@@ -2,9 +2,9 @@
 #define RUNEBOUND_FWD_HPP_
 
 namespace runebound {
-enum class AdventureType { Meeting, Research, Fight, Nothing };
+enum class AdventureType { MEETING, RESEARCH, FIGHT, NOTHING };
 
-enum class Side { Front, Back };
+enum class Side { FRONT, BACK };
 
 }  // namespace runebound
 
