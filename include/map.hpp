@@ -56,6 +56,7 @@ public:
         m_rivers.insert(make_river_index(0, 2, 1, 1));
         m_rivers.insert(make_river_index(0, 2, 1, 2));
         m_rivers.insert(make_river_index(0, 2, 1, 3));
+
         m_map[2][0].make_token(runebound::AdventureType::FIGHT);
         m_map[2][4].make_token(runebound::AdventureType::MEETING);
         m_map[4][2].make_token(runebound::AdventureType::RESEARCH);
