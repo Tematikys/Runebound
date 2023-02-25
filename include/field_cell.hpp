@@ -11,7 +11,7 @@ namespace field {
 
     const int COUNT_NEIGHBOUR = 6;
 
-    enum class TypeCell { JOKER, WATER, FOREST, MOUNTAINS, HILLS, PLAIN };
+    enum class TypeCell { WATER, FOREST, MOUNTAINS, HILLS, PLAIN };
 
     enum class Neighbour {
         TOPRIGHT,
