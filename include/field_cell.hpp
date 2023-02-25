@@ -52,6 +52,10 @@ namespace field {
             return m_side_token;
         }
 
+        TypeCell get_type_cell() const {
+            return m_type_cell;
+        }
+
     private:
         const TypeCell m_type_cell;
         runebound::AdventureType m_token;
