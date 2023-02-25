@@ -52,6 +52,15 @@ namespace field {
             return m_side_token;
         }
 
+        int type() {
+            if (m_type_cell == TypeCell::WATER) return 1;
+            if (m_type_cell == TypeCell::FOREST) return 2;
+            if (m_type_cell == TypeCell::MOUNTAINS) return 3;
+            if (m_type_cell == TypeCell::HILLS) return 4;
+            if (m_type_cell == TypeCell::PLAIN) return 5;
+            return 0;
+        }
+
     private:
         const TypeCell m_type_cell;
         runebound::AdventureType m_token;
