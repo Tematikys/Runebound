@@ -13,13 +13,13 @@ int main() {
                     c = '*';
                 }
             }
-            if (test_map.get_field_cell(j, i).get_token() !=AdventureType::NOTHING) {  // тест на приключения в клетке
+            if (test_map.get_cell_map(j, i).get_token() !=AdventureType::NOTHING) {  // тест на приключения в клетке
                 c = '^';
             }
             if (i % 2 == 0) {
-                std::cout << "  " << test_map.get_field_cell_int(i, j) << c << " ";
+                std::cout << "  " << static_cast<int>(test_map.get_cell_map(i, j).get_type_cell()) << c << " ";
             } else {
-                std::cout << test_map.get_field_cell_int(i, j) << c << "   ";
+                std::cout << static_cast<int>(test_map.get_cell_map(i, j).get_type_cell()) << c << "   ";
             }
         }
         std::cout << '\n';

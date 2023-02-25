@@ -64,11 +64,7 @@ public:
     Map(int width, int height) : m_height(height), m_width(width) {
     }
 
-    int get_field_cell_int(int height, int width) {
-        return (m_map[height][width]).type();
-    }
-
-    FieldCell get_field_cell(int height, int width) {
+    FieldCell get_cell_map(int height, int width) {
         return m_map[height][width];
     }
 
