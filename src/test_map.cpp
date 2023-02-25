@@ -1,4 +1,4 @@
-#include "map.hpp"
+#include "../include/map.hpp"
 
 int main() {
     using namespace runebound;
