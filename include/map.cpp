@@ -23,7 +23,7 @@ unsigned int make_river_index(int x1, int y1, int x2, int y2) {
 
 struct Map {
 private:
-    std::vector<std::vector<FieldCell>> m_map;
+    std::vector<std::vector<FieldCell>>m_map;  // [строка][столбик]
     std::set<unsigned int> m_rivers;
     const int m_height, m_weight;
     const std::vector<std::pair<int, int>> directions_odd_row{
@@ -43,21 +43,19 @@ public:
 
     Map() : m_weight(StandartWeight), m_height(StandartHeight) {
         std::vector<TypeCell> cells =
-
-            {TypeCell::FOREST,    TypeCell::FOREST,    TypeCell::PLAIN,
-             TypeCell::WATER,     TypeCell::WATER,     TypeCell::FOREST,
-             TypeCell::FOREST,    TypeCell::PLAIN,     TypeCell::WATER,
-             TypeCell::WATER,     TypeCell::PLAIN,     TypeCell::PLAIN,
-             TypeCell::PLAIN,     TypeCell::PLAIN,     TypeCell::PLAIN,
-             TypeCell::HILLS,     TypeCell::HILLS,     TypeCell::PLAIN,
-             TypeCell::MOUNTAINS, TypeCell::MOUNTAINS, TypeCell::HILLS,
-             TypeCell::HILLS,     TypeCell::PLAIN,     TypeCell::MOUNTAINS,
-             TypeCell::MOUNTAINS};
+            {TypeCell::FOREST,    TypeCell::FOREST,    TypeCell::PLAIN,     TypeCell::WATER,     TypeCell::WATER,
+             TypeCell::FOREST,    TypeCell::FOREST,    TypeCell::PLAIN,     TypeCell::WATER,     TypeCell::WATER,
+             TypeCell::PLAIN,     TypeCell::PLAIN,     TypeCell::PLAIN,     TypeCell::PLAIN,     TypeCell::PLAIN,
+             TypeCell::HILLS,     TypeCell::HILLS,     TypeCell::PLAIN,     TypeCell::MOUNTAINS, TypeCell::MOUNTAINS,
+             TypeCell::HILLS,     TypeCell::HILLS,     TypeCell::PLAIN,     TypeCell::MOUNTAINS, TypeCell::MOUNTAINS};
         make_map(cells);
 
         m_rivers.insert(make_river_index(0, 2, 1, 1));
         m_rivers.insert(make_river_index(0, 2, 1, 2));
         m_rivers.insert(make_river_index(0, 2, 1, 3));
+        m_map[2][0].make_token(runebound::AdventureType::FIGHT);
+        m_map[2][4].make_token(runebound::AdventureType::MEETING);
+        m_map[4][2].make_token(runebound::AdventureType::RESEARCH);
     }
 
     Map(int weight, int height) : m_height(height), m_weight(weight) {
@@ -65,6 +63,10 @@ public:
 
     int get_field_cell_int(int height, int weight) {
         return (m_map[height][weight]).type();
+    }
+
+    FieldCell get_field_cell(int height, int weight) {
+        return m_map[height][weight];
     }
 
     std::vector<std::pair<int, int>> get_neighbours_coor(int x, int y) {
@@ -93,24 +95,30 @@ public:
 }  // namespace runebound
 
 int main() {
-    runebound::field::Map test_map;
-    for (int i = 0; i < 5; i++) { //координата y
-        for (int j = 0; j < 5; j++) { //координата x
+    using namespace runebound;
+    {
+    field::Map test_map;
+    for (int i = 0; i < 5; i++) {      // координата y
+        for (int j = 0; j < 5; j++) {  // координата x
             char c = ' ';
-            for (auto [x, y] : test_map.get_neighbours_coor(j, i)) {
-                if (test_map.runebound::field::Map::check_river(
-                        runebound::field::make_river_index(j, i, x, y)
-                    )) {
+            for (auto [x, y] : test_map.get_neighbours_coor(j, i)) {  // тест на наличие реки рядом с клеткой
+                if (test_map.field::Map::check_river(field::make_river_index(j, i, x, y))) {
                     c = '*';
                 }
             }
+            if (test_map.get_field_cell(j, i).get_token() !=AdventureType::NOTHING) {  // тест на приключения в клетке
+                c = '^';
+            }
             if (i % 2 == 0) {
-                std::cout << "  " << test_map.get_field_cell_int(i, j) << c <<" ";
+                std::cout << "  " << test_map.get_field_cell_int(i, j) << c << " ";
             } else {
                 std::cout << test_map.get_field_cell_int(i, j) << c << "   ";
             }
         }
         std::cout << '\n';
     }
+    }
+
+
     return 0;
 }
