@@ -5,7 +5,7 @@
 
 namespace runebound {
 namespace field {
-int StandartHeight = 5, StandartWeight = 5;
+int StandartHeight = 5, StandartWidth = 5;
 
 unsigned int make_river_index(int x1, int y1, int x2, int y2) {
     if (x1 > x2) {
@@ -25,7 +25,7 @@ struct Map {
 private:
     std::vector<std::vector<FieldCell>>m_map;  // [строка][столбик]
     std::set<unsigned int> m_rivers;
-    const int m_height, m_weight;
+    const int m_height, m_width;
     const std::vector<std::pair<int, int>> directions_odd_row{
         {0, -1}, {1, 0}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
     const std::vector<std::pair<int, int>> directions_even_row{
@@ -35,13 +35,13 @@ public:
     void make_map(std::vector<TypeCell> cells) {
         m_map.resize(m_height);
         for (int i = 0; i < m_height; i++) {
-            for (int j = 0; j < m_weight; j++) {
+            for (int j = 0; j < m_width; j++) {
                 m_map[i].push_back(FieldCell(cells[i * m_height + j]));
             }
         }
     }
 
-    Map() : m_weight(StandartWeight), m_height(StandartHeight) {
+    Map() : m_width(StandartWidth), m_height(StandartHeight) {
         std::vector<TypeCell> cells =
             {TypeCell::FOREST,    TypeCell::FOREST,    TypeCell::PLAIN,     TypeCell::WATER,     TypeCell::WATER,
              TypeCell::FOREST,    TypeCell::FOREST,    TypeCell::PLAIN,     TypeCell::WATER,     TypeCell::WATER,
@@ -58,15 +58,15 @@ public:
         m_map[4][2].make_token(runebound::AdventureType::RESEARCH);
     }
 
-    Map(int weight, int height) : m_height(height), m_weight(weight) {
+    Map(int width, int height) : m_height(height), m_width(width) {
     }
 
-    int get_field_cell_int(int height, int weight) {
-        return (m_map[height][weight]).type();
+    int get_field_cell_int(int height, int width) {
+        return (m_map[height][width]).type();
     }
 
-    FieldCell get_field_cell(int height, int weight) {
-        return m_map[height][weight];
+    FieldCell get_field_cell(int height, int width) {
+        return m_map[height][width];
     }
 
     std::vector<std::pair<int, int>> get_neighbours_coor(int x, int y) {
@@ -78,7 +78,8 @@ public:
             directions = &directions_odd_row;
         }
         for (auto [dx, dy] : *directions) {
-            result.push_back({x + dx, y + dy});
+            if ((x+dx>=0) && (x+dx<m_width) && (y+dy>=0) && (y+dy<m_height) ) {
+            result.push_back({x + dx, y + dy});}
         }
         return result;
     }
@@ -100,6 +101,7 @@ int main() {
     field::Map test_map;
     for (int i = 0; i < 5; i++) {      // координата y
         for (int j = 0; j < 5; j++) {  // координата x
+            test_map.get_neighbours_coor(j,i);
             char c = ' ';
             for (auto [x, y] : test_map.get_neighbours_coor(j, i)) {  // тест на наличие реки рядом с клеткой
                 if (test_map.field::Map::check_river(field::make_river_index(j, i, x, y))) {
