@@ -1,13 +1,14 @@
-#ifndef MAP_HPP
-#define MAP_HPP
+#ifndef MAP_HPP_
+#define MAP_HPP_
 
 #include <iostream>
 #include <set>
 #include <vector>
+#include "dice.hpp"
 #include "field_cell.hpp"
 
 namespace runebound {
-namespace field {
+namespace map {
 int StandartHeight = 5, StandartWidth = 5;
 
 unsigned int make_river_index(int x1, int y1, int x2, int y2) {
@@ -26,7 +27,7 @@ unsigned int make_river_index(int x1, int y1, int x2, int y2) {
 
 struct Map {
 private:
-    std::vector<std::vector<FieldCell>>m_map;  // [строка][столбик]
+    std::vector<std::vector<MapCell>> m_map;  // [строка][столбик]
     std::set<unsigned int> m_rivers;
     const int m_height, m_width;
     const std::vector<std::pair<int, int>> directions_odd_row{
@@ -39,18 +40,22 @@ public:
         m_map.resize(m_height);
         for (int i = 0; i < m_height; i++) {
             for (int j = 0; j < m_width; j++) {
-                m_map[i].push_back(FieldCell(cells[i * m_height + j]));
+                m_map[i].push_back(MapCell(cells[i * m_height + j]));
             }
         }
     }
 
     Map() : m_width(StandartWidth), m_height(StandartHeight) {
-        std::vector<TypeCell> cells =
-            {TypeCell::FOREST,    TypeCell::FOREST,    TypeCell::PLAIN,     TypeCell::WATER,     TypeCell::WATER,
-             TypeCell::FOREST,    TypeCell::FOREST,    TypeCell::PLAIN,     TypeCell::WATER,     TypeCell::WATER,
-             TypeCell::PLAIN,     TypeCell::PLAIN,     TypeCell::PLAIN,     TypeCell::PLAIN,     TypeCell::PLAIN,
-             TypeCell::HILLS,     TypeCell::HILLS,     TypeCell::PLAIN,     TypeCell::MOUNTAINS, TypeCell::MOUNTAINS,
-             TypeCell::HILLS,     TypeCell::HILLS,     TypeCell::PLAIN,     TypeCell::MOUNTAINS, TypeCell::MOUNTAINS};
+        std::vector<TypeCell> cells = {
+            TypeCell::FOREST,    TypeCell::FOREST,    TypeCell::PLAIN,
+            TypeCell::WATER,     TypeCell::WATER,     TypeCell::FOREST,
+            TypeCell::FOREST,    TypeCell::PLAIN,     TypeCell::WATER,
+            TypeCell::WATER,     TypeCell::PLAIN,     TypeCell::PLAIN,
+            TypeCell::PLAIN,     TypeCell::PLAIN,     TypeCell::PLAIN,
+            TypeCell::HILLS,     TypeCell::HILLS,     TypeCell::PLAIN,
+            TypeCell::MOUNTAINS, TypeCell::MOUNTAINS, TypeCell::HILLS,
+            TypeCell::HILLS,     TypeCell::PLAIN,     TypeCell::MOUNTAINS,
+            TypeCell::MOUNTAINS};
         make_map(cells);
 
         m_rivers.insert(make_river_index(0, 2, 1, 1));
@@ -64,23 +69,31 @@ public:
     Map(int width, int height) : m_height(height), m_width(width) {
     }
 
-    FieldCell get_cell_map(int height, int width) {
+    MapCell get_cell_map(int height, int width) const {
         return m_map[height][width];
     }
 
-    std::vector<std::pair<int, int>> get_neighbours_coor(int x, int y) {
+    const std::vector<std::pair<int, int>> &get_direction(int x) const;
+
+    std::vector<std::pair<int, int>> get_neighbours_coor(int x, int y) const {
         std::vector<std::pair<int, int>> result;
-        const std::vector<std::pair<int, int>> *directions;
-        if (x % 2 == 0) {
-            directions = &directions_even_row;
-        } else {
-            directions = &directions_odd_row;
-        }
-        for (auto [dx, dy] : *directions) {
-            if ((x+dx>=0) && (x+dx<m_width) && (y+dy>=0) && (y+dy<m_height) ) {
-                result.push_back({x + dx, y + dy});}
+        const std::vector<std::pair<int, int>> &directions = get_direction(x);
+        for (const auto &[dx, dy] : directions) {
+            if ((x + dx >= 0) && (x + dx < m_width) && (y + dy >= 0) &&
+                (y + dy < m_height)) {
+                result.push_back({x + dx, y + dy});
+            }
         }
         return result;
+    }
+
+    std::pair<int, int> get_neigbour(int x, int y, int dx, int dy) const {
+        return {x + dx, y + dy};
+    }
+
+    bool check_neigbour(int x, int y, int dx, int dy) const {
+        return (x + dx >= 0) && (x + dx < m_width) && (y + dy >= 0) &&
+               (y + dy < m_height);
     }
 
     bool check_river(unsigned int river_index) {
@@ -90,7 +103,26 @@ public:
             return false;
         }
     }
+
+    bool check_hand_dice(int x, int y, ::runebound::dice::HandDice dice) const;
+
+    bool make_move(
+        int start_x,
+        int start_y,
+        int end_x,
+        int end_y,
+        const std::vector<::runebound::dice::HandDice> &dice_roll_results,
+        int count_dice
+    ) const;
+
+    bool check_move(
+        int start_x,
+        int start_y,
+        int end_x,
+        int end_y,
+        std::vector<::runebound::dice::HandDice> dice_roll_results
+    );
 };
-}  // namespace field
+}  // namespace map
 }  // namespace runebound
-#endif  // MAP_HPP
+#endif  // MAP_HPP_
