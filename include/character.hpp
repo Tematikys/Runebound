@@ -1,16 +1,16 @@
 #ifndef CHARACTER_HPP_
 #define CHARACTER_HPP_
 
-#include "runebound_fwd.hpp"
-#include <string>
-#include <vector>
-#include "card_adventure.hpp"
 #include <memory>
 #include <set>
+#include <string>
+#include <vector>
+#include "../src/card_adventure.hpp"
+#include "runebound_fwd.hpp"
 
 namespace runebound {
 namespace character {
-
+gt
 struct Character {
 private:
     int m_gold, m_health;
