@@ -9,21 +9,9 @@
 
 namespace runebound {
 namespace map {
-int StandartHeight = 5, StandartWidth = 5;
+const int StandartHeight = 5, StandartWidth = 5;
 
-unsigned int make_river_index(int x1, int y1, int x2, int y2) {
-    if (x1 > x2) {
-        std::swap(x1, x2);
-        std::swap(y1, y2);
-    } else {
-        if ((x1 == x2) && (y1 > y2)) {
-            std::swap(y1, y2);
-        }
-    }
-
-    int step = 64;
-    return (((x1 * step) + y1) * step + x2) * step + y2;
-}
+unsigned int make_river_index(int x1, int y1, int x2, int y2);
 
 struct Map {
 private:
