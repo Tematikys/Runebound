@@ -9,13 +9,32 @@
 
 namespace runebound {
 namespace cards {
+nlohmann::json serialize_card_research(const CardResearch& card);
+CardResearch deserialize_card_research(const nlohmann::json& json);
+
 struct CardResearch : CardAdventure {
+public:
+    struct Outcome;
 private:
+    int m_task_position_x, m_task_position_y;
+    bool m_completed = false;
+
+    std::vector<Outcome> m_outcomes;
+
+    [[nodiscard]] bool check_hand_dice(
+        const ::runebound::map::TypeCell &necessary_result,
+        const ::runebound::dice::HandDice &dice
+    ) const;
+
+public:
     struct Outcome {
     public:
         int m_delta_gold;
         int m_delta_health;
         std::vector<::runebound::map::TypeCell> m_necessary_result;
+
+        Outcome() : m_delta_gold(0), m_delta_health(0) {}
+
         Outcome(
             int delta_gold,
             int delta_health,
@@ -27,25 +46,61 @@ private:
         }
     };
 
-    int m_task_position_x, m_task_position_y;
-    bool m_completed;
+    explicit CardResearch(int task_position_x, int task_position_y,
+                          std::vector <Outcome> outcomes) :
+          m_task_position_x(task_position_x), m_task_position_y(task_position_y),
+          m_outcomes(std::move(outcomes)) {}
 
-    std::vector<Outcome> m_outcomes;
+    CardResearch() : m_task_position_x(0), m_task_position_y(0), m_completed(false) {}
 
-    bool check_hand_dice(
-        const ::runebound::map::TypeCell &necessary_result,
-        const ::runebound::dice::HandDice &dice
-    ) const;
+    CardResearch(const CardResearch &other) : m_task_position_x(0), m_task_position_y(0), m_completed(false) {
+        *this = other;
+    }
 
-public:
-    bool check_completion_task(int x, int y);
+    CardResearch(CardResearch &&other) noexcept : m_task_position_x(0), m_task_position_y(0), m_completed(false) {
+        *this = std::move(other);
+    }
 
-    bool check_outcome(
+    CardResearch &operator=(const CardResearch &other) {
+        m_task_position_x = other.m_task_position_x;
+        m_task_position_y = other.m_task_position_y;
+        m_completed = other.m_completed;
+        m_outcomes = other.m_outcomes;
+        return *this;
+    }
+
+    CardResearch &operator=(CardResearch &&other) noexcept {
+        m_task_position_x = other.m_task_position_x;
+        m_task_position_y = other.m_task_position_y;
+        m_completed = other.m_completed;
+        m_outcomes = std::move(other.m_outcomes);
+        return *this;
+    }
+
+    [[nodiscard]] bool check_completion_task(int x, int y);
+
+    [[nodiscard]] bool check_outcome(
         int index,
         std::vector<::runebound::dice::HandDice> &result_dice,
         int &delta_gold,
         int &delta_health
     );
+
+   [[nodiscard]] int get_task_position_x() const {
+        return m_task_position_x;
+    }
+
+   [[nodiscard]] int get_task_position_y() const {
+       return m_task_position_y;
+   }
+
+   [[nodiscard]] std::vector<Outcome> get_outcomes() const {
+       return m_outcomes;
+   }
+
+    friend nlohmann::json serialize_card_research(const CardResearch& card);
+    friend CardResearch deserialize_card_research(const nlohmann::json& json);
+
 };
 }  // namespace cards
 }  // namespace runebound

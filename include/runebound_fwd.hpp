@@ -13,6 +13,10 @@ namespace map {
 struct MapCell;
 } // namespace token
 
+namespace cards {
+struct CardAdventure;
+struct CardResearch;
+} // namespace cards
 
 }  // namespace runebound
 
