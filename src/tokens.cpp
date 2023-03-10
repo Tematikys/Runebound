@@ -4,16 +4,11 @@
 namespace runebound {
 namespace token {
 
-nlohmann::json serialize_token(const Token& token) {
-    nlohmann::json json_token;
-    json_token["m_type"] = token.m_type;
-    return json_token;
+void to_json(nlohmann::json &json, const Token& token) {
+    json["m_type"] = token.m_type;
 }
-
-Token deserialize_token(const nlohmann::json& json) {
-    Token result;
-    result.m_type = json["m_type"];
-    return result;
+void from_json(const nlohmann::json &json, Token& token) {
+    token.m_type = json["m_type"];
 }
 
 } // namespace token

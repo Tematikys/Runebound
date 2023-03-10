@@ -6,8 +6,8 @@
 namespace runebound {
 namespace token {
 
-nlohmann::json serialize_token(const Token& token);
-Token deserialize_token(const nlohmann::json& json);
+void to_json(nlohmann::json &json, const Token& token);
+void from_json(const nlohmann::json &json, Token& token);
 
 enum class TokenType { BATTLE, ADVENTURE, PLOT };
 
@@ -25,9 +25,8 @@ public:
         return m_type;
     }
 
-    friend nlohmann::json serialize_token(const Token& token);
-
-    friend Token deserialize_token(const nlohmann::json& json);
+    friend void to_json(nlohmann::json &json, const Token& token);
+    friend void from_json(const nlohmann::json &json, Token& token);
 
 };
 }  // namespace token

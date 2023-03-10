@@ -9,8 +9,12 @@ namespace token {
 struct Token;
 } // namespace token
 
+namespace character {
+struct Character;
+}
 namespace map {
 struct MapCell;
+struct Map;
 } // namespace token
 
 namespace cards {

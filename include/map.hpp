@@ -13,6 +13,9 @@ const int StandartHeight = 5, StandartWidth = 5;
 
 unsigned int make_river_index(int x1, int y1, int x2, int y2);
 
+void to_json(nlohmann::json &json, const Map& map);
+void from_json(const nlohmann::json &json, Map& map);
+
 struct Map {
 private:
     std::vector<std::vector<MapCell>> m_map;  // [строка][столбик]
@@ -110,6 +113,10 @@ public:
         int end_y,
         std::vector<::runebound::dice::HandDice> dice_roll_results
     ) const;
+
+    friend void to_json(nlohmann::json &json, const Map& map);
+    friend void from_json(const nlohmann::json &json, Map& map);
+
 };
 }  // namespace map
 }  // namespace runebound
