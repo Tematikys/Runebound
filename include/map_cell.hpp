@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 #include "runebound_fwd.hpp"
+#include "nlohmann/json_fwd.hpp"
 
 namespace runebound {
 namespace map {
@@ -22,8 +23,13 @@ enum class Neighbour {
     TOPLEFT
 };
 
+nlohmann::json serialize_map_cell(const MapCell& map_cell);
+MapCell deserialize_map_cell(const nlohmann::json& json);
+
 struct MapCell {
 public:
+    MapCell() = default;
+
     MapCell(TypeCell type_cell) : m_type_cell(type_cell) {
         m_token = runebound::AdventureType::NOTHING;
         m_side_token = runebound::Side::FRONT;
@@ -33,7 +39,7 @@ public:
         m_token = token;
     }
 
-    runebound::AdventureType get_token() const {
+    [[nodiscard]] runebound::AdventureType get_token() const {
         return m_token;
     }
 
@@ -42,16 +48,19 @@ public:
             static_cast<runebound::Side>(static_cast<int>(m_side_token) ^ 1);
     }
 
-    runebound::Side get_side_token() const {
+    [[nodiscard]] runebound::Side get_side_token() const {
         return m_side_token;
     }
 
-    TypeCell get_type_cell() const {
+    [[nodiscard]] TypeCell get_type_cell() const {
         return m_type_cell;
     }
 
+    friend nlohmann::json serialize_map_cell(const MapCell& map_cell);
+    friend MapCell deserialize_map_cell(const nlohmann::json& json);
+
 private:
-    const TypeCell m_type_cell;
+    TypeCell m_type_cell;
     runebound::AdventureType m_token;
     runebound::Side m_side_token;
 };
