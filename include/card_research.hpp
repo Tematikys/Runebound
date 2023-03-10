@@ -6,11 +6,12 @@
 #include "card_adventure.hpp"
 #include "dice.hpp"
 #include "map_cell.hpp"
+#include "nlohmann/json.hpp"
 
 namespace runebound {
 namespace cards {
-nlohmann::json serialize_card_research(const CardResearch& card);
-CardResearch deserialize_card_research(const nlohmann::json& json);
+void to_json(nlohmann::json &json, const CardResearch& card);
+void from_json(const nlohmann::json &json, CardResearch& card);
 
 struct CardResearch : CardAdventure {
 public:
@@ -98,8 +99,9 @@ public:
        return m_outcomes;
    }
 
-    friend nlohmann::json serialize_card_research(const CardResearch& card);
-    friend CardResearch deserialize_card_research(const nlohmann::json& json);
+    friend void to_json(nlohmann::json &json, const CardResearch& card);
+
+    friend void from_json(const nlohmann::json &json, CardResearch& card);
 
 };
 }  // namespace cards

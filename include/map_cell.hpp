@@ -23,8 +23,8 @@ enum class Neighbour {
     TOPLEFT
 };
 
-nlohmann::json serialize_map_cell(const MapCell& map_cell);
-MapCell deserialize_map_cell(const nlohmann::json& json);
+void to_json(nlohmann::json &json, const MapCell& map_cell);
+void from_json(const nlohmann::json& json, MapCell &map_cell);
 
 struct MapCell {
 public:
@@ -56,8 +56,8 @@ public:
         return m_type_cell;
     }
 
-    friend nlohmann::json serialize_map_cell(const MapCell& map_cell);
-    friend MapCell deserialize_map_cell(const nlohmann::json& json);
+    friend void to_json(nlohmann::json &json, const MapCell& map_cell);
+    friend void from_json(const nlohmann::json& json, MapCell &map_cell);
 
 private:
     TypeCell m_type_cell;

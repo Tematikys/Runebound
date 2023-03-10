@@ -70,37 +70,33 @@ bool CardResearch::check_outcome(
     return false;
 }
 
-nlohmann::json serialize_card_research(const CardResearch& card) {
-    nlohmann::json json_card_research;
-    json_card_research["m_task_position_x"] = card.m_task_position_x;
-    json_card_research["m_task_position_y"] = card.m_task_position_y;
-    json_card_research["m_completed"] = card.m_completed;
+void to_json(nlohmann::json &json, const CardResearch& card) {
+    json["m_task_position_x"] = card.m_task_position_x;
+    json["m_task_position_y"] = card.m_task_position_y;
+    json["m_completed"] = card.m_completed;
     std::vector <nlohmann::json> json_outcome(card.m_outcomes.size());
     for (std::size_t outcome = 0; outcome < card.m_outcomes.size(); ++outcome) {
         json_outcome[outcome]["m_delta_gold"] = card.m_outcomes[outcome].m_delta_gold;
         json_outcome[outcome]["m_delta_health"] = card.m_outcomes[outcome].m_delta_health;
         json_outcome[outcome]["m_necessary_result"] = card.m_outcomes[outcome].m_necessary_result;
     }
-    json_card_research["m_outcomes"] = json_outcome;
-    return json_card_research;
+    json["m_outcomes"] = json_outcome;
 }
 
-CardResearch deserialize_card_research(const nlohmann::json& json) {
-    CardResearch result;
-    result.m_task_position_x = json["m_task_position_x"];
-    result.m_task_position_y = json["m_task_position_y"];
-    result.m_completed = json["m_completed"];
+void from_json(const nlohmann::json &json, CardResearch& card) {
+    card.m_task_position_x = json["m_task_position_x"];
+    card.m_task_position_y = json["m_task_position_y"];
+    card.m_completed = json["m_completed"];
     std::vector <nlohmann::json> json_outcome = json["m_outcomes"];
-    result.m_outcomes.resize(json_outcome.size());
+    card.m_outcomes.resize(json_outcome.size());
     for (std::size_t outcome = 0; outcome < json_outcome.size(); ++outcome) {
-        result.m_outcomes[outcome].m_delta_gold = json_outcome[outcome]["m_delta_gold"];
-        result.m_outcomes[outcome].m_delta_health = json_outcome[outcome]["m_delta_health"];
-        result.m_outcomes[outcome].m_necessary_result.resize(json_outcome[outcome]["m_necessary_result"].size());
+        card.m_outcomes[outcome].m_delta_gold = json_outcome[outcome]["m_delta_gold"];
+        card.m_outcomes[outcome].m_delta_health = json_outcome[outcome]["m_delta_health"];
+        card.m_outcomes[outcome].m_necessary_result.resize(json_outcome[outcome]["m_necessary_result"].size());
         for (std::size_t i = 0; i < json_outcome[outcome]["m_necessary_result"].size(); ++i) {
-            result.m_outcomes[outcome].m_necessary_result[i] = json_outcome[outcome]["m_necessary_result"][i];
+            card.m_outcomes[outcome].m_necessary_result[i] = json_outcome[outcome]["m_necessary_result"][i];
         }
     }
-    return result;
 }
 }  // namespace cards
 }  // namespace runebound

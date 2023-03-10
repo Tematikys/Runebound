@@ -7,20 +7,16 @@
 namespace runebound {
 namespace map {
 
-nlohmann::json serialize_map_cell(const MapCell& map_cell) {
-    nlohmann::json json_map_cell;
-    json_map_cell["m_type_cell"] = map_cell.m_type_cell;
-    json_map_cell["m_token"] = map_cell.m_token;
-    json_map_cell["m_side_token"] = map_cell.m_side_token;
-    return json_map_cell;
+void to_json(nlohmann::json &json, const MapCell& map_cell) {
+    json["m_type_cell"] = map_cell.m_type_cell;
+    json["m_token"] = map_cell.m_token;
+    json["m_side_token"] = map_cell.m_side_token;
 }
 
-MapCell deserialize_map_cell(const nlohmann::json& json) {
-    MapCell result;
-    result.m_type_cell = json["m_type_cell"];
-    result.m_token = json["m_token"];
-    result.m_side_token = json["m_side_token"];
-    return result;
+void from_json(const nlohmann::json& json, MapCell& map_cell) {
+    map_cell.m_type_cell = json["m_type_cell"];
+    map_cell.m_token = json["m_token"];
+    map_cell.m_side_token = json["m_side_token"];
 }
 } // namespace map
 } // namespace runebound
