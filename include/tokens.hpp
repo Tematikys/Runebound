@@ -11,10 +11,10 @@ private:
     TokenType m_type;
 
 public:
-    Token(TokenType type) : m_type(type) {
+    explicit Token(TokenType type) : m_type(type) {
     }
 
-    TokenType get_type() const {
+    [[nodiscard]] TokenType get_type() const {
         return m_type;
     }
 };

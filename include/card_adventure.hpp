@@ -3,19 +3,15 @@
 
 namespace runebound::cards {
 struct CardAdventure {
-    unsigned int height();
-    unsigned int width();
     CardAdventure(const CardAdventure &) = delete;
     CardAdventure(CardAdventure &&) = delete;
     CardAdventure &operator=(const CardAdventure &) = delete;
     CardAdventure &operator=(CardAdventure &&) = delete;
-
-protected:
-    CardAdventure() = default;
+    CardAdventure() = delete;
 
 private:
-    const unsigned int m_height;
-    const double m_ratio;
+    const unsigned int m_height = 1;
+    const double m_ratio = 0.66;
 };
 
 }  // namespace runebound::cards

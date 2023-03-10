@@ -5,19 +5,17 @@
 #include <vector>
 #include "card_adventure.hpp"
 #include "dice.hpp"
-#include "field_cell.hpp"
+#include "map_cell.hpp"
 
 namespace runebound {
 namespace cards {
 struct CardResearch : CardAdventure {
 private:
     struct Outcome {
-    private:
+    public:
         int m_delta_gold;
         int m_delta_health;
         std::vector<::runebound::map::TypeCell> m_necessary_result;
-
-    public:
         Outcome(
             int delta_gold,
             int delta_health,
@@ -26,22 +24,6 @@ private:
             : m_delta_gold(delta_gold),
               m_delta_health(delta_health),
               m_necessary_result(std::move(necessary_result)) {
-        }
-
-        int get_delta_gold() const {
-            return m_delta_health;
-        };
-
-        int get_delta_health() const {
-            return m_delta_health;
-        }
-
-        std::size_t get_size_necessary_result() const {
-            return m_necessary_result.size();
-        }
-
-        ::runebound::map::TypeCell get_necessary_result(int index) const {
-            return m_necessary_result[index];
         }
     };
 

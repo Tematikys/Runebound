@@ -12,15 +12,15 @@ void Game::make_move(
         return;
     }
     if (!m_map.check_move(
-            m_characters[m_turn].get_current_x(),
-            m_characters[m_turn].get_current_x(), end_x, end_y,
+            m_characters[m_turn].m_current_x,
+            m_characters[m_turn].m_current_y, end_x, end_y,
             dice_roll_results
         )) {
         return;
     }
-    m_characters[m_turn].set_current_x(end_x);
-    m_characters[m_turn].set_current_y(end_y);
-    m_turn = (m_turn + 1) % m_count_players;
+    m_characters[m_turn].m_current_x = end_x;
+    m_characters[m_turn].m_current_y = end_y;
+    m_turn = (m_turn + 1) % M_COUNT_PLAYERS;
 }
 
 }  // namespace game

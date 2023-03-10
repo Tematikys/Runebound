@@ -50,19 +50,19 @@ bool CardResearch::check_outcome(
         for (std::size_t i = 0;
              i < std::min(
                      result_dice.size(),
-                     m_outcomes[index].get_size_necessary_result()
+                     m_outcomes[index].m_necessary_result.size()
                  );
              ++i) {
             if (!check_hand_dice(
-                    m_outcomes[index].get_necessary_result(i), result_dice[i]
+                    m_outcomes[index].m_necessary_result[i], result_dice[i]
                 )) {
                 completed = false;
                 break;
             }
         }
         if (completed) {
-            delta_health += m_outcomes[index].get_delta_health();
-            delta_gold += m_outcomes[index].get_delta_gold();
+            delta_health += m_outcomes[index].m_delta_health;
+            delta_gold += m_outcomes[index].m_delta_gold;
             return true;
         }
     } while (std::next_permutation(result_dice.begin(), result_dice.end()));

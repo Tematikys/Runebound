@@ -5,7 +5,7 @@
 #include <set>
 #include <vector>
 #include "dice.hpp"
-#include "field_cell.hpp"
+#include "map_cell.hpp"
 
 namespace runebound {
 namespace map {
@@ -57,13 +57,13 @@ public:
     Map(int width, int height) : m_height(height), m_width(width) {
     }
 
-    MapCell get_cell_map(int height, int width) const {
+    [[nodiscard]] MapCell get_cell_map(int height, int width) const {
         return m_map[height][width];
     }
 
-    const std::vector<std::pair<int, int>> &get_direction(int x) const;
+    [[nodiscard]] const std::vector<std::pair<int, int>> &get_direction(int x) const;
 
-    std::vector<std::pair<int, int>> get_neighbours_coor(int x, int y) const {
+    [[nodiscard]] std::vector<std::pair<int, int>> get_neighbours_coor(int x, int y) const {
         std::vector<std::pair<int, int>> result;
         const std::vector<std::pair<int, int>> &directions = get_direction(x);
         for (const auto &[dx, dy] : directions) {
@@ -75,11 +75,11 @@ public:
         return result;
     }
 
-    std::pair<int, int> get_neigbour(int x, int y, int dx, int dy) const {
+    [[nodiscard]] std::pair<int, int> get_neighbour(int x, int y, int dx, int dy) const {
         return {x + dx, y + dy};
     }
 
-    bool check_neigbour(int x, int y, int dx, int dy) const {
+    [[nodiscard]] bool check_neighbour(int x, int y, int dx, int dy) const {
         return (x + dx >= 0) && (x + dx < m_width) && (y + dy >= 0) &&
                (y + dy < m_height);
     }
@@ -92,9 +92,9 @@ public:
         }
     }
 
-    bool check_hand_dice(int x, int y, ::runebound::dice::HandDice dice) const;
+    [[nodiscard]] bool check_hand_dice(int x, int y, ::runebound::dice::HandDice dice) const;
 
-    bool make_move(
+    [[nodiscard]] bool make_move(
         int start_x,
         int start_y,
         int end_x,
@@ -103,13 +103,13 @@ public:
         int count_dice
     ) const;
 
-    bool check_move(
+    [[nodiscard]] bool check_move(
         int start_x,
         int start_y,
         int end_x,
         int end_y,
         std::vector<::runebound::dice::HandDice> dice_roll_results
-    );
+    ) const;
 };
 }  // namespace map
 }  // namespace runebound

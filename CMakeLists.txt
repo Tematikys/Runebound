@@ -7,4 +7,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include_directories(include)
 
-add_executable(main src/field_cell.cpp src/character.cpp src/map.cpp src/game.cpp src/main.cpp src/card_research.cpp src/card_adventure.cpp)
+add_executable(main src/map_cell.cpp src/character.cpp src/map.cpp src/game.cpp src/main.cpp src/card_research.cpp src/card_adventure.cpp)

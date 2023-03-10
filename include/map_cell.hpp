@@ -25,14 +25,8 @@ enum class Neighbour {
 struct MapCell {
 public:
     MapCell(TypeCell type_cell) : m_type_cell(type_cell) {
-        m_neighbours.resize(COUNT_NEIGHBOUR, nullptr);
         m_token = runebound::AdventureType::NOTHING;
         m_side_token = runebound::Side::FRONT;
-    }
-
-    void
-    make_neighbour(std::shared_ptr<MapCell> neighbour, Neighbour direction) {
-        m_neighbours[static_cast<int>(direction)] = std::move(neighbour);
     }
 
     void make_token(runebound::AdventureType token) {
@@ -60,7 +54,6 @@ private:
     const TypeCell m_type_cell;
     runebound::AdventureType m_token;
     runebound::Side m_side_token;
-    std::vector<std::shared_ptr<MapCell>> m_neighbours;
 };
 
 }  // namespace map

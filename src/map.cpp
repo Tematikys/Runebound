@@ -50,8 +50,8 @@ bool Map::make_move(
             return true;
         }
         for (const auto &[dx, dy] : get_direction(x)) {
-            if (check_neigbour(x, y, dx, dy)) {
-                auto [new_x, new_y] = get_neigbour(x, y, dx, dy);
+            if (check_neighbour(x, y, dx, dy)) {
+                auto [new_x, new_y] = get_neighbour(x, y, dx, dy);
                 if (!dist.count({new_x, new_y}) &&
                     check_hand_dice(
                         new_x, new_y, dice_roll_results[dist[{x, y}]]
@@ -71,7 +71,7 @@ bool Map::check_move(
     int end_x,
     int end_y,
     std::vector<::runebound::dice::HandDice> dice_roll_results
-) {
+) const {
     do {
         if (make_move(
                 start_x, start_y, end_x, end_y, dice_roll_results,

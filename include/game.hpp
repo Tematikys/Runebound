@@ -20,17 +20,17 @@ private:
     std::vector<std::unique_ptr<::runebound::cards::CardAdventure>>
         m_cards_adventure;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
-    int m_turn = 0;
-    unsigned int m_count_players = 0;
+    unsigned int m_turn = 0;
+    const unsigned int M_COUNT_PLAYERS;
 
 public:
-    Game() {
-        m_cards_adventure.resize(60);
+    Game() : M_COUNT_PLAYERS(1) {
+        m_cards_adventure.resize(DECK_SIZE);
     };
 
-    explicit Game(unsigned int count_players) : m_count_players(count_players) {
+    explicit Game(unsigned int count_players) : M_COUNT_PLAYERS(count_players) {
         m_characters.resize(count_players);
-        m_cards_adventure.resize(60);
+        m_cards_adventure.resize(DECK_SIZE);
     }
 
     void make_move(

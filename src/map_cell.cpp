@@ -1,4 +1,4 @@
-#include "field_cell.hpp"
+#include "map_cell.hpp"
 #include <cassert>
 #include <memory>
 #include <vector>
