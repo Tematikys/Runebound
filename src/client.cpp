@@ -1,33 +1,100 @@
-#include <iostream>
 #include <boost/asio.hpp>
-
-using namespace boost::asio;
-using std::string;
-using std::cout;
-
-
-
-int main() {
-    boost::asio::io_service io_service;
-    ip::tcp::socket socket(io_service);
-    socket.connect( ip::tcp::endpoint( boost::asio::ip::address::from_string("127.0.0.1"), 1234 ));
-    boost::system::error_code error;
-    boost::asio::write( socket, boost::asio::buffer("Pong\n"), error );
-//    if( !error ) {
-//        cout << "Client sent ping message!" << endl;
-//    }
-//    else {
-//        cout << "send failed: " << error.message() << endl;
-//    }
-    // getting response from server
-    boost::asio::streambuf receive_buffer;
-    boost::asio::read(socket, receive_buffer, boost::asio::transfer_all(), error);
-    if( error && error != boost::asio::error::eof ) {
-        cout << "receive failed: " << error.message() << '\n';
+#include <cstdlib>
+#include <deque>
+#include <iostream>
+#include <thread>
+#include "../include/message.hpp"
+using boost::asio::ip::tcp;
+using namespace std;
+class client {
+public:
+    client(boost::asio::io_context& context, const tcp::resolver::results_type& endpoints) : context(context), socket(context) {
+        connect(endpoints);
     }
-    else {
-        const char* data = boost::asio::buffer_cast<const char*>(receive_buffer.data());
-        cout << data << '\n';
+    void write(const message& messageItem) {
+        boost::asio::post(context, [this, messageItem]() {
+            bool write_in_progress = !writeMessage.empty();
+            writeMessage.push_back(messageItem);
+            if(!write_in_progress) {
+                write();
+            }
+        });
+    }
+    void close() {
+        boost::asio::post(context, [this]() { socket.close(); });
+    }
+private:
+    void connect(const tcp::resolver::results_type& endpoints) {
+        boost::asio::async_connect(socket, endpoints, [this](boost::system::error_code ec, tcp::endpoint) {
+            if(!ec) {
+                readHeader();
+            }
+        });
+    }
+    void readHeader() {
+        boost::asio::async_read(socket, boost::asio::buffer(readMessage.data(), message::headerLength), [this](boost::system::error_code ec, size_t) {
+            if(!ec && readMessage.decodeHeader()) {
+                readBody();
+            }
+            else {
+                socket.close();
+            }
+        });
+    }
+    void readBody() {
+        boost::asio::async_read(socket, boost::asio::buffer(readMessage.body(), readMessage.bodyLength()), [this](boost::system::error_code ec, size_t) {
+            if(!ec) {
+                cout.write(readMessage.body(), readMessage.bodyLength());
+                cout << "\n";
+                readHeader();
+            }
+            else {
+                socket.close();
+            }
+        });
+    }
+    void write() {
+        boost::asio::async_write(socket, boost::asio::buffer(writeMessage.front().data(), writeMessage.front().length()), [this](boost::system::error_code ec, size_t) {
+            if(!ec) {
+                writeMessage.pop_front();
+                if(!writeMessage.empty()) {
+                    write();
+                }
+            }
+            else {
+                socket.close();
+            }
+        });
+    }
+    boost::asio::io_context& context;
+    tcp::socket socket;
+    message readMessage;
+    deque<message> writeMessage;
+};
+int main(int argc, char* argv[]) {
+    try {
+        if(argc != 3) {
+            cerr << "Usage: client <host> <port>\n";
+            return 1;
+        }
+        boost::asio::io_context context;
+        tcp::resolver resolver(context);
+        auto endpoints = resolver.resolve(argv[1], argv[2]);
+        client c(context, endpoints);
+        thread t([&context](){ context.run(); });
+        char line[message::maxBodyLength + 1];
+        while(cin.getline(line, message::maxBodyLength + 1)) {
+            message messageItem;
+            messageItem.bodyLength(strlen(line));
+            memcpy(messageItem.body(), line, messageItem.bodyLength());
+            messageItem.encodeHeader();
+            c.write(messageItem);
+        }
+        c.close();
+        t.join();
+    }
+    catch (exception& e) {
+        cerr << "Exception: " << e.what() << "\n";
     }
     return 0;
 }
