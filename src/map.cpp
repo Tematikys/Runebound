@@ -114,12 +114,6 @@ bool Map::check_hand_dice(int x, int y, ::runebound::dice::HandDice dice)
 }
 
 void to_json(nlohmann::json &json, const Map& map) {
-    /*std::vector <std::vector <nlohmann::json>> json_cells(map.m_height, std::vector <nlohmann::json>(map.m_width));
-    for (int i = 0; i < map.m_height; ++i) {
-        for (int j = 0; j < map.m_width; ++j) {
-            to_json(json_cells[i][j], map.m_map[i][j]);
-        }
-    }*/
     json["m_map"] = map.m_map;
     json["m_height"] = map.m_height;
     json["m_width"] = map.m_width;

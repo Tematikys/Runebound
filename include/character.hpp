@@ -13,6 +13,9 @@
 namespace runebound {
 namespace character {
 
+void to_json(nlohmann::json &json, const Character& character);
+void from_json(const nlohmann::json &json, Character& character);
+
 struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
@@ -50,9 +53,6 @@ public:
           m_name(std::move(name)) {
     }
 
-    void add_gold(int value) {
-        m_gold += value;
-    }
 
 
     [[nodiscard]] std::string get_name() const {
@@ -67,6 +67,8 @@ public:
         ::runebound::cards::CardAdventure *card
     );
 
+    friend void to_json(nlohmann::json &json, const Character& character);
+    friend void from_json(const nlohmann::json &json, Character& character);
 };
 }  // namespace character
 }  // namespace runebound
