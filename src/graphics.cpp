@@ -2,34 +2,12 @@
 #include <SDL2/SDL.h>
 #include <fstream>
 #include <iostream>
-#include <numeric>
 #include <vector>
 
 namespace runebound::graphics {
 
-const int SCREEN_WIDTH = 300;
-const int SCREEN_HEIGHT = 300;
-
-PolygonShape::PolygonShape(std::vector<Point> &vertexes)
-    : m_vertexes(std::move(vertexes)) {
-    //    int min_x = std::accumulate(
-    //        m_vertexes.begin(), m_vertexes.end(), 0xFFFF,
-    //        [](int x, const Point &p) { return std::min(x, p.x()); }
-    //    );
-    //    int max_x = std::accumulate(
-    //        m_vertexes.begin(), m_vertexes.end(), 0x0000,
-    //        [](int x, const Point &p) { return std::max(x, p.x()); }
-    //    );
-    //    int min_y = std::accumulate(
-    //        m_vertexes.begin(), m_vertexes.end(), 0xFFFF,
-    //        [](int y, const Point &p) { return std::min(y, p.y()); }
-    //    );
-    //    int max_y = std::accumulate(
-    //        m_vertexes.begin(), m_vertexes.end(), 0x0000,
-    //        [](int y, const Point &p) { return std::max(y, p.y()); }
-    //    );
-    //    m_center = Point((max_x + min_x) / 2, (max_y + min_y) / 2);
-}
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
 bool draw_filled_polygon(
     const PolygonShape &polygon,
@@ -38,7 +16,7 @@ bool draw_filled_polygon(
 ) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
-    std::vector<Point> vertices = polygon.get_vertices();
+    ::std::vector<Point> vertices = polygon.get_vertices();
     int num_vertexes = static_cast<int>(polygon.get_number_of_vertices());
     int num_vertexes_processed = 1;
 
@@ -128,31 +106,31 @@ bool draw_filled_polygon(
 
 bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cout << "SDL could not initialize! SDL Error:\n"
-                  << SDL_GetError() << '\n';
+        ::std::cout << "SDL could not initialize! SDL Error:\n"
+                    << SDL_GetError() << '\n';
         return false;
     }
 
     if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
-        std::cout << "Warning: Linear texture filtering not enabled!";
+        ::std::cout << "Warning: Linear texture filtering not enabled!";
     }
 
     gWindow = SDL_CreateWindow(
-        "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        "Runebound-v001", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN
     );
 
     if (gWindow == nullptr) {
-        std::cout << "Window could not be created! SDL Error:\n"
-                  << SDL_GetError() << '\n';
+        ::std::cout << "Window could not be created! SDL Error:\n"
+                    << SDL_GetError() << '\n';
         return false;
     }
 
     gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 
     if (gRenderer == nullptr) {
-        std::cout << "Renderer could not be created! SDL Error:\n"
-                  << SDL_GetError() << '\n';
+        ::std::cout << "Renderer could not be created! SDL Error:\n"
+                    << SDL_GetError() << '\n';
         return false;
     }
 
@@ -163,14 +141,14 @@ bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
 }  // namespace runebound::graphics
 
 int main(int argc, char *args[]) {
-//    std::ofstream out("../out.txt");
-//    std::cout.rdbuf(out.rdbuf());
-//    std::cout << "Hello, World!\n";
+    ::std::ofstream out("../out.txt");
+    ::std::cout.rdbuf(out.rdbuf());
+    ::std::cout << "Hello, World!\n";
 
     SDL_Window *gWindow = nullptr;
     SDL_Renderer *gRenderer = nullptr;
-    if (!runebound::graphics::SDL_init(gWindow, gRenderer)) {
-        std::cout << "Failed to initialize!\n";
+    if (!::runebound::graphics::SDL_init(gWindow, gRenderer)) {
+        ::std::cout << "Failed to initialize!\n";
         return 0;
     }
     bool run = true;
@@ -185,7 +163,7 @@ int main(int argc, char *args[]) {
         SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
         SDL_RenderClear(gRenderer);
 
-        std::vector<runebound::graphics::Point> vertexes;
+        ::std::vector<::runebound::graphics::Point> vertexes;
 
         vertexes.emplace_back(100, 0);
         vertexes.emplace_back(200, 58);
@@ -194,8 +172,8 @@ int main(int argc, char *args[]) {
         vertexes.emplace_back(0, 173);
         vertexes.emplace_back(0, 58);
 
-        runebound::graphics::PolygonShape poly =
-            runebound::graphics::PolygonShape(vertexes);
+        ::runebound::graphics::PolygonShape poly =
+            ::runebound::graphics::PolygonShape(vertexes);
 
         SDL_Color color = {.r = 255, .g = 255, .b = 255, .a = 255};
 
