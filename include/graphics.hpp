@@ -24,21 +24,17 @@ public:
 
 class PolygonShape {
 private:
-//    Point m_center;
-    std::vector<Point> m_vertexes;
+    ::std::vector<Point> m_vertexes;
 
 public:
-    explicit PolygonShape(std::vector<Point> &vertexes);
+    explicit PolygonShape(::std::vector<Point> &vertexes)
+        : m_vertexes(::std::move(vertexes)){};
 
-//    [[nodiscard]] Point get_center() const {
-//        return m_center;
-//    };
-
-    [[nodiscard]] std::vector<Point> get_vertices() const {
+    [[nodiscard]] ::std::vector<Point> get_vertices() const {
         return m_vertexes;
     };
 
-    [[nodiscard]] std::size_t get_number_of_vertices() const {
+    [[nodiscard]] ::std::size_t get_number_of_vertices() const {
         return m_vertexes.size();
     };
 };
