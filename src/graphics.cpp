@@ -156,7 +156,7 @@ bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
 }
 }  // namespace runebound::graphics
 
-int main(int /*argc*/, char * /*args*/[]) {
+int main(int argc, char *args[]) {
     SDL_Window *gWindow = nullptr;
     SDL_Renderer *gRenderer = nullptr;
     if (!runebound::graphics::SDL_init(gWindow, gRenderer)) {
