@@ -1,124 +1,130 @@
 #include "graphics.hpp"
 #include <SDL2/SDL.h>
+#include <fstream>
 #include <iostream>
+#include <numeric>
 #include <vector>
 
 namespace runebound::graphics {
 
-PolygonShape::PolygonShape(const std::vector<Point> &vertices_) {
-    int minX = 0xFFFF, minY = 0xFFFF, maxX = 0, maxY = 0;
-    length = vertices_.size();
-    vertices = vertices_;
-    for (std::size_t i = 0; i < length; i++) {
-        vertices[i] = Point(vertices[i].x, vertices[i].y);
-        if (vertices[i].x > maxX)
-            maxX = vertices[i].x;
-        if (vertices[i].x < minX)
-            minX = vertices[i].x;
-        if (vertices[i].y > maxY)
-            maxY = vertices[i].y;
-        if (vertices[i].y < minY)
-            minY = vertices[i].y;
-    }
-    center.x = minX + ((maxX - minX) / 2);
-    center.y = minY + ((maxY - minY) / 2);
+const int SCREEN_WIDTH = 300;
+const int SCREEN_HEIGHT = 300;
+
+PolygonShape::PolygonShape(std::vector<Point> &vertexes)
+    : m_vertexes(std::move(vertexes)) {
+    //    int min_x = std::accumulate(
+    //        m_vertexes.begin(), m_vertexes.end(), 0xFFFF,
+    //        [](int x, const Point &p) { return std::min(x, p.x()); }
+    //    );
+    //    int max_x = std::accumulate(
+    //        m_vertexes.begin(), m_vertexes.end(), 0x0000,
+    //        [](int x, const Point &p) { return std::max(x, p.x()); }
+    //    );
+    //    int min_y = std::accumulate(
+    //        m_vertexes.begin(), m_vertexes.end(), 0xFFFF,
+    //        [](int y, const Point &p) { return std::min(y, p.y()); }
+    //    );
+    //    int max_y = std::accumulate(
+    //        m_vertexes.begin(), m_vertexes.end(), 0x0000,
+    //        [](int y, const Point &p) { return std::max(y, p.y()); }
+    //    );
+    //    m_center = Point((max_x + min_x) / 2, (max_y + min_y) / 2);
 }
 
-bool DrawFilledPolygon(
+bool draw_filled_polygon(
     const PolygonShape &polygon,
     const SDL_Color color,
     SDL_Renderer *renderer
 ) {
-    int topY, topCnt, leftCnt, rightCnt, startX, endX, cntY, leftSlope,
-        rightSlope, cnt;
-    int numVertices = static_cast<int>(polygon.getNumberOfVertices());
-    int numVerticesProc = 1;
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
-    Point center = polygon.getCenter();
-    std::vector<Point> vertices = polygon.getVertices();
+    std::vector<Point> vertices = polygon.get_vertices();
+    int num_vertexes = static_cast<int>(polygon.get_number_of_vertices());
+    int num_vertexes_processed = 1;
 
-    topY = vertices[0].y;
-    topCnt = 0;
-
-    for (cnt = 1; cnt < numVertices; cnt++) {
-        if (vertices[cnt].y < topY) {
-            topY = vertices[cnt].y;
-            topCnt = cnt;
+    int top_y = vertices[0].y();
+    int top_index = 0;
+    for (int i = 1; i < num_vertexes; ++i) {
+        if (vertices[i].y() < top_y) {
+            top_y = vertices[i].y();
+            top_index = i;
         }
     }
 
-    leftCnt = topCnt - 1;
-    if (leftCnt < 0)
-        leftCnt = numVertices - 1;
+    int left_index = top_index - 1;
+    if (left_index < 0) {
+        left_index = num_vertexes - 1;
+    }
+    int right_index = top_index + 1;
+    if (right_index >= num_vertexes) {
+        right_index = 0;
+    }
 
-    rightCnt = topCnt + 1;
-    if (rightCnt >= numVertices)
+    int left_x, right_x;
+    left_x = right_x = (vertices[top_index].x()) << 16;
 
-        rightCnt = 0;
+    int left_slope = 0;
+    if (vertices[left_index].y() != vertices[top_index].y()) {
+        left_slope =
+            ((vertices[left_index].x() - vertices[top_index].x()) << 16) /
+            (vertices[left_index].y() - vertices[top_index].y());
+    }
+    int right_slope = 0;
+    if (vertices[right_index].y() != vertices[top_index].y()) {
+        right_slope =
+            ((vertices[right_index].x() - vertices[top_index].x()) << 16) /
+            (vertices[right_index].y() - vertices[top_index].y());
+    }
 
-    startX = endX = (vertices[topCnt].x + center.x) << 16;
-    cntY = vertices[topCnt].y;
+    int y = vertices[top_index].y();
 
-    if (vertices[leftCnt].y != vertices[topCnt].y)
-        leftSlope = ((vertices[leftCnt].x - vertices[topCnt].x) << 16) /
-                    (vertices[leftCnt].y - vertices[topCnt].y);
-    if (vertices[rightCnt].y != vertices[topCnt].y)
-        rightSlope = ((vertices[rightCnt].x - vertices[topCnt].x) << 16) /
-                     (vertices[rightCnt].y - vertices[topCnt].y);
-
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
-    while (numVerticesProc < numVertices) {
-        while (cntY < vertices[leftCnt].y && cntY < vertices[rightCnt].y) {
-            SDL_RenderDrawLine(
-                renderer, startX >> 16, cntY + center.y, endX >> 16,
-                cntY + center.y
-            );
-
-            cntY++;
-            startX += leftSlope;
-            endX += rightSlope;
+    while (num_vertexes_processed < num_vertexes) {
+        while (y < vertices[left_index].y() && y < vertices[right_index].y()) {
+            SDL_RenderDrawLine(renderer, left_x >> 16, y, right_x >> 16, y);
+            ++y;
+            left_x += left_slope;
+            right_x += right_slope;
         }
 
-        if (vertices[leftCnt].y <= cntY) {
-            topCnt = leftCnt;
-            leftCnt--;
-            if (leftCnt < 0)
-                leftCnt = numVertices - 1;
-            if (vertices[leftCnt].y != vertices[topCnt].y)
+        if (vertices[left_index].y() <= y) {
+            top_index = left_index;
+            --left_index;
+            if (left_index < 0) {
+                left_index = num_vertexes - 1;
+            }
 
-                leftSlope = ((vertices[leftCnt].x - vertices[topCnt].x) << 16) /
-                            (vertices[leftCnt].y - vertices[topCnt].y);
+            if (vertices[left_index].y() != vertices[top_index].y())
+                left_slope =
+                    ((vertices[left_index].x() - vertices[top_index].x())
+                     << 16) /
+                    (vertices[left_index].y() - vertices[top_index].y());
 
-            startX = (vertices[topCnt].x + center.x) << 16;
-            numVerticesProc++;
+            left_x = (vertices[top_index].x()) << 16;
+            ++num_vertexes_processed;
         }
 
-        if (vertices[rightCnt].y <= cntY) {
-            topCnt = rightCnt;
-            rightCnt++;
-            if (rightCnt == numVertices)
+        if (vertices[right_index].y() <= y) {
+            top_index = right_index;
+            ++right_index;
+            if (right_index == num_vertexes) {
+                right_index = 0;
+            }
 
-                rightCnt = 0;
-            if (vertices[rightCnt].y != vertices[topCnt].y)
+            if (vertices[right_index].y() != vertices[top_index].y())
+                right_slope =
+                    ((vertices[right_index].x() - vertices[top_index].x())
+                     << 16) /
+                    (vertices[right_index].y() - vertices[top_index].y());
 
-                rightSlope =
-                    ((vertices[rightCnt].x - vertices[topCnt].x) << 16) /
-                    (vertices[rightCnt].y - vertices[topCnt].y);
-
-            endX = (vertices[topCnt].x + center.x) << 16;
-            numVerticesProc++;
+            right_x = (vertices[top_index].x()) << 16;
+            ++num_vertexes_processed;
         }
-        SDL_RenderDrawLine(
-            renderer, startX >> 16, cntY + center.y, endX >> 16, cntY + center.y
-        );
+
+        SDL_RenderDrawLine(renderer, left_x >> 16, y, right_x >> 16, y);
     }
 
     return true;
 };
-
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
 
 bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -157,6 +163,10 @@ bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
 }  // namespace runebound::graphics
 
 int main(int argc, char *args[]) {
+//    std::ofstream out("../out.txt");
+//    std::cout.rdbuf(out.rdbuf());
+//    std::cout << "Hello, World!\n";
+
     SDL_Window *gWindow = nullptr;
     SDL_Renderer *gRenderer = nullptr;
     if (!runebound::graphics::SDL_init(gWindow, gRenderer)) {
@@ -175,21 +185,21 @@ int main(int argc, char *args[]) {
         SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
         SDL_RenderClear(gRenderer);
 
-        std::vector<runebound::graphics::Point> vertices;
+        std::vector<runebound::graphics::Point> vertexes;
 
-        vertices.emplace_back(150, 50);
-        vertices.emplace_back(200, 79);
-        vertices.emplace_back(200, 137);
-        vertices.emplace_back(150, 166);
-        vertices.emplace_back(100, 137);
-        vertices.emplace_back(100, 79);
+        vertexes.emplace_back(100, 0);
+        vertexes.emplace_back(200, 58);
+        vertexes.emplace_back(200, 173);
+        vertexes.emplace_back(100, 231);
+        vertexes.emplace_back(0, 173);
+        vertexes.emplace_back(0, 58);
 
         runebound::graphics::PolygonShape poly =
-            runebound::graphics::PolygonShape(vertices);
+            runebound::graphics::PolygonShape(vertexes);
 
         SDL_Color color = {.r = 255, .g = 255, .b = 255, .a = 255};
 
-        DrawFilledPolygon(poly, color, gRenderer);
+        draw_filled_polygon(poly, color, gRenderer);
 
         SDL_RenderPresent(gRenderer);
     }
