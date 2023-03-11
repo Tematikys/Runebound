@@ -5,33 +5,41 @@
 
 namespace runebound::graphics {
 class Point {
+private:
+    int m_x, m_y;
+
 public:
-    int x, y;
+    explicit Point() : m_x(), m_y(){};
 
-    Point() : x(), y(){};
+    explicit Point(int x, int y) : m_x(x), m_y(y){};
 
-    Point(int x_, int y_) : x(x_), y(y_){};
+    [[nodiscard]] int x() const {
+        return m_x;
+    };
+
+    [[nodiscard]] int y() const {
+        return m_y;
+    };
 };
 
 class PolygonShape {
 private:
-    std::vector<Point> vertices;
-    Point center;
-    std::size_t length;
+//    Point m_center;
+    std::vector<Point> m_vertexes;
 
 public:
-    explicit PolygonShape(const std::vector<Point> &vertices_);
+    explicit PolygonShape(std::vector<Point> &vertexes);
 
-    [[nodiscard]] Point getCenter() const {
-        return center;
+//    [[nodiscard]] Point get_center() const {
+//        return m_center;
+//    };
+
+    [[nodiscard]] std::vector<Point> get_vertices() const {
+        return m_vertexes;
     };
 
-    [[nodiscard]] std::vector<Point> getVertices() const {
-        return vertices;
-    };
-
-    [[nodiscard]] std::size_t getNumberOfVertices() const {
-        return length;
+    [[nodiscard]] std::size_t get_number_of_vertices() const {
+        return m_vertexes.size();
     };
 };
 }  // namespace runebound::graphics
