@@ -25,10 +25,12 @@ public:
 
 // basic polygon class
 class PolygonShape {
-private:
+protected:
     ::std::vector<Point> m_vertexes;
 
 public:
+    PolygonShape() = default;
+
     explicit PolygonShape(::std::vector<Point> &vertexes)
         : m_vertexes(::std::move(vertexes)){};
 
@@ -39,6 +41,12 @@ public:
     [[nodiscard]] ::std::size_t get_number_of_vertexes() const {
         return m_vertexes.size();
     };
+};
+
+// basic hexagon class, derived to polygon
+class HexagonShape : public PolygonShape {
+public:
+    explicit HexagonShape(Point center, int radius);
 };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_HPP_

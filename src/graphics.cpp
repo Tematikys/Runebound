@@ -1,13 +1,26 @@
-#include "graphics.hpp"
 #include <SDL2/SDL.h>
 #include <fstream>
+#include <graphics.hpp>
 #include <iostream>
 #include <vector>
 
 namespace runebound::graphics {
 
+// hexagon constructor from given center and radius
+HexagonShape::HexagonShape(Point center, int radius) {
+    // rounded multiplication by cos(pi/6)
+    int dx = (radius * 56756) >> 16;
+    m_vertexes.emplace_back(center.x(), center.y() - radius);
+    m_vertexes.emplace_back(center.x() + dx, center.y() - radius / 2);
+    m_vertexes.emplace_back(center.x() + dx, center.y() + radius / 2);
+    m_vertexes.emplace_back(center.x(), center.y() + radius);
+    m_vertexes.emplace_back(center.x() - dx, center.y() + radius / 2);
+    m_vertexes.emplace_back(center.x() - dx, center.y() - radius / 2);
+}
+
 // screen size parameters
 const int SCREEN_WIDTH = 640;
+
 const int SCREEN_HEIGHT = 480;
 
 // draw colored polygon function
@@ -204,21 +217,13 @@ int main(int argc, char *args[]) {
         SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
         SDL_RenderClear(gRenderer);
 
-        ::std::vector<::runebound::graphics::Point> vertexes;
+        ::runebound::graphics::HexagonShape hex(
+            ::runebound::graphics::Point(300, 300), 50
+        );
 
-        vertexes.emplace_back(100, 0);
-        vertexes.emplace_back(200, 58);
-        vertexes.emplace_back(200, 173);
-        vertexes.emplace_back(100, 231);
-        vertexes.emplace_back(0, 173);
-        vertexes.emplace_back(0, 58);
+        SDL_Color color = {0xFF, 0xFF, 0xFF, 0xFF};
 
-        ::runebound::graphics::PolygonShape poly =
-            ::runebound::graphics::PolygonShape(vertexes);
-
-        SDL_Color color = {.r = 255, .g = 255, .b = 255, .a = 255};
-
-        draw_filled_polygon(poly, color, gRenderer);
+        draw_filled_polygon(hex, color, gRenderer);
 
         SDL_RenderPresent(gRenderer);
     }
