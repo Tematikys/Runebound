@@ -2,9 +2,18 @@
 #include <fstream>
 #include <graphics.hpp>
 #include <iostream>
+#include <map.hpp>
+#include <map_cell.hpp>
 #include <vector>
 
 namespace runebound::graphics {
+
+// screen size parameters
+const int SCREEN_WIDTH = 640;
+
+const int SCREEN_HEIGHT = 480;
+
+int HEXAGON_RADIUS = 50;
 
 // hexagon constructor from given center and radius
 HexagonShape::HexagonShape(Point center, int radius) {
@@ -18,15 +27,10 @@ HexagonShape::HexagonShape(Point center, int radius) {
     m_vertexes.emplace_back(center.x() - dx, center.y() - radius / 2);
 }
 
-// screen size parameters
-const int SCREEN_WIDTH = 640;
-
-const int SCREEN_HEIGHT = 480;
-
-// draw colored polygon function
+// draw colored polygon function definition
 bool draw_filled_polygon(
     const PolygonShape &polygon,
-    const SDL_Color color,
+    SDL_Color color,
     SDL_Renderer *renderer
 ) {
     // set required color
@@ -141,7 +145,95 @@ bool draw_filled_polygon(
 
     // if rendering was successful, return true
     return true;
-};
+}
+
+// draw colored polygon function definition
+bool draw_polygon_border(
+    const PolygonShape &polygon,
+    SDL_Color color,
+    SDL_Renderer *renderer
+) {
+    // set required color
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+    // draw every edge of polygon except last
+    for (::std::size_t i = 1; i < polygon.get_number_of_vertexes(); ++i) {
+        SDL_RenderDrawLine(
+            renderer, polygon.get_vertex(i - 1).x(),
+            polygon.get_vertex(i - 1).y(), polygon.get_vertex(i).x(),
+            polygon.get_vertex(i).y()
+        );
+    }
+
+    // draw last edge
+    SDL_RenderDrawLine(
+        renderer, polygon.get_vertex(0).x(), polygon.get_vertex(0).y(),
+        polygon.get_vertex(polygon.get_number_of_vertexes() - 1).x(),
+        polygon.get_vertex(polygon.get_number_of_vertexes() - 1).y()
+    );
+
+    return true;
+}
+
+// draw map function definition
+bool draw_map(const ::runebound::map::Map &map, SDL_Renderer *renderer) {
+    // iterate by every cell
+    for (int row = 0; row < ::runebound::map::StandartHeight; ++row) {
+        for (int col = 0; col < ::runebound::map::StandartWidth; ++col) {
+            SDL_Color color;
+
+            // get necessary color due to the type of cell
+            switch (map.get_cell_map(row, col).get_type_cell()) {
+                case ::runebound::map::TypeCell::WATER:
+                    color = {0x00, 0x00, 0xFF, 0xFF};
+                    break;
+                case ::runebound::map::TypeCell::FOREST:
+                    color = {0x00, 0xFF, 0x00, 0xFF};
+                    break;
+                case ::runebound::map::TypeCell::MOUNTAINS:
+                    color = {0x77, 0x77, 0x77, 0xFF};
+                    break;
+                case ::runebound::map::TypeCell::HILLS:
+                    color = {0x00, 0x77, 0x00, 0xFF};
+                    break;
+                case ::runebound::map::TypeCell::PLAIN:
+                    color = {0x77, 0xFF, 0x77, 0xFF};
+                    break;
+            }
+
+            // supportive variable
+            int dx = (HEXAGON_RADIUS * 56756) >> 16;
+
+            // set coordinates due to parity of row
+            HexagonShape hex;
+            if (row % 2 == 0) {
+                hex = HexagonShape(
+                    Point(
+                        dx * 2 * (1 + col), HEXAGON_RADIUS * (2 + row * 3) / 2
+                    ),
+                    HEXAGON_RADIUS
+                );
+            } else {
+                hex = HexagonShape(
+                    Point(
+                        dx * (1 + 2 * col), HEXAGON_RADIUS * (2 + row * 3) / 2
+                    ),
+                    HEXAGON_RADIUS
+                );
+            }
+
+            // draw polygon
+            draw_filled_polygon(hex, color, renderer);
+
+            // draw border for better contrast
+            draw_polygon_border(
+                hex, SDL_Color{0x00, 0x00, 0x00, 0xFF}, renderer
+            );
+        }
+    }
+
+    return true;
+}
 
 // SDL init function
 bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
@@ -159,7 +251,7 @@ bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
 
     // create window
     gWindow = SDL_CreateWindow(
-        "Runebound-v001", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        "Runebound-v0.0.2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN
     );
 
@@ -214,16 +306,11 @@ int main(int argc, char *args[]) {
         }
 
         // drawing test hexagon
-        SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+        SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(gRenderer);
 
-        ::runebound::graphics::HexagonShape hex(
-            ::runebound::graphics::Point(300, 300), 50
-        );
-
-        SDL_Color color = {0xFF, 0xFF, 0xFF, 0xFF};
-
-        draw_filled_polygon(hex, color, gRenderer);
+        ::runebound::map::Map map;
+        ::runebound::graphics::draw_map(map, gRenderer);
 
         SDL_RenderPresent(gRenderer);
     }
