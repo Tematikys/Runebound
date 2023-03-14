@@ -1,6 +1,6 @@
 #ifndef TOKENS_HPP_
 #define TOKENS_HPP_
-#include "nlohmann/json_fwd.hpp"
+#include <json_fwd.hpp>
 #include "runebound_fwd.hpp"
 
 namespace runebound {
@@ -17,6 +17,10 @@ private:
 
 public:
     Token() = default;
+
+    bool operator <(const Token &token) const {
+        return static_cast<int>(m_type) < static_cast<int>(token.m_type);
+    }
 
     explicit Token(TokenType type) : m_type(type) {
     }

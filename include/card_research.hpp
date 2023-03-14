@@ -6,7 +6,8 @@
 #include "card_adventure.hpp"
 #include "dice.hpp"
 #include "map_cell.hpp"
-#include "nlohmann/json.hpp"
+#include <json_fwd.hpp>
+#include <memory>
 
 namespace runebound {
 namespace cards {
@@ -98,6 +99,9 @@ public:
    [[nodiscard]] std::vector<Outcome> get_outcomes() const {
        return m_outcomes;
    }
+
+   nlohmann::json to_json() override;
+
 
     friend void to_json(nlohmann::json &json, const CardResearch& card);
 

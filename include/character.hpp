@@ -9,6 +9,7 @@
 #include "card_adventure.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
+#include <json_fwd.hpp>
 
 namespace runebound {
 namespace character {

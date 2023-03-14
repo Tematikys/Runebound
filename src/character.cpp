@@ -1,6 +1,7 @@
 #include "character.hpp"
-#include "nlohmann/json.hpp"
+#include <json.hpp>
 #include <map>
+#include <memory>
 
 namespace runebound {
 namespace character {
@@ -27,6 +28,11 @@ void to_json(nlohmann::json &json, const Character& character) {
     json["m_current_x"] = character.m_current_x;
     json["m_current_y"] = character.m_current_y;
     json["m_tokens"] = character.m_tokens;
+    std::vector <nlohmann::json> json_cards;
+    for (const auto &card : character.m_cards) {
+        json_cards.push_back(card->to_json());
+    }
+    json["m_cards"].clear();
 }
 
 void from_json(const nlohmann::json &json, Character& character) {
@@ -37,8 +43,12 @@ void from_json(const nlohmann::json &json, Character& character) {
     character.m_health = json["m_health"];
     character.m_current_x = json["m_current_x"];
     character.m_current_y = json["m_current_y"];
-    for (const auto &token : json["m_tokens"]) {
-        character.m_tokens.emplace(token);
+    character.m_tokens = json["m_tokens"];
+    character.m_cards.clear();
+    for (auto &card : json["m_cards"]) {
+        cards::CardAdventure &card_ref;
+        from_json(card, card_ref);
+        character.m_cards.push_back(std::make_unique<cards::CardAdventure>(card_ref));
     }
 }
 }  // namespace character
