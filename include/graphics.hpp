@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <map.hpp>
 #include <map_cell.hpp>
+#include <tuple>
 #include <vector>
 
 namespace runebound::graphics {
@@ -52,10 +53,15 @@ public:
 
 // basic hexagon class, derived to polygon
 class HexagonShape : public PolygonShape {
+private:
+    std::vector<std::tuple<int, int, int>> m_side_coefficients;
+
 public:
     explicit HexagonShape() = default;
 
     explicit HexagonShape(Point center, int radius);
+
+    [[nodiscard]] bool in_bounds(Point dot) const;
 };
 
 // draw colored polygon function declaration

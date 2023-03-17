@@ -1,9 +1,11 @@
 #include <SDL2/SDL.h>
+#include <algorithm>
 #include <fstream>
 #include <graphics.hpp>
 #include <iostream>
 #include <map.hpp>
 #include <map_cell.hpp>
+#include <tuple>
 #include <vector>
 
 namespace runebound::graphics {
@@ -25,6 +27,26 @@ HexagonShape::HexagonShape(Point center, int radius) {
     m_vertexes.emplace_back(center.x(), center.y() + radius);
     m_vertexes.emplace_back(center.x() - dx, center.y() + radius / 2);
     m_vertexes.emplace_back(center.x() - dx, center.y() - radius / 2);
+    for (int i = 0; i < 6; ++i) {
+        int x1 = m_vertexes[(i + 1) % 6].x();
+        int y1 = m_vertexes[(i + 1) % 6].y();
+        int x2 = m_vertexes[i].x();
+        int y2 = m_vertexes[i].y();
+        m_side_coefficients.emplace_back(y1 - y2, x2 - x1, x1 * y2 - x2 * y1);
+    }
+}
+
+bool HexagonShape::in_bounds(Point dot) const {
+    if (::std::all_of(
+            m_side_coefficients.begin(), m_side_coefficients.end(),
+            [&](::std::tuple<int, int, int> coefficients) {
+                auto [a, b, c] = coefficients;
+                return dot.x() * a + dot.y() * b + c < 0;
+            }
+        )) {
+        return true;
+    }
+    return false;
 }
 
 // draw colored polygon function definition
@@ -281,10 +303,6 @@ bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
 }  // namespace runebound::graphics
 
 int main(int argc, char *args[]) {
-    // connect fstream because standard iostream does not work properly
-    ::std::ofstream out("../out.txt");
-    ::std::cout.rdbuf(out.rdbuf());
-
     // declare window and renderer
     SDL_Window *gWindow = nullptr;
     SDL_Renderer *gRenderer = nullptr;
@@ -305,12 +323,46 @@ int main(int argc, char *args[]) {
             }
         }
 
+        /// SDL_WarpMouseInWindow(gWindow, 320, 240);
+
         // drawing test hexagon
         SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(gRenderer);
 
         ::runebound::map::Map map;
         ::runebound::graphics::draw_map(map, gRenderer);
+
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+        for (int row = 0; row < ::runebound::map::StandartHeight; ++row) {
+            for (int col = 0; col < ::runebound::map::StandartWidth; ++col) {
+                SDL_Color color = {0xFF, 0xF7, 0x00, 0xFF};
+                int dx = (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
+                ::runebound::graphics::HexagonShape hex;
+                if (row % 2 == 0) {
+                    hex = ::runebound::graphics::HexagonShape(
+                        ::runebound::graphics::Point(
+                            dx * 2 * (1 + col),
+                            ::runebound::graphics::HEXAGON_RADIUS *
+                                (2 + row * 3) / 2
+                        ),
+                        ::runebound::graphics::HEXAGON_RADIUS
+                    );
+                } else {
+                    hex = ::runebound::graphics::HexagonShape(
+                        ::runebound::graphics::Point(
+                            dx * (1 + 2 * col),
+                            ::runebound::graphics::HEXAGON_RADIUS *
+                                (2 + row * 3) / 2
+                        ),
+                        ::runebound::graphics::HEXAGON_RADIUS
+                    );
+                }
+                if (hex.in_bounds(::runebound::graphics::Point(x, y))) {
+                    draw_filled_polygon(hex, color, gRenderer);
+                }
+            }
+        }
 
         SDL_RenderPresent(gRenderer);
     }
