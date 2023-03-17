@@ -2,6 +2,7 @@
 #define MAP_HPP_
 
 #include <iostream>
+#include <json_fwd.hpp>
 #include <set>
 #include <vector>
 #include "dice.hpp"
@@ -13,8 +14,8 @@ const int StandartHeight = 5, StandartWidth = 5;
 
 unsigned int make_river_index(int x1, int y1, int x2, int y2);
 
-void to_json(nlohmann::json &json, const Map& map);
-void from_json(const nlohmann::json &json, Map& map);
+void to_json(nlohmann::json &json, const Map &map);
+void from_json(const nlohmann::json &json, Map &map);
 
 struct Map {
 private:
@@ -57,6 +58,36 @@ public:
         m_map[4][2].make_token(runebound::AdventureType::RESEARCH);
     }
 
+    Map(const Map &other)
+        : m_rivers(other.m_rivers),
+          m_height(other.m_height),
+          m_width(other.m_width),
+          directions_odd_row(other.directions_odd_row),
+          directions_even_row(other.directions_even_row) {
+        m_map = other.m_map;
+    }
+
+    Map(Map &&other) noexcept
+        : m_map(std::move(other.m_map)),
+          m_rivers(std::move(other.m_rivers)),
+          m_height(other.m_height),
+          m_width(other.m_width),
+          directions_odd_row(other.directions_odd_row),
+          directions_even_row(other.directions_even_row) {
+    }
+
+    Map &operator=(const Map &other) {
+        m_map = other.m_map;
+        return *this;
+    }
+
+    Map &operator=(Map &&other) noexcept {
+        m_map = other.m_map;
+        return *this;
+    }
+
+    ~Map() = default;
+
     Map(int width, int height) : m_height(height), m_width(width) {
     }
 
@@ -64,9 +95,11 @@ public:
         return m_map[height][width];
     }
 
-    [[nodiscard]] const std::vector<std::pair<int, int>> &get_direction(int x) const;
+    [[nodiscard]] const std::vector<std::pair<int, int>> &get_direction(int x
+    ) const;
 
-    [[nodiscard]] std::vector<std::pair<int, int>> get_neighbours_coor(int x, int y) const {
+    [[nodiscard]] std::vector<std::pair<int, int>>
+    get_neighbours_coor(int x, int y) const {
         std::vector<std::pair<int, int>> result;
         const std::vector<std::pair<int, int>> &directions = get_direction(x);
         for (const auto &[dx, dy] : directions) {
@@ -78,7 +111,8 @@ public:
         return result;
     }
 
-    [[nodiscard]] std::pair<int, int> get_neighbour(int x, int y, int dx, int dy) const {
+    [[nodiscard]] std::pair<int, int>
+    get_neighbour(int x, int y, int dx, int dy) const {
         return {x + dx, y + dy};
     }
 
@@ -95,7 +129,8 @@ public:
         }
     }
 
-    [[nodiscard]] bool check_hand_dice(int x, int y, ::runebound::dice::HandDice dice) const;
+    [[nodiscard]] bool
+    check_hand_dice(int x, int y, ::runebound::dice::HandDice dice) const;
 
     [[nodiscard]] bool make_move(
         int start_x,
@@ -114,9 +149,8 @@ public:
         std::vector<::runebound::dice::HandDice> dice_roll_results
     ) const;
 
-    friend void to_json(nlohmann::json &json, const Map& map);
-    friend void from_json(const nlohmann::json &json, Map& map);
-
+    friend void to_json(nlohmann::json &json, const Map &map);
+    friend void from_json(const nlohmann::json &json, Map &map);
 };
 }  // namespace map
 }  // namespace runebound

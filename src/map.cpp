@@ -1,9 +1,9 @@
 #include "map.hpp"
 #include <algorithm>
+#include <json.hpp>
 #include <map>
 #include <queue>
 #include "dice.hpp"
-#include "nlohmann/json.hpp"
 
 namespace runebound {
 namespace map {
@@ -113,7 +113,7 @@ bool Map::check_hand_dice(int x, int y, ::runebound::dice::HandDice dice)
     }
 }
 
-void to_json(nlohmann::json &json, const Map& map) {
+void to_json(nlohmann::json &json, const Map &map) {
     json["m_map"] = map.m_map;
     json["m_height"] = map.m_height;
     json["m_width"] = map.m_width;
@@ -122,10 +122,9 @@ void to_json(nlohmann::json &json, const Map& map) {
     json["directions_even_row"] = map.directions_even_row;
 }
 
-void from_json(const nlohmann::json &json, Map& map) {
+void from_json(const nlohmann::json &json, Map &map) {
     map.m_map = json["m_map"];
 }
-
 
 }  // namespace map
 }  // namespace runebound

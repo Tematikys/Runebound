@@ -5,22 +5,28 @@ namespace runebound {
 enum class AdventureType { MEETING, RESEARCH, FIGHT, NOTHING };
 
 enum class Side { FRONT, BACK };
+
 namespace token {
 struct Token;
-} // namespace token
+}  // namespace token
 
 namespace character {
 struct Character;
 }
+
 namespace map {
 struct MapCell;
 struct Map;
-} // namespace token
+}  // namespace map
+
+namespace game {
+struct Game;
+}
 
 namespace cards {
 struct CardAdventure;
 struct CardResearch;
-} // namespace cards
+}  // namespace cards
 
 }  // namespace runebound
 

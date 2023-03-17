@@ -6,8 +6,8 @@
 namespace runebound {
 namespace token {
 
-void to_json(nlohmann::json &json, const Token& token);
-void from_json(const nlohmann::json &json, Token& token);
+void to_json(nlohmann::json &json, const Token &token);
+void from_json(const nlohmann::json &json, Token &token);
 
 enum class TokenType { BATTLE, ADVENTURE, PLOT };
 
@@ -18,7 +18,7 @@ private:
 public:
     Token() = default;
 
-    bool operator <(const Token &token) const {
+    bool operator<(const Token &token) const {
         return static_cast<int>(m_type) < static_cast<int>(token.m_type);
     }
 
@@ -29,9 +29,8 @@ public:
         return m_type;
     }
 
-    friend void to_json(nlohmann::json &json, const Token& token);
-    friend void from_json(const nlohmann::json &json, Token& token);
-
+    friend void to_json(nlohmann::json &json, const Token &token);
+    friend void from_json(const nlohmann::json &json, Token &token);
 };
 }  // namespace token
 }  // namespace runebound

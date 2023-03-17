@@ -11,8 +11,9 @@ struct CardAdventure {
     CardAdventure &operator=(const CardAdventure &) = delete;
     CardAdventure &operator=(CardAdventure &&) = delete;
     CardAdventure() = default;
+    virtual ~CardAdventure() = default;
     virtual nlohmann::json to_json() = 0;
-
+    ::runebound::AdventureType m_card_type;
 };
 
 }  // namespace runebound::cards

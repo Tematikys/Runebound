@@ -1,6 +1,7 @@
 #ifndef CHARACTER_HPP_
 #define CHARACTER_HPP_
 
+#include <json_fwd.hpp>
 #include <map>
 #include <memory>
 #include <set>
@@ -9,19 +10,18 @@
 #include "card_adventure.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
-#include <json_fwd.hpp>
 
 namespace runebound {
 namespace character {
 
-void to_json(nlohmann::json &json, const Character& character);
-void from_json(const nlohmann::json &json, Character& character);
+void to_json(nlohmann::json &json, const Character &character);
+void from_json(const nlohmann::json &json, Character &character);
 
 struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
     std::string m_name;
-    std::vector<std::unique_ptr<::runebound::cards::CardAdventure>> m_cards;
+    std::vector<unsigned int> m_cards;
     std::map<runebound::token::Token, int> m_tokens;
 
 public:
@@ -54,22 +54,18 @@ public:
           m_name(std::move(name)) {
     }
 
-
-
     [[nodiscard]] std::string get_name() const {
         return m_name;
     }
 
-    void add_card(std::unique_ptr<::runebound::cards::CardAdventure> card) {
-        m_cards.push_back(std::move(card));
+    void add_card(unsigned int card) {
+        m_cards.push_back(card);
     }
 
-    std::unique_ptr<::runebound::cards::CardAdventure> pop_card(
-        ::runebound::cards::CardAdventure *card
-    );
+    void pop_card(unsigned int card);
 
-    friend void to_json(nlohmann::json &json, const Character& character);
-    friend void from_json(const nlohmann::json &json, Character& character);
+    friend void to_json(nlohmann::json &json, const Character &character);
+    friend void from_json(const nlohmann::json &json, Character &character);
 };
 }  // namespace character
 }  // namespace runebound
