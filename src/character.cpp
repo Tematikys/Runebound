@@ -2,7 +2,9 @@
 
 namespace runebound {
 namespace character {
-std::unique_ptr <::runebound::cards::CardAdventure> Character::pop_card(::runebound::cards::CardAdventure *card) {
+std::unique_ptr<::runebound::cards::CardAdventure> Character::pop_card(
+    ::runebound::cards::CardAdventure *card
+) {
     for (std::size_t i = 0; i < m_cards.size(); ++i) {
         if (m_cards[i].get() == card) {
             std::swap(m_cards[i], m_cards.back());
@@ -13,5 +15,5 @@ std::unique_ptr <::runebound::cards::CardAdventure> Character::pop_card(::runebo
     m_cards.pop_back();
     return desired_card;
 }
-} // namespace character
-} // namespace runebound
+}  // namespace character
+}  // namespace runebound
