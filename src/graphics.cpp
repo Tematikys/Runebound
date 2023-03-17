@@ -11,16 +11,13 @@
 
 namespace runebound::graphics {
 
-// screen size parameters
+// graphics parameters
 const int SCREEN_WIDTH = 640;
-
 const int SCREEN_HEIGHT = 480;
-
 const int HEXAGON_RADIUS = 50;
-
 const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};
 
-::std::size_t selected_hexagon;
+::std::size_t selected_hexagon{0xFFFF};
 
 // initialize polygon's sides coefficients
 void PolygonShape::init_side_coefficients() {
@@ -168,19 +165,12 @@ void PolygonShape::render(
     );
 
     // draw every edge of polygon except last
-    for (::std::size_t i = 1; i < get_number_of_vertexes(); ++i) {
+    for (::std::size_t i = 0; i < get_number_of_vertexes(); ++i) {
         SDL_RenderDrawLine(
-            renderer, get_vertex(i - 1).x(), get_vertex(i - 1).y(),
-            get_vertex(i).x(), get_vertex(i).y()
+            renderer, get_vertex(i).x(), get_vertex(i).y(),
+            get_vertex((i + 1) % get_number_of_vertexes()).x(), get_vertex((i + 1) % get_number_of_vertexes()).y()
         );
     }
-
-    // draw last edge
-    SDL_RenderDrawLine(
-        renderer, get_vertex(0).x(), get_vertex(0).y(),
-        get_vertex(get_number_of_vertexes() - 1).x(),
-        get_vertex(get_number_of_vertexes() - 1).y()
-    );
 }
 
 // hexagon constructor from given center and radius
@@ -217,7 +207,7 @@ void Board::render(SDL_Renderer *renderer) const {
     }
 }
 
-::std::optional<::std::size_t> Board::in_bounds(Point dot) {
+::std::optional<::std::size_t> Board::in_bounds(Point dot) const {
     for (::std::size_t i = 0; i < m_hexagon_amount; ++i) {
         if (m_hexagons[i].in_bounds(dot)) {
             return i;
@@ -287,8 +277,10 @@ int main(int /*argc*/, char * /*args*/[]) {
     const ::runebound::map::Map map;
 
     ::runebound::graphics::Board board;
+    // initialize board
     for (int row = 0; row < ::runebound::map::StandartHeight; ++row) {
         for (int col = 0; col < ::runebound::map::StandartWidth; ++col) {
+            // get necessary color
             SDL_Color color;
             switch (map.get_cell_map(row, col).get_type_cell()) {
                 case ::runebound::map::TypeCell::WATER:
@@ -307,8 +299,11 @@ int main(int /*argc*/, char * /*args*/[]) {
                     color = {0x77, 0xFF, 0x77, 0xFF};
                     break;
             }
+
+            // supportive variable
             const int dx =
                 (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
+
             ::runebound::graphics::HexagonShape hex;
             if (row % 2 == 0) {
                 hex = ::runebound::graphics::HexagonShape(
@@ -344,21 +339,19 @@ int main(int /*argc*/, char * /*args*/[]) {
 
         /// SDL_WarpMouseInWindow(gWindow, 320, 240);
 
-        // drawing test hexagon
         SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(gRenderer);
 
         int x{};
         int y{};
         SDL_GetMouseState(&x, &y);
-        ::runebound::graphics::selected_hexagon = -1;
 
+        ::runebound::graphics::selected_hexagon = 0xFFFF;
         if (auto index = board.in_bounds(::runebound::graphics::Point(x, y))) {
             ::runebound::graphics::selected_hexagon = index.value();
         }
 
         board.render(gRenderer);
-
         SDL_RenderPresent(gRenderer);
     }
     return 0;

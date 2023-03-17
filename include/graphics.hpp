@@ -36,7 +36,7 @@ protected:
     ::std::vector<std::tuple<int, int, int>> m_side_coefficients;
 
 public:
-    PolygonShape() = default;
+    explicit PolygonShape() = default;
 
     explicit PolygonShape(::std::vector<Point> &vertexes)
         : m_vertexes(::std::move(vertexes)) {
@@ -45,7 +45,6 @@ public:
 
     void init_side_coefficients();
 
-    // check is dot is inside the polygon
     [[nodiscard]] bool in_bounds(Point dot) const;
 
     void render(
@@ -104,7 +103,7 @@ public:
 
     void render(SDL_Renderer *renderer) const;
 
-    ::std::optional<::std::size_t> in_bounds(Point dot);
+    [[nodiscard]] ::std::optional<::std::size_t> in_bounds(Point dot) const;
 };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_HPP_
