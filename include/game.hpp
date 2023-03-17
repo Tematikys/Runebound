@@ -57,6 +57,18 @@ public:
         : M_COUNT_PLAYERS(count_players), ALL_CARDS(std::move(cards)) {
     }
 
+    [[nodiscard]] int get_map_height() const {
+        return m_map.get_height();
+    }
+
+    [[nodiscard]] int get_map_width() const {
+        return m_map.get_width();
+    }
+
+    [[nodiscard]] int get_turn() const {
+        return m_turn;
+    }
+
     void make_move(
         const ::runebound::character::Character *chr,
         int end_x,

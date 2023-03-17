@@ -12,7 +12,7 @@ namespace map {
 
 const int COUNT_NEIGHBOUR = 6;
 
-enum class TypeCell { WATER, FOREST, MOUNTAINS, HILLS, PLAIN };
+enum class TypeCell { WATER, FOREST, MOUNTAINS, HILLS, PLAIN, TOWN };
 
 enum class Neighbour {
     TOPRIGHT,

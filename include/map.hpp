@@ -36,7 +36,6 @@ private:
         int count_dice
     ) const;
 
-public:
     void make_map(std::vector<TypeCell> cells) {
         m_map.resize(m_height);
         for (int i = 0; i < m_height; i++) {
@@ -44,6 +43,14 @@ public:
                 m_map[i].push_back(MapCell(cells[i * m_height + j]));
             }
         }
+    }
+public:
+    [[nodiscard]] int get_height() const {
+        return m_height;
+    }
+
+    [[nodiscard]] int get_width() const {
+        return m_width;
     }
 
     Map() : m_width(StandartWidth), m_height(StandartHeight) {

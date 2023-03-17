@@ -108,6 +108,8 @@ bool Map::check_hand_dice(int x, int y, ::runebound::dice::HandDice dice)
                    dice == ::runebound::dice::HandDice::PLAIN_FOREST ||
                    dice == ::runebound::dice::HandDice::HILLS_PLAIN ||
                    dice == ::runebound::dice::HandDice::JOKER;
+        case (TypeCell::TOWN):
+            return true;
         default:
             return dice == ::runebound::dice::HandDice::JOKER;
     }
