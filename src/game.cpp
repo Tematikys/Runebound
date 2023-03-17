@@ -49,10 +49,31 @@ void from_json(const nlohmann::json &json, Game &game) {
 
 std::vector<cards::CardAdventure *> Game::generate_all_cards() {
     std::vector<cards::CardAdventure *> cards;
+    m_indexes_card_research.resize(DECK_SIZE);
     for (int i = 0; i < DECK_SIZE; ++i) {
         cards.push_back(new cards::CardResearch());
+        m_indexes_card_research[i] = i;
     }
     return cards;
+}
+
+void Game::check_and_get_card_adventure_because_of_token(
+    ::runebound::character::Character *chr
+) {
+    if (m_map.get_cell_map(chr->m_current_x, chr->m_current_y).get_token() !=
+            ::runebound::AdventureType::NOTHING &&
+        m_map.get_cell_map(chr->m_current_x, chr->m_current_y)
+                .get_side_token() == ::runebound::Side::FRONT) {
+        if (m_map.get_cell_map(chr->m_current_x, chr->m_current_y)
+                .get_token() == ::runebound::AdventureType::RESEARCH) {
+            unsigned int card =
+                m_indexes_card_research[rng() % m_indexes_card_research.size()];
+            chr->add_card(card);
+            pop_element_from_vector(card, m_card_deck);
+            pop_element_from_vector(card, m_indexes_card_research);
+        }
+        m_map.get_cell_map(chr->m_current_x, chr->m_current_y).reverse_token();
+    }
 }
 
 void Game::make_move(

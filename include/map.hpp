@@ -44,6 +44,7 @@ private:
             }
         }
     }
+
 public:
     [[nodiscard]] int get_height() const {
         return m_height;
@@ -147,7 +148,6 @@ public:
 
     [[nodiscard]] bool
     check_hand_dice(int x, int y, ::runebound::dice::HandDice dice) const;
-
 
     [[nodiscard]] bool check_move(
         int start_x,

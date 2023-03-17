@@ -20,6 +20,7 @@ void from_json(const nlohmann::json &json, Character &character);
 struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
+    unsigned int m_action_points = 3;
     std::string m_name;
     std::vector<unsigned int> m_cards;
     std::map<runebound::token::Token, int> m_tokens;
@@ -56,6 +57,14 @@ public:
 
     [[nodiscard]] std::string get_name() const {
         return m_name;
+    }
+
+    void add_action_points(unsigned int delta) {
+        m_action_points += delta;
+    }
+
+    [[nodiscard]] unsigned int get_action_points() const {
+        return m_action_points;
     }
 
     void add_card(unsigned int card) {

@@ -27,13 +27,28 @@ public:
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
     const unsigned int M_COUNT_PLAYERS;
+    std::vector<unsigned int> m_indexes_card_research;
     const std::vector<cards::CardAdventure *> ALL_CARDS;
 
-    static std::vector<cards::CardAdventure *> generate_all_cards();
+    std::vector<cards::CardAdventure *> generate_all_cards();
+
+    template <typename T>
+    void pop_element_from_vector(T element, std::vector<T> &vec) {
+        for (std::size_t i = 0; i < vec.size(); ++i) {
+            if (vec[i] == element) {
+                std::swap(vec[i], vec.back());
+                break;
+            }
+        }
+        vec.pop_back();
+    }
 
 public:
     Game() : M_COUNT_PLAYERS(1), ALL_CARDS(std::move(generate_all_cards())) {
         m_card_deck.resize(DECK_SIZE);
+        for (int i = 0; i < DECK_SIZE; ++i) {
+            m_card_deck[i] = i;
+        }
     };
 
     explicit Game(unsigned int count_players) : M_COUNT_PLAYERS(count_players) {
@@ -68,6 +83,10 @@ public:
     [[nodiscard]] int get_turn() const {
         return m_turn;
     }
+
+    void check_and_get_card_adventure_because_of_token(
+        ::runebound::character::Character *chr
+    );
 
     void make_move(
         const ::runebound::character::Character *chr,
