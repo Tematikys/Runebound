@@ -39,36 +39,23 @@ bool PolygonShape::in_bounds(Point dot) const {
         m_side_coefficients.begin(), m_side_coefficients.end(),
         [&](::std::tuple<int, int, int> coefficients) {
             auto [a, b, c] = coefficients;
-            return dot.x() * a + dot.y() * b + c < 0;
+            return dot.x() * a + dot.y() * b + c <= 0;
         }
     );
 }
 
-// hexagon constructor from given center and radius
-HexagonShape::HexagonShape(Point center, int radius) {
-    // rounded multiplication by cos(pi/6)
-    const int dx = (radius * 56756) >> 16;
-    m_vertexes.emplace_back(center.x(), center.y() - radius);
-    m_vertexes.emplace_back(center.x() + dx, center.y() - radius / 2);
-    m_vertexes.emplace_back(center.x() + dx, center.y() + radius / 2);
-    m_vertexes.emplace_back(center.x(), center.y() + radius);
-    m_vertexes.emplace_back(center.x() - dx, center.y() + radius / 2);
-    m_vertexes.emplace_back(center.x() - dx, center.y() - radius / 2);
-    init_side_coefficients();
-}
-
-// draw colored polygon function definition
-bool draw_filled_polygon(
-    const PolygonShape &polygon,
-    SDL_Color color,
-    SDL_Renderer *renderer
-) {
-    // set required color
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+void PolygonShape::render(
+    SDL_Renderer *renderer,
+    SDL_Color fill_color,
+    SDL_Color border_color
+) const {
+    SDL_SetRenderDrawColor(
+        renderer, fill_color.r, fill_color.g, fill_color.b, fill_color.a
+    );
 
     // get and set necessary variables
-    ::std::vector<Point> vertexes = polygon.get_vertexes();
-    const int num_vertexes = static_cast<int>(polygon.get_number_of_vertexes());
+    ::std::vector<Point> vertexes = get_vertexes();
+    const int num_vertexes = static_cast<int>(get_number_of_vertexes());
     int num_vertexes_processed = 1;
 
     // find the highest vertex
@@ -176,107 +163,37 @@ bool draw_filled_polygon(
         SDL_RenderDrawLine(renderer, left_x >> 16, y, right_x >> 16, y);
     }
 
-    // if rendering was successful, return true
-    return true;
-}
-
-// draw colored polygon function definition
-bool draw_polygon_border(
-    const PolygonShape &polygon,
-    SDL_Color color,
-    SDL_Renderer *renderer
-) {
-    // set required color
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_SetRenderDrawColor(
+        renderer, border_color.r, border_color.g, border_color.b, border_color.a
+    );
 
     // draw every edge of polygon except last
-    for (::std::size_t i = 1; i < polygon.get_number_of_vertexes(); ++i) {
+    for (::std::size_t i = 1; i < get_number_of_vertexes(); ++i) {
         SDL_RenderDrawLine(
-            renderer, polygon.get_vertex(i - 1).x(),
-            polygon.get_vertex(i - 1).y(), polygon.get_vertex(i).x(),
-            polygon.get_vertex(i).y()
+            renderer, get_vertex(i - 1).x(), get_vertex(i - 1).y(),
+            get_vertex(i).x(), get_vertex(i).y()
         );
     }
 
     // draw last edge
     SDL_RenderDrawLine(
-        renderer, polygon.get_vertex(0).x(), polygon.get_vertex(0).y(),
-        polygon.get_vertex(polygon.get_number_of_vertexes() - 1).x(),
-        polygon.get_vertex(polygon.get_number_of_vertexes() - 1).y()
+        renderer, get_vertex(0).x(), get_vertex(0).y(),
+        get_vertex(get_number_of_vertexes() - 1).x(),
+        get_vertex(get_number_of_vertexes() - 1).y()
     );
-
-    return true;
 }
 
-// draw map function definition
-bool draw_map(const ::runebound::map::Map &map, SDL_Renderer *renderer) {
-    // iterate by every cell
-    for (int row = 0; row < ::runebound::map::StandartHeight; ++row) {
-        for (int col = 0; col < ::runebound::map::StandartWidth; ++col) {
-            SDL_Color color;
-
-            // get necessary color due to the type of cell
-            switch (map.get_cell_map(row, col).get_type_cell()) {
-                case ::runebound::map::TypeCell::WATER:
-                    color = {0x00, 0x00, 0xFF, 0xFF};
-                    break;
-                case ::runebound::map::TypeCell::FOREST:
-                    color = {0x00, 0xFF, 0x00, 0xFF};
-                    break;
-                case ::runebound::map::TypeCell::MOUNTAINS:
-                    color = {0x77, 0x77, 0x77, 0xFF};
-                    break;
-                case ::runebound::map::TypeCell::HILLS:
-                    color = {0x00, 0x77, 0x00, 0xFF};
-                    break;
-                case ::runebound::map::TypeCell::PLAIN:
-                    color = {0x77, 0xFF, 0x77, 0xFF};
-                    break;
-            }
-
-            // supportive variable
-            const int dx = (HEXAGON_RADIUS * 56756) >> 16;
-
-            // set coordinates due to parity of row
-            HexagonShape hex;
-            if (row % 2 == 0) {
-                hex = HexagonShape(
-                    Point(
-                        dx * 2 * (1 + col), HEXAGON_RADIUS * (2 + row * 3) / 2
-                    ),
-                    HEXAGON_RADIUS
-                );
-            } else {
-                hex = HexagonShape(
-                    Point(
-                        dx * (1 + 2 * col), HEXAGON_RADIUS * (2 + row * 3) / 2
-                    ),
-                    HEXAGON_RADIUS
-                );
-            }
-
-            // draw polygon
-            draw_filled_polygon(hex, color, renderer);
-
-            // draw border for better contrast
-            draw_polygon_border(
-                hex, SDL_Color{0x00, 0x00, 0x00, 0xFF}, renderer
-            );
-        }
-    }
-
-    return true;
-}
-
-void Board::render(SDL_Renderer *renderer) const {
-    for (::std::size_t i = 0; i < m_hexagon_amount; ++i) {
-        if (i == selected_hexagon) {
-            draw_filled_polygon(m_hexagons[i], SELECTED_COLOR, renderer);
-        } else {
-            draw_filled_polygon(m_hexagons[i], m_fill_colors[i], renderer);
-        };
-        draw_polygon_border(m_hexagons[i], m_border_color[i], renderer);
-    }
+// hexagon constructor from given center and radius
+HexagonShape::HexagonShape(Point center, int radius) {
+    // rounded multiplication by cos(pi/6)
+    const int dx = (radius * 56756) >> 16;
+    m_vertexes.emplace_back(center.x(), center.y() - radius);
+    m_vertexes.emplace_back(center.x() + dx, center.y() - radius / 2);
+    m_vertexes.emplace_back(center.x() + dx, center.y() + radius / 2);
+    m_vertexes.emplace_back(center.x(), center.y() + radius);
+    m_vertexes.emplace_back(center.x() - dx, center.y() + radius / 2);
+    m_vertexes.emplace_back(center.x() - dx, center.y() - radius / 2);
+    init_side_coefficients();
 }
 
 void Board::add_hexagon(
@@ -288,6 +205,16 @@ void Board::add_hexagon(
     m_fill_colors.push_back(fill_color);
     m_border_color.push_back(border_color);
     ++m_hexagon_amount;
+}
+
+void Board::render(SDL_Renderer *renderer) const {
+    for (::std::size_t i = 0; i < m_hexagon_amount; ++i) {
+        if (i == selected_hexagon) {
+            m_hexagons[i].render(renderer, SELECTED_COLOR, m_border_color[i]);
+        } else {
+            m_hexagons[i].render(renderer, m_fill_colors[i], m_border_color[i]);
+        }
+    }
 }
 
 ::std::optional<::std::size_t> Board::in_bounds(Point dot) {
@@ -420,8 +347,6 @@ int main(int /*argc*/, char * /*args*/[]) {
         // drawing test hexagon
         SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(gRenderer);
-
-        ::runebound::graphics::draw_map(map, gRenderer);
 
         int x{};
         int y{};

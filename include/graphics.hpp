@@ -4,11 +4,12 @@
 #include <SDL2/SDL.h>
 #include <map.hpp>
 #include <map_cell.hpp>
+#include <optional>
 #include <tuple>
 #include <vector>
-#include <optional>
 
 namespace runebound::graphics {
+
 // basic point class
 class Point {
 private:
@@ -44,7 +45,14 @@ public:
 
     void init_side_coefficients();
 
+    // check is dot is inside the polygon
     [[nodiscard]] bool in_bounds(Point dot) const;
+
+    void render(
+        SDL_Renderer *renderer,
+        SDL_Color fill_color,
+        SDL_Color border_color
+    ) const;
 
     [[nodiscard]] Point get_vertex(::std::size_t index) const {
         return m_vertexes[index];
@@ -67,6 +75,7 @@ public:
     explicit HexagonShape(Point center, int radius);
 };
 
+// board class, contains hexagons, has connected methods
 class Board {
 private:
     ::std::vector<HexagonShape> m_hexagons;
@@ -77,15 +86,15 @@ private:
 public:
     explicit Board() = default;
 
-    //    explicit Board(
-    //        ::std::vector<HexagonShape> &hexagons,
-    //        ::std::vector<SDL_Color> fill_colors,
-    //        ::std::vector<SDL_Color> border_colors
-    //    )
-    //        : m_hexagons(::std::move(hexagons)),
-    //          m_fill_colors(::std::move(fill_colors)),
-    //          m_border_color(::std::move(border_colors)),
-    //          m_hexagon_amount(m_hexagons.size()){};
+    explicit Board(
+        ::std::vector<HexagonShape> &hexagons,
+        ::std::vector<SDL_Color> fill_colors,
+        ::std::vector<SDL_Color> border_colors
+    )
+        : m_hexagons(::std::move(hexagons)),
+          m_fill_colors(::std::move(fill_colors)),
+          m_border_color(::std::move(border_colors)),
+          m_hexagon_amount(m_hexagons.size()){};
 
     void add_hexagon(
         HexagonShape &hex,
@@ -97,22 +106,5 @@ public:
 
     ::std::optional<::std::size_t> in_bounds(Point dot);
 };
-
-// draw colored polygon function declaration
-bool draw_filled_polygon(
-    const PolygonShape &polygon,
-    SDL_Color color,
-    SDL_Renderer *renderer
-);
-
-// draw polygon border function declaration
-bool draw_polygon_border(
-    const PolygonShape &polygon,
-    SDL_Color color,
-    SDL_Renderer *renderer
-);
-
-// draw map function declaration
-bool draw_map(const ::runebound::map::Map &map, SDL_Renderer *renderer);
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_HPP_
