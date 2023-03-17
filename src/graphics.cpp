@@ -15,38 +15,41 @@ const int SCREEN_WIDTH = 640;
 
 const int SCREEN_HEIGHT = 480;
 
-int HEXAGON_RADIUS = 50;
+const int HEXAGON_RADIUS = 50;
+
+// initialize polygon's sides coefficients
+void PolygonShape::init_side_coefficients() {
+    for (::std::size_t i = 0; i < m_vertexes.size(); ++i) {
+        const int x1 = m_vertexes[(i + 1) % 6].x();
+        const int y1 = m_vertexes[(i + 1) % 6].y();
+        const int x2 = m_vertexes[i].x();
+        const int y2 = m_vertexes[i].y();
+        m_side_coefficients.emplace_back(y1 - y2, x2 - x1, x1 * y2 - x2 * y1);
+    }
+}
+
+// check that point is inside of polygon
+bool PolygonShape::in_bounds(Point dot) const {
+    return ::std::all_of(
+        m_side_coefficients.begin(), m_side_coefficients.end(),
+        [&](::std::tuple<int, int, int> coefficients) {
+            auto [a, b, c] = coefficients;
+            return dot.x() * a + dot.y() * b + c < 0;
+        }
+    );
+}
 
 // hexagon constructor from given center and radius
 HexagonShape::HexagonShape(Point center, int radius) {
     // rounded multiplication by cos(pi/6)
-    int dx = (radius * 56756) >> 16;
+    const int dx = (radius * 56756) >> 16;
     m_vertexes.emplace_back(center.x(), center.y() - radius);
     m_vertexes.emplace_back(center.x() + dx, center.y() - radius / 2);
     m_vertexes.emplace_back(center.x() + dx, center.y() + radius / 2);
     m_vertexes.emplace_back(center.x(), center.y() + radius);
     m_vertexes.emplace_back(center.x() - dx, center.y() + radius / 2);
     m_vertexes.emplace_back(center.x() - dx, center.y() - radius / 2);
-    for (int i = 0; i < 6; ++i) {
-        int x1 = m_vertexes[(i + 1) % 6].x();
-        int y1 = m_vertexes[(i + 1) % 6].y();
-        int x2 = m_vertexes[i].x();
-        int y2 = m_vertexes[i].y();
-        m_side_coefficients.emplace_back(y1 - y2, x2 - x1, x1 * y2 - x2 * y1);
-    }
-}
-
-bool HexagonShape::in_bounds(Point dot) const {
-    if (::std::all_of(
-            m_side_coefficients.begin(), m_side_coefficients.end(),
-            [&](::std::tuple<int, int, int> coefficients) {
-                auto [a, b, c] = coefficients;
-                return dot.x() * a + dot.y() * b + c < 0;
-            }
-        )) {
-        return true;
-    }
-    return false;
+    init_side_coefficients();
 }
 
 // draw colored polygon function definition
@@ -60,7 +63,7 @@ bool draw_filled_polygon(
 
     // get and set necessary variables
     ::std::vector<Point> vertexes = polygon.get_vertexes();
-    int num_vertexes = static_cast<int>(polygon.get_number_of_vertexes());
+    const int num_vertexes = static_cast<int>(polygon.get_number_of_vertexes());
     int num_vertexes_processed = 1;
 
     // find the highest vertex
@@ -85,7 +88,8 @@ bool draw_filled_polygon(
     }
 
     // left, right-side x
-    int left_x, right_x;
+    int left_x{};
+    int right_x{};
     left_x = right_x = (vertexes[top_index].x()) << 16;
 
     // left dx slope
@@ -131,11 +135,12 @@ bool draw_filled_polygon(
             }
 
             // change slope if needed
-            if (vertexes[left_index].y() != vertexes[top_index].y())
+            if (vertexes[left_index].y() != vertexes[top_index].y()) {
                 left_slope =
                     ((vertexes[left_index].x() - vertexes[top_index].x())
                      << 16) /
                     (vertexes[left_index].y() - vertexes[top_index].y());
+            }
 
             // << 16 is used for rounding
             left_x = (vertexes[top_index].x()) << 16;
@@ -151,11 +156,12 @@ bool draw_filled_polygon(
                 right_index = 0;
             }
 
-            if (vertexes[right_index].y() != vertexes[top_index].y())
+            if (vertexes[right_index].y() != vertexes[top_index].y()) {
                 right_slope =
                     ((vertexes[right_index].x() - vertexes[top_index].x())
                      << 16) /
                     (vertexes[right_index].y() - vertexes[top_index].y());
+            }
 
             right_x = (vertexes[top_index].x()) << 16;
             ++num_vertexes_processed;
@@ -224,7 +230,7 @@ bool draw_map(const ::runebound::map::Map &map, SDL_Renderer *renderer) {
             }
 
             // supportive variable
-            int dx = (HEXAGON_RADIUS * 56756) >> 16;
+            const int dx = (HEXAGON_RADIUS * 56756) >> 16;
 
             // set coordinates due to parity of row
             HexagonShape hex;
@@ -267,7 +273,7 @@ bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
     }
 
     // enable linear texture filtering
-    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
+    if (SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1") == 0U) {
         ::std::cout << "Warning: Linear texture filtering not enabled!";
     }
 
@@ -302,7 +308,7 @@ bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
 }
 }  // namespace runebound::graphics
 
-int main(int argc, char *args[]) {
+int main(int /*argc*/, char * /*args*/[]) {
     // declare window and renderer
     SDL_Window *gWindow = nullptr;
     SDL_Renderer *gRenderer = nullptr;
@@ -329,15 +335,17 @@ int main(int argc, char *args[]) {
         SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(gRenderer);
 
-        ::runebound::map::Map map;
+        const ::runebound::map::Map map;
         ::runebound::graphics::draw_map(map, gRenderer);
 
-        int x, y;
+        int x{};
+        int y{};
         SDL_GetMouseState(&x, &y);
         for (int row = 0; row < ::runebound::map::StandartHeight; ++row) {
             for (int col = 0; col < ::runebound::map::StandartWidth; ++col) {
-                SDL_Color color = {0xFF, 0xF7, 0x00, 0xFF};
-                int dx = (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
+                const SDL_Color color = {0xFF, 0xF7, 0x00, 0xFF};
+                const int dx =
+                    (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
                 ::runebound::graphics::HexagonShape hex;
                 if (row % 2 == 0) {
                     hex = ::runebound::graphics::HexagonShape(

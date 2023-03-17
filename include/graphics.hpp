@@ -31,12 +31,19 @@ public:
 class PolygonShape {
 protected:
     ::std::vector<Point> m_vertexes;
+    ::std::vector<std::tuple<int, int, int>> m_side_coefficients;
 
 public:
     PolygonShape() = default;
 
     explicit PolygonShape(::std::vector<Point> &vertexes)
-        : m_vertexes(::std::move(vertexes)){};
+        : m_vertexes(::std::move(vertexes)) {
+        init_side_coefficients();
+    }
+
+    void init_side_coefficients();
+
+    [[nodiscard]] bool in_bounds(Point dot) const;
 
     [[nodiscard]] Point get_vertex(::std::size_t index) const {
         return m_vertexes[index];
@@ -53,15 +60,10 @@ public:
 
 // basic hexagon class, derived to polygon
 class HexagonShape : public PolygonShape {
-private:
-    std::vector<std::tuple<int, int, int>> m_side_coefficients;
-
 public:
     explicit HexagonShape() = default;
 
     explicit HexagonShape(Point center, int radius);
-
-    [[nodiscard]] bool in_bounds(Point dot) const;
 };
 
 // draw colored polygon function declaration
