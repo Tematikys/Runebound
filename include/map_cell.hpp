@@ -56,11 +56,16 @@ public:
         return m_type_cell;
     }
 
+    [[nodiscard]] bool check_road() const {
+        return m_road;
+    }
+
     friend void to_json(nlohmann::json &json, const MapCell &map_cell);
     friend void from_json(const nlohmann::json &json, MapCell &map_cell);
 
 private:
     TypeCell m_type_cell;
+    bool m_road;
     runebound::AdventureType m_token;
     runebound::Side m_side_token;
 };

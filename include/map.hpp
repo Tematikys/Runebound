@@ -27,6 +27,15 @@ private:
     const std::vector<std::pair<int, int>> directions_even_row{
         {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 0}, {0, -1}};
 
+    [[nodiscard]] bool make_move(
+        int start_x,
+        int start_y,
+        int end_x,
+        int end_y,
+        const std::vector<::runebound::dice::HandDice> &dice_roll_results,
+        int count_dice
+    ) const;
+
 public:
     void make_map(std::vector<TypeCell> cells) {
         m_map.resize(m_height);
@@ -132,14 +141,6 @@ public:
     [[nodiscard]] bool
     check_hand_dice(int x, int y, ::runebound::dice::HandDice dice) const;
 
-    [[nodiscard]] bool make_move(
-        int start_x,
-        int start_y,
-        int end_x,
-        int end_y,
-        const std::vector<::runebound::dice::HandDice> &dice_roll_results,
-        int count_dice
-    ) const;
 
     [[nodiscard]] bool check_move(
         int start_x,

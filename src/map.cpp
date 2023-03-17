@@ -54,9 +54,9 @@ bool Map::make_move(
             if (check_neighbour(x, y, dx, dy)) {
                 auto [new_x, new_y] = get_neighbour(x, y, dx, dy);
                 if (!dist.count({new_x, new_y}) &&
-                    check_hand_dice(
+                    (get_cell_map(new_x, new_y).check_road() || check_hand_dice(
                         new_x, new_y, dice_roll_results[dist[{x, y}]]
-                    )) {
+                    ))) {
                     dist[{new_x, new_y}] = dist[{x, y}] + 1;
                     bfs_queue.push({new_x, new_y});
                 }
