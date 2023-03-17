@@ -1,12 +1,14 @@
 #ifndef CHARACTER_HPP_
 #define CHARACTER_HPP_
 
+#include <map>
 #include <memory>
 #include <set>
 #include <string>
 #include <vector>
-#include "../src/card_adventure.hpp"
+#include "card_adventure.hpp"
 #include "runebound_fwd.hpp"
+#include "tokens.hpp"
 
 namespace runebound {
 namespace character {
