@@ -6,6 +6,7 @@
 #include <map_cell.hpp>
 #include <tuple>
 #include <vector>
+#include <optional>
 
 namespace runebound::graphics {
 // basic point class
@@ -64,6 +65,37 @@ public:
     explicit HexagonShape() = default;
 
     explicit HexagonShape(Point center, int radius);
+};
+
+class Board {
+private:
+    ::std::vector<HexagonShape> m_hexagons;
+    ::std::vector<SDL_Color> m_fill_colors;
+    ::std::vector<SDL_Color> m_border_color;
+    ::std::size_t m_hexagon_amount{0};
+
+public:
+    explicit Board() = default;
+
+    //    explicit Board(
+    //        ::std::vector<HexagonShape> &hexagons,
+    //        ::std::vector<SDL_Color> fill_colors,
+    //        ::std::vector<SDL_Color> border_colors
+    //    )
+    //        : m_hexagons(::std::move(hexagons)),
+    //          m_fill_colors(::std::move(fill_colors)),
+    //          m_border_color(::std::move(border_colors)),
+    //          m_hexagon_amount(m_hexagons.size()){};
+
+    void add_hexagon(
+        HexagonShape &hex,
+        SDL_Color fill_color,
+        SDL_Color border_color
+    );
+
+    void render(SDL_Renderer *renderer) const;
+
+    ::std::optional<::std::size_t> in_bounds(Point dot);
 };
 
 // draw colored polygon function declaration

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map.hpp>
 #include <map_cell.hpp>
+#include <optional>
 #include <tuple>
 #include <vector>
 
@@ -16,6 +17,10 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
 const int HEXAGON_RADIUS = 50;
+
+const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};
+
+::std::size_t selected_hexagon;
 
 // initialize polygon's sides coefficients
 void PolygonShape::init_side_coefficients() {
@@ -263,6 +268,37 @@ bool draw_map(const ::runebound::map::Map &map, SDL_Renderer *renderer) {
     return true;
 }
 
+void Board::render(SDL_Renderer *renderer) const {
+    for (::std::size_t i = 0; i < m_hexagon_amount; ++i) {
+        if (i == selected_hexagon) {
+            draw_filled_polygon(m_hexagons[i], SELECTED_COLOR, renderer);
+        } else {
+            draw_filled_polygon(m_hexagons[i], m_fill_colors[i], renderer);
+        };
+        draw_polygon_border(m_hexagons[i], m_border_color[i], renderer);
+    }
+}
+
+void Board::add_hexagon(
+    HexagonShape &hex,
+    SDL_Color fill_color,
+    SDL_Color border_color
+) {
+    m_hexagons.push_back(::std::move(hex));
+    m_fill_colors.push_back(fill_color);
+    m_border_color.push_back(border_color);
+    ++m_hexagon_amount;
+}
+
+::std::optional<::std::size_t> Board::in_bounds(Point dot) {
+    for (::std::size_t i = 0; i < m_hexagon_amount; ++i) {
+        if (m_hexagons[i].in_bounds(dot)) {
+            return i;
+        }
+    }
+    return {};
+}
+
 // SDL init function
 bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
     // initialize SDL
@@ -279,7 +315,7 @@ bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
 
     // create window
     gWindow = SDL_CreateWindow(
-        "Runebound-v0.0.2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        "Runebound-v0.0.4", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN
     );
 
@@ -321,6 +357,56 @@ int main(int /*argc*/, char * /*args*/[]) {
     bool run = true;
     // event handler
     SDL_Event e;
+    const ::runebound::map::Map map;
+
+    ::runebound::graphics::Board board;
+    for (int row = 0; row < ::runebound::map::StandartHeight; ++row) {
+        for (int col = 0; col < ::runebound::map::StandartWidth; ++col) {
+            SDL_Color color;
+            switch (map.get_cell_map(row, col).get_type_cell()) {
+                case ::runebound::map::TypeCell::WATER:
+                    color = {0x00, 0x00, 0xFF, 0xFF};
+                    break;
+                case ::runebound::map::TypeCell::FOREST:
+                    color = {0x00, 0xFF, 0x00, 0xFF};
+                    break;
+                case ::runebound::map::TypeCell::MOUNTAINS:
+                    color = {0x77, 0x77, 0x77, 0xFF};
+                    break;
+                case ::runebound::map::TypeCell::HILLS:
+                    color = {0x00, 0x77, 0x00, 0xFF};
+                    break;
+                case ::runebound::map::TypeCell::PLAIN:
+                    color = {0x77, 0xFF, 0x77, 0xFF};
+                    break;
+            }
+            const int dx =
+                (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
+            ::runebound::graphics::HexagonShape hex;
+            if (row % 2 == 0) {
+                hex = ::runebound::graphics::HexagonShape(
+                    ::runebound::graphics::Point(
+                        dx * 2 * (1 + col),
+                        ::runebound::graphics::HEXAGON_RADIUS * (2 + row * 3) /
+                            2
+                    ),
+                    ::runebound::graphics::HEXAGON_RADIUS
+                );
+            } else {
+                hex = ::runebound::graphics::HexagonShape(
+                    ::runebound::graphics::Point(
+                        dx * (1 + 2 * col),
+                        ::runebound::graphics::HEXAGON_RADIUS * (2 + row * 3) /
+                            2
+                    ),
+                    ::runebound::graphics::HEXAGON_RADIUS
+                );
+            }
+
+            board.add_hexagon(hex, color, SDL_Color{0x00, 0x00, 0x00, 0xFF});
+        }
+    }
+
     while (run) {
         // process events
         while (SDL_PollEvent(&e) != 0) {
@@ -335,42 +421,18 @@ int main(int /*argc*/, char * /*args*/[]) {
         SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(gRenderer);
 
-        const ::runebound::map::Map map;
         ::runebound::graphics::draw_map(map, gRenderer);
 
         int x{};
         int y{};
         SDL_GetMouseState(&x, &y);
-        for (int row = 0; row < ::runebound::map::StandartHeight; ++row) {
-            for (int col = 0; col < ::runebound::map::StandartWidth; ++col) {
-                const SDL_Color color = {0xFF, 0xF7, 0x00, 0xFF};
-                const int dx =
-                    (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
-                ::runebound::graphics::HexagonShape hex;
-                if (row % 2 == 0) {
-                    hex = ::runebound::graphics::HexagonShape(
-                        ::runebound::graphics::Point(
-                            dx * 2 * (1 + col),
-                            ::runebound::graphics::HEXAGON_RADIUS *
-                                (2 + row * 3) / 2
-                        ),
-                        ::runebound::graphics::HEXAGON_RADIUS
-                    );
-                } else {
-                    hex = ::runebound::graphics::HexagonShape(
-                        ::runebound::graphics::Point(
-                            dx * (1 + 2 * col),
-                            ::runebound::graphics::HEXAGON_RADIUS *
-                                (2 + row * 3) / 2
-                        ),
-                        ::runebound::graphics::HEXAGON_RADIUS
-                    );
-                }
-                if (hex.in_bounds(::runebound::graphics::Point(x, y))) {
-                    draw_filled_polygon(hex, color, gRenderer);
-                }
-            }
+        ::runebound::graphics::selected_hexagon = -1;
+
+        if (auto index = board.in_bounds(::runebound::graphics::Point(x, y))) {
+            ::runebound::graphics::selected_hexagon = index.value();
         }
+
+        board.render(gRenderer);
 
         SDL_RenderPresent(gRenderer);
     }
