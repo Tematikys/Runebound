@@ -60,12 +60,17 @@ public:
         return m_road;
     }
 
+    [[nodiscard]] std::string get_special_type_cell() const {
+        return m_special_type_cell;
+    }
+
     friend void to_json(nlohmann::json &json, const MapCell &map_cell);
     friend void from_json(const nlohmann::json &json, MapCell &map_cell);
 
 private:
     TypeCell m_type_cell;
     bool m_road;
+    std::string m_special_type_cell;
     runebound::AdventureType m_token;
     runebound::Side m_side_token;
 };
