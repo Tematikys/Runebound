@@ -8,6 +8,5 @@
 namespace runebound::graphics {
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-const int HEXAGON_RADIUS = 50;
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_HPP_

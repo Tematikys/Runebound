@@ -21,7 +21,7 @@ bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
 
     // create window
     gWindow = SDL_CreateWindow(
-        "Runebound-v0.0.4", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        "Runebound-v0.0.5", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN
     );
 
@@ -59,65 +59,17 @@ int main(int /*argc*/, char * /*args*/[]) {
         ::std::cout << "Failed to initialize!\n";
         return 0;
     }
+
     // run flag
     bool run = true;
     // event handler
     SDL_Event e;
     const ::runebound::map::Map map;
+    ::runebound::graphics::Board board(map);
 
-    ::runebound::graphics::Board board;
-    // initialize board
-    for (int row = 0; row < ::runebound::map::StandartHeight; ++row) {
-        for (int col = 0; col < ::runebound::map::StandartWidth; ++col) {
-            // get necessary color
-            SDL_Color color;
-            switch (map.get_cell_map(row, col).get_type_cell()) {
-                case ::runebound::map::TypeCell::WATER:
-                    color = {0x00, 0x00, 0xFF, 0xFF};
-                    break;
-                case ::runebound::map::TypeCell::FOREST:
-                    color = {0x00, 0xFF, 0x00, 0xFF};
-                    break;
-                case ::runebound::map::TypeCell::MOUNTAINS:
-                    color = {0x77, 0x77, 0x77, 0xFF};
-                    break;
-                case ::runebound::map::TypeCell::HILLS:
-                    color = {0x00, 0x77, 0x00, 0xFF};
-                    break;
-                case ::runebound::map::TypeCell::PLAIN:
-                    color = {0x77, 0xFF, 0x77, 0xFF};
-                    break;
-            }
-
-            // supportive variable
-            const int dx =
-                (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
-
-            ::runebound::graphics::HexagonShape hex;
-            if (row % 2 == 0) {
-                hex = ::runebound::graphics::HexagonShape(
-                    ::runebound::graphics::Point(
-                        dx * 2 * (1 + col),
-                        ::runebound::graphics::HEXAGON_RADIUS * (2 + row * 3) /
-                            2
-                    ),
-                    ::runebound::graphics::HEXAGON_RADIUS
-                );
-            } else {
-                hex = ::runebound::graphics::HexagonShape(
-                    ::runebound::graphics::Point(
-                        dx * (1 + 2 * col),
-                        ::runebound::graphics::HEXAGON_RADIUS * (2 + row * 3) /
-                            2
-                    ),
-                    ::runebound::graphics::HEXAGON_RADIUS
-                );
-            }
-
-            board.add_hexagon(hex, color, SDL_Color{0x00, 0x00, 0x00, 0xFF});
-        }
-    }
-
+    // variables for mouse position
+    int x{};
+    int y{};
     while (run) {
         // process events
         while (SDL_PollEvent(&e) != 0) {
@@ -126,13 +78,8 @@ int main(int /*argc*/, char * /*args*/[]) {
             }
         }
 
-        /// SDL_WarpMouseInWindow(gWindow, 320, 240);
-
         SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(gRenderer);
-
-        int x{};
-        int y{};
         SDL_GetMouseState(&x, &y);
 
         board.set_selected_hexagon(0xFFFF);

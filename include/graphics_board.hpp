@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <graphics_point.hpp>
 #include <graphics_shapes.hpp>
+#include <map.hpp>
 #include <optional>
 #include <vector>
 
@@ -18,17 +19,7 @@ private:
     ::std::size_t m_selected_hexagon{0xFFFF};
 
 public:
-    explicit Board() = default;
-
-    [[maybe_unused]] Board(
-        ::std::vector<HexagonShape> &hexagons,
-        ::std::vector<SDL_Color> fill_colors,
-        ::std::vector<SDL_Color> border_colors
-    )
-        : m_hexagons(::std::move(hexagons)),
-          m_fill_colors(::std::move(fill_colors)),
-          m_border_color(::std::move(border_colors)),
-          m_hexagon_amount(m_hexagons.size()){};
+    explicit Board(const ::runebound::map::Map &map);
 
     void add_hexagon(
         HexagonShape &hex,
