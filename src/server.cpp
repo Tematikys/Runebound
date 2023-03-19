@@ -1,123 +1,99 @@
-
+#include <algorithm>
+#include <fstream>
 #include <iostream>
-#include <cstdlib>
-#include <deque>
-#include <iostream>
-#include <list>
-#include <memory>
-#include <set>
+#include <thread>
 #include <utility>
 
 
-#include <iostream>
+#include "game.hpp"
 #include <boost/asio.hpp>
 
 using boost::asio::ip::tcp;
 
-class Session;
+#ifdef _MSC_VER
+#include <crtdbg.h>
+#endif
 
-std::set <Session*> Sessions;
-class Session : public std::enable_shared_from_this<Session>
-{
-public:
-    Session(tcp::socket socket) : socket_(std::move(socket))
-    {
-        Sessions.insert(this);
-    }
+struct user;
 
-    void Start()
-    {
-        DoRead([this](std::string data){
-            // Handle received data
-            std::cout << "Received: " << data << std::endl;
+runebound::game::Game game();
+std::set<user*> users;
 
-            // Echo back to client
-            for (auto Session : Sessions){ if (Session!=this) {Session->DoWrite(data);}  }
-        });
-    }
+struct user {
+    user(tcp::iostream io, std::string username) : io(std::move(io)), username(username) {
+//        character = character();
+        users.insert(this);
+    };
 
-
-private:
-    void DoRead(std::function<void(std::string)> callback)
-    {
-        auto self(shared_from_this());
-        socket_.async_read_some(boost::asio::buffer(data_, max_length),
-                                     [this, self, callback](boost::system::error_code ec, std::size_t length)
-                                     {
-                                         if (!ec)
-                                         {
-                                             callback(std::string(data_, length));
-                                         } else { Sessions.erase(this);  std::cout<<"Disconected";}
-                                     });
-    }
-
-
-    void DoWrite(const std::string& message)
-    {
-        auto self(shared_from_this());
-        boost::asio::async_write(socket_, boost::asio::buffer(message),
-                                 [this, self](boost::system::error_code ec, std::size_t /*length*/)
-                                 {
-                                     if (!ec)
-                                     {
-                                         DoRead([this](std::string data){
-                                             // Handle received data
-                                             std::cout << "Received: " << data << std::endl;
-
-                                             // Echo back to client
-                                             for (auto Session : Sessions){ if (Session!=this) {Session->DoWrite(data);}  }
-
-                                         });
-                                     } else { Sessions.erase(this);  std::cout<<"Disconected";}
-                                 });
-    }
-
-    tcp::socket socket_;
-    enum { max_length = 1024 };
-    char data_[max_length];
+    void disconnected() {users.erase(this);}
+    runebound::character::Character *character;
+    tcp::iostream io;
+    std::string username;
 };
 
-class Server
-{
-public:
-    Server(boost::asio::io_context& io_context, short port)
-            : acceptor_(io_context, tcp::endpoint(tcp::v4(), port))
-    {
-        DoAccept();
+
+
+
+
+
+
+int main(int argc, char *argv[]) {
+
+    if (argc != 2) {
+        std::cerr
+                << "Usage: "
+                << std::string(argv[0])
+                << " <port> \n";
+        return 1;
     }
 
-private:
-    void DoAccept()
-    {
-        acceptor_.async_accept([this](boost::system::error_code ec, tcp::socket socket)
-                               {
-                                   if (!ec)
-                                   {
-                                       std::make_shared<Session>(std::move(socket))->Start();
-                                   }
 
-                                   DoAccept();
-                               });
-    }
 
-    tcp::acceptor acceptor_;
-};
-
-int main()
-{
-    try
-    {
+    try {
         boost::asio::io_context io_context;
-        Server server(io_context, 1234);
-        io_context.run();
-    }
-    catch (std::exception& e)
-    {
-        std::cerr << "Exception: " << e.what() << "\n";
-    }
+        tcp::acceptor acceptor(
+                io_context,
+                tcp::endpoint(tcp::v4(),static_cast<short>(std::stoi(argv[1]))
+                )
+        );
+        std::cout << "Listening at " << acceptor.local_endpoint() << "\n";
 
+        while (true) {
+            tcp::socket s = acceptor.accept();
+            std::thread([s = std::move(s)]() mutable {
+                tcp::endpoint remote = s.remote_endpoint();
+                tcp::endpoint local = s.local_endpoint();
+                std::cout << "Connected " << remote << " --> " << local << "\n";
+                tcp::iostream client_io(std::move(s));
+                client_io << "What is your name?\n";
+                std::string username;
+                client_io >> username;
+                client_io << "Hi " << username << "\n";
+                user user(std::move(client_io), username);
+                while (client_io) {
+                    try {
+                        std::string command;
+                        if (!(client_io >> command)) {
+                            break;
+                        }
+                        if (command=="move"){
+                            int x,y;
+                            client_io>>x>>y;
+//                            game.make_move(user, x, y, )
+
+                        }
+                        client_io << "Unknown command: '" << command << "'\n";
+                    } catch (std::exception &e) {
+                        std::cout << e.what() << "\n";
+                    }
+                }
+                user.disconnected();
+                std::cout << "Disconnected " << remote << " --> " << local
+                          << "\n";
+            }).detach();
+        }
+
+    } catch (...) {
+    }
     return 0;
 }
-
-
-
