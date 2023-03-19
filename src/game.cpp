@@ -11,7 +11,7 @@ void to_json(nlohmann::json &json, const Game &game) {
     json["m_card_deck"] = game.m_card_deck;
     json["m_tokens"] = game.m_tokens;
     json["m_turn"] = game.m_turn;
-    json["M_COUNT_PLAYERS"] = game.M_COUNT_PLAYERS;
+    json["m_count_players"] = game.m_count_players;
     std::vector<nlohmann::json> cards(game.ALL_CARDS.size());
     for (std::size_t card = 0; card < game.ALL_CARDS.size(); ++card) {
         cards[card] = game.ALL_CARDS[card]->to_json();
@@ -36,7 +36,8 @@ void from_json(const nlohmann::json &json, Game &game) {
             }
         }
     }
-    game = Game(count_players, cards);
+    game = Game(cards);
+    game.m_count_players = json["m_count_players"];
     game.m_map = json["m_map"];
     game.m_characters = json["m_characters"];
     game.m_card_deck.clear();
@@ -99,7 +100,7 @@ void Game::make_move(
     }
     m_characters[m_turn].m_current_x = end_x;
     m_characters[m_turn].m_current_y = end_y;
-    m_turn = (m_turn + 1) % M_COUNT_PLAYERS;
+    m_turn = (m_turn + 1) % m_count_players;
 }
 
 }  // namespace game

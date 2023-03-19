@@ -26,7 +26,7 @@ private:
     std::vector<unsigned int> m_card_deck;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
-    const unsigned int M_COUNT_PLAYERS;
+    unsigned int m_count_players;
     std::vector<unsigned int> m_indexes_card_research;
     const std::vector<cards::CardAdventure *> ALL_CARDS;
 
@@ -44,20 +44,13 @@ private:
     }
 
 public:
-    Game() : M_COUNT_PLAYERS(1), ALL_CARDS(std::move(generate_all_cards())) {
+    Game() : ALL_CARDS(std::move(generate_all_cards())) {
         m_card_deck.resize(DECK_SIZE);
         for (int i = 0; i < DECK_SIZE; ++i) {
             m_card_deck[i] = i;
         }
     };
 
-    explicit Game(unsigned int count_players) : M_COUNT_PLAYERS(count_players) {
-        m_characters.resize(count_players);
-        m_card_deck.resize(DECK_SIZE);
-        for (int i = 0; i < DECK_SIZE; ++i) {
-            m_card_deck[i] = i;
-        }
-    }
 
     Game &operator=(const Game &other) {
         m_map = other.m_map;
@@ -68,8 +61,8 @@ public:
         return *this;
     }
 
-    Game(unsigned int count_players, std::vector<cards::CardAdventure *> cards)
-        : M_COUNT_PLAYERS(count_players), ALL_CARDS(std::move(cards)) {
+    Game(std::vector<cards::CardAdventure *> cards)
+        : ALL_CARDS(std::move(cards)) {
     }
 
     ::runebound::character::Character *make_character(
@@ -84,6 +77,7 @@ public:
         m_characters.emplace_back(::runebound::character::Character(
             gold, health, current_x, current_y, hand_limit, speed, name
         ));
+        m_count_players += 1;
         return &m_characters.back();
     }
 
