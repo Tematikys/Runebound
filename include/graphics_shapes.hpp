@@ -14,12 +14,7 @@ protected:
     ::std::vector<::std::tuple<int, int, int>> m_side_coefficients;
 
 public:
-    explicit PolygonShape() = default;
-
-    [[maybe_unused]] explicit PolygonShape(::std::vector<Point> &vertexes)
-        : m_vertexes(::std::move(vertexes)) {
-        init_side_coefficients();
-    }
+    PolygonShape() = default;
 
     void init_side_coefficients();
 
@@ -47,9 +42,9 @@ public:
 // basic hexagon class, derived to polygon
 class HexagonShape : public PolygonShape {
 public:
-    explicit HexagonShape() = default;
+    HexagonShape() = default;
 
-    explicit HexagonShape(Point center, int radius);
+    HexagonShape(Point center, int radius);
 };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_SHAPES_HPP_

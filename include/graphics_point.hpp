@@ -8,9 +8,9 @@ private:
     int m_x, m_y;
 
 public:
-    explicit Point() : m_x(), m_y(){};
+    Point() : m_x(), m_y(){};
 
-    explicit Point(int x, int y) : m_x(x), m_y(y){};
+    Point(int x, int y) : m_x(x), m_y(y){};
 
     [[nodiscard]] int x() const {
         return m_x;
