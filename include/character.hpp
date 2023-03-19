@@ -37,7 +37,7 @@ public:
           m_current_y(0) {
     }
 
-    Character(
+    explicit Character(
         int gold,
         int health,
         int current_x,

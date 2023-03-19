@@ -72,6 +72,21 @@ public:
         : M_COUNT_PLAYERS(count_players), ALL_CARDS(std::move(cards)) {
     }
 
+    ::runebound::character::Character *make_character(
+        int gold,
+        int health,
+        int current_x,
+        int current_y,
+        unsigned int hand_limit,
+        unsigned int speed,
+        std::string name
+    ) {
+        m_characters.emplace_back(::runebound::character::Character(
+            gold, health, current_x, current_y, hand_limit, speed, name
+        ));
+        return &m_characters.back();
+    }
+
     [[nodiscard]] int get_map_height() const {
         return m_map.get_height();
     }
@@ -84,7 +99,7 @@ public:
         return m_map.get_width();
     }
 
-    [[nodiscard]] int get_turn() const {
+    [[nodiscard]] unsigned int get_turn() const {
         return m_turn;
     }
 
