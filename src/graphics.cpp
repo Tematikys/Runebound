@@ -2,7 +2,6 @@
 #include <graphics.hpp>
 #include <iostream>
 #include <map.hpp>
-#include <map_cell.hpp>
 
 namespace runebound::graphics {
 // SDL init function
