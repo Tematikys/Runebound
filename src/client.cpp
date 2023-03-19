@@ -1,100 +1,157 @@
-#include <boost/asio.hpp>
-#include <cstdlib>
-#include <deque>
+#include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <thread>
-#include "../include/message.hpp"
+#include <utility>
+
+
+#include "game.hpp"
+#include <boost/asio.hpp>
 using boost::asio::ip::tcp;
-using namespace std;
-class client {
-public:
-    client(boost::asio::io_context& context, const tcp::resolver::results_type& endpoints) : context(context), socket(context) {
-        connect(endpoints);
-    }
-    void write(const message& messageItem) {
-        boost::asio::post(context, [this, messageItem]() {
-            bool write_in_progress = !writeMessage.empty();
-            writeMessage.push_back(messageItem);
-            if(!write_in_progress) {
-                write();
-            }
-        });
-    }
-    void close() {
-        boost::asio::post(context, [this]() { socket.close(); });
-    }
-private:
-    void connect(const tcp::resolver::results_type& endpoints) {
-        boost::asio::async_connect(socket, endpoints, [this](boost::system::error_code ec, tcp::endpoint) {
-            if(!ec) {
-                readHeader();
-            }
-        });
-    }
-    void readHeader() {
-        boost::asio::async_read(socket, boost::asio::buffer(readMessage.data(), message::headerLength), [this](boost::system::error_code ec, size_t) {
-            if(!ec && readMessage.decodeHeader()) {
-                readBody();
-            }
-            else {
-                socket.close();
-            }
-        });
-    }
-    void readBody() {
-        boost::asio::async_read(socket, boost::asio::buffer(readMessage.body(), readMessage.bodyLength()), [this](boost::system::error_code ec, size_t) {
-            if(!ec) {
-                cout.write(readMessage.body(), readMessage.bodyLength());
-                cout << "\n";
-                readHeader();
-            }
-            else {
-                socket.close();
-            }
-        });
-    }
-    void write() {
-        boost::asio::async_write(socket, boost::asio::buffer(writeMessage.front().data(), writeMessage.front().length()), [this](boost::system::error_code ec, size_t) {
-            if(!ec) {
-                writeMessage.pop_front();
-                if(!writeMessage.empty()) {
-                    write();
-                }
-            }
-            else {
-                socket.close();
-            }
-        });
-    }
-    boost::asio::io_context& context;
-    tcp::socket socket;
-    message readMessage;
-    deque<message> writeMessage;
+
+#ifdef _MSC_VER
+#include <crtdbg.h>
+#endif
+
+struct user {
+    user(tcp::socket s) : s(s){
+      character=character();
+    };
+    runebound::character::Character* character;
+    tcp::socket* s;
 };
-int main(int argc, char* argv[]) {
-    try {
-        if(argc != 3) {
-            cerr << "Usage: client <host> <port>\n";
-            return 1;
-        }
-        boost::asio::io_context context;
-        tcp::resolver resolver(context);
-        auto endpoints = resolver.resolve(argv[1], argv[2]);
-        client c(context, endpoints);
-        thread t([&context](){ context.run(); });
-        char line[message::maxBodyLength + 1];
-        while(cin.getline(line, message::maxBodyLength + 1)) {
-            message messageItem;
-            messageItem.bodyLength(strlen(line));
-            memcpy(messageItem.body(), line, messageItem.bodyLength());
-            messageItem.encodeHeader();
-            c.write(messageItem);
-        }
-        c.close();
-        t.join();
+
+
+user &start(tcp::iostream &client_io) {
+    client_io << "What is your name?\n";
+    std::string username;
+    client_io >> username;
+    client_io << "Hi " << username << "\n";
+    return ledger.get_or_create_user(username);
+}
+
+void transfer(
+        tcp::iostream &client_io,
+        bank::ledger &ledger,
+        bank::user &user
+) {
+    std::string counterpatry;
+    std::string comment;
+    int amount = 0;
+    client_io >> counterpatry;
+    client_io >> amount;
+
+    std::getline(client_io, comment);
+    user.transfer(
+            ledger.get_or_create_user(counterpatry), amount, comment.substr(1)
+    );
+    client_io << "OK\n";
+}
+
+// NOLINTNEXTLINE (readability-function-cognitive-complexity)
+int main(int argc, char *argv[]) {
+
+    if (argc != 2) {
+        std::cerr
+                << "Usage: "
+                << std::string(argv[0])
+                << " <port> \n";
+        return 1;
     }
-    catch (exception& e) {
-        cerr << "Exception: " << e.what() << "\n";
+
+    bank::ledger ledger = {};
+    try {
+        boost::asio::io_context io_context;
+        tcp::acceptor acceptor(
+                io_context,
+                tcp::endpoint(
+                        tcp::v4(),
+                        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                        static_cast<short>(std::stoi(argv[1]))
+                )
+        );
+        std::string filename =
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                argv[2];
+
+        std::cout << "Listening at " << acceptor.local_endpoint() << "\n";
+
+        while (true) {
+            tcp::socket s = acceptor.accept();
+            std::thread([s = std::move(s), &ledger]() mutable {
+                tcp::endpoint remote = s.remote_endpoint();
+                tcp::endpoint local = s.local_endpoint();
+                std::cout << "Connected " << remote << " --> " << local << "\n";
+                tcp::iostream client_io(std::move(s));
+
+                bank::user &user = start(client_io, ledger);
+
+                while (client_io) {
+                    auto print_transactions =
+                            [&](const std::vector<bank::transaction> &transactions,
+                                int balance_xts) {
+                                client_io << "CPTY\tBAL\tCOMM\n";
+                                int number_of_transactions = 0;
+                                client_io >> number_of_transactions;
+                                for (size_t i = std::max(
+                                        0, static_cast<int>(transactions.size()) -
+                                           number_of_transactions
+
+                                );
+                                     i < transactions.size(); i++) {
+                                    bank::transaction t = transactions[i];
+                                    if (t.counterparty != nullptr) {
+                                        client_io << t.counterparty->name() << "\t";
+                                    } else {
+                                        client_io << "-\t";
+                                    }
+
+                                    client_io << t.balance_delta_xts << "\t"
+                                              << t.comment << '\n';
+                                }
+                                client_io << "===== BALANCE: " << balance_xts
+                                          << " XTS =====\n";
+                            };
+                    try {
+                        std::string command;
+                        if (!(client_io >> command)) {
+                            break;
+                        }
+                        if (command == "balance") {
+                            client_io << user.balance_xts() << "\n";
+                            continue;
+                        }
+                        if (command == "transactions") {
+                            user.snapshot_transactions(print_transactions);
+                            continue;
+                        }
+                        if (command == "monitor") {
+                            bank::user_transactions_iterator monitor =
+                                    user.snapshot_transactions(print_transactions);
+
+                            while (true) {
+                                bank::transaction t =
+                                        monitor.wait_next_transaction();
+                                client_io << t.counterparty->name() << "\t"
+                                          << t.balance_delta_xts << "\t"
+                                          << t.comment << '\n';
+                            }
+                        }
+                        if (command == "transfer") {
+                            transfer(client_io, ledger, user);
+                            continue;
+                        }
+                        client_io << "Unknown command: '" << command << "'\n";
+                    } catch (std::exception &e) {
+                        client_io << e.what() << "\n";
+                    }
+                }
+                std::cout << "Disconnected " << remote << " --> " << local
+                          << "\n";
+            }).detach();
+        }
+
+    } catch (...) {
     }
     return 0;
 }

@@ -1,4 +1,5 @@
-#include <boost/asio.hpp>
+
+#include <iostream>
 #include <cstdlib>
 #include <deque>
 #include <iostream>
@@ -6,129 +7,117 @@
 #include <memory>
 #include <set>
 #include <utility>
-#include "../include/message.hpp"
+
+
+#include <iostream>
+#include <boost/asio.hpp>
+
 using boost::asio::ip::tcp;
-using namespace std;
-class participant {
+
+class Session;
+
+std::set <Session*> Sessions;
+class Session : public std::enable_shared_from_this<Session>
+{
 public:
-    virtual ~participant() {}
-    virtual void deliver(const message& messageItem) = 0;
-};
-class room {
-public:
-    void join(shared_ptr<participant> participant) {
-        participants.insert(participant);
-        for(auto messageItem: messageRecents)
-            participant->deliver(messageItem);
+    Session(tcp::socket socket) : socket_(std::move(socket))
+    {
+        Sessions.insert(this);
     }
-    void deliver(const message& messageItem) {
-        messageRecents.push_back(messageItem);
-        while(messageRecents.size() > max)
-            messageRecents.pop_front();
-        for(auto participant: participants)
-            participant->deliver(messageItem);
-    }
-    void leave(shared_ptr<participant> participant) {
-        participants.erase(participant);
-    }
-private:
-    deque<message> messageRecents;
-    enum { max = 200 };
-    set<shared_ptr<participant>> participants;
-};
-class session : public participant, public enable_shared_from_this<session> {
-public:
-    session(tcp::socket socket, room& room) : socket(move(socket)), room_(room) {
-    }
-    void start() {
-        room_.join(shared_from_this());
-        readHeader();
-    }
-    void deliver(const message& messageItem) {
-        bool write_in_progress = !Messages.empty();
-        Messages.push_back(messageItem);
-        if(!write_in_progress)
-        {
-            write();
-        }
-    }
-private:
-    void readHeader() {
-        auto self(shared_from_this());
-        boost::asio::async_read(socket,
-                                boost::asio::buffer(messageItem.data(), message::headerLength), [this, self](boost::system::error_code ec, size_t) {
-                                    if(!ec && messageItem.decodeHeader()) {
-                                        readBody();
-                                    }
-                                    else {
-                                        room_.leave(shared_from_this());
-                                    }
-                                });
-    }
-    void readBody() {
-        auto self(shared_from_this());
-        boost::asio::async_read(socket, boost::asio::buffer(messageItem.body(), messageItem.bodyLength()), [this, self](boost::system::error_code ec, size_t) {
-            if(!ec) {
-                room_.deliver(messageItem);
-                readHeader();
-            }
-            else {
-                room_.leave(shared_from_this());
-            }
+
+    void Start()
+    {
+        DoRead([this](std::string data){
+            // Handle received data
+            std::cout << "Received: " << data << std::endl;
+
+            // Echo back to client
+            for (auto Session : Sessions){ if (Session!=this) {Session->DoWrite(data);}  }
         });
     }
-    void write() {
-        auto self(shared_from_this());
-        boost::asio::async_write(socket, boost::asio::buffer(Messages.front().data(), Messages.front().length()), [this, self](boost::system::error_code ec, size_t) {
-            if(!ec) {
-                Messages.pop_front();
-                if(!Messages.empty()) {
-                    write();
-                }
-            }
-            else {
-                room_.leave(shared_from_this());
-            }
-        });
-    }
-    tcp::socket socket;
-    room& room_;
-    message messageItem;
-    deque<message> Messages;
-};
-class server {
-public:
-    server(boost::asio::io_context& io_context, const tcp::endpoint& endpoint) : acceptor(io_context, endpoint) {
-        do_accept();
-    }
+
+
 private:
-    void do_accept() {
-        acceptor.async_accept([this](boost::system::error_code ec, tcp::socket socket) {
-            if(!ec) {
-                make_shared<session>(move(socket), room_)->start();
-            }
-            do_accept();
-        });
+    void DoRead(std::function<void(std::string)> callback)
+    {
+        auto self(shared_from_this());
+        socket_.async_read_some(boost::asio::buffer(data_, max_length),
+                                     [this, self, callback](boost::system::error_code ec, std::size_t length)
+                                     {
+                                         if (!ec)
+                                         {
+                                             callback(std::string(data_, length));
+                                         } else { Sessions.erase(this);  std::cout<<"Disconected";}
+                                     });
     }
-    tcp::acceptor acceptor;
-    room room_;
+
+
+    void DoWrite(const std::string& message)
+    {
+        auto self(shared_from_this());
+        boost::asio::async_write(socket_, boost::asio::buffer(message),
+                                 [this, self](boost::system::error_code ec, std::size_t /*length*/)
+                                 {
+                                     if (!ec)
+                                     {
+                                         DoRead([this](std::string data){
+                                             // Handle received data
+                                             std::cout << "Received: " << data << std::endl;
+
+                                             // Echo back to client
+                                             for (auto Session : Sessions){ if (Session!=this) {Session->DoWrite(data);}  }
+
+                                         });
+                                     } else { Sessions.erase(this);  std::cout<<"Disconected";}
+                                 });
+    }
+
+    tcp::socket socket_;
+    enum { max_length = 1024 };
+    char data_[max_length];
 };
-int main(int argc, char* argv[]) {
-    try {
-        if(argc < 2) {
-            cerr << "Usage: server <port> [<port> ...]\n";
-            return 1;
-        }
+
+class Server
+{
+public:
+    Server(boost::asio::io_context& io_context, short port)
+            : acceptor_(io_context, tcp::endpoint(tcp::v4(), port))
+    {
+        DoAccept();
+    }
+
+private:
+    void DoAccept()
+    {
+        acceptor_.async_accept([this](boost::system::error_code ec, tcp::socket socket)
+                               {
+                                   if (!ec)
+                                   {
+                                       std::make_shared<Session>(std::move(socket))->Start();
+                                   }
+
+                                   DoAccept();
+                               });
+    }
+
+    tcp::acceptor acceptor_;
+};
+
+int main()
+{
+    try
+    {
         boost::asio::io_context io_context;
-        list<server> servers;
-        for(int i = 1; i < argc; ++i) {
-            tcp::endpoint endpoint(tcp::v4(), atoi(argv[i]));
-            servers.emplace_back(io_context, endpoint);
-        }
+        Server server(io_context, 1234);
         io_context.run();
     }
-    catch (exception& e) {
-        cerr << "Exception: " << e.what() << "\n";
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception: " << e.what() << "\n";
     }
+
     return 0;
 }
+
+
+
