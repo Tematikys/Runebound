@@ -12,7 +12,7 @@
 
 namespace runebound {
 namespace character {
-gt
+
 struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
