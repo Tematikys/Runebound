@@ -6,35 +6,29 @@
 
 
 #include "game.hpp"
+#include "dice.hpp"
 #include <boost/asio.hpp>
 
 using boost::asio::ip::tcp;
 
-#ifdef _MSC_VER
-#include <crtdbg.h>
-#endif
 
 struct user;
-
 runebound::game::Game game();
-std::set<user*> users;
+
+std::set<user *> users;
 
 struct user {
     user(tcp::iostream io, std::string username) : io(std::move(io)), username(username) {
-//        character = character();
+        character = game.make_character(0,5,0,0,3,3,username);
         users.insert(this);
     };
 
-    void disconnected() {users.erase(this);}
+    void disconnected() { users.erase(this); }
+
     runebound::character::Character *character;
     tcp::iostream io;
     std::string username;
 };
-
-
-
-
-
 
 
 int main(int argc, char *argv[]) {
@@ -48,43 +42,43 @@ int main(int argc, char *argv[]) {
     }
 
 
-
     try {
         boost::asio::io_context io_context;
         tcp::acceptor acceptor(
                 io_context,
-                tcp::endpoint(tcp::v4(),static_cast<short>(std::stoi(argv[1]))
+                tcp::endpoint(tcp::v4(), static_cast<short>(std::stoi(argv[1]))
                 )
         );
         std::cout << "Listening at " << acceptor.local_endpoint() << "\n";
-
         while (true) {
             tcp::socket s = acceptor.accept();
-            std::thread([s = std::move(s)]() mutable {
+            std::thread([&, s = std::move(s)]() mutable {
                 tcp::endpoint remote = s.remote_endpoint();
                 tcp::endpoint local = s.local_endpoint();
                 std::cout << "Connected " << remote << " --> " << local << "\n";
-                tcp::iostream client_io(std::move(s));
-                client_io << "What is your name?\n";
+                tcp::iostream user_io(std::move(s));
+                user_io << "What is your name?\n";
                 std::string username;
-                client_io >> username;
-                client_io << "Hi " << username << "\n";
-                user user(std::move(client_io), username);
-                while (client_io) {
+                user_io >> username;
+                user_io << "Hi " << username << "\n";
+                user user(std::move(user_io), username);
+                while (user.io) {
                     try {
                         std::string command;
-                        if (!(client_io >> command)) {
+                        if (!(user.io >> command)) {
                             break;
                         }
-                        if (command=="move"){
-                            int x,y;
-                            client_io>>x>>y;
-//                            game.make_move(user, x, y, )
+                        if (command == "move") {
+                            int x, y;
+                            user.io >> x >> y;
+                            game.make_move(user.character, x, y,
+                                           runebound::dice::get_combination_of_dice(user.character->m_speed));
+
 
                         }
-                        client_io << "Unknown command: '" << command << "'\n";
+                        user.io << "Unknown command: '" << command << "'\n";
                     } catch (std::exception &e) {
-                        std::cout << e.what() << "\n";
+                        user.io<< e.what() << "\n";
                     }
                 }
                 user.disconnected();
