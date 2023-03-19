@@ -1,6 +1,7 @@
 #ifndef DICE_HPP_
 #define DICE_HPP_
 
+
 #include "runebound_fwd.hpp"
 
 namespace runebound {

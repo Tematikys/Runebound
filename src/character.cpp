@@ -5,7 +5,9 @@
 
 namespace runebound {
 namespace character {
+
 void Character::pop_card(unsigned int card) {
+
     for (std::size_t i = 0; i < m_cards.size(); ++i) {
         if (m_cards[i] == card) {
             std::swap(m_cards[i], m_cards.back());
@@ -14,6 +16,7 @@ void Character::pop_card(unsigned int card) {
     }
     m_cards.pop_back();
 }
+
 
 void to_json(nlohmann::json &json, const Character &character) {
     json["m_hand_limit"] = character.m_hand_limit;
@@ -41,5 +44,6 @@ void from_json(const nlohmann::json &json, Character &character) {
         character.m_cards.push_back(card);
     }
 }
+
 }  // namespace character
 }  // namespace runebound

@@ -1,5 +1,7 @@
 #include "card_research.hpp"
+
 #include <json.hpp>
+
 
 namespace runebound {
 namespace cards {
@@ -49,10 +51,12 @@ bool CardResearch::check_outcome(
     do {
         bool completed = true;
         for (std::size_t i = 0;
+
              i <
              std::min(
                  result_dice.size(), m_outcomes[index].m_necessary_result.size()
              );
+
              ++i) {
             if (!check_hand_dice(
                     m_outcomes[index].m_necessary_result[i], result_dice[i]
@@ -69,6 +73,7 @@ bool CardResearch::check_outcome(
     } while (std::next_permutation(result_dice.begin(), result_dice.end()));
     return false;
 }
+
 
 nlohmann::json CardResearch::to_json() {
     nlohmann::json json;
@@ -128,5 +133,6 @@ void from_json(const nlohmann::json &json, CardResearch *card) {
         }
     }
 }
+
 }  // namespace cards
 }  // namespace runebound

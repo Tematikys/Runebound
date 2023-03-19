@@ -1,5 +1,6 @@
 #include "map_cell.hpp"
 #include <cassert>
+
 #include <json.hpp>
 #include <memory>
 #include <vector>
@@ -20,3 +21,4 @@ void from_json(const nlohmann::json &json, MapCell &map_cell) {
 }
 }  // namespace map
 }  // namespace runebound
+

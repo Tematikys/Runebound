@@ -1,4 +1,5 @@
 #include "dice.hpp"
+
 #include <vector>
 
 namespace runebound {
@@ -17,5 +18,6 @@ std::vector<HandDice> get_combination_of_dice(unsigned int count_throws) {
     }
     return result_of_throws;
 }
+
 }  // namespace dice
 }  // namespace runebound

@@ -1,21 +1,26 @@
 #ifndef GAME_HPP_
 #define GAME_HPP_
 
+
 #include <json_fwd.hpp>
+
 #include <map>
 #include <memory>
 #include <utility>
 #include <vector>
+
 #include "card_research.hpp"
 #include "character.hpp"
 #include "map.hpp"
 #include "runebound_fwd.hpp"
+
 #include "tokens.hpp"
 
 namespace runebound {
 const int DECK_SIZE = 60;
 
 namespace game {
+
 void to_json(nlohmann::json &json, const Game &game);
 void from_json(const nlohmann::json &json, Game &game);
 
@@ -23,6 +28,7 @@ struct Game {
 private:
     ::runebound::map::Map m_map;
     std::vector<::runebound::character::Character> m_characters;
+
     std::vector<unsigned int> m_card_deck;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
@@ -101,6 +107,7 @@ public:
         ::runebound::character::Character *chr
     );
 
+
     void make_move(
         const ::runebound::character::Character *chr,
         int end_x,
@@ -108,8 +115,10 @@ public:
         std::vector<::runebound::dice::HandDice> &dice_roll_results
     );
 
+
     friend void to_json(nlohmann::json &json, const Game &game);
     friend void from_json(const nlohmann::json &json, Game &game);
+
 };
 }  // namespace game
 }  // namespace runebound

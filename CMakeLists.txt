@@ -8,22 +8,37 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(SDL2_INCLUDE_DIR tpl/SDL2/include/)
 set(SDL2_LIB_DIR tpl/SDL2/lib/)
 
+
+
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+
 include_directories("include/")
 include_directories("tpl/nlohmann/")
+
 
 include_directories(${SDL2_INCLUDE_DIR})
 link_directories(${SDL2_LIB_DIR})
 
 add_executable(${PROJECT_NAME}
-            src/card_adventure.cpp
-            src/card_research.cpp
-            src/character.cpp
-            src/dice.cpp
-            src/game.cpp
-            src/graphics.cpp
-            src/map.cpp
-            src/map_cell.cpp
-            src/tokens.cpp
-        )
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} -lmingw32 -lSDL2main -lSDL2 -mwindows -lSDL2_image)
+        src/card_adventure.cpp
+        src/card_research.cpp
+        src/character.cpp
+        src/dice.cpp
+        src/game.cpp
+        #    src/graphics.cpp
+        src/map.cpp
+        src/map_cell.cpp
+        src/tokens.cpp
+        src/server.cpp
+
+        )
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ws2_32)
+target_link_libraries(${PROJECT_NAME} wsock32)
+
+
+
+#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} -lmingw32 -lSDL2main -lSDL2 -mwindows -lSDL2_image)
+
