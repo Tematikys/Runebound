@@ -47,6 +47,12 @@ void from_json(const nlohmann::json &json, Game &game) {
     game.m_turn = json["m_turn"];
 }
 
+std::pair<int, int> Game::get_position_character(
+    ::runebound::character::Character *chr
+) const {
+    return std::pair(chr->m_current_x, chr->m_current_y);
+}
+
 std::vector<cards::CardAdventure *> Game::generate_all_cards() {
     std::vector<cards::CardAdventure *> cards;
     m_indexes_card_research.resize(DECK_SIZE);

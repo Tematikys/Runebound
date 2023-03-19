@@ -76,6 +76,10 @@ public:
         return m_map.get_height();
     }
 
+    [[nodiscard]] std::pair<int, int> get_position_character(
+        ::runebound::character::Character *chr
+    ) const;
+
     [[nodiscard]] int get_map_width() const {
         return m_map.get_width();
     }
