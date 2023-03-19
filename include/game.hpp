@@ -20,7 +20,7 @@ void to_json(nlohmann::json &json, const Game &game);
 void from_json(const nlohmann::json &json, Game &game);
 
 struct Game {
-public:
+private:
     ::runebound::map::Map m_map;
     std::vector<::runebound::character::Character> m_characters;
     std::vector<unsigned int> m_card_deck;
