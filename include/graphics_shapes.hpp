@@ -28,7 +28,7 @@ public:
 
     [[nodiscard]] Point get_vertex(::std::size_t index) const {
         return m_vertexes[index];
-    }
+    };
 
     [[nodiscard]] ::std::vector<Point> get_vertexes() const {
         return m_vertexes;

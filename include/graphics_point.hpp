@@ -9,7 +9,6 @@ private:
 
 public:
     Point() : m_x(), m_y(){};
-
     Point(int x, int y) : m_x(x), m_y(y){};
 
     [[nodiscard]] int x() const {

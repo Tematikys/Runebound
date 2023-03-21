@@ -1,8 +1,7 @@
 #include <graphics_board.hpp>
-#include <map.hpp>
-#include <map_cell.hpp>
 
 namespace runebound::graphics {
+// constants for hexagons
 const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};
 const int HEXAGON_RADIUS = 50;
 

@@ -31,7 +31,7 @@ public:
 
     void set_selected_hexagon(::std::size_t index) {
         m_selected_hexagon = index;
-    }
+    };
 
     [[nodiscard]] ::std::optional<::std::size_t> in_bounds(Point dot) const;
 };
