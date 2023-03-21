@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <graphics.hpp>
 #include <graphics_board.hpp>
+#include <utility>
 
 namespace runebound::client {
 class Client {
@@ -15,6 +16,7 @@ private:
     int m_frame_time;
     unsigned long long m_counter;
     uint32_t m_prev_frame_time;
+    ::std::pair<int, int> m_mouse_pos;
 
 public:
     Client()
@@ -24,7 +26,8 @@ public:
           m_is_running(false),
           m_frame_time(1000 / 60),
           m_counter(0),
-          m_prev_frame_time(0){};
+          m_prev_frame_time(0),
+          m_mouse_pos({0, 0}){};
 
     void init_graphics(
         const char *title,

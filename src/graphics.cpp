@@ -50,4 +50,8 @@ bool SDL_init(
     // return true, if initialization was successful
     return true;
 }
+
+void update_mouse_pos(::std::pair<int, int> &pos) {
+    SDL_GetMouseState(&pos.first, &pos.second);
+}
 }  // namespace runebound::graphics

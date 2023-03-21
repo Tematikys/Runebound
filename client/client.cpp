@@ -37,21 +37,20 @@ void Client::render() {
     SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(m_renderer);
 
-    int x{};
-    int y{};
-    SDL_GetMouseState(&x, &y);
-
-    m_board.set_selected_hexagon(0xFFFF);
-    if (auto index = m_board.in_bounds(::runebound::graphics::Point(x, y))) {
-        m_board.set_selected_hexagon(index.value());
-    }
-
     m_board.render(m_renderer);
 
     SDL_RenderPresent(m_renderer);
 }
 
 void Client::update() {
+    ::runebound::graphics::update_mouse_pos(m_mouse_pos);
+
+    m_board.set_selected_hexagon(0xFFFF);
+    if (auto index =
+            m_board.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
+        m_board.set_selected_hexagon(index.value());
+    }
+
     ++m_counter;
 }
 
