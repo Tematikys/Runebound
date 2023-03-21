@@ -15,6 +15,7 @@ link_directories(${SDL2_LIB_DIR})
 
 add_executable(${PROJECT_NAME}
         main.cpp
+        client.cpp
         ../src/graphics.cpp
         ../src/graphics_board.cpp
         ../src/graphics_shapes.cpp

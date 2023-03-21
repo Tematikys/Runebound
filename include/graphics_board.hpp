@@ -19,6 +19,8 @@ private:
     ::std::size_t m_selected_hexagon{0xFFFF};
 
 public:
+    Board() = default;
+
     explicit Board(const ::runebound::map::Map &map);
 
     void add_hexagon(

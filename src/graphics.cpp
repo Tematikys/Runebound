@@ -3,7 +3,15 @@
 
 namespace runebound::graphics {
 // SDL init function
-bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
+bool SDL_init(
+    SDL_Window *&gWindow,
+    SDL_Renderer *&gRenderer,
+    const char *title,
+    int x_pos,
+    int y_pos,
+    int width,
+    int height
+) {
     // initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         ::std::cout << "SDL could not initialize! SDL Error:\n"
@@ -17,10 +25,8 @@ bool SDL_init(SDL_Window *&gWindow, SDL_Renderer *&gRenderer) {
     }
 
     // create window
-    gWindow = SDL_CreateWindow(
-        "Runebound-v0.0.5", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN
-    );
+    gWindow =
+        SDL_CreateWindow(title, x_pos, y_pos, width, height, SDL_WINDOW_SHOWN);
 
     // report error if appeared
     if (gWindow == nullptr) {
