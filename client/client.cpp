@@ -7,7 +7,8 @@ void Client::init_graphics(
     int x_pos,
     int y_pos,
     int width,
-    int height
+    int height,
+    int fps
 ) {
     if (!::runebound::graphics::SDL_init(
             m_window, m_renderer, title, x_pos, y_pos, width, height
@@ -16,6 +17,7 @@ void Client::init_graphics(
         return;
     }
     m_is_running = true;
+    m_fps = 1000 / fps;
 }
 
 void Client::init_board(const ::runebound::map::Map &map) {

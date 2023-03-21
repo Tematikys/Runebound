@@ -8,12 +8,12 @@
 namespace runebound::client {
 class Client {
 private:
+    ::runebound::graphics::Board m_board;
     SDL_Window *m_window{nullptr};
     SDL_Renderer *m_renderer{nullptr};
     bool m_is_running{false};
-    unsigned long long m_counter{0};
-    ::runebound::graphics::Board m_board;
     int m_fps{1000 / 60};
+    unsigned long long m_counter{0};
     uint32_t m_prev_frame_time{0};
 
 public:
@@ -22,7 +22,8 @@ public:
         int x_pos,
         int y_pos,
         int width,
-        int height
+        int height,
+        int fps
     );
 
     void init_board(const ::runebound::map::Map &map);
