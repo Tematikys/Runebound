@@ -4,10 +4,6 @@
 #include <SDL2/SDL.h>
 
 namespace runebound::graphics {
-
-const int FPS = 60;
-const int FRAME_DELAY = 1000 / FPS;
-
 // SDL init function
 bool SDL_init(
     SDL_Window *&gWindow,

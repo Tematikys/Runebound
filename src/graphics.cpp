@@ -2,7 +2,6 @@
 #include <iostream>
 
 namespace runebound::graphics {
-// SDL init function
 bool SDL_init(
     SDL_Window *&gWindow,
     SDL_Renderer *&gRenderer,
