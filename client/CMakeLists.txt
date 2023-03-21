@@ -1,14 +1,14 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.24)
 
 project(Runebound CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(SDL2_INCLUDE_DIR ../tpl/SDL2/include/)
-set(SDL2_LIB_DIR ../tpl/SDL2/lib/)
-
 include_directories("../include/")
+
+set(SDL2_INCLUDE_DIR "../tpl/SDL2/include/")
+set(SDL2_LIB_DIR "../tpl/SDL2/lib/")
 
 include_directories(${SDL2_INCLUDE_DIR})
 link_directories(${SDL2_LIB_DIR})

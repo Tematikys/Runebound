@@ -17,7 +17,7 @@ void Client::init_graphics(
         return;
     }
     m_is_running = true;
-    m_fps = 1000 / fps;
+    m_frame_time = 1000 / fps;
 }
 
 void Client::init_board(const ::runebound::map::Map &map) {
@@ -57,8 +57,8 @@ void Client::update() {
 
 void Client::tick() {
     uint32_t cur_frame_time = SDL_GetTicks();
-    if (cur_frame_time - m_prev_frame_time < m_fps) {
-        SDL_Delay(m_fps - cur_frame_time + m_prev_frame_time);
+    if (cur_frame_time - m_prev_frame_time < m_frame_time) {
+        SDL_Delay(m_frame_time - cur_frame_time + m_prev_frame_time);
     }
     m_prev_frame_time = cur_frame_time;
 }

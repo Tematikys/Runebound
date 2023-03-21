@@ -1,22 +1,20 @@
-#include <SDL2/SDL.h>
-#include <iostream>
 #include "client.hpp"
 
-int main(int /*argc*/, char * /*args*/[]) {
-    auto client = new ::runebound::client::Client;
+int main(int, char *[]) {
+    ::runebound::client::Client client;
 
-    client->init_graphics("Runebound-v0.0.6.1", 100, 100, 640, 480, 165);
+    client.init_graphics("Runebound-v0.0.7", 100, 100, 640, 480, 60);
 
     const ::runebound::map::Map map;
-    client->init_board(map);
+    client.init_board(map);
 
-    while (client->running()) {
-        client->handle_events();
-        client->update();
-        client->render();
-        client->tick();
+    while (client.running()) {
+        client.handle_events();
+        client.update();
+        client.render();
+        client.tick();
     }
+    client.exit();
 
-    client->exit();
     return 0;
 }
