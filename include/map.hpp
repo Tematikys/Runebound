@@ -11,7 +11,7 @@
 
 namespace runebound {
 namespace map {
-const int StandartHeight = 5, StandartWidth = 5;
+const int STANDART_SIZE = 15;
 
 unsigned int make_river_index(int x1, int y1, int x2, int y2);
 
@@ -22,7 +22,7 @@ struct Map {
 private:
     std::vector<std::vector<MapCell>> m_map;  // [row][column]
     std::set<std::pair<Point, Point>> m_rivers;
-    const int m_height, m_width;
+    const int m_size;
     const std::vector<Point> directions_odd_row{{0, -1}, {1, 0},  {0, 1},
                                                 {-1, 1}, {-1, 0}, {-1, -1}};
     const std::vector<Point> directions_even_row{{1, -1}, {1, 0},  {1, 1},
@@ -35,37 +35,18 @@ private:
         int count_dice
     ) const;
 
-    void make_map(std::vector<TypeCell> cells) {
-        m_map.resize(m_height);
-        for (int i = 0; i < m_height; i++) {
-            for (int j = 0; j < m_width; j++) {
-                m_map[i].push_back(MapCell(cells[i * m_height + j]));
-            }
-        }
-    }
+    void make_row(int row, int start_column, int end_column, TypeCell type);
+
+    void make_map();
 
 public:
-    [[nodiscard]] int get_height() const {
-        return m_height;
+    [[nodiscard]] int get_size() const {
+        return m_size;
     }
 
-    [[nodiscard]] int get_width() const {
-        return m_width;
-    }
 
-    Map() : m_width(StandartWidth), m_height(StandartHeight) {
-        std::vector<TypeCell> cells = {
-            TypeCell::FOREST,    TypeCell::FOREST,    TypeCell::PLAIN,
-            TypeCell::WATER,     TypeCell::WATER,     TypeCell::FOREST,
-            TypeCell::FOREST,    TypeCell::PLAIN,     TypeCell::WATER,
-            TypeCell::WATER,     TypeCell::PLAIN,     TypeCell::PLAIN,
-            TypeCell::PLAIN,     TypeCell::PLAIN,     TypeCell::PLAIN,
-            TypeCell::HILLS,     TypeCell::HILLS,     TypeCell::PLAIN,
-            TypeCell::MOUNTAINS, TypeCell::MOUNTAINS, TypeCell::HILLS,
-            TypeCell::HILLS,     TypeCell::PLAIN,     TypeCell::MOUNTAINS,
-            TypeCell::MOUNTAINS};
-        make_map(cells);
-
+    Map() : m_size(STANDART_SIZE) {
+        make_map();
         m_rivers.insert({Point(0, 2), Point(1, 1)});
         m_rivers.insert({Point(1, 1), Point(0, 2)});
         m_rivers.insert({Point(0, 2), Point(1, 2)});
@@ -79,8 +60,7 @@ public:
 
     Map(const Map &other)
         : m_rivers(other.m_rivers),
-          m_height(other.m_height),
-          m_width(other.m_width),
+          m_size(other.m_size),
           directions_odd_row(other.directions_odd_row),
           directions_even_row(other.directions_even_row) {
         m_map = other.m_map;
@@ -89,8 +69,7 @@ public:
     Map(Map &&other) noexcept
         : m_map(std::move(other.m_map)),
           m_rivers(std::move(other.m_rivers)),
-          m_height(other.m_height),
-          m_width(other.m_width),
+          m_size(other.m_size),
           directions_odd_row(other.directions_odd_row),
           directions_even_row(other.directions_even_row) {
     }
@@ -107,9 +86,6 @@ public:
 
     ~Map() = default;
 
-    Map(int width, int height) : m_height(height), m_width(width) {
-    }
-
     [[nodiscard]] MapCell get_cell_map(const Point &point) const {
         return m_map[point.x][point.y];
     }
@@ -124,9 +100,9 @@ public:
     [[nodiscard]] bool
     check_neighbour(const Point &point, const Point &direction) const {
         return (point.x + direction.x >= 0) &&
-               (point.x + direction.x < m_width) &&
+               (point.x + direction.x < m_size) &&
                (point.y + direction.y >= 0) &&
-               (point.y + direction.y < m_height);
+               (point.y + direction.y < m_size);
     }
 
     bool check_river(const Point &lhs_point, const Point &rhs_point) const {

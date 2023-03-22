@@ -79,17 +79,13 @@ public:
         return &m_characters.back();
     }
 
-    [[nodiscard]] int get_map_height() const {
-        return m_map.get_height();
+    [[nodiscard]] int get_map_size() const {
+        return m_map.get_size();
     }
 
     [[nodiscard]] Point get_position_character(
         ::runebound::character::Character *chr
     ) const;
-
-    [[nodiscard]] int get_map_width() const {
-        return m_map.get_width();
-    }
 
     [[nodiscard]] unsigned int get_turn() const {
         return m_turn;

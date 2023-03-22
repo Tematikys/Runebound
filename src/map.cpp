@@ -8,6 +8,25 @@
 namespace runebound {
 namespace map {
 
+void Map::make_row(int row, int start_column, int end_column, TypeCell type) {
+    for (int column = start_column; column < end_column; ++column) {
+        m_map[row][column] = type;
+    }
+}
+
+void Map::make_map() {
+    m_map.resize(m_size, std::vector <MapCell>(m_size));
+    make_row(0, 0, 7, TypeCell::PLAIN);
+    make_row(0, 7, 13, TypeCell::FOREST);
+    make_row(0, 13, 14, TypeCell::HILLS);
+    make_row(0, 14, 15, TypeCell::MOUNTAINS);
+    make_row(1, 0, 2, TypeCell::FOREST);
+    make_row(1, 2, 7, TypeCell::PLAIN);
+    make_row(1, 7, 11, TypeCell::FOREST);
+    make_row(1, 11, 12, TypeCell::TOWN);
+    make_row(1, 12, 13, TypeCell::HILLS);
+    make_row(1, 13, 15, TypeCell::MOUNTAINS);
+}
 unsigned int make_river_index(int x1, int y1, int x2, int y2) {
     if (x1 > x2) {
         std::swap(x1, x2);
@@ -120,8 +139,7 @@ bool Map::check_hand_dice(const Point &point, ::runebound::dice::HandDice dice)
 
 void to_json(nlohmann::json &json, const Map &map) {
     json["m_map"] = map.m_map;
-    json["m_height"] = map.m_height;
-    json["m_width"] = map.m_width;
+    json["m_size"] = map.m_size;
     json["m_rivers"] = map.m_rivers;
     json["directions_odd_row"] = map.directions_odd_row;
     json["directions_even_row"] = map.directions_even_row;
