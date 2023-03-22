@@ -20,7 +20,8 @@ add_executable(${PROJECT_NAME}
             src/character.cpp
             src/dice.cpp
             src/game.cpp
-            src/graphics.cpp
+            # src/graphics.cpp
+            src/main.cpp
             src/map.cpp
             src/map_cell.cpp
             src/tokens.cpp

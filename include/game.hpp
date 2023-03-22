@@ -68,14 +68,13 @@ public:
     ::runebound::character::Character *make_character(
         int gold,
         int health,
-        int current_x,
-        int current_y,
+        const Point &current,
         unsigned int hand_limit,
         unsigned int speed,
         std::string name
     ) {
         m_characters.emplace_back(::runebound::character::Character(
-            gold, health, current_x, current_y, hand_limit, speed, name
+            gold, health, current, hand_limit, speed, name
         ));
         m_count_players += 1;
         return &m_characters.back();
@@ -85,7 +84,7 @@ public:
         return m_map.get_height();
     }
 
-    [[nodiscard]] std::pair<int, int> get_position_character(
+    [[nodiscard]] Point get_position_character(
         ::runebound::character::Character *chr
     ) const;
 
@@ -103,8 +102,7 @@ public:
 
     void make_move(
         const ::runebound::character::Character *chr,
-        int end_x,
-        int end_y,
+        const Point &point,
         std::vector<::runebound::dice::HandDice> &dice_roll_results
     );
 

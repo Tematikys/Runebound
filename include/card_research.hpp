@@ -29,6 +29,8 @@ private:
         const ::runebound::dice::HandDice &dice
     ) const;
 
+    [[nodiscard]] bool check_completion_task(int x, int y);
+
 public:
     ::runebound::AdventureType m_card_type =
         ::runebound::AdventureType::RESEARCH;
@@ -92,8 +94,6 @@ public:
         m_outcomes = std::move(other.m_outcomes);
         return *this;
     }
-
-    [[nodiscard]] bool check_completion_task(int x, int y);
 
     [[nodiscard]] bool check_outcome(
         int index,

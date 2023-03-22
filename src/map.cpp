@@ -22,7 +22,7 @@ unsigned int make_river_index(int x1, int y1, int x2, int y2) {
     return (((x1 * step) + y1) * step + x2) * step + y2;
 }
 
-const std::vector<std::pair<int, int>> &Map::get_direction(int x) const {
+const std::vector<Point> &Map::get_direction(int x) const {
     if (x % 2 == 0) {
         return directions_even_row;
     }
@@ -30,36 +30,34 @@ const std::vector<std::pair<int, int>> &Map::get_direction(int x) const {
 }
 
 bool Map::make_move(
-    int start_x,
-    int start_y,
-    int end_x,
-    int end_y,
+    const Point &start,
+    const Point &end,
     const std::vector<::runebound::dice::HandDice> &dice_roll_results,
     int count_dice
 ) const {
-    std::map<std::pair<int, int>, int> dist;
-    dist[{start_x, start_y}] = 0;
-    std::queue<std::pair<int, int>> bfs_queue;
-    bfs_queue.push({start_x, start_y});
+    std::map<Point, int> dist;
+    dist[start] = 0;
+    std::queue<Point> bfs_queue;
+    bfs_queue.push(start);
     while (!bfs_queue.empty()) {
-        auto [x, y] = bfs_queue.front();
+        auto current = bfs_queue.front();
         bfs_queue.pop();
-        if (dist[{x, y}] > count_dice) {
+        if (dist[current] > count_dice) {
             return false;
         }
-        if (x == end_x && y == end_y) {
+        if (current == end) {
             return true;
         }
-        for (const auto &[dx, dy] : get_direction(x)) {
-            if (check_neighbour(x, y, dx, dy)) {
-                auto [new_x, new_y] = get_neighbour(x, y, dx, dy);
-                if (!dist.count({new_x, new_y}) &&
-                    (get_cell_map(new_x, new_y).check_road() ||
+        for (const auto &direction : get_direction(current.x)) {
+            if (check_neighbour(current, direction)) {
+                auto new_point = get_neighbour(current, direction);
+                if (!dist.count(new_point) &&
+                    (get_cell_map(new_point).check_road() ||
                      check_hand_dice(
-                         new_x, new_y, dice_roll_results[dist[{x, y}]]
+                         new_point, dice_roll_results[dist[current]]
                      ))) {
-                    dist[{new_x, new_y}] = dist[{x, y}] + 1;
-                    bfs_queue.push({new_x, new_y});
+                    dist[new_point] = dist[current] + 1;
+                    bfs_queue.push(new_point);
                 }
             }
         }
@@ -68,15 +66,13 @@ bool Map::make_move(
 }
 
 bool Map::check_move(
-    int start_x,
-    int start_y,
-    int end_x,
-    int end_y,
+    const Point &start,
+    const Point &end,
     std::vector<::runebound::dice::HandDice> dice_roll_results
 ) const {
     do {
         if (make_move(
-                start_x, start_y, end_x, end_y, dice_roll_results,
+                start, end, dice_roll_results,
                 static_cast<int>(dice_roll_results.size())
             )) {
             return true;
@@ -87,9 +83,9 @@ bool Map::check_move(
     return false;
 }
 
-bool Map::check_hand_dice(int x, int y, ::runebound::dice::HandDice dice)
+bool Map::check_hand_dice(const Point &point, ::runebound::dice::HandDice dice)
     const {
-    switch (get_cell_map(x, y).get_type_cell()) {
+    switch (get_cell_map(point).get_type_cell()) {
         case (TypeCell::WATER):
             return dice == ::runebound::dice::HandDice::MOUNTAINS_WATER ||
                    dice == ::runebound::dice::HandDice::JOKER;

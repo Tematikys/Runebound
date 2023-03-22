@@ -7,6 +7,7 @@
 #include <vector>
 #include "dice.hpp"
 #include "map_cell.hpp"
+#include "point.hpp"
 
 namespace runebound {
 namespace map {
@@ -22,16 +23,14 @@ private:
     std::vector<std::vector<MapCell>> m_map;  // [строка][столбик]
     std::set<unsigned int> m_rivers;
     const int m_height, m_width;
-    const std::vector<std::pair<int, int>> directions_odd_row{
+    const std::vector<Point> directions_odd_row{
         {0, -1}, {1, 0}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
-    const std::vector<std::pair<int, int>> directions_even_row{
+    const std::vector<Point> directions_even_row{
         {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 0}, {0, -1}};
 
     [[nodiscard]] bool make_move(
-        int start_x,
-        int start_y,
-        int end_x,
-        int end_y,
+        const Point &start,
+        const Point &end,
         const std::vector<::runebound::dice::HandDice> &dice_roll_results,
         int count_dice
     ) const;
@@ -108,34 +107,22 @@ public:
     Map(int width, int height) : m_height(height), m_width(width) {
     }
 
-    [[nodiscard]] MapCell get_cell_map(int height, int width) const {
-        return m_map[height][width];
+    [[nodiscard]] MapCell get_cell_map(const Point &point) const {
+        return m_map[point.x][point.y];
     }
 
-    [[nodiscard]] const std::vector<std::pair<int, int>> &get_direction(int x
+    [[nodiscard]] const std::vector<Point> &get_direction(int x
     ) const;
 
-    [[nodiscard]] std::vector<std::pair<int, int>>
-    get_neighbours_coor(int x, int y) const {
-        std::vector<std::pair<int, int>> result;
-        const std::vector<std::pair<int, int>> &directions = get_direction(x);
-        for (const auto &[dx, dy] : directions) {
-            if ((x + dx >= 0) && (x + dx < m_width) && (y + dy >= 0) &&
-                (y + dy < m_height)) {
-                result.push_back({x + dx, y + dy});
-            }
-        }
-        return result;
+    [[nodiscard]] Point
+    get_neighbour(const Point &point, const Point &direction) const {
+        return {point.x + direction.x, point.y + direction.y};
     }
 
-    [[nodiscard]] std::pair<int, int>
-    get_neighbour(int x, int y, int dx, int dy) const {
-        return {x + dx, y + dy};
-    }
-
-    [[nodiscard]] bool check_neighbour(int x, int y, int dx, int dy) const {
-        return (x + dx >= 0) && (x + dx < m_width) && (y + dy >= 0) &&
-               (y + dy < m_height);
+    [[nodiscard]] bool check_neighbour(const Point &point, const Point &direction) const {
+        return (point.x + direction.x >= 0) && (point.x + direction.x < m_width) &&
+               (point.y + direction.y >= 0) &&
+               (point.y + direction.y < m_height);
     }
 
     bool check_river(unsigned int river_index) {
@@ -147,13 +134,11 @@ public:
     }
 
     [[nodiscard]] bool
-    check_hand_dice(int x, int y, ::runebound::dice::HandDice dice) const;
+    check_hand_dice(const Point &point, ::runebound::dice::HandDice dice) const;
 
     [[nodiscard]] bool check_move(
-        int start_x,
-        int start_y,
-        int end_x,
-        int end_y,
+        const Point &start,
+        const Point &end,
         std::vector<::runebound::dice::HandDice> dice_roll_results
     ) const;
 

@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include <json.hpp>
 #include "runebound_fwd.hpp"
+#include "point.hpp"
 
 namespace runebound {
 namespace game {
@@ -48,10 +49,10 @@ void from_json(const nlohmann::json &json, Game &game) {
     game.m_turn = json["m_turn"];
 }
 
-std::pair<int, int> Game::get_position_character(
+Point Game::get_position_character(
     ::runebound::character::Character *chr
 ) const {
-    return std::pair(chr->m_current_x, chr->m_current_y);
+    return chr->m_current_position;
 }
 
 std::vector<cards::CardAdventure *> Game::generate_all_cards() {
@@ -67,11 +68,11 @@ std::vector<cards::CardAdventure *> Game::generate_all_cards() {
 void Game::check_and_get_card_adventure_because_of_token(
     ::runebound::character::Character *chr
 ) {
-    if (m_map.get_cell_map(chr->m_current_x, chr->m_current_y).get_token() !=
+    if (m_map.get_cell_map(chr->m_current_position).get_token() !=
             ::runebound::AdventureType::NOTHING &&
-        m_map.get_cell_map(chr->m_current_x, chr->m_current_y)
+        m_map.get_cell_map(chr->m_current_position)
                 .get_side_token() == ::runebound::Side::FRONT) {
-        if (m_map.get_cell_map(chr->m_current_x, chr->m_current_y)
+        if (m_map.get_cell_map(chr->m_current_position)
                 .get_token() == ::runebound::AdventureType::RESEARCH) {
             unsigned int card =
                 m_indexes_card_research[rng() % m_indexes_card_research.size()];
@@ -79,27 +80,25 @@ void Game::check_and_get_card_adventure_because_of_token(
             pop_element_from_vector(card, m_card_deck);
             pop_element_from_vector(card, m_indexes_card_research);
         }
-        m_map.get_cell_map(chr->m_current_x, chr->m_current_y).reverse_token();
+        m_map.get_cell_map(chr->m_current_position).reverse_token();
     }
 }
 
 void Game::make_move(
     const ::runebound::character::Character *chr,
-    int end_x,
-    int end_y,
+    const Point &end,
     std::vector<::runebound::dice::HandDice> &dice_roll_results
 ) {
     if (chr != &m_characters[m_turn]) {
         return;
     }
     if (!m_map.check_move(
-            m_characters[m_turn].m_current_x, m_characters[m_turn].m_current_y,
-            end_x, end_y, dice_roll_results
+            m_characters[m_turn].m_current_position,
+            end, dice_roll_results
         )) {
         return;
     }
-    m_characters[m_turn].m_current_x = end_x;
-    m_characters[m_turn].m_current_y = end_y;
+    m_characters[m_turn].m_current_position = end;
     m_turn = (m_turn + 1) % m_count_players;
 }
 
