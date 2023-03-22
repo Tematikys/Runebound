@@ -51,7 +51,6 @@ public:
         }
     };
 
-
     Game &operator=(const Game &other) {
         m_map = other.m_map;
         m_characters = other.m_characters;

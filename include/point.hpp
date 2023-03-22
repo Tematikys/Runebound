@@ -8,13 +8,14 @@ public:
 
     Point() = default;
 
-    Point (int x_, int y_) : x(x_), y(y_) {}
+    Point(int x_, int y_) : x(x_), y(y_) {
+    }
 
-    bool operator <(const Point &point) const {
+    bool operator<(const Point &point) const {
         return (x < point.x) || (x == point.x && y < point.y);
     }
 
-    bool operator ==(const Point &point) const {
+    bool operator==(const Point &point) const {
         return x == point.x && y == point.y;
     }
 

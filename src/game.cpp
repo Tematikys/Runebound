@@ -1,7 +1,7 @@
 #include "game.hpp"
 #include <json.hpp>
-#include "runebound_fwd.hpp"
 #include "point.hpp"
+#include "runebound_fwd.hpp"
 
 namespace runebound {
 namespace game {
@@ -49,8 +49,7 @@ void from_json(const nlohmann::json &json, Game &game) {
     game.m_turn = json["m_turn"];
 }
 
-Point Game::get_position_character(
-    ::runebound::character::Character *chr
+Point Game::get_position_character(::runebound::character::Character *chr
 ) const {
     return chr->m_current_position;
 }
@@ -70,10 +69,10 @@ void Game::check_and_get_card_adventure_because_of_token(
 ) {
     if (m_map.get_cell_map(chr->m_current_position).get_token() !=
             ::runebound::AdventureType::NOTHING &&
-        m_map.get_cell_map(chr->m_current_position)
-                .get_side_token() == ::runebound::Side::FRONT) {
-        if (m_map.get_cell_map(chr->m_current_position)
-                .get_token() == ::runebound::AdventureType::RESEARCH) {
+        m_map.get_cell_map(chr->m_current_position).get_side_token() ==
+            ::runebound::Side::FRONT) {
+        if (m_map.get_cell_map(chr->m_current_position).get_token() ==
+            ::runebound::AdventureType::RESEARCH) {
             unsigned int card =
                 m_indexes_card_research[rng() % m_indexes_card_research.size()];
             chr->add_card(card);
@@ -93,8 +92,7 @@ void Game::make_move(
         return;
     }
     if (!m_map.check_move(
-            m_characters[m_turn].m_current_position,
-            end, dice_roll_results
+            m_characters[m_turn].m_current_position, end, dice_roll_results
         )) {
         return;
     }

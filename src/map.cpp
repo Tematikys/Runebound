@@ -52,10 +52,16 @@ bool Map::make_move(
             if (check_neighbour(current, direction)) {
                 auto new_point = get_neighbour(current, direction);
                 if (!dist.count(new_point) &&
-                    (get_cell_map(new_point).check_road() ||
-                     check_hand_dice(
-                         new_point, dice_roll_results[dist[current]]
-                     ))) {
+                        (get_cell_map(new_point).check_road() ||
+                         (!check_river(current, new_point) &&
+                          check_hand_dice(
+                              new_point, dice_roll_results[dist[current]]
+                          ))) ||
+                    (check_river(current, new_point) &&
+                     (dice_roll_results[dist[current]] ==
+                          ::runebound::dice::HandDice::JOKER ||
+                      dice_roll_results[dist[current]] ==
+                          ::runebound::dice::HandDice::MOUNTAINS_WATER))) {
                     dist[new_point] = dist[current] + 1;
                     bfs_queue.push(new_point);
                 }

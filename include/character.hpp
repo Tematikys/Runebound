@@ -8,9 +8,9 @@
 #include <string>
 #include <vector>
 #include "card_adventure.hpp"
+#include "point.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
-#include "point.hpp"
 
 namespace runebound {
 namespace character {
