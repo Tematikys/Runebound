@@ -62,6 +62,10 @@ public:
         m_action_points += delta;
     }
 
+    unsigned int get_speed() const {
+        return m_speed;
+    }
+
     [[nodiscard]] unsigned int get_action_points() const {
         return m_action_points;
     }

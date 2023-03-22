@@ -16,6 +16,7 @@ enum class HandDice {
 };
 
 HandDice throw_dice();
+std::vector<HandDice> get_combination_of_dice(unsigned int count_throws);
 
 }  // namespace dice
 }  // namespace runebound

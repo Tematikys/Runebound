@@ -99,6 +99,12 @@ public:
         ::runebound::character::Character *chr
     );
 
+    std::vector<::runebound::dice::HandDice> throw_camping_dice(
+        const ::runebound::character::Character *chr
+    ) const {
+        return ::runebound::dice::get_combination_of_dice(chr->get_speed());
+    }
+
     void make_move(
         const ::runebound::character::Character *chr,
         const Point &point,
