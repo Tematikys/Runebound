@@ -27,19 +27,6 @@ void Map::make_map() {
     make_row(1, 12, 13, TypeCell::HILLS);
     make_row(1, 13, 15, TypeCell::MOUNTAINS);
 }
-unsigned int make_river_index(int x1, int y1, int x2, int y2) {
-    if (x1 > x2) {
-        std::swap(x1, x2);
-        std::swap(y1, y2);
-    } else {
-        if ((x1 == x2) && (y1 > y2)) {
-            std::swap(y1, y2);
-        }
-    }
-
-    int step = 64;
-    return (((x1 * step) + y1) * step + x2) * step + y2;
-}
 
 const std::vector<Point> &Map::get_direction(int x) const {
     if (x % 2 == 0) {
@@ -73,8 +60,8 @@ bool Map::make_move(
                 if (!dist.count(new_point) &&
                         (get_cell_map(new_point).check_road() ||
                          (!check_river(current, new_point) &&
-                          check_hand_dice(
-                              new_point, dice_roll_results[dist[current]]
+                          ::runebound::dice::check_hand_dice(
+                              get_cell_map(new_point).get_type_cell(), dice_roll_results[dist[current]]
                           ))) ||
                     (check_river(current, new_point) &&
                      (dice_roll_results[dist[current]] ==
@@ -108,34 +95,6 @@ bool Map::check_move(
     return false;
 }
 
-bool Map::check_hand_dice(const Point &point, ::runebound::dice::HandDice dice)
-    const {
-    switch (get_cell_map(point).get_type_cell()) {
-        case (TypeCell::WATER):
-            return dice == ::runebound::dice::HandDice::MOUNTAINS_WATER ||
-                   dice == ::runebound::dice::HandDice::JOKER;
-        case (TypeCell::FOREST):
-            return dice == ::runebound::dice::HandDice::FOREST_HILLS ||
-                   dice == ::runebound::dice::HandDice::PLAIN_FOREST ||
-                   dice == ::runebound::dice::HandDice::JOKER;
-        case (TypeCell::MOUNTAINS):
-            return dice == ::runebound::dice::HandDice::MOUNTAINS_WATER ||
-                   dice == ::runebound::dice::HandDice::JOKER;
-        case (TypeCell::HILLS):
-            return dice == ::runebound::dice::HandDice::FOREST_HILLS ||
-                   dice == ::runebound::dice::HandDice::HILLS_PLAIN ||
-                   dice == ::runebound::dice::HandDice::JOKER;
-        case (TypeCell::PLAIN):
-            return dice == ::runebound::dice::HandDice::PLAIN ||
-                   dice == ::runebound::dice::HandDice::PLAIN_FOREST ||
-                   dice == ::runebound::dice::HandDice::HILLS_PLAIN ||
-                   dice == ::runebound::dice::HandDice::JOKER;
-        case (TypeCell::TOWN):
-            return true;
-        default:
-            return dice == ::runebound::dice::HandDice::JOKER;
-    }
-}
 
 void to_json(nlohmann::json &json, const Map &map) {
     json["m_map"] = map.m_map;

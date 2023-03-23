@@ -13,7 +13,6 @@ namespace runebound {
 namespace map {
 const int STANDART_SIZE = 15;
 
-unsigned int make_river_index(int x1, int y1, int x2, int y2);
 
 void to_json(nlohmann::json &json, const Map &map);
 void from_json(const nlohmann::json &json, Map &map);
@@ -108,9 +107,6 @@ public:
     bool check_river(const Point &lhs_point, const Point &rhs_point) const {
         return m_rivers.find({lhs_point, rhs_point}) != m_rivers.end();
     }
-
-    [[nodiscard]] bool
-    check_hand_dice(const Point &point, ::runebound::dice::HandDice dice) const;
 
     [[nodiscard]] bool check_move(
         const Point &start,
