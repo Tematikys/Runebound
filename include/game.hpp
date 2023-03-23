@@ -109,6 +109,18 @@ public:
 
     friend void to_json(nlohmann::json &json, const Game &game);
     friend void from_json(const nlohmann::json &json, Game &game);
+
+    [[nodiscard]] nlohmann::json to_json() const {
+        nlohmann::json json;
+        ::runebound::game::to_json(json, *this);
+        return json;
+    }
+
+    static Game from_json(const nlohmann::json &json) {
+        Game game;
+        ::runebound::game::from_json(json, game);
+        return game;
+    }
 };
 }  // namespace game
 }  // namespace runebound

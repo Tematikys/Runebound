@@ -26,6 +26,7 @@ private:
     std::vector<unsigned int> m_cards;
     std::map<runebound::token::Token, int> m_tokens;
     int m_max_health;
+
 public:
     int m_gold, m_health;
     Point m_current_position;
@@ -34,7 +35,8 @@ public:
         : m_gold(0),
           m_health(0),
           m_hand_limit(0),
-          m_speed(0), m_max_health(0),
+          m_speed(0),
+          m_max_health(0),
           m_current_position(0, 0) {
     }
 
@@ -76,7 +78,6 @@ public:
     }
 
     void pop_card(unsigned int card);
-
 
     friend void to_json(nlohmann::json &json, const Character &character);
     friend void from_json(const nlohmann::json &json, Character &character);

@@ -14,7 +14,6 @@ namespace map {
 
 const int STANDARD_SIZE = 15;
 
-
 void to_json(nlohmann::json &json, const Map &map);
 void from_json(const nlohmann::json &json, Map &map);
 
@@ -35,15 +34,17 @@ private:
         int count_dice
     ) const;
 
-    void make_row(int row, const std::vector <std::pair<TypeCell, int>> &elements);
+    void
+    make_row(int row, const std::vector<std::pair<TypeCell, int>> &elements);
 
+    void make_cells();
+    void make_rivers();
     void make_map();
 
 public:
     [[nodiscard]] int get_size() const {
         return m_size;
     }
-
 
     Map() : m_size(STANDARD_SIZE) {
         make_map();
@@ -101,8 +102,7 @@ public:
     check_neighbour(const Point &point, const Point &direction) const {
         return (point.x + direction.x >= 0) &&
                (point.x + direction.x < m_size) &&
-               (point.y + direction.y >= 0) &&
-               (point.y + direction.y < m_size);
+               (point.y + direction.y >= 0) && (point.y + direction.y < m_size);
     }
 
     bool check_river(const Point &lhs_point, const Point &rhs_point) const {

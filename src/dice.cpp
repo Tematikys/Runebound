@@ -20,9 +20,12 @@ std::vector<HandDice> get_combination_of_dice(unsigned int count_throws) {
     return result_of_throws;
 }
 
-bool check_hand_dice(::runebound::map::TypeCell type, ::runebound::dice::HandDice dice) {
+bool check_hand_dice(
+    ::runebound::map::TypeCell type,
+    ::runebound::dice::HandDice dice
+) {
     switch (type) {
-    case (::runebound::map::TypeCell::WATER):
+        case (::runebound::map::TypeCell::WATER):
             return dice == ::runebound::dice::HandDice::MOUNTAINS_WATER ||
                    dice == ::runebound::dice::HandDice::JOKER;
         case (::runebound::map::TypeCell::FOREST):
