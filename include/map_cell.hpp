@@ -1,6 +1,7 @@
 #ifndef FIELD_CELL_HPP_
 #define FIELD_CELL_HPP_
 
+#include <json_fwd.hpp>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -11,7 +12,7 @@ namespace map {
 
 const int COUNT_NEIGHBOUR = 6;
 
-enum class TypeCell { WATER, FOREST, MOUNTAINS, HILLS, PLAIN };
+enum class TypeCell { WATER, FOREST, MOUNTAINS, HILLS, PLAIN, TOWN };
 
 enum class Neighbour {
     TOPRIGHT,
@@ -22,9 +23,14 @@ enum class Neighbour {
     TOPLEFT
 };
 
+void to_json(nlohmann::json &json, const MapCell &map_cell);
+void from_json(const nlohmann::json &json, MapCell &map_cell);
+
 struct MapCell {
 public:
-    MapCell(TypeCell type_cell) : m_type_cell(type_cell) {
+    MapCell() = default;
+
+    explicit MapCell(TypeCell type_cell) : m_type_cell(type_cell) {
         m_token = runebound::AdventureType::NOTHING;
         m_side_token = runebound::Side::FRONT;
     }
@@ -33,7 +39,7 @@ public:
         m_token = token;
     }
 
-    runebound::AdventureType get_token() const {
+    [[nodiscard]] runebound::AdventureType get_token() const {
         return m_token;
     }
 
@@ -42,16 +48,33 @@ public:
             static_cast<runebound::Side>(static_cast<int>(m_side_token) ^ 1);
     }
 
-    runebound::Side get_side_token() const {
+    [[nodiscard]] runebound::Side get_side_token() const {
         return m_side_token;
     }
 
-    TypeCell get_type_cell() const {
+    [[nodiscard]] TypeCell get_type_cell() const {
         return m_type_cell;
     }
 
+    [[nodiscard]] bool check_road() const {
+        return m_road;
+    }
+
+    void make_road() {
+        m_road = false;
+    }
+
+    [[nodiscard]] std::string get_special_type_cell() const {
+        return m_special_type_cell;
+    }
+
+    friend void to_json(nlohmann::json &json, const MapCell &map_cell);
+    friend void from_json(const nlohmann::json &json, MapCell &map_cell);
+
 private:
-    const TypeCell m_type_cell;
+    TypeCell m_type_cell;
+    bool m_road = false;
+    std::string m_special_type_cell;
     runebound::AdventureType m_token;
     runebound::Side m_side_token;
 };
