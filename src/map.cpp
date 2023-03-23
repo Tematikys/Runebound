@@ -1,5 +1,6 @@
 #include "map.hpp"
 #include <algorithm>
+#include <iostream>
 #include <json.hpp>
 #include <map>
 #include <queue>
@@ -222,24 +223,32 @@ const std::vector<Point> &Map::get_directions(int x) const {
     return directions_odd_row;
 }
 
-bool Map::make_move(
+std::vector<Point> Map::make_move(
     const Point &start,
     const Point &end,
     const std::vector<::runebound::dice::HandDice> &dice_roll_results,
     int count_dice
 ) const {
     std::map<Point, int> dist;
+    std::map<Point, Point> parent;
     dist[start] = 0;
     std::queue<Point> bfs_queue;
     bfs_queue.push(start);
+    parent[start] = Point(-1, -1);
     while (!bfs_queue.empty()) {
         auto current = bfs_queue.front();
         bfs_queue.pop();
         if (dist[current] > count_dice) {
-            return false;
+            return {};
         }
         if (current == end) {
-            return true;
+            std::vector<Point> result;
+            while (current != Point(-1, -1)) {
+                result.push_back(current);
+                current = parent[current];
+            }
+            std::reverse(result.begin(), result.end());
+            return result;
         }
         for (const auto &direction : get_directions(current.x)) {
             if (check_neighbour(current, direction)) {
@@ -257,30 +266,32 @@ bool Map::make_move(
                       dice_roll_results[dist[current]] ==
                           ::runebound::dice::HandDice::MOUNTAINS_WATER))) {
                     dist[new_point] = dist[current] + 1;
+                    parent[new_point] = current;
                     bfs_queue.push(new_point);
                 }
             }
         }
     }
-    return false;
+    return {};
 }
 
-bool Map::check_move(
+std::vector<Point> Map::check_move(
     const Point &start,
     const Point &end,
     std::vector<::runebound::dice::HandDice> dice_roll_results
 ) const {
     do {
-        if (make_move(
-                start, end, dice_roll_results,
-                static_cast<int>(dice_roll_results.size())
-            )) {
-            return true;
+        auto result = make_move(
+            start, end, dice_roll_results,
+            static_cast<int>(dice_roll_results.size())
+        );
+        if (!result.empty()) {
+            return result;
         }
     } while (std::next_permutation(
         dice_roll_results.begin(), dice_roll_results.end()
     ));
-    return false;
+    return {};
 }
 
 void to_json(nlohmann::json &json, const Map &map) {

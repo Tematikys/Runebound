@@ -64,21 +64,24 @@ void Game::check_and_get_card_adventure_because_of_token(
     }
 }
 
-void Game::make_move(
+std::vector<Point> Game::make_move(
     const ::runebound::character::Character *chr,
     const Point &end,
     std::vector<::runebound::dice::HandDice> &dice_roll_results
 ) {
     if (chr != &m_characters[m_turn]) {
-        return;
+        return {};
     }
-    if (!m_map.check_move(
-            m_characters[m_turn].m_current_position, end, dice_roll_results
-        )) {
-        return;
+    std::vector<Point> result = m_map.check_move(
+        m_characters[m_turn].m_current_position, end, dice_roll_results
+    );
+
+    if (result.empty()) {
+        return result;
     }
     m_characters[m_turn].m_current_position = end;
     m_turn = (m_turn + 1) % m_count_players;
+    return result;
 }
 
 }  // namespace game

@@ -60,6 +60,10 @@ public:
         return m_road;
     }
 
+    void make_road() {
+        m_road = false;
+    }
+
     [[nodiscard]] std::string get_special_type_cell() const {
         return m_special_type_cell;
     }
@@ -69,7 +73,7 @@ public:
 
 private:
     TypeCell m_type_cell;
-    bool m_road;
+    bool m_road = false;
     std::string m_special_type_cell;
     runebound::AdventureType m_token;
     runebound::Side m_side_token;

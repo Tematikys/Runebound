@@ -97,7 +97,7 @@ public:
         return ::runebound::dice::get_combination_of_dice(chr->get_speed());
     }
 
-    void make_move(
+    std::vector<Point> make_move(
         const ::runebound::character::Character *chr,
         const Point &point,
         std::vector<::runebound::dice::HandDice> &dice_roll_results

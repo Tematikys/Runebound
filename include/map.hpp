@@ -26,8 +26,7 @@ private:
                                                 {-1, 1}, {-1, 0}, {-1, -1}};
     const std::vector<Point> directions_even_row{{1, -1}, {1, 0},  {1, 1},
                                                  {0, 1},  {-1, 0}, {0, -1}};
-
-    [[nodiscard]] bool make_move(
+    [[nodiscard]] std::vector<Point> make_move(
         const Point &start,
         const Point &end,
         const std::vector<::runebound::dice::HandDice> &dice_roll_results,
@@ -109,7 +108,7 @@ public:
         return m_rivers.find({lhs_point, rhs_point}) != m_rivers.end();
     }
 
-    [[nodiscard]] bool check_move(
+    [[nodiscard]] std::vector<Point> check_move(
         const Point &start,
         const Point &end,
         std::vector<::runebound::dice::HandDice> dice_roll_results
