@@ -21,6 +21,7 @@ void to_json(nlohmann::json &json, const Character &character) {
     json["m_name"] = character.m_name;
     json["m_gold"] = character.m_gold;
     json["m_health"] = character.m_health;
+    json["m_max_health"] = character.m_max_health;
     json["m_current_position"] = character.m_current_position;
     json["m_tokens"] = character.m_tokens;
     json["m_cards"] = character.m_cards;
@@ -32,6 +33,7 @@ void from_json(const nlohmann::json &json, Character &character) {
     character.m_name = json["m_name"];
     character.m_gold = json["m_gold"];
     character.m_health = json["m_health"];
+    character.m_max_health = json["m_max_health"];
     character.m_current_position = json["m_current_position"];
     character.m_tokens = json["m_tokens"];
     character.m_cards.clear();

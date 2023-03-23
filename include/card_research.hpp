@@ -24,11 +24,6 @@ private:
 
     std::vector<Outcome> m_outcomes;
 
-    [[nodiscard]] bool check_hand_dice(
-        const ::runebound::map::TypeCell &necessary_result,
-        const ::runebound::dice::HandDice &dice
-    ) const;
-
     [[nodiscard]] bool check_completion_task(int x, int y);
 
 public:
@@ -55,7 +50,7 @@ public:
         }
     };
 
-    explicit CardResearch(
+    CardResearch(
         int task_position_x,
         int task_position_y,
         std::vector<Outcome> outcomes

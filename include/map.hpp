@@ -11,7 +11,8 @@
 
 namespace runebound {
 namespace map {
-const int STANDART_SIZE = 15;
+
+const int STANDARD_SIZE = 15;
 
 
 void to_json(nlohmann::json &json, const Map &map);
@@ -34,7 +35,7 @@ private:
         int count_dice
     ) const;
 
-    void make_row(int row, int start_column, int end_column, TypeCell type);
+    void make_row(int row, const std::vector <std::pair<TypeCell, int>> &elements);
 
     void make_map();
 
@@ -44,7 +45,7 @@ public:
     }
 
 
-    Map() : m_size(STANDART_SIZE) {
+    Map() : m_size(STANDARD_SIZE) {
         make_map();
         m_rivers.insert({Point(0, 2), Point(1, 1)});
         m_rivers.insert({Point(1, 1), Point(0, 2)});
@@ -89,7 +90,7 @@ public:
         return m_map[point.x][point.y];
     }
 
-    [[nodiscard]] const std::vector<Point> &get_direction(int x) const;
+    [[nodiscard]] const std::vector<Point> &get_directions(int x) const;
 
     [[nodiscard]] Point
     get_neighbour(const Point &point, const Point &direction) const {
@@ -116,6 +117,18 @@ public:
 
     friend void to_json(nlohmann::json &json, const Map &map);
     friend void from_json(const nlohmann::json &json, Map &map);
+
+    nlohmann::json to_json() {
+        nlohmann::json json;
+        ::runebound::map::to_json(json, *this);
+        return json;
+    }
+
+    static Map from_json(const nlohmann::json &json) {
+        Map map;
+        ::runebound::map::from_json(json, map);
+        return map;
+    }
 };
 }  // namespace map
 }  // namespace runebound

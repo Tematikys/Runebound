@@ -25,7 +25,7 @@ private:
     std::string m_name;
     std::vector<unsigned int> m_cards;
     std::map<runebound::token::Token, int> m_tokens;
-
+    int m_max_health;
 public:
     int m_gold, m_health;
     Point m_current_position;
@@ -34,7 +34,7 @@ public:
         : m_gold(0),
           m_health(0),
           m_hand_limit(0),
-          m_speed(0),
+          m_speed(0), m_max_health(0),
           m_current_position(0, 0) {
     }
 
@@ -48,6 +48,7 @@ public:
     )
         : m_gold(gold),
           m_health(health),
+          m_max_health(health),
           m_current_position(current_position),
           m_hand_limit(hand_limit),
           m_speed(speed),
@@ -76,8 +77,21 @@ public:
 
     void pop_card(unsigned int card);
 
+
     friend void to_json(nlohmann::json &json, const Character &character);
     friend void from_json(const nlohmann::json &json, Character &character);
+
+    nlohmann::json to_json() {
+        nlohmann::json json;
+        ::runebound::character::to_json(json, *this);
+        return json;
+    }
+
+    static Character from_json(const nlohmann::json &json) {
+        Character chr;
+        ::runebound::character::from_json(json, chr);
+        return chr;
+    }
 };
 }  // namespace character
 }  // namespace runebound

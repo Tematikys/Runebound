@@ -8,27 +8,77 @@
 namespace runebound {
 namespace map {
 
-void Map::make_row(int row, int start_column, int end_column, TypeCell type) {
-    for (int column = start_column; column < end_column; ++column) {
-        m_map[row][column] = type;
+void Map::make_row(int row, const std::vector <std::pair<TypeCell, int>> &elements) {
+    int column = 0;
+    for (const auto &one_type : elements) {
+        for (int i = 0; i < one_type.second; ++i) {
+            m_map[row][column] = MapCell(one_type.first);
+            column += 1;
+        }
     }
 }
 
 void Map::make_map() {
     m_map.resize(m_size, std::vector <MapCell>(m_size));
-    make_row(0, 0, 7, TypeCell::PLAIN);
-    make_row(0, 7, 13, TypeCell::FOREST);
-    make_row(0, 13, 14, TypeCell::HILLS);
-    make_row(0, 14, 15, TypeCell::MOUNTAINS);
-    make_row(1, 0, 2, TypeCell::FOREST);
-    make_row(1, 2, 7, TypeCell::PLAIN);
-    make_row(1, 7, 11, TypeCell::FOREST);
-    make_row(1, 11, 12, TypeCell::TOWN);
-    make_row(1, 12, 13, TypeCell::HILLS);
-    make_row(1, 13, 15, TypeCell::MOUNTAINS);
+
+    make_row(0, std::vector{std::pair(TypeCell::PLAIN, 7), std::pair(TypeCell::FOREST, 6),
+                            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::MOUNTAINS, 1)});
+    make_row(1, std::vector{std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::PLAIN, 5),
+                            std::pair(TypeCell::FOREST, 4), std::pair(TypeCell::TOWN, 1),
+                            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::MOUNTAINS, 2)});
+    make_row(2, std::vector{std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::MOUNTAINS, 1),
+                            std::pair(TypeCell::PLAIN, 5), std::pair(TypeCell::FOREST, 1),
+                            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::MOUNTAINS, 3)});
+    make_row(3, std::vector{std::pair(TypeCell::FOREST, 1), std::pair(TypeCell::PLAIN, 2),
+                            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 8),
+                            std::pair(TypeCell::MOUNTAINS, 3)});
+    make_row(4, std::vector{std::pair(TypeCell::PLAIN, 5), std::pair(TypeCell::WATER, 1),
+                            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::FOREST, 1),
+                            std::pair(TypeCell::PLAIN, 1), std::pair(TypeCell::WATER, 1),
+                            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::HILLS, 2)});
+    make_row(5, std::vector{std::pair(TypeCell::PLAIN, 1), std::pair(TypeCell::HILLS, 1),
+                            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::WATER, 2),
+                            std::pair(TypeCell::TOWN, 1), std::pair(TypeCell::PLAIN, 4),
+                            std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::HILLS, 2)});
+    make_row(6, std::vector{std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 1),
+                            std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::PLAIN, 6),
+                            std::pair(TypeCell::FOREST, 3), std::pair(TypeCell::HILLS, 2)});
+    make_row(7, std::vector{std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 4),
+                            std::pair(TypeCell::WATER, 1), std::pair(TypeCell::PLAIN, 3),
+                            std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 2),
+                            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 2)});
+    make_row(8, std::vector{std::pair(TypeCell::PLAIN, 10), std::pair(TypeCell::MOUNTAINS, 1),
+                            std::pair(TypeCell::PLAIN, 4)});
+    make_row(9, std::vector{std::pair(TypeCell::FOREST, 1), std::pair(TypeCell::PLAIN, 10),
+                            std::pair(TypeCell::WATER, 1), std::pair(TypeCell::PLAIN, 3)});
+    make_row(10, std::vector{std::pair(TypeCell::FOREST, 1), std::pair(TypeCell::PLAIN, 1),
+                            std::pair(TypeCell::TOWN, 1), std::pair(TypeCell::HILLS, 1),
+                            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 1),
+                            std::pair(TypeCell::PLAIN, 6), std::pair(TypeCell::FOREST, 1)});
+    make_row(11, std::vector{std::pair(TypeCell::PLAIN, 4), std::pair(TypeCell::HILLS, 1),
+                            std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 1),
+                            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::WATER, 2),
+                            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::TOWN, 1),
+                            std::pair(TypeCell::FOREST, 1)});
+    make_row(12, std::vector{std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 2),
+                             std::pair(TypeCell::MOUNTAINS, 2), std::pair(TypeCell::HILLS, 3),
+                             std::pair(TypeCell::PLAIN, 5)});
+    make_row(13, std::vector{std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 2),
+                             std::pair(TypeCell::MOUNTAINS, 3), std::pair(TypeCell::HILLS, 1),
+                             std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 5)});
+    make_row(13, std::vector{std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 2),
+                             std::pair(TypeCell::MOUNTAINS, 3), std::pair(TypeCell::HILLS, 1),
+                             std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 5)});
+
+
+
+
+
+
+
 }
 
-const std::vector<Point> &Map::get_direction(int x) const {
+const std::vector<Point> &Map::get_directions(int x) const {
     if (x % 2 == 0) {
         return directions_even_row;
     }
@@ -54,7 +104,7 @@ bool Map::make_move(
         if (current == end) {
             return true;
         }
-        for (const auto &direction : get_direction(current.x)) {
+        for (const auto &direction : get_directions(current.x)) {
             if (check_neighbour(current, direction)) {
                 auto new_point = get_neighbour(current, direction);
                 if (!dist.count(new_point) &&

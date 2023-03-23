@@ -30,7 +30,7 @@ struct MapCell {
 public:
     MapCell() = default;
 
-    MapCell(TypeCell type_cell) : m_type_cell(type_cell) {
+    explicit MapCell(TypeCell type_cell) : m_type_cell(type_cell) {
         m_token = runebound::AdventureType::NOTHING;
         m_side_token = runebound::Side::FRONT;
     }
