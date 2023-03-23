@@ -27,4 +27,6 @@ add_executable(${PROJECT_NAME}
             src/tokens.cpp
         )
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} -lmingw32 -lSDL2main -lSDL2 -mwindows -lSDL2_image)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} -lmingw32 -lSDL2main -lSDL2 -mwindows -lSDL2_image -mconsole
+        )
+

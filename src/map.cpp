@@ -132,9 +132,87 @@ void Map::make_cells() {
     );
 }
 
+void Map::make_rivers() {
+    m_rivers.insert({Point(2, 11), Point(3, 11)});
+    m_rivers.insert({Point(3, 11), Point(2, 11)});
+    m_rivers.insert({Point(3, 10), Point(3, 11)});
+    m_rivers.insert({Point(3, 11), Point(3, 10)});
+    m_rivers.insert({Point(4, 9), Point(5, 10)});
+    m_rivers.insert({Point(5, 10), Point(4, 9)});
+    m_rivers.insert({Point(4, 9), Point(5, 9)});
+    m_rivers.insert({Point(5, 9), Point(4, 9)});
+    m_rivers.insert({Point(5, 8), Point(5, 9)});
+    m_rivers.insert({Point(5, 9), Point(5, 8)});
+    m_rivers.insert({Point(5, 8), Point(6, 8)});
+    m_rivers.insert({Point(6, 8), Point(5, 8)});
+    m_rivers.insert({Point(5, 8), Point(5, 7)});
+    m_rivers.insert({Point(5, 7), Point(5, 8)});
+    m_rivers.insert({Point(5, 7), Point(4, 7)});
+    m_rivers.insert({Point(4, 7), Point(5, 7)});
+    m_rivers.insert({Point(5, 3), Point(6, 4)});
+    m_rivers.insert({Point(6, 4), Point(5, 3)});
+    m_rivers.insert({Point(6, 3), Point(6, 4)});
+    m_rivers.insert({Point(6, 4), Point(6, 3)});
+    m_rivers.insert({Point(6, 3), Point(7, 4)});
+    m_rivers.insert({Point(7, 4), Point(6, 3)});
+    m_rivers.insert({Point(6, 4), Point(7, 4)});
+    m_rivers.insert({Point(7, 4), Point(6, 4)});
+    m_rivers.insert({Point(7, 4), Point(6, 5)});
+    m_rivers.insert({Point(6, 5), Point(7, 4)});
+    m_rivers.insert({Point(7, 3), Point(7, 4)});
+    m_rivers.insert({Point(7, 4), Point(7, 3)});
+    m_rivers.insert({Point(7, 3), Point(8, 4)});
+    m_rivers.insert({Point(8, 4), Point(7, 3)});
+    m_rivers.insert({Point(8, 2), Point(8, 3)});
+    m_rivers.insert({Point(8, 3), Point(8, 2)});
+    m_rivers.insert({Point(9, 2), Point(8, 3)});
+    m_rivers.insert({Point(8, 3), Point(9, 2)});
+    m_rivers.insert({Point(9, 2), Point(9, 3)});
+    m_rivers.insert({Point(9, 3), Point(9, 2)});
+    m_rivers.insert({Point(9, 1), Point(9, 2)});
+    m_rivers.insert({Point(9, 2), Point(9, 1)});
+    m_rivers.insert({Point(9, 1), Point(10, 0)});
+    m_rivers.insert({Point(10, 0), Point(9, 1)});
+    m_rivers.insert({Point(9, 1), Point(9, 0)});
+    m_rivers.insert({Point(9, 0), Point(9, 1)});
+    m_rivers.insert({Point(8, 1), Point(9, 0)});
+    m_rivers.insert({Point(9, 0), Point(8, 1)});
+    m_rivers.insert({Point(8, 0), Point(9, 0)});
+    m_rivers.insert({Point(9, 0), Point(8, 0)});
+    m_rivers.insert({Point(8, 14), Point(9, 14)});
+    m_rivers.insert({Point(9, 14), Point(8, 14)});
+    m_rivers.insert({Point(8, 13), Point(9, 14)});
+    m_rivers.insert({Point(9, 14), Point(8, 13)});
+    m_rivers.insert({Point(8, 13), Point(9, 13)});
+    m_rivers.insert({Point(9, 13), Point(8, 13)});
+    m_rivers.insert({Point(9, 12), Point(9, 13)});
+    m_rivers.insert({Point(9, 13), Point(9, 12)});
+    m_rivers.insert({Point(10, 12), Point(9, 13)});
+    m_rivers.insert({Point(9, 13), Point(10, 12)});
+    m_rivers.insert({Point(10, 12), Point(10, 13)});
+    m_rivers.insert({Point(10, 13), Point(10, 12)});
+    m_rivers.insert({Point(11, 13), Point(10, 13)});
+    m_rivers.insert({Point(10, 13), Point(11, 13)});
+    m_rivers.insert({Point(12, 14), Point(11, 14)});
+    m_rivers.insert({Point(11, 14), Point(12, 14)});
+    m_rivers.insert({Point(12, 14), Point(12, 13)});
+    m_rivers.insert({Point(12, 13), Point(12, 14)});
+    m_rivers.insert({Point(11, 11), Point(12, 11)});
+    m_rivers.insert({Point(12, 11), Point(11, 11)});
+    m_rivers.insert({Point(11, 11), Point(12, 12)});
+    m_rivers.insert({Point(12, 12), Point(11, 11)});
+    m_rivers.insert({Point(11, 11), Point(12, 10)});
+    m_rivers.insert({Point(12, 10), Point(11, 11)});
+    m_rivers.insert({Point(11, 10), Point(12, 10)});
+    m_rivers.insert({Point(12, 10), Point(11, 10)});
+    m_rivers.insert({Point(11, 12), Point(12, 12)});
+    m_rivers.insert({Point(12, 12), Point(11, 12)});
+}
+
 void Map::make_map() {
     m_map.resize(m_size, std::vector<MapCell>(m_size));
     make_cells();
+    make_rivers();
 }
 
 const std::vector<Point> &Map::get_directions(int x) const {
