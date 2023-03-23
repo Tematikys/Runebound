@@ -1,3 +1,4 @@
+#include <boost/asio.hpp>
 #include "client.hpp"
 
 int main(int, char *[]) {

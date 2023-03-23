@@ -13,6 +13,16 @@ set(SDL2_LIB_DIR "../tpl/SDL2/lib/")
 include_directories(${SDL2_INCLUDE_DIR})
 link_directories(${SDL2_LIB_DIR})
 
+set(BOOST_INCLUDE_DIR "../tpl/boost/include/")
+set(BOOST_LIB_DIR "../tpl/boost/lib/")
+
+include_directories(${BOOST_INCLUDE_DIR})
+link_directories(${BOOST_LIB_DIR})
+
+set(NLOHMANN_INCLUDE_DIR "../tpl/nlohmann/")
+
+include_directories(${NLOHMANN_INCLUDE_DIR})
+
 add_executable(${PROJECT_NAME}
         main.cpp
         client.cpp
@@ -24,3 +34,4 @@ add_executable(${PROJECT_NAME}
         )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2 -lSDL2_image)
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARy} ws2_32 wsock32)
