@@ -12,7 +12,7 @@
 namespace runebound {
 namespace cards {
 void to_json(nlohmann::json &json, const CardResearch &card);
-void from_json(const nlohmann::json &json, CardResearch *card);
+void from_json(const nlohmann::json &json, CardResearch &card);
 
 struct CardResearch : CardAdventure {
 public:
@@ -113,7 +113,7 @@ public:
 
     friend void to_json(nlohmann::json &json, const CardResearch &card);
 
-    friend void from_json(const nlohmann::json &json, CardResearch *card);
+    friend void from_json(const nlohmann::json &json, CardResearch &card);
 };
 }  // namespace cards
 }  // namespace runebound

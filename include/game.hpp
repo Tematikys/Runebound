@@ -23,14 +23,14 @@ struct Game {
 private:
     ::runebound::map::Map m_map;
     std::vector<::runebound::character::Character> m_characters;
-    std::vector<unsigned int> m_card_deck;
+    std::vector<unsigned int> m_card_deck_research;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
     unsigned int m_count_players;
     std::vector<unsigned int> m_indexes_card_research;
-    const std::vector<cards::CardAdventure *> ALL_CARDS;
+    const std::vector<cards::CardResearch> ALL_CARDS_RESEARCH;
 
-    std::vector<cards::CardAdventure *> generate_all_cards();
+    std::vector<cards::CardResearch> generate_all_cards_research();
 
     template <typename T>
     void pop_element_from_vector(T element, std::vector<T> &vec) {
@@ -44,24 +44,20 @@ private:
     }
 
 public:
-    Game() : ALL_CARDS(std::move(generate_all_cards())) {
-        m_card_deck.resize(DECK_SIZE);
+    Game() : ALL_CARDS_RESEARCH(std::move(generate_all_cards_research())) {
+        m_card_deck_research.resize(DECK_SIZE);
         for (int i = 0; i < DECK_SIZE; ++i) {
-            m_card_deck[i] = i;
+            m_card_deck_research[i] = i;
         }
     };
 
     Game &operator=(const Game &other) {
         m_map = other.m_map;
         m_characters = other.m_characters;
-        m_card_deck = other.m_card_deck;
+        m_card_deck_research = other.m_card_deck_research;
         m_tokens = other.m_tokens;
         m_turn = other.m_turn;
         return *this;
-    }
-
-    Game(std::vector<cards::CardAdventure *> cards)
-        : ALL_CARDS(std::move(cards)) {
     }
 
     ::runebound::character::Character *make_character(

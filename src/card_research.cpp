@@ -77,24 +77,24 @@ void to_json(nlohmann::json &json, const CardResearch &card) {
     json["m_outcomes"] = json_outcome;
 }
 
-void from_json(const nlohmann::json &json, CardResearch *card) {
-    card->m_task_position_x = json["m_task_position_x"];
-    card->m_task_position_y = json["m_task_position_y"];
-    card->m_completed = json["m_completed"];
-    card->m_card_type = json["m_card_type"];
+void from_json(const nlohmann::json &json, CardResearch &card) {
+    card.m_task_position_x = json["m_task_position_x"];
+    card.m_task_position_y = json["m_task_position_y"];
+    card.m_completed = json["m_completed"];
+    card.m_card_type = json["m_card_type"];
     std::vector<nlohmann::json> json_outcome = json["m_outcomes"];
-    card->m_outcomes.resize(json_outcome.size());
+    card.m_outcomes.resize(json_outcome.size());
     for (std::size_t outcome = 0; outcome < json_outcome.size(); ++outcome) {
-        card->m_outcomes[outcome].m_delta_gold =
+        card.m_outcomes[outcome].m_delta_gold =
             json_outcome[outcome]["m_delta_gold"];
-        card->m_outcomes[outcome].m_delta_health =
+        card.m_outcomes[outcome].m_delta_health =
             json_outcome[outcome]["m_delta_health"];
-        card->m_outcomes[outcome].m_necessary_result.resize(
+        card.m_outcomes[outcome].m_necessary_result.resize(
             json_outcome[outcome]["m_necessary_result"].size()
         );
         for (std::size_t i = 0;
              i < json_outcome[outcome]["m_necessary_result"].size(); ++i) {
-            card->m_outcomes[outcome].m_necessary_result[i] =
+            card.m_outcomes[outcome].m_necessary_result[i] =
                 json_outcome[outcome]["m_necessary_result"][i];
         }
     }
