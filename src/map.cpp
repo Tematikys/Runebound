@@ -207,11 +207,40 @@ void Map::make_rivers() {
     m_rivers.insert({Point(10, 11), Point(11, 11)});
     m_rivers.insert({Point(11, 11), Point(10, 11)});
 }
-
+void Map::make_tokens() {
+    m_map[0][0].make_token(AdventureType::MEETING);
+    m_map[0][4].make_token(AdventureType::FIGHT);
+    m_map[0][9].make_token(AdventureType::FIGHT);
+    m_map[0][12].make_token(AdventureType::MEETING);
+    m_map[1][7].make_token(AdventureType::RESEARCH);
+    m_map[2][3].make_token(AdventureType::MEETING);
+    m_map[3][14].make_token(AdventureType::FIGHT);
+    m_map[3][0].make_token(AdventureType::RESEARCH);
+    m_map[5][4].make_token(AdventureType::FIGHT);
+    m_map[4][9].make_token(AdventureType::RESEARCH);
+    m_map[5][12].make_token(AdventureType::MEETING);
+    m_map[6][14].make_token(AdventureType::RESEARCH);
+    m_map[6][2].make_token(AdventureType::RESEARCH);
+    m_map[7][0].make_token(AdventureType::MEETING);
+    m_map[10][0].make_token(AdventureType::FIGHT);
+    m_map[13][0].make_token(AdventureType::RESEARCH);
+    m_map[12][2].make_token(AdventureType::MEETING);
+    m_map[12][5].make_token(AdventureType::FIGHT);
+    m_map[11][4].make_token(AdventureType::RESEARCH);
+    m_map[8][5].make_token(AdventureType::FIGHT);
+    m_map[13][14].make_token(AdventureType::FIGHT);
+    m_map[10][14].make_token(AdventureType::MEETING);
+    m_map[13][8].make_token(AdventureType::MEETING);
+    m_map[11][9].make_token(AdventureType::RESEARCH);
+    m_map[9][8].make_token(AdventureType::MEETING);
+    m_map[7][9].make_token(AdventureType::FIGHT);
+    m_map[9][12].make_token(AdventureType::RESEARCH);
+}
 void Map::make_map() {
     m_map.resize(m_size, std::vector<MapCell>(m_size));
     make_cells();
     make_rivers();
+    make_tokens();
 }
 
 const std::vector<Point> &Map::get_directions(int x) const {

@@ -39,6 +39,7 @@ private:
     void make_cells();
     void make_rivers();
     void make_map();
+    void make_tokens();
 
     bool check_neighbour(const Point &lhs, const Point &rhs) const;
 
