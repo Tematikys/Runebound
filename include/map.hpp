@@ -41,10 +41,6 @@ private:
     void make_map();
 
 public:
-    [[nodiscard]] int get_size() const {
-        return m_size;
-    }
-
     Map() : m_size(STANDARD_SIZE) {
         make_map();
         m_rivers.insert({Point(0, 2), Point(1, 1)});
@@ -106,6 +102,13 @@ public:
 
     bool check_river(const Point &lhs_point, const Point &rhs_point) const {
         return m_rivers.find({lhs_point, rhs_point}) != m_rivers.end();
+    }
+
+    [[nodiscard]] std::set<std::pair<Point, Point>> get_rivers() const {
+        return m_rivers;
+    }
+    [[nodiscard]] int get_size() const {
+        return m_size;
     }
 
     [[nodiscard]] std::vector<Point> check_move(
