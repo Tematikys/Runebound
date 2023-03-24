@@ -1,9 +1,9 @@
 #ifndef GAME_HPP_
 #define GAME_HPP_
 
-#include <json_fwd.hpp>
 #include <map>
 #include <memory>
+#include <nlohmann/json_fwd.hpp>
 #include <utility>
 #include <vector>
 #include "card_research.hpp"

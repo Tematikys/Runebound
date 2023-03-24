@@ -1,12 +1,12 @@
 #ifndef FIELD_CELL_HPP_
 #define FIELD_CELL_HPP_
 
-#include <json_fwd.hpp>
 #include <memory>
+#include <nlohmann/json_fwd.hpp>
+#include <string>
 #include <utility>
 #include <vector>
 #include "runebound_fwd.hpp"
-#include <string>
 
 namespace runebound {
 namespace map {
@@ -15,13 +15,7 @@ const int COUNT_NEIGHBOUR = 6;
 
 enum class TypeCell { WATER, FOREST, MOUNTAINS, HILLS, PLAIN, TOWN };
 
-enum class SpecialTypeCell {
-    SANCTUARY,
-    FORTRESS,
-    SETTLEMENT,
-    NOTHING
-};
-
+enum class SpecialTypeCell { SANCTUARY, FORTRESS, SETTLEMENT, NOTHING };
 
 void to_json(nlohmann::json &json, const MapCell &map_cell);
 void from_json(const nlohmann::json &json, MapCell &map_cell);

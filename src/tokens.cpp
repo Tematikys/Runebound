@@ -1,5 +1,5 @@
 #include "tokens.hpp"
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 namespace runebound {
 namespace token {

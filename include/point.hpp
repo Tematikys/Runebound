@@ -1,6 +1,6 @@
 #ifndef POINT_HPP_
 #define POINT_HPP_
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
 struct Point {
 public:

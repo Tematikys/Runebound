@@ -2,7 +2,7 @@
 #define MAP_HPP_
 
 #include <iostream>
-#include <json_fwd.hpp>
+#include <nlohmann/json_fwd.hpp>
 #include <set>
 #include <vector>
 #include "dice.hpp"
@@ -84,13 +84,17 @@ public:
 
     [[nodiscard]] const std::vector<Point> &get_directions(int x) const;
 
-    [[nodiscard]] Point
-    get_neighbour_in_direction(const Point &point, const Point &direction) const {
+    [[nodiscard]] Point get_neighbour_in_direction(
+        const Point &point,
+        const Point &direction
+    ) const {
         return {point.x + direction.x, point.y + direction.y};
     }
 
-    [[nodiscard]] bool
-    check_neighbour_in_direction(const Point &point, const Point &direction) const {
+    [[nodiscard]] bool check_neighbour_in_direction(
+        const Point &point,
+        const Point &direction
+    ) const {
         return (point.x + direction.x >= 0) &&
                (point.x + direction.x < m_size) &&
                (point.y + direction.y >= 0) && (point.y + direction.y < m_size);
@@ -103,6 +107,7 @@ public:
     [[nodiscard]] std::set<std::pair<Point, Point>> get_rivers() const {
         return m_rivers;
     }
+
     [[nodiscard]] int get_size() const {
         return m_size;
     }

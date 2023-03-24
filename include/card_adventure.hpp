@@ -1,6 +1,6 @@
 #ifndef CARD_ADVENTURE_HPP_
 #define CARD_ADVENTURE_HPP_
-#include <json_fwd.hpp>
+#include <nlohmann/json_fwd.hpp>
 #include "runebound_fwd.hpp"
 
 namespace runebound::cards {

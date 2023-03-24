@@ -1,7 +1,7 @@
 #include "map_cell.hpp"
 #include <cassert>
-#include <json.hpp>
 #include <memory>
+#include <nlohmann/json.hpp>
 #include <vector>
 
 namespace runebound {

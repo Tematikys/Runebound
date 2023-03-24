@@ -1,7 +1,7 @@
 #include "character.hpp"
-#include <json.hpp>
 #include <map>
 #include <memory>
+#include <nlohmann/json.hpp>
 
 namespace runebound {
 namespace character {

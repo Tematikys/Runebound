@@ -9,7 +9,7 @@ set(SDL2_INCLUDE_DIR tpl/SDL2/include/)
 set(SDL2_LIB_DIR tpl/SDL2/lib/)
 
 include_directories("include/")
-include_directories("tpl/nlohmann/")
+include_directories("tpl/")
 
 #include_directories(${SDL2_INCLUDE_DIR})
 #link_directories(${SDL2_LIB_DIR})

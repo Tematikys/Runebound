@@ -1,8 +1,8 @@
 #include "map.hpp"
 #include <algorithm>
 #include <iostream>
-#include <json.hpp>
 #include <map>
+#include <nlohmann/json.hpp>
 #include <queue>
 #include "dice.hpp"
 
@@ -207,6 +207,7 @@ void Map::make_rivers() {
     m_rivers.insert({Point(10, 11), Point(11, 11)});
     m_rivers.insert({Point(11, 11), Point(10, 11)});
 }
+
 void Map::make_tokens() {
     m_map[0][0].make_token(AdventureType::MEETING);
     m_map[0][4].make_token(AdventureType::FIGHT);
