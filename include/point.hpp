@@ -28,5 +28,9 @@ public:
         point.x = json["x"];
         point.y = json["y"];
     }
+
+    friend Point operator+(const Point &lhs, const Point &rhs) {
+        return Point(lhs.x + rhs.x, lhs.y + rhs.y);
+    }
 };
 #endif  // POINT_HPP_

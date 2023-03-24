@@ -221,6 +221,16 @@ const std::vector<Point> &Map::get_directions(int x) const {
     return directions_odd_row;
 }
 
+bool Map::check_neighbour(const Point &lhs, const Point &rhs) const {
+    auto directions = get_directions(lhs.x);
+    for (const auto &direction : directions) {
+        if (lhs + direction == rhs) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::vector<Point> Map::make_move(
     const Point &start,
     const Point &end,
@@ -249,8 +259,8 @@ std::vector<Point> Map::make_move(
             return result;
         }
         for (const auto &direction : get_directions(current.x)) {
-            if (check_neighbour(current, direction)) {
-                auto new_point = get_neighbour(current, direction);
+            if (check_neighbour_in_direction(current, direction)) {
+                auto new_point = get_neighbour_in_direction(current, direction);
                 if (!dist.count(new_point) &&
                         (get_cell_map(new_point).check_road() ||
                          (!check_river(current, new_point) &&
@@ -278,6 +288,9 @@ std::vector<Point> Map::check_move(
     const Point &end,
     std::vector<::runebound::dice::HandDice> dice_roll_results
 ) const {
+    if (check_neighbour(start, end)) {
+        return {start, end};
+    }
     do {
         auto result = make_move(
             start, end, dice_roll_results,

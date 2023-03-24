@@ -40,6 +40,8 @@ private:
     void make_rivers();
     void make_map();
 
+    bool check_neighbour(const Point &lhs, const Point &rhs) const;
+
 public:
     Map() : m_size(STANDARD_SIZE) {
         make_map();
@@ -89,12 +91,12 @@ public:
     [[nodiscard]] const std::vector<Point> &get_directions(int x) const;
 
     [[nodiscard]] Point
-    get_neighbour(const Point &point, const Point &direction) const {
+    get_neighbour_in_direction(const Point &point, const Point &direction) const {
         return {point.x + direction.x, point.y + direction.y};
     }
 
     [[nodiscard]] bool
-    check_neighbour(const Point &point, const Point &direction) const {
+    check_neighbour_in_direction(const Point &point, const Point &direction) const {
         return (point.x + direction.x >= 0) &&
                (point.x + direction.x < m_size) &&
                (point.y + direction.y >= 0) && (point.y + direction.y < m_size);
