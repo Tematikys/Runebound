@@ -23,7 +23,7 @@ set(NLOHMANN_INCLUDE_DIR "../tpl/nlohmann/")
 
 include_directories(${NLOHMANN_INCLUDE_DIR})
 
-add_executable(${PROJECT_NAME}
+add_executable(client
         main.cpp
         client.cpp
         ../src/graphics.cpp
@@ -31,7 +31,12 @@ add_executable(${PROJECT_NAME}
         ../src/graphics_shapes.cpp
         ../src/map.cpp
         ../src/map_cell.cpp
+        ../tpl/SDL2/src/SDL_ttf.cpp
         )
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2 -lSDL2_image)
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARy} ws2_32 wsock32)
+target_link_libraries(client ${SDL2_LIBRARY} -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2 -lSDL2_image)
+target_link_libraries(client ${Boost_LIBRARIES} ws2_32 wsock32)
+
+add_executable(server server.cpp)
+
+target_link_libraries(server ${Boost_LIBRARIES} ws2_32 wsock32)

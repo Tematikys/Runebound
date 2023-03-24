@@ -1,8 +1,21 @@
-#include <boost/asio.hpp>
+#include <iostream>
 #include "client.hpp"
 
 int main(int, char *[]) {
     ::runebound::client::Client client;
+
+//    try {
+//        client.init_network("localhost", "1234");
+//        std::cout << "Connected\n";
+//        std::cout << client.read_network();
+//        client.write_network("get games\n");
+//        ::std::cout << client.read_network();
+//        client.write_network("add game Mygame\n");
+//        client.write_network("get games\n");
+//        ::std::cout << client.read_network();
+//    } catch (std::exception &e) {
+//        std::cerr << "Exception: " << e.what() << std::endl;
+//    }
 
     client.init_graphics("Runebound-v0.0.7", 100, 100, 640, 480, 60);
 
