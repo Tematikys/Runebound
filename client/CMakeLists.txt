@@ -31,7 +31,6 @@ add_executable(client
         ../src/graphics_shapes.cpp
         ../src/map.cpp
         ../src/map_cell.cpp
-        ../tpl/SDL2/src/SDL_ttf.cpp
         )
 
 target_link_libraries(client ${SDL2_LIBRARY} -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2 -lSDL2_image)
