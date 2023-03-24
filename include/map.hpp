@@ -45,15 +45,6 @@ private:
 public:
     Map() : m_size(STANDARD_SIZE) {
         make_map();
-        m_rivers.insert({Point(0, 2), Point(1, 1)});
-        m_rivers.insert({Point(1, 1), Point(0, 2)});
-        m_rivers.insert({Point(0, 2), Point(1, 2)});
-        m_rivers.insert({Point(1, 2), Point(0, 2)});
-        m_rivers.insert({Point(1, 3), Point(0, 2)});
-        m_rivers.insert({Point(0, 2), Point(1, 3)});
-        m_map[2][0].make_token(runebound::AdventureType::FIGHT);
-        m_map[2][4].make_token(runebound::AdventureType::MEETING);
-        m_map[4][2].make_token(runebound::AdventureType::RESEARCH);
     }
 
     Map(const Map &other)
