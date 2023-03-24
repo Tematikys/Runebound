@@ -236,11 +236,37 @@ void Map::make_tokens() {
     m_map[7][9].make_token(AdventureType::FIGHT);
     m_map[9][12].make_token(AdventureType::RESEARCH);
 }
+
+void Map::make_road() {
+    // TODO
+}
+
+void Map::make_special_type_cells() {
+    m_map[0][1].make_special_type_cell(SpecialTypeCell::FORTRESS);
+    m_map[1][5].make_special_type_cell(SpecialTypeCell::SANCTUARY);
+    m_map[3][1].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
+    m_map[0][14].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
+    m_map[2][12].make_special_type_cell(SpecialTypeCell::SANCTUARY);
+    m_map[5][1].make_special_type_cell(SpecialTypeCell::FORTRESS);
+    m_map[5][8].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
+    m_map[6][8].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
+    m_map[6][13].make_special_type_cell(SpecialTypeCell::FORTRESS);
+    m_map[7][4].make_special_type_cell(SpecialTypeCell::SANCTUARY);
+    m_map[8][13].make_special_type_cell(SpecialTypeCell::SANCTUARY);
+    m_map[12][0].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
+    m_map[13][6].make_special_type_cell(SpecialTypeCell::SANCTUARY);
+    m_map[11][6].make_special_type_cell(SpecialTypeCell::FORTRESS);
+    m_map[8][7].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
+    m_map[13][12].make_special_type_cell(SpecialTypeCell::FORTRESS);
+}
+
 void Map::make_map() {
     m_map.resize(m_size, std::vector<MapCell>(m_size));
     make_cells();
     make_rivers();
     make_tokens();
+    make_road();
+    make_special_type_cells();
 }
 
 const std::vector<Point> &Map::get_directions(int x) const {

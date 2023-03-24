@@ -40,6 +40,8 @@ private:
     void make_rivers();
     void make_map();
     void make_tokens();
+    void make_road();
+    void make_special_type_cells();
 
     bool check_neighbour(const Point &lhs, const Point &rhs) const;
 
