@@ -4,14 +4,18 @@
 #include <deque>
 #include <set>
 #include <memory>
+#include <map>
 
+#include "game.hpp"
 
 using boost::asio::ip::tcp;
 
 class Session;
 
+
+std::map<std::string, runebound::game::Game> games;
 std::set<Session*> sessions;
-std::set<std::string> games={"Game1", "Game2", "Game3", "Game4"};
+
 class Session : public std::enable_shared_from_this<Session>
 {
 public:
@@ -21,7 +25,7 @@ public:
     {
         std::cout<<"Some connected\n";
         sessions.insert(this);
-        write("Hello form server\n");
+        write("Hello from server\n");
         do_read();
 
     }
@@ -50,7 +54,7 @@ private:
     void do_read()
     {
         auto self(shared_from_this());
-        socket_.async_read_some(boost::asio::buffer(data_, max_length),
+        socket_.async_read_some(boost::asio::buffer(data_, 1024),
                                 [this, self](boost::system::error_code ec, std::size_t length)
                                 {
                                     if (!ec)
@@ -59,21 +63,24 @@ private:
                                         std::cout << "Received: " << message;
                                         if (message=="get games\n") {
                                             std::string str = "List of games: \n";
-                                            for (auto e : games){
-                                                str+=e+'\n';
+                                            for (auto [game_name, game] : games){
+                                                str+=game_name+'\n';
                                             }
                                             write (str);
                                             std::cout<<"Games sent"<<'\n';
 
                                         }
                                         if (message.find("add game ") == 0) {
-                                            games.insert(message.substr(9, message.size()-10));
+                                            std::string game_name=message.substr(9, message.size()-10);
+                                            games.emplace(game_name, runebound::game::Game());
+                                            write ("Game added "+game_name);
                                             std::cout<<"Game added\n";
                                         }
-
-
-
-
+                                        if (message.find("enter game ") == 0) {
+                                            std::string game_name=message.substr(11, message.size()-12);
+                                            game_=&games[game_name];
+                                            write("You are entered a game: "+game_name);
+                                        }
                                         do_read();
                                     }
                                     else
@@ -83,10 +90,9 @@ private:
                                     }
                                 });
     }
-
+    runebound::game::Game* game_=nullptr;
     tcp::socket socket_;
-    enum { max_length = 1024 };
-    char data_[max_length];
+    char data_[1024];
 };
 
 class Server
@@ -95,6 +101,7 @@ public:
     Server(boost::asio::io_context& io_context, short port)
             : acceptor_(io_context, tcp::endpoint(tcp::v4(), port))
     {
+        std::cout<<"Server started\n";
         do_accept();
     }
 

@@ -57,6 +57,10 @@ int main() {
         client.read_to_out();
         client.write("get games\n");
         client.read_to_out();
+        client.write("enter game Mygame\n");
+        client.read_to_out();
+
+
 
     } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
