@@ -5,24 +5,15 @@ project(Runebound CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-include_directories("../include/")
-include_directories("../tpl/nlohmann/")
-
 set(SDL2_INCLUDE_DIR "../tpl/SDL2/include/")
+set(NLOHMANN_INCLUDE_DIR "../tpl/nlohmann/")
 set(SDL2_LIB_DIR "../tpl/SDL2/lib/")
 
+include_directories("../include/")
 include_directories(${SDL2_INCLUDE_DIR})
+include_directories(${NLOHMANN_INCLUDE_DIR})
+
 link_directories(${SDL2_LIB_DIR})
-
-set(BOOST_INCLUDE_DIR "../tpl/boost/include/")
-set(BOOST_LIB_DIR "../tpl/boost/lib/")
-
-include_directories(${BOOST_INCLUDE_DIR})
-link_directories(${BOOST_LIB_DIR})
-
-#set(NLOHMANN_INCLUDE_DIR "../tpl/nlohmann/")
-#
-#include_directories(${NLOHMANN_INCLUDE_DIR})
 
 add_executable(client
         main.cpp
@@ -35,9 +26,4 @@ add_executable(client
         ../src/dice.cpp
         )
 
-target_link_libraries(client ${SDL2_LIBRARY} -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2 -lSDL2_image)
-target_link_libraries(client ${Boost_LIBRARIES} ws2_32 wsock32)
-
-add_executable(server server.cpp)
-
-target_link_libraries(server ${Boost_LIBRARIES} ws2_32 wsock32)
+target_link_libraries(client -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2)
