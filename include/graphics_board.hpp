@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <graphics_point.hpp>
+#include <graphics_segment.hpp>
 #include <graphics_shapes.hpp>
 #include <map.hpp>
 #include <optional>
@@ -12,9 +13,12 @@ namespace runebound::graphics {
 // board class, contains hexagons, has connected methods
 class Board {
 private:
+    ::std::vector<Segment> m_segments;
+    ::std::vector<SDL_Color> m_segment_color;
+    ::std::size_t m_segment_amount{0};
     ::std::vector<HexagonShape> m_hexagons;
-    ::std::vector<SDL_Color> m_fill_colors;
-    ::std::vector<SDL_Color> m_border_color;
+    ::std::vector<SDL_Color> m_hexagon_fill_colors;
+    ::std::vector<SDL_Color> m_hexagon_border_color;
     ::std::size_t m_hexagon_amount{0};
     ::std::size_t m_selected_hexagon{0xFFFF};
 
@@ -28,6 +32,8 @@ public:
         SDL_Color fill_color,
         SDL_Color border_color
     );
+
+    void add_segment(Segment &seg, SDL_Color col);
 
     void render(SDL_Renderer *renderer) const;
 

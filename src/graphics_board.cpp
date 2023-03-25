@@ -1,10 +1,9 @@
 #include <graphics_board.hpp>
-#include <point.hpp>
 
 namespace runebound::graphics {
 // constants for hexagons
 const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};
-const int HEXAGON_RADIUS = 40;
+const int HEXAGON_RADIUS = 30;
 
 void Board::add_hexagon(
     HexagonShape &hex,
@@ -12,17 +11,27 @@ void Board::add_hexagon(
     SDL_Color border_color
 ) {
     m_hexagons.push_back(::std::move(hex));
-    m_fill_colors.push_back(fill_color);
-    m_border_color.push_back(border_color);
+    m_hexagon_fill_colors.push_back(fill_color);
+    m_hexagon_border_color.push_back(border_color);
     ++m_hexagon_amount;
+}
+
+void Board::add_segment(Segment &seg, SDL_Color col) {
+    m_segments.push_back(::std::move(seg));
+    m_segment_color.push_back(col);
+    ++m_segment_amount;
 }
 
 void Board::render(SDL_Renderer *renderer) const {
     for (::std::size_t i = 0; i < m_hexagon_amount; ++i) {
         if (i == m_selected_hexagon) {
-            m_hexagons[i].render(renderer, SELECTED_COLOR, m_border_color[i]);
+            m_hexagons[i].render(
+                renderer, SELECTED_COLOR, m_hexagon_border_color[i]
+            );
         } else {
-            m_hexagons[i].render(renderer, m_fill_colors[i], m_border_color[i]);
+            m_hexagons[i].render(
+                renderer, m_hexagon_fill_colors[i], m_hexagon_border_color[i]
+            );
         }
     }
 }
@@ -90,5 +99,7 @@ Board::Board(const ::runebound::map::Map &map) {
             add_hexagon(hex, color, SDL_Color{0x00, 0x00, 0x00, 0xFF});
         }
     }
+
+
 }
 }  // namespace runebound::graphics

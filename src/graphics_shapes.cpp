@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <graphics_segment.hpp>
 #include <graphics_shapes.hpp>
 
 namespace runebound::graphics {

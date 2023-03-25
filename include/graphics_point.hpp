@@ -14,6 +14,8 @@ public:
 
     Point(int x, int y) : m_x(x), m_y(y){};
 
+    Point(const Point &other) : m_x(other.x()), m_y(other.y()){};
+
     explicit Point(::std::pair<int, int> coords)
         : m_x(coords.first), m_y(coords.second){};
 
