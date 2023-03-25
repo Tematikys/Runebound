@@ -68,24 +68,24 @@ void Client::exit() {
     SDL_Quit();
 }
 
-//void Client::init_network(const std::string &host, const std::string &port) {
-//    m_socket = ::boost::asio::ip::tcp::socket(m_io_context);
-//    ::boost::asio::ip::tcp::resolver resolver(m_io_context);
-//    ::boost::asio::ip::tcp::resolver::results_type endpoints =
-//        resolver.resolve(host, port);
-//    ::boost::asio::connect(m_socket, endpoints);
-//}
-//
-//::std::string Client::read_network() {
-//    ::std::string buffer(1024, ' ');
-//    ::std::size_t n =
-//        m_socket.read_some(::boost::asio::buffer(buffer, buffer.size()));
-//    return buffer.substr(0, n);
-//}
-//
-//void Client::write_network(const std::string &str) {
-//    ::boost::asio::write(
-//        m_socket, ::boost::asio::buffer(str.data(), str.length())
-//    );
-//}
+void Client::init_network(const std::string &host, const std::string &port) {
+    m_socket = ::boost::asio::ip::tcp::socket(m_io_context);
+    ::boost::asio::ip::tcp::resolver resolver(m_io_context);
+    ::boost::asio::ip::tcp::resolver::results_type endpoints =
+        resolver.resolve(host, port);
+    ::boost::asio::connect(m_socket, endpoints);
+}
+
+::std::string Client::read_network() {
+    ::std::string buffer(1024, ' ');
+    ::std::size_t n =
+        m_socket.read_some(::boost::asio::buffer(buffer, buffer.size()));
+    return buffer.substr(0, n);
+}
+
+void Client::write_network(const std::string &str) {
+    ::boost::asio::write(
+        m_socket, ::boost::asio::buffer(str.data(), str.length())
+    );
+}
 }  // namespace runebound::client

@@ -5,14 +5,18 @@ project(Runebound CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(SDL2_INCLUDE_DIR "../tpl/SDL2/include/")
+set(BOOST_INCLUDE_DIR "../tpl/boost/include")
+set(BOOST_LIB_DIR "../tpl/boost/lib")
 set(NLOHMANN_INCLUDE_DIR "../tpl/nlohmann/")
+set(SDL2_INCLUDE_DIR "../tpl/SDL2/include/")
 set(SDL2_LIB_DIR "../tpl/SDL2/lib/")
 
 include_directories("../include/")
-include_directories(${SDL2_INCLUDE_DIR})
+include_directories(${BOOST_INCLUDE_DIR})
 include_directories(${NLOHMANN_INCLUDE_DIR})
+include_directories(${SDL2_INCLUDE_DIR})
 
+link_directories(${BOOST_LIN_DIR})
 link_directories(${SDL2_LIB_DIR})
 
 add_executable(client
@@ -27,3 +31,4 @@ add_executable(client
         )
 
 target_link_libraries(client -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2)
+target_link_libraries(client ws2_32)

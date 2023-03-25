@@ -2,6 +2,7 @@
 #define RUNEBOUND_CLIENT_HPP_
 
 #include <SDL2/SDL.h>
+#include <boost/asio.hpp>
 #include <graphics.hpp>
 #include <graphics_board.hpp>
 #include <string>
@@ -11,9 +12,9 @@ namespace runebound::client {
 class Client {
 private:
     // network
-//    ::boost::asio::io_context m_io_context;
-//    ::boost::asio::ip::tcp::socket m_socket;
-//    ::std::thread m_thread;
+    ::boost::asio::io_context m_io_context;
+    ::boost::asio::ip::tcp::socket m_socket;
+    ::std::thread m_thread;
 
     // board
     ::runebound::graphics::Board m_board;
@@ -28,13 +29,13 @@ private:
     ::std::pair<int, int> m_mouse_pos;
 
 public:
-//    Client() : m_io_context(), m_socket(m_io_context){};
+    Client() : m_io_context(), m_socket(m_io_context){};
 
     void init_network(const ::std::string &host, const ::std::string &port);
 
-//    void start_network() {
-//        m_thread = ::std::thread([this]() { m_io_context.run(); });
-//    }
+    void start_network() {
+        m_thread = ::std::thread([this]() { m_io_context.run(); });
+    }
 
     ::std::string read_network();
 
