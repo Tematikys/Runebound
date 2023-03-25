@@ -17,7 +17,7 @@ int main(int, char *[]) {
 //        std::cerr << "Exception: " << e.what() << std::endl;
 //    }
 
-    client.init_graphics("Runebound-v0.0.7", 100, 100, 640, 480, 60);
+    client.init_graphics("Runebound-v0.0.7", 100, 100, 1920, 1080, 60);
 
     const ::runebound::map::Map map;
     client.init_board(map);

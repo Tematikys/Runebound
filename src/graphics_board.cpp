@@ -1,9 +1,10 @@
 #include <graphics_board.hpp>
+#include <point.hpp>
 
 namespace runebound::graphics {
 // constants for hexagons
 const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};
-const int HEXAGON_RADIUS = 50;
+const int HEXAGON_RADIUS = 40;
 
 void Board::add_hexagon(
     HexagonShape &hex,
@@ -36,25 +37,28 @@ void Board::render(SDL_Renderer *renderer) const {
 }
 
 Board::Board(const ::runebound::map::Map &map) {
-    for (int row = 0; row < ::runebound::map::StandartHeight; ++row) {
-        for (int col = 0; col < ::runebound::map::StandartWidth; ++col) {
+    for (int row = 0; row < ::runebound::map::STANDARD_SIZE; ++row) {
+        for (int col = 0; col < ::runebound::map::STANDARD_SIZE; ++col) {
             // get necessary color
             SDL_Color color;
-            switch (map.get_cell_map(row, col).get_type_cell()) {
+            switch (map.get_cell_map(::Point(row, col)).get_type_cell()) {
                 case ::runebound::map::TypeCell::WATER:
                     color = {0x00, 0x00, 0xFF, 0xFF};
                     break;
                 case ::runebound::map::TypeCell::FOREST:
-                    color = {0x00, 0xFF, 0x00, 0xFF};
+                    color = {0x00, 0x77, 0x00, 0xFF};
                     break;
                 case ::runebound::map::TypeCell::MOUNTAINS:
                     color = {0x77, 0x77, 0x77, 0xFF};
                     break;
                 case ::runebound::map::TypeCell::HILLS:
-                    color = {0x00, 0x77, 0x00, 0xFF};
+                    color = {0x7F, 0x77, 0x00, 0xFF};
                     break;
                 case ::runebound::map::TypeCell::PLAIN:
                     color = {0x77, 0xFF, 0x77, 0xFF};
+                    break;
+                case ::runebound::map::TypeCell::TOWN:
+                    color = {0x00, 0x00, 0x00, 0xFF};
                     break;
             }
 
