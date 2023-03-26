@@ -14,17 +14,6 @@ void PolygonShape::init_side_coefficients() {
     }
 }
 
-// check that point is inside of polygon
-bool PolygonShape::in_bounds(Point dot) const {
-    return ::std::all_of(
-        m_side_coefficients.begin(), m_side_coefficients.end(),
-        [&](::std::tuple<int, int, int> coefficients) {
-            auto [a, b, c] = coefficients;
-            return dot.x() * a + dot.y() * b + c <= 0;
-        }
-    );
-}
-
 void PolygonShape::render(
     SDL_Renderer *renderer,
     SDL_Color fill_color,
@@ -156,6 +145,17 @@ void PolygonShape::render(
             get_vertex((i + 1) % get_number_of_vertexes()).y()
         );
     }
+}
+
+// check that point is inside of polygon
+bool PolygonShape::in_bounds(Point dot) const {
+    return ::std::all_of(
+        m_side_coefficients.begin(), m_side_coefficients.end(),
+        [&](::std::tuple<int, int, int> coefficients) {
+            auto [a, b, c] = coefficients;
+            return dot.x() * a + dot.y() * b + c <= 0;
+        }
+    );
 }
 
 // hexagon constructor from given center and radius

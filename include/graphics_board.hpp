@@ -13,9 +13,12 @@ namespace runebound::graphics {
 // board class, contains hexagons, has connected methods
 class Board {
 private:
+    // segments
     ::std::vector<Segment> m_segments;
     ::std::vector<SDL_Color> m_segment_color;
     ::std::size_t m_segment_amount{0};
+
+    // hexagons
     ::std::vector<HexagonShape> m_hexagons;
     ::std::vector<SDL_Color> m_hexagon_fill_colors;
     ::std::vector<SDL_Color> m_hexagon_border_color;
@@ -33,7 +36,7 @@ public:
         SDL_Color border_color
     );
 
-    void add_segment(Segment seg, SDL_Color col);
+    void add_segment(Segment &seg, SDL_Color col);
 
     void render(SDL_Renderer *renderer) const;
 
@@ -41,7 +44,8 @@ public:
         m_selected_hexagon = index;
     };
 
-    [[nodiscard]] ::std::optional<::std::size_t> in_bounds(Point dot) const;
+    [[nodiscard]] ::std::optional<::std::size_t> in_bounds(const Point &dot
+    ) const;
 };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_BOARD_HPP_

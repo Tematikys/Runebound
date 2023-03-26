@@ -9,9 +9,10 @@
 #include <utility>
 
 namespace runebound::client {
+// client class, is called in main function, contains everything that is in use
 class Client {
 private:
-    // network
+    // network variables
     ::boost::asio::io_context m_io_context;
     ::boost::asio::ip::tcp::socket m_socket;
     ::std::thread m_thread;
@@ -19,7 +20,7 @@ private:
     // board
     ::runebound::graphics::Board m_board;
 
-    // graphics
+    // graphics variables
     SDL_Window *m_window{nullptr};
     SDL_Renderer *m_renderer{nullptr};
     bool m_is_running{false};

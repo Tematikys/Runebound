@@ -2,6 +2,30 @@
 #include <iostream>
 
 namespace runebound::client {
+void Client::init_network(
+    const ::std::string &host,
+    const ::std::string &port
+) {
+    m_socket = ::boost::asio::ip::tcp::socket(m_io_context);
+    ::boost::asio::ip::tcp::resolver resolver(m_io_context);
+    ::boost::asio::ip::tcp::resolver::results_type endpoints =
+        resolver.resolve(host, port);
+    ::boost::asio::connect(m_socket, endpoints);
+}
+
+::std::string Client::read_network() {
+    ::std::string buffer(1024, ' ');
+    ::std::size_t n =
+        m_socket.read_some(::boost::asio::buffer(buffer, buffer.size()));
+    return buffer.substr(0, n);
+}
+
+void Client::write_network(const ::std::string &str) {
+    ::boost::asio::write(
+        m_socket, ::boost::asio::buffer(str.data(), str.length())
+    );
+}
+
 void Client::init_graphics(
     const char *title,
     int x_pos,
@@ -34,7 +58,7 @@ void Client::handle_events() {
 }
 
 void Client::render() {
-    SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(m_renderer, 0xEE, 0xEE, 0xEE, 0xFF);
     SDL_RenderClear(m_renderer);
 
     m_board.render(m_renderer);
@@ -66,26 +90,5 @@ void Client::exit() {
     SDL_DestroyWindow(m_window);
     SDL_DestroyRenderer(m_renderer);
     SDL_Quit();
-}
-
-void Client::init_network(const std::string &host, const std::string &port) {
-    m_socket = ::boost::asio::ip::tcp::socket(m_io_context);
-    ::boost::asio::ip::tcp::resolver resolver(m_io_context);
-    ::boost::asio::ip::tcp::resolver::results_type endpoints =
-        resolver.resolve(host, port);
-    ::boost::asio::connect(m_socket, endpoints);
-}
-
-::std::string Client::read_network() {
-    ::std::string buffer(1024, ' ');
-    ::std::size_t n =
-        m_socket.read_some(::boost::asio::buffer(buffer, buffer.size()));
-    return buffer.substr(0, n);
-}
-
-void Client::write_network(const std::string &str) {
-    ::boost::asio::write(
-        m_socket, ::boost::asio::buffer(str.data(), str.length())
-    );
 }
 }  // namespace runebound::client
