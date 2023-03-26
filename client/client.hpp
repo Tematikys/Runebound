@@ -38,7 +38,7 @@ public:
         m_thread = ::std::thread([this]() { m_io_context.run(); });
     }
 
-    ::std::string read_network();
+    [[nodiscard]] ::std::string read_network();
 
     void write_network(const ::std::string &str);
 

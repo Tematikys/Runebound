@@ -69,11 +69,13 @@ void Client::render() {
 void Client::update() {
     ::runebound::graphics::update_mouse_pos(m_mouse_pos);
 
-    m_board.set_selected_hexagon(0xFFFF);
-    if (auto index =
-            m_board.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
-        m_board.set_selected_hexagon(index.value());
-    }
+    //    m_board.set_selected_hexagon(0xFFFF);
+    //    if (auto index =
+    //            m_board.in_bounds(::runebound::graphics::Point(m_mouse_pos)))
+    //            {
+    //        m_board.set_selected_hexagon(index.value());
+    //    }
+    m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
 
     ++m_counter;
 }

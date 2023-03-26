@@ -1,3 +1,4 @@
+#include <SDL2/SDL2_gfxPrimitives.h>
 #include <algorithm>
 #include <graphics_segment.hpp>
 #include <graphics_shapes.hpp>
@@ -24,16 +25,15 @@ void PolygonShape::render(
     );
 
     // get and set necessary variables
-    ::std::vector<Point> vertexes = get_vertexes();
     const int num_vertexes = static_cast<int>(get_number_of_vertexes());
     int num_vertexes_processed = 1;
 
     // find the highest vertex
-    int top_y = vertexes[0].y();
+    int top_y = m_vertexes[0].y();
     int top_index = 0;
     for (int i = 1; i < num_vertexes; ++i) {
-        if (vertexes[i].y() < top_y) {
-            top_y = vertexes[i].y();
+        if (m_vertexes[i].y() < top_y) {
+            top_y = m_vertexes[i].y();
             top_index = i;
         }
     }
@@ -52,30 +52,31 @@ void PolygonShape::render(
     // left, right-side x
     int left_x;
     int right_x;
-    left_x = right_x = (vertexes[top_index].x()) << 16;
+    left_x = right_x = (m_vertexes[top_index].x()) << 16;
 
     // left dx slope
     int left_slope = 0;
-    if (vertexes[left_index].y() != vertexes[top_index].y()) {
+    if (m_vertexes[left_index].y() != m_vertexes[top_index].y()) {
         left_slope =
-            ((vertexes[left_index].x() - vertexes[top_index].x()) << 16) /
-            (vertexes[left_index].y() - vertexes[top_index].y());
+            ((m_vertexes[left_index].x() - m_vertexes[top_index].x()) << 16) /
+            (m_vertexes[left_index].y() - m_vertexes[top_index].y());
     }
     // right dx slope
     int right_slope = 0;
-    if (vertexes[right_index].y() != vertexes[top_index].y()) {
+    if (m_vertexes[right_index].y() != m_vertexes[top_index].y()) {
         right_slope =
-            ((vertexes[right_index].x() - vertexes[top_index].x()) << 16) /
-            (vertexes[right_index].y() - vertexes[top_index].y());
+            ((m_vertexes[right_index].x() - m_vertexes[top_index].x()) << 16) /
+            (m_vertexes[right_index].y() - m_vertexes[top_index].y());
     }
 
     // y coordinate
-    int y = vertexes[top_index].y();
+    int y = m_vertexes[top_index].y();
 
     // until all the vertices are drawn, draw
     while (num_vertexes_processed < num_vertexes) {
-        // while y is above side vertexes, draw horizontal lines
-        while (y < vertexes[left_index].y() && y < vertexes[right_index].y()) {
+        // while y is above side m_vertexes, draw horizontal lines
+        while (y < m_vertexes[left_index].y() && y < m_vertexes[right_index].y()
+        ) {
             // draw line
             SDL_RenderDrawLine(renderer, left_x >> 16, y, right_x >> 16, y);
             // lower y
@@ -86,7 +87,7 @@ void PolygonShape::render(
         }
 
         // if y coordinate is on the same level as left vertex, go to next
-        if (vertexes[left_index].y() <= y) {
+        if (m_vertexes[left_index].y() <= y) {
             // make top vertex equal left
             top_index = left_index;
             // go to next vertex
@@ -97,35 +98,35 @@ void PolygonShape::render(
             }
 
             // change slope if needed
-            if (vertexes[left_index].y() != vertexes[top_index].y()) {
+            if (m_vertexes[left_index].y() != m_vertexes[top_index].y()) {
                 left_slope =
-                    ((vertexes[left_index].x() - vertexes[top_index].x())
+                    ((m_vertexes[left_index].x() - m_vertexes[top_index].x())
                      << 16) /
-                    (vertexes[left_index].y() - vertexes[top_index].y());
+                    (m_vertexes[left_index].y() - m_vertexes[top_index].y());
             }
 
             // << 16 is used for rounding
-            left_x = (vertexes[top_index].x()) << 16;
+            left_x = (m_vertexes[top_index].x()) << 16;
             // +1 processed vertex
             ++num_vertexes_processed;
         }
 
         // same for right side
-        if (vertexes[right_index].y() <= y) {
+        if (m_vertexes[right_index].y() <= y) {
             top_index = right_index;
             ++right_index;
             if (right_index == num_vertexes) {
                 right_index = 0;
             }
 
-            if (vertexes[right_index].y() != vertexes[top_index].y()) {
+            if (m_vertexes[right_index].y() != m_vertexes[top_index].y()) {
                 right_slope =
-                    ((vertexes[right_index].x() - vertexes[top_index].x())
+                    ((m_vertexes[right_index].x() - m_vertexes[top_index].x())
                      << 16) /
-                    (vertexes[right_index].y() - vertexes[top_index].y());
+                    (m_vertexes[right_index].y() - m_vertexes[top_index].y());
             }
 
-            right_x = (vertexes[top_index].x()) << 16;
+            right_x = (m_vertexes[top_index].x()) << 16;
             ++num_vertexes_processed;
         }
 
@@ -169,5 +170,26 @@ HexagonShape::HexagonShape(const Point &center, int radius) {
     m_vertexes.emplace_back(center.x() - dx, center.y() + radius / 2);
     m_vertexes.emplace_back(center.x() - dx, center.y() - radius / 2);
     init_side_coefficients();
+}
+
+void CircleShape::render(
+    SDL_Renderer *renderer,
+    SDL_Color fill_color,
+    SDL_Color border_color
+) const {
+    filledCircleRGBA(
+        renderer, m_center.x(), m_center.y(), m_radius, fill_color.r,
+        fill_color.g, fill_color.b, fill_color.a
+    );
+    circleRGBA(
+        renderer, m_center.x(), m_center.y(), m_radius, border_color.r,
+        border_color.g, border_color.b, border_color.a
+    );
+}
+
+bool CircleShape::in_bounds(const Point &dot) const {
+    int dx = (m_center.x() - dot.x());
+    int dy = (m_center.y() - dot.y());
+    return dx * dx + dy * dy < m_radius * m_radius;
 }
 }  // namespace runebound::graphics

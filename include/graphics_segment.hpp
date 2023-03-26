@@ -12,7 +12,7 @@ private:
 public:
     Segment() = default;
 
-    Segment(Point s, Point f) : m_s(s), m_f(f){};
+    Segment(const Point &s, const Point &f) : m_s(s), m_f(f){};
 
     void render(SDL_Renderer *renderer, SDL_Color col) const;
 

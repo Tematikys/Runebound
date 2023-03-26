@@ -51,31 +51,40 @@ Board::Board(const ::runebound::map::Map &map) {
             }
 
             // supportive variable
-            const int dx =
-                (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
+            const int dx = (HEXAGON_RADIUS * 56756) >> 16;
 
-            ::runebound::graphics::HexagonShape hex;
+            Point center;
             if (row % 2 == 0) {
-                hex = ::runebound::graphics::HexagonShape(
-                    ::runebound::graphics::Point(
-                        dx * 2 * (1 + col),
-                        ::runebound::graphics::HEXAGON_RADIUS * (2 + row * 3) /
-                            2
-                    ),
-                    ::runebound::graphics::HEXAGON_RADIUS
+                center = Point(
+                    dx * 2 * (1 + col), HEXAGON_RADIUS * (2 + row * 3) / 2
                 );
             } else {
-                hex = ::runebound::graphics::HexagonShape(
-                    ::runebound::graphics::Point(
-                        dx * (1 + 2 * col),
-                        ::runebound::graphics::HEXAGON_RADIUS * (2 + row * 3) /
-                            2
-                    ),
-                    ::runebound::graphics::HEXAGON_RADIUS
+                center = Point(
+                    dx * (1 + 2 * col), HEXAGON_RADIUS * (2 + row * 3) / 2
                 );
             }
+            HexagonShape hex = {center, HEXAGON_RADIUS};
 
             add_hexagon(hex, fill_color, SDL_Color{0x00, 0x00, 0x00, 0xFF});
+            bool tr = true;
+            switch (map.get_cell_map(::Point(row, col)).get_token()) {
+                case ::runebound::AdventureType::MEETING:
+                    fill_color = {0x9D, 0x00, 0xC4, 0xFF};
+                    break;
+                case AdventureType::RESEARCH:
+                    fill_color = {0x00, 0xFF, 0x00, 0xFF};
+                    break;
+                case AdventureType::FIGHT:
+                    fill_color = {0xC4, 0x90, 0x00, 0xFF};
+                    break;
+                case AdventureType::NOTHING:
+                    tr = false;
+                    break;
+            }
+            if (tr) {
+                CircleShape cir = {center, HEXAGON_RADIUS / 2};
+                add_circle(cir, fill_color, {0x00, 0x00, 0x00, 0xFF});
+            }
         }
     }
     for (const auto &pair : map.get_rivers()) {
@@ -109,20 +118,58 @@ void Board::add_segment(Segment &seg, SDL_Color col) {
     ++m_segment_amount;
 }
 
+void Board::add_circle(
+    CircleShape &cir,
+    SDL_Color fill_color,
+    SDL_Color border_color
+) {
+    m_circles.push_back(::std::move(cir));
+    m_circle_fill_color.push_back(fill_color);
+    m_circle_border_color.push_back(border_color);
+    ++m_circle_amount;
+}
+
 void Board::render(SDL_Renderer *renderer) const {
     for (::std::size_t i = 0; i < m_hexagon_amount; ++i) {
-        if (i == m_selected_hexagon) {
-            m_hexagons[i].render(
-                renderer, SELECTED_COLOR, m_hexagon_border_color[i]
-            );
-        } else {
-            m_hexagons[i].render(
-                renderer, m_hexagon_fill_colors[i], m_hexagon_border_color[i]
-            );
-        }
+        m_hexagons[i].render(
+            renderer, m_hexagon_fill_colors[i], m_hexagon_border_color[i]
+        );
+    }
+    if (m_selected_hexagon != 0xFFFF && m_selected_circle == 0xFFFF) {
+        m_hexagons[m_selected_hexagon].render(
+            renderer, SELECTED_COLOR, m_hexagon_border_color[m_selected_hexagon]
+        );
     }
     for (::std::size_t i = 0; i < m_segment_amount; ++i) {
         m_segments[i].render(renderer, m_segment_color[i]);
+    }
+
+    for (::std::size_t i = 0; i < m_circle_amount; ++i) {
+        m_circles[i].render(
+            renderer, m_circle_fill_color[i], m_circle_border_color[i]
+        );
+    }
+    if (m_selected_circle != 0xFFFF) {
+        m_circles[m_selected_circle].render(
+            renderer, SELECTED_COLOR, m_circle_border_color[m_selected_circle]
+        );
+    }
+}
+
+void Board::update_selection(const Point &dot) {
+    m_selected_hexagon = 0xFFFF;
+    m_selected_circle = 0xFFFF;
+    for (::std::size_t i = 0; i < m_hexagon_amount; ++i) {
+        if (m_hexagons[i].in_bounds(dot)) {
+            m_selected_hexagon = i;
+            break;
+        }
+    }
+    for (::std::size_t i = 0; i < m_circle_amount; ++i) {
+        if (m_circles[i].in_bounds(dot)) {
+            m_selected_circle = i;
+            break;
+        }
     }
 }
 
