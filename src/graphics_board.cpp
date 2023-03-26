@@ -3,7 +3,7 @@
 namespace runebound::graphics {
 // constants for hexagons
 const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};
-const int HEXAGON_RADIUS = 30;
+const int HEXAGON_RADIUS = 40;
 
 void Board::add_hexagon(
     HexagonShape &hex,
@@ -16,7 +16,7 @@ void Board::add_hexagon(
     ++m_hexagon_amount;
 }
 
-void Board::add_segment(Segment &seg, SDL_Color col) {
+void Board::add_segment(Segment seg, SDL_Color col) {
     m_segments.push_back(::std::move(seg));
     m_segment_color.push_back(col);
     ++m_segment_amount;
@@ -33,6 +33,9 @@ void Board::render(SDL_Renderer *renderer) const {
                 renderer, m_hexagon_fill_colors[i], m_hexagon_border_color[i]
             );
         }
+    }
+    for(::std::size_t i = 0; i < m_segment_amount; ++i) {
+        m_segments[i].render(renderer, m_segment_color[i]);
     }
 }
 
@@ -52,7 +55,7 @@ Board::Board(const ::runebound::map::Map &map) {
             SDL_Color color;
             switch (map.get_cell_map(::Point(row, col)).get_type_cell()) {
                 case ::runebound::map::TypeCell::WATER:
-                    color = {0x00, 0x00, 0xFF, 0xFF};
+                    color = {0x7F, 0x7F, 0xFF, 0xFF};
                     break;
                 case ::runebound::map::TypeCell::FOREST:
                     color = {0x00, 0x77, 0x00, 0xFF};
@@ -99,7 +102,56 @@ Board::Board(const ::runebound::map::Map &map) {
             add_hexagon(hex, color, SDL_Color{0x00, 0x00, 0x00, 0xFF});
         }
     }
-
-
+    for (const auto &pair : map.get_rivers()) {
+        int x1 = pair.first.x;
+        int y1 = pair.first.y;
+        int x2 = pair.second.x;
+        int y2 = pair.second.y;
+        if (x1 == x2) {
+            HexagonShape hex =
+                m_hexagons[x1 * ::runebound::map::STANDARD_SIZE + y1];
+            if (y1 < y2) {
+                add_segment(
+                    {hex.get_vertex(1), hex.get_vertex(2)},
+                    {0x00, 0x0F, 0xFF, 0xFF}
+                );
+            } else {
+                add_segment(
+                    {hex.get_vertex(5), hex.get_vertex(4)},
+                    {0x00, 0x0F, 0xFF, 0xFF}
+                );
+            }
+        }
+        else if(x1 < x2) {
+            HexagonShape hex =
+                m_hexagons[x1 * ::runebound::map::STANDARD_SIZE + y1];
+            if (y1 < y2) {
+                add_segment(
+                    {hex.get_vertex(0), hex.get_vertex(5)},
+                    {0x00, 0x0F, 0xFF, 0xFF}
+                );
+            } else {
+                add_segment(
+                    {hex.get_vertex(0), hex.get_vertex(1)},
+                    {0x00, 0x0F, 0xFF, 0xFF}
+                );
+            }
+        }
+        else {
+            HexagonShape hex =
+                m_hexagons[x1 * ::runebound::map::STANDARD_SIZE + y1];
+            if (y1 < y2) {
+                add_segment(
+                    {hex.get_vertex(2), hex.get_vertex(3)},
+                    {0x00, 0x0F, 0xFF, 0xFF}
+                );
+            } else {
+                add_segment(
+                    {hex.get_vertex(3), hex.get_vertex(4)},
+                    {0x00, 0x0F, 0xFF, 0xFF}
+                );
+            }
+        }
+    }
 }
 }  // namespace runebound::graphics

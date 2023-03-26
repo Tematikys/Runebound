@@ -33,7 +33,7 @@ public:
         SDL_Color border_color
     );
 
-    void add_segment(Segment &seg, SDL_Color col);
+    void add_segment(Segment seg, SDL_Color col);
 
     void render(SDL_Renderer *renderer) const;
 

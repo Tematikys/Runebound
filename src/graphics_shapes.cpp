@@ -159,7 +159,7 @@ void PolygonShape::render(
 }
 
 // hexagon constructor from given center and radius
-HexagonShape::HexagonShape(Point center, int radius) {
+HexagonShape::HexagonShape(const Point &center, int radius) {
     // rounded multiplication by cos(pi/6)
     const int dx = (radius * 56756) >> 16;
     m_vertexes.emplace_back(center.x(), center.y() - radius);

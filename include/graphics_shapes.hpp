@@ -44,7 +44,7 @@ class HexagonShape : public PolygonShape {
 public:
     HexagonShape() = default;
 
-    HexagonShape(Point center, int radius);
+    HexagonShape(const Point &center, int radius);
 };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_SHAPES_HPP_

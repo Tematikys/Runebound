@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(BOOST_INCLUDE_DIR "../tpl/boost/include")
 set(BOOST_LIB_DIR "../tpl/boost/lib")
-set(NLOHMANN_INCLUDE_DIR "../tpl/nlohmann/")
+set(NLOHMANN_INCLUDE_DIR "../tpl/")
 set(SDL2_INCLUDE_DIR "../tpl/SDL2/include/")
 set(SDL2_LIB_DIR "../tpl/SDL2/lib/")
 
@@ -22,12 +22,22 @@ link_directories(${SDL2_LIB_DIR})
 add_executable(client
         main.cpp
         client.cpp
+        ../src/card_adventure.cpp
+        ../src/card_research.cpp
+        ../src/character.cpp
+        ../src/dice.cpp
+        ../src/game.cpp
         ../src/graphics.cpp
         ../src/graphics_board.cpp
+        ../src/graphics_segment.cpp
         ../src/graphics_shapes.cpp
         ../src/map.cpp
         ../src/map_cell.cpp
-        ../src/dice.cpp
+        ../src/tokens.cpp
+        ../tpl/SDL2/src/SDL2_gfxPrimitives.cpp
+        ../tpl/SDL2/src/SDL2_rotozoom.cpp
+        ../tpl/SDL2/src/SDL2_imageFilter.cpp
+        ../tpl/SDL2/src/SDL2_framerate.cpp
         )
 
 target_link_libraries(client -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2)
