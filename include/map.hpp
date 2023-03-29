@@ -22,10 +22,11 @@ private:
     std::vector<std::vector<MapCell>> m_map;  // [row][column]
     std::set<std::pair<Point, Point>> m_rivers;
     const int m_size;
-    const std::vector<Point> directions_odd_row{{0, -1}, {1, 0},  {0, 1},
-                                                {-1, 1}, {-1, 0}, {-1, -1}};
-    const std::vector<Point> directions_even_row{{1, -1}, {1, 0},  {1, 1},
-                                                 {0, 1},  {-1, 0}, {0, -1}};
+    const std::vector<Point> directions_odd_column{{-1, 0}, {0, 1},  {1, 1},
+                                                   {1, 0},  {1, -1}, {0, -1}};
+    const std::vector<Point> directions_even_column{{-1, 0}, {-1, 1}, {0, 1},
+                                                    {1, 0},  {0, -1}, {-1, -1}};
+
     [[nodiscard]] std::vector<Point> make_move(
         const Point &start,
         const Point &end,
@@ -53,8 +54,8 @@ public:
     Map(const Map &other)
         : m_rivers(other.m_rivers),
           m_size(other.m_size),
-          directions_odd_row(other.directions_odd_row),
-          directions_even_row(other.directions_even_row) {
+          directions_odd_column(other.directions_odd_column),
+          directions_even_column(other.directions_even_column) {
         m_map = other.m_map;
     }
 
@@ -62,8 +63,8 @@ public:
         : m_map(std::move(other.m_map)),
           m_rivers(std::move(other.m_rivers)),
           m_size(other.m_size),
-          directions_odd_row(other.directions_odd_row),
-          directions_even_row(other.directions_even_row) {
+          directions_odd_column(other.directions_odd_column),
+          directions_even_column(other.directions_even_column) {
     }
 
     Map &operator=(const Map &other) {
@@ -82,7 +83,8 @@ public:
         return m_map[point.x][point.y];
     }
 
-    [[nodiscard]] const std::vector<Point> &get_directions(int x) const;
+    [[nodiscard]] const std::vector<Point> &get_directions(const Point &point
+    ) const;
 
     [[nodiscard]] Point get_neighbour_in_direction(
         const Point &point,
