@@ -41,7 +41,7 @@ struct CardResearch;
 namespace map {
 std::set<std::pair<Point, Point>> make_rivers();
 std::vector<std::vector<MapCell>> make_map();
-}
+}  // namespace map
 }  // namespace runebound
 
 #endif  // RUNEBOUND_FWD_HPP_

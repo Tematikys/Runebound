@@ -37,7 +37,8 @@ private:
     bool check_neighbour(const Point &lhs, const Point &rhs) const;
 
 public:
-    Map() : m_size(STANDARD_SIZE), m_map(make_map()) {}
+    Map() : m_size(STANDARD_SIZE), m_map(make_map()) {
+    }
 
     Map(const Map &other)
         : m_rivers(other.m_rivers),

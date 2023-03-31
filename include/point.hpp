@@ -34,5 +34,5 @@ public:
         return Point(lhs.x + rhs.x, lhs.y + rhs.y);
     }
 };
-} // namespace runebound
+}  // namespace runebound
 #endif  // POINT_HPP_

@@ -1,9 +1,9 @@
-#include "runebound_fwd.hpp"
+#include <set>
+#include <vector>
 #include "map.hpp"
 #include "map_cell.hpp"
-#include <set>
 #include "point.hpp"
-#include <vector>
+#include "runebound_fwd.hpp"
 
 namespace runebound::map {
 std::set<std::pair<Point, Point>> make_rivers() {
@@ -265,10 +265,12 @@ void make_special_type_cells(std::vector<std::vector<MapCell>> &map) {
     map[8][7].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
     map[13][12].make_special_type_cell(SpecialTypeCell::FORTRESS);
 }
-} // namespace
+}  // namespace
 
-std::vector<std::vector <MapCell>> make_map() {
-    std::vector<std::vector <MapCell>> map(STANDARD_SIZE, std::vector<MapCell>(STANDARD_SIZE));
+std::vector<std::vector<MapCell>> make_map() {
+    std::vector<std::vector<MapCell>> map(
+        STANDARD_SIZE, std::vector<MapCell>(STANDARD_SIZE)
+    );
     make_cells(map);
     make_tokens(map);
     make_road(map);
@@ -276,5 +278,4 @@ std::vector<std::vector <MapCell>> make_map() {
     return map;
 }
 
-
-} // namespace runebound::map
+}  // namespace runebound::map

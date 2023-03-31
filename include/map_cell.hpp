@@ -11,8 +11,6 @@
 namespace runebound {
 namespace map {
 
-const int COUNT_NEIGHBOUR = 6;
-
 enum class TypeCell { WATER, FOREST, MOUNTAINS, HILLS, PLAIN, TOWN };
 
 enum class SpecialTypeCell { SANCTUARY, FORTRESS, SETTLEMENT, NOTHING };
