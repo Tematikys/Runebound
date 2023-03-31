@@ -5,7 +5,7 @@
 
 namespace runebound::graphics {
 class Point;
-Point operator+(const Point &, const Point &);
+Point operator+(const Point &lhs, const Point &rhs);
 
 // basic point class
 class Point {

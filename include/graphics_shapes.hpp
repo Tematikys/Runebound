@@ -17,23 +17,19 @@ protected:
 public:
     PolygonShape() = default;
 
+    explicit PolygonShape(::std::vector<Point> vertexes) : m_vertexes(std::move(vertexes)) {
+        init_side_coefficients();
+    }
+
     void init_side_coefficients();
 
     void render(
         SDL_Renderer *renderer,
         SDL_Color fill_color,
-        int x_offset = 0,
-        int y_offset = 0
+        SDL_Color border_color
     ) const;
 
-    void render_border(
-        SDL_Renderer *renderer,
-        SDL_Color border_color,
-        int x_offset = 0,
-        int y_offset = 0
-    ) const;
-
-    [[nodiscard]] bool in_bounds(const Point &dot) const;
+    [[nodiscard]] bool in_bounds(Point dot) const;
 
     [[nodiscard]] Point get_vertex(::std::size_t index) const {
         return m_vertexes[index];
@@ -52,25 +48,11 @@ public:
     HexagonShape(const Point &center, int radius);
 };
 
-class SquareShape : public PolygonShape {
-public:
-    SquareShape() = default;
-
-    SquareShape(const Point &center, int radius);
-};
-
-class RectangleShape : public PolygonShape {
-public:
-    RectangleShape() = default;
-
-    RectangleShape(int x, int y, int width, int height);
-};
-
 // basic circle class
 class CircleShape {
 private:
     Point m_center;
-    int m_radius = 0;
+    int m_radius{0};
 
 public:
     CircleShape() = default;
@@ -81,15 +63,7 @@ public:
     void render(
         SDL_Renderer *renderer,
         SDL_Color fill_color,
-        int x_offset = 0,
-        int y_offset = 0
-    ) const;
-
-    void render_border(
-        SDL_Renderer *renderer,
-        SDL_Color border_color,
-        int x_offset = 0,
-        int y_offset = 0
+        SDL_Color border_color
     ) const;
 
     [[nodiscard]] bool in_bounds(const Point &dot) const;

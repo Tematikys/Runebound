@@ -7,23 +7,24 @@
 namespace runebound::graphics {
 class Segment {
 private:
-    Point m_start, m_finish;
+    Point m_s, m_f;
 
 public:
     Segment() = default;
 
-    Segment(const Point &s, const Point &f) : m_start(s), m_finish(f){};
+    Segment(const Point &s, const Point &f) : m_s(s), m_f(f){};
 
-    void render(SDL_Renderer *renderer, SDL_Color color, int size) const;
+    void render(SDL_Renderer *renderer, SDL_Color col, int size) const;
 
-    void half_render(SDL_Renderer *renderer, SDL_Color color, int size) const;
+    // TODO
+    void half_render(SDL_Renderer *renderer, SDL_Color col, int size) const;
 
-    [[nodiscard]] Point start() const {
-        return m_start;
+    [[nodiscard]] Point s() const {
+        return m_s;
     };
 
-    [[nodiscard]] Point finish() const {
-        return m_finish;
+    [[nodiscard]] Point f() const {
+        return m_f;
     };
 };
 }  // namespace runebound::graphics
