@@ -4,6 +4,9 @@
 #include <utility>
 
 namespace runebound::graphics {
+class Point;
+Point operator+(const Point &lhs, const Point &rhs);
+
 // basic point class
 class Point {
 private:
@@ -26,6 +29,8 @@ public:
     [[nodiscard]] int y() const {
         return m_y;
     };
+
+    friend Point operator+(const Point &lhs, const Point &rhs);
 };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_POINT_HPP_

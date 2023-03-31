@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <graphics_point.hpp>
 #include <tuple>
+#include <utility>
 #include <vector>
 
 namespace runebound::graphics {
@@ -15,6 +16,10 @@ protected:
 
 public:
     PolygonShape() = default;
+
+    explicit PolygonShape(::std::vector<Point> vertexes) : m_vertexes(std::move(vertexes)) {
+        init_side_coefficients();
+    }
 
     void init_side_coefficients();
 

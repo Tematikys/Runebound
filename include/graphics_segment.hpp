@@ -14,7 +14,10 @@ public:
 
     Segment(const Point &s, const Point &f) : m_s(s), m_f(f){};
 
-    void render(SDL_Renderer *renderer, SDL_Color col) const;
+    void render(SDL_Renderer *renderer, SDL_Color col, int size) const;
+
+    // TODO
+    void half_render(SDL_Renderer *renderer, SDL_Color col, int size) const;
 
     [[nodiscard]] Point s() const {
         return m_s;
