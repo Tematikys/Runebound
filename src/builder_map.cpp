@@ -106,8 +106,9 @@ void make_cells(std::vector<std::vector<MapCell>> &map) {
     make_row(
         map, 0,
         std::vector{
-            std::pair(TypeCell::PLAIN, 7), std::pair(TypeCell::FOREST, 6),
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::MOUNTAINS, 1)}
+            std::pair(TypeCell::PLAIN, 7), std::pair(TypeCell::FOREST, 4),
+            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::HILLS, 1),
+            std::pair(TypeCell::MOUNTAINS, 1)}
     );
     make_row(
         map, 1,
