@@ -265,7 +265,9 @@ void make_road(std::vector<std::vector<MapCell>> &map) {
     make_all_roads_in_row(map, 8, {7});
     make_all_roads_in_row(map, 9, {6, 5, 4, 3, 7});
     make_all_roads_in_row(map, 10, {8, 9, 11});
-    make_all_roads_in_row(map, 11, {10, 11});
+    make_all_roads_in_row(map, 11, {10, 12});
+    make_all_roads_in_row(map, 12, {10});
+
 }
 
 void make_special_type_cells(std::vector<std::vector<MapCell>> &map) {
