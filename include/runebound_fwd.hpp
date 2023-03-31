@@ -38,6 +38,9 @@ struct CardAdventure;
 struct CardResearch;
 }  // namespace cards
 
+namespace client {
+struct Client;
+}
 namespace map {
 std::set<std::pair<Point, Point>> make_rivers();
 std::vector<std::vector<MapCell>> make_map();
