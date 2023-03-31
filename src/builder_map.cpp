@@ -244,8 +244,45 @@ void make_tokens(std::vector<std::vector<MapCell>> &map) {
     map[9][12].make_token(AdventureType::RESEARCH);
 }
 
+void make_all_roads_in_row(std::vector<std::vector<MapCell>> &map, int row, const std::vector <int> columns) {
+    for (const auto &column : columns) {
+        map[row][column].make_road();
+    }
+}
 void make_road(std::vector<std::vector<MapCell>> &map) {
-    // TODO
+    /*make_all_roads_in_row(map, 0, {5});
+    make_all_roads_in_row(map, 1, {5});
+    make_all_roads_in_row(map, 2, {6, 7, 9, 10});
+    make_all_roads_in_row(map, 3, {6, 8});
+    make_all_roads_in_row(map, 4, {6});
+    make_all_roads_in_row(map, 6, {6});
+    make_all_roads_in_row(map, 7, {6, 7});
+    make_all_roads_in_row(map, 8, {7});
+    make_all_roads_in_row(map, 9, {6, 7, 9, 10});*/
+
+    map[0][5].make_road();
+    map[1][5].make_road();
+    map[2][6].make_road();
+    map[2][7].make_road();
+    map[3][8].make_road();
+    map[2][9].make_road();
+    map[2][10].make_road();
+    map[3][6].make_road();
+    map[4][6].make_road();
+    map[6][6].make_road();
+    map[7][6].make_road();
+    map[7][7].make_road();
+    map[8][7].make_road();
+    map[9][6].make_road();
+    map[9][5].make_road();
+    map[9][4].make_road();
+    map[9][3].make_road();
+    map[9][7].make_road();
+    map[10][8].make_road();
+    map[10][9].make_road();
+    map[11][10].make_road();
+    map[10][11].make_road();
+    map[11][12].make_road();
 }
 
 void make_special_type_cells(std::vector<std::vector<MapCell>> &map) {
