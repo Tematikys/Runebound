@@ -267,7 +267,6 @@ void make_road(std::vector<std::vector<MapCell>> &map) {
     make_all_roads_in_row(map, 10, {8, 9, 11});
     make_all_roads_in_row(map, 11, {10, 12});
     make_all_roads_in_row(map, 12, {10});
-
 }
 
 void make_special_type_cells(std::vector<std::vector<MapCell>> &map) {
@@ -288,6 +287,7 @@ void make_special_type_cells(std::vector<std::vector<MapCell>> &map) {
     map[8][7].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
     map[13][12].make_special_type_cell(SpecialTypeCell::FORTRESS);
 }
+
 }  // namespace
 
 std::vector<std::vector<MapCell>> make_map() {
@@ -301,4 +301,72 @@ std::vector<std::vector<MapCell>> make_map() {
     return map;
 }
 
+std::map<std::string, std::vector<Point>> make_territory_name() {
+    std::map<std::string, std::vector<Point>> territory_name;
+    territory_name["Starfall Forest"] = {Point(2, 0), Point(1, 1)};
+    territory_name["Rogue Peak"] = {Point(2, 2)};
+    territory_name["Everton"] = {Point(3, 1)};
+    territory_name["Caer Loek"] = {Point(0, 1)};
+    territory_name["Suvar's Haven"] = {Point(1, 5)};
+    territory_name["Cursed ruins"] = {Point(3, 3)};
+    territory_name["Telsvanian Plains"] = {
+        Point(1, 3), Point(2, 4), Point(2, 5)};
+    territory_name["The Quagmire of the Black Wing"] = {
+        Point(5, 4), Point(5, 5), Point(4, 5)};
+    territory_name["Telis Castle"] = {Point(5, 1)};
+    territory_name["Talamir"] = {Point(5, 6)};
+    territory_name["Robber freemen"] = {Point(1, 8)};
+    territory_name["The Thicket of Despondency"] = {
+        Point(0, 7), Point(0, 8), Point(0, 9)};
+    territory_name["Valley of Souls"] = {Point(0, 13), Point(1, 12)};
+    territory_name["Underground City"] = {Point(0, 14)};
+    territory_name["Snake Forest"] = {Point(4, 8)};
+    territory_name["Echo Lake"] = {Point(4, 10)};
+    territory_name["Smithy"] = {Point(1, 11)};
+    territory_name["Itraitova Forge"] = {Point(2, 12)};
+    territory_name["Sharp cliffs"] = {Point(3, 14), Point(3, 13), Point(3, 12)};
+    territory_name["Ash Hills"] = {
+        Point(6, 14), Point(5, 14), Point(5, 13), Point(4, 12)};
+    territory_name["Hedge"] = {Point(6, 2), Point(6, 3)};
+    territory_name["Howling Dol"] = {Point(6, 0), Point(7, 0)};
+    territory_name["Hunting Circle"] = {Point(7, 4)};
+    territory_name["Lake Kernan"] = {Point(7, 5)};
+    territory_name["Kellos' Breath"] = {Point(8, 0), Point(7, 1), Point(8, 2)};
+    territory_name["Stub"] = {Point(9, 0), Point(10, 0)};
+    territory_name["Downsmoor"] = {Point(10, 2)};
+    territory_name["Bright dol"] = {Point(12, 0)};
+    territory_name["Misty Plains"] = {
+        Point(11, 1), Point(11, 2), Point(12, 2), Point(11, 3)};
+    territory_name["Lowlands of Bitterness"] = {Point(12, 3), Point(12, 4)};
+    territory_name["Mountains of Despair"] = {Point(12, 6), Point(11, 5)};
+    territory_name["Madness Pass"] = {Point(13, 6)};
+    territory_name["The firmament"] = {Point(11, 6)};
+    territory_name["Blue Haze Hills"] = {
+        Point(11, 7), Point(12, 8), Point(12, 9)};
+    territory_name["Moonlight Swamp"] = {Point(11, 8), Point(11, 9)};
+    territory_name["Zedrik Crossing"] = {Point(11, 10)};
+    territory_name["Southern Plains"] = {
+        Point(13, 10), Point(12, 11), Point(12, 12)};
+    territory_name["Sandergard"] = {Point(13, 12)};
+    territory_name["River Patrol"] = {Point(11, 13)};
+    territory_name["Green Forest"] = {Point(11, 14), Point(10, 14)};
+    territory_name["Aris Sanctuary"] = {Point(8, 13)};
+    territory_name["Lake of Tears"] = {Point(9, 11)};
+    territory_name["The Fangs of the Mennara"] = {Point(7, 9), Point(8, 10)};
+    territory_name["Fort Rodrik"] = {Point(6, 13)};
+    territory_name["Trading Hail"] = {Point(8, 7)};
+    territory_name["River lands"] = {Point(6, 7), Point(7, 6), Point(8, 6)};
+    return territory_name;
+}
+
+void make_connections_between_territory_names_and_cells(
+    std::vector<std::vector<MapCell>> &map,
+    const std::map<std::string, std::vector<Point>> &territory_name
+) {
+    for (const auto &territory : territory_name) {
+        for (const auto &cell : territory.second) {
+            map[cell.x][cell.y].make_name_territory(territory.first);
+        }
+    }
+}
 }  // namespace runebound::map

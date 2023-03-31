@@ -1,7 +1,10 @@
 #ifndef MAP_CLIENT_HPP_
 #define MAP_CLIENT_HPP_
+
+#include <map>
 #include <nlohmann/json.hpp>
 #include <set>
+#include <string>
 #include "map.hpp"
 #include "map_cell.hpp"
 #include "point.hpp"
@@ -17,6 +20,7 @@ private:
                                                    {1, 0},  {1, -1}, {0, -1}};
     const std::vector<Point> directions_even_column{{-1, 0}, {-1, 1}, {0, 1},
                                                     {1, 0},  {0, -1}, {-1, -1}};
+    const std::map<std::string, std::vector<Point>> m_territory_name;
     const int m_size = STANDARD_SIZE;
     const std::set<std::pair<Point, Point>> m_rivers = make_rivers();
     std::vector<std::vector<MapCell>> m_map;
@@ -30,7 +34,13 @@ private:
     ) const;
 
 public:
-    MapClient() : m_rivers(make_rivers()), m_map(make_map()) {
+    MapClient()
+        : m_rivers(make_rivers()),
+          m_map(make_map()),
+          m_territory_name(make_territory_name()) {
+        make_connections_between_territory_names_and_cells(
+            m_map, m_territory_name
+        );
     }
 
     void reverse_token(int row, int column) {

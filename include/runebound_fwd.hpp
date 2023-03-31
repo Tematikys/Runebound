@@ -50,6 +50,11 @@ struct Board;
 namespace map {
 std::set<std::pair<Point, Point>> make_rivers();
 std::vector<std::vector<MapCell>> make_map();
+std::map<std::string, std::vector<Point>> make_territory_name();
+void make_connections_between_territory_names_and_cells(
+    std::vector<std::vector<MapCell>> &map,
+    const std::map<std::string, std::vector<Point>> &territory_name
+);
 }  // namespace map
 }  // namespace runebound
 

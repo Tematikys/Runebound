@@ -65,11 +65,11 @@ public:
     }
 
     void make_name_territory(const std::string &name) {
-        m_name_territory = name;
+        m_territory_name = name;
     }
 
-    [[nodiscard]] std::string get_name_territory() const {
-        return m_name_territory;
+    [[nodiscard]] std::string get_territory_name() const {
+        return m_territory_name;
     }
 
     friend void to_json(nlohmann::json &json, const MapCell &map_cell);
@@ -79,7 +79,7 @@ private:
     TypeCell m_type_cell;
     SpecialTypeCell m_special_type_cell = SpecialTypeCell::NOTHING;
     bool m_road = false;
-    std::string m_name_territory;
+    std::string m_territory_name;
     runebound::AdventureType m_token;
     runebound::Side m_side_token;
 };
