@@ -17,7 +17,7 @@ private:
                                                    {1, 0},  {1, -1}, {0, -1}};
     const std::vector<Point> directions_even_column{{-1, 0}, {-1, 1}, {0, 1},
                                                     {1, 0},  {0, -1}, {-1, -1}};
-    static const int m_size = STANDARD_SIZE;
+    const int m_size = STANDARD_SIZE;
     const std::set<std::pair<Point, Point>> m_rivers = make_rivers();
     std::vector<std::vector<MapCell>> m_map;
 
