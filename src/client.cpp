@@ -1,68 +1,86 @@
-#include <boost/asio.hpp>
 #include <iostream>
-#include <string>
+#include <boost/asio.hpp>
 
 using boost::asio::ip::tcp;
 
-class Client {
+class Client
+{
 public:
-    Client(const std::string &host, const std::string &port)
-            : io_context_(), socket_(io_context_) {
-        tcp::resolver resolver(io_context_);
-        tcp::resolver::results_type endpoints =
-                resolver.resolve(host, port);
-        boost::asio::connect(socket_, endpoints);
-    }
-
-    void start() {
-        io_thread_ = std::thread([this]() {
-            io_context_.run();
-        });
-    }
-
-    std::string read() {
-        char buffer[1024];
-        std::size_t n = socket_.read_some(boost::asio::buffer(buffer, sizeof(buffer)));
-        return std::string(buffer, n);
-    }
-
-    void read_to_out() {
-        char buffer[1024];
-        std::size_t n = socket_.read_some(boost::asio::buffer(buffer, sizeof(buffer)));
-        std::string response(buffer, n);
-        std::cout << "Received " << response.length() << " bytes:\n"
-                << response << std::endl;
-    }
-
-    void write(const std::string &s) {
-        boost::asio::write(socket_, boost::asio::buffer(s.data(), s.length()));
+    Client(boost::asio::io_context& io_context, const std::string& host, const std::string& port)
+            : socket_(io_context)
+    {
+        tcp::resolver resolver(io_context);
+        auto endpoints = resolver.resolve(host, port);
+        boost::asio::async_connect(socket_, endpoints,
+                                   [this](boost::system::error_code ec, const tcp::endpoint&)
+                                   {
+                                       if (!ec)
+                                       {
+                                           do_read();
+                                           do_write();
+                                       }
+                                       else
+                                       {
+                                           std::cerr << "Connect failed: " << ec.message() << std::endl;
+                                       }
+                                   });
     }
 
 private:
-    boost::asio::io_context io_context_;
+    void do_read()
+    {
+        boost::asio::async_read(socket_, boost::asio::buffer(read_buffer_, max_length),
+                                [this](boost::system::error_code ec, std::size_t length)
+                                {
+                                    if (!ec)
+                                    {
+                                        std::cout << "Received: " << read_buffer_ << std::endl;
+                                        do_read();
+                                    }
+                                    else
+                                    {
+                                        std::cerr << "Read failed: " << ec.message() << std::endl;
+                                        socket_.close();
+                                    }
+                                });
+    }
+
+    void do_write()
+    {
+        std::cout << "Enter message: ";
+        std::cin.getline(write_buffer_, max_length);
+        boost::asio::async_write(socket_, boost::asio::buffer(write_buffer_, std::strlen(write_buffer_)),
+                                 [this](boost::system::error_code ec, std::size_t length)
+                                 {
+                                     if (!ec)
+                                     {
+                                         std::cout << "Sent: " << write_buffer_ << std::endl;
+                                         do_write();
+                                     }
+                                     else
+                                     {
+                                         std::cerr << "Write failed: " << ec.message() << std::endl;
+                                         socket_.close();
+                                     }
+                                 });
+    }
+
     tcp::socket socket_;
-    std::thread io_thread_;
+    enum { max_length = 1024 };
+    char read_buffer_[max_length];
+    char write_buffer_[max_length];
 };
 
-
-int main() {
-    try {
-        Client client("localhost", "1234");
-        client.start();
-        std::cout << "Connected\n";
-        client.read_to_out();
-        client.write("get games\n");
-        client.read_to_out();
-        client.write("add game Mygame\n");
-        client.read_to_out();
-        client.write("get games\n");
-        client.read_to_out();
-        client.write("enter game Mygame\n");
-        client.read_to_out();
-
-
-
-    } catch (std::exception &e) {
+int main()
+{
+    try
+    {
+        boost::asio::io_context io_context;
+        Client client(io_context, "localhost", "4444");
+        io_context.run();
+    }
+    catch (std::exception& e)
+    {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
 
