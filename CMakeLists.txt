@@ -25,6 +25,7 @@ add_executable(${PROJECT_NAME}
             src/map.cpp
             src/map_cell.cpp
             src/tokens.cpp
+            src/builder_map.cpp
         )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} -lmingw32 -lSDL2main -lSDL2 -mwindows -lSDL2_image -mconsole)

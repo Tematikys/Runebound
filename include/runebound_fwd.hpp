@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <random>
+#include <set>
 
 namespace runebound {
 enum class AdventureType { MEETING, RESEARCH, FIGHT, NOTHING };
@@ -12,6 +13,8 @@ enum class Side { FRONT, BACK };
 static std::mt19937 rng(
     std::chrono::steady_clock::now().time_since_epoch().count()
 );
+
+struct Point;
 
 namespace token {
 struct Token;
@@ -35,6 +38,10 @@ struct CardAdventure;
 struct CardResearch;
 }  // namespace cards
 
+namespace map {
+std::set<std::pair<Point, Point>> make_rivers();
+std::vector<std::vector<MapCell>> make_map();
+}
 }  // namespace runebound
 
 #endif  // RUNEBOUND_FWD_HPP_

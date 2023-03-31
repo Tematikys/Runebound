@@ -34,22 +34,10 @@ private:
         int count_dice
     ) const;
 
-    void
-    make_row(int row, const std::vector<std::pair<TypeCell, int>> &elements);
-
-    void make_cells();
-    void make_rivers();
-    void make_map();
-    void make_tokens();
-    void make_road();
-    void make_special_type_cells();
-
     bool check_neighbour(const Point &lhs, const Point &rhs) const;
 
 public:
-    Map() : m_size(STANDARD_SIZE) {
-        make_map();
-    }
+    Map() : m_size(STANDARD_SIZE), m_map(make_map()) {}
 
     Map(const Map &other)
         : m_rivers(other.m_rivers),

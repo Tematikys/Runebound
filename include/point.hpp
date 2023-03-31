@@ -2,6 +2,7 @@
 #define POINT_HPP_
 #include <nlohmann/json.hpp>
 
+namespace runebound {
 struct Point {
 public:
     int x, y;
@@ -33,4 +34,5 @@ public:
         return Point(lhs.x + rhs.x, lhs.y + rhs.y);
     }
 };
+} // namespace runebound
 #endif  // POINT_HPP_
