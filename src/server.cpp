@@ -55,12 +55,13 @@ private:
     {
         auto self(shared_from_this());
         socket_.async_read_some(boost::asio::buffer(data_, 1024),
-                                [this, self](boost::system::error_code ec, std::size_t length)
+                                [this, self](boost::system::error_code ec,  std::size_t length)
                                 {
                                     if (!ec)
                                     {
                                         std::string message(data_, length);
                                         std::cout << "Received: " << message;
+                                        write("Message getted\n");
                                         if (message=="get games\n") {
                                             std::string str = "List of games: \n";
                                             for (auto [game_name, game] : games){
@@ -80,6 +81,11 @@ private:
                                             std::string game_name=message.substr(11, message.size()-12);
                                             game_=&games[game_name];
                                             write("You are entered a game: "+game_name);
+                                        }
+                                        if (message=="notify all\n"){
+                                            for (auto session : sessions){
+                                                session->write("You are notified");
+                                            }
                                         }
                                         do_read();
                                     }
@@ -128,7 +134,7 @@ int main()
     try
     {
         boost::asio::io_context io_context;
-        Server server(io_context, 1234);
+        Server server(io_context, 4444);
         io_context.run();
     }
     catch (std::exception& e)
