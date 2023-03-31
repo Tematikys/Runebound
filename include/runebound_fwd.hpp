@@ -27,6 +27,7 @@ struct Character;
 namespace map {
 struct MapCell;
 struct Map;
+struct MapClient;
 }  // namespace map
 
 namespace game {
@@ -41,9 +42,11 @@ struct CardResearch;
 namespace client {
 struct Client;
 }
+
 namespace graphics {
 struct Board;
 }
+
 namespace map {
 std::set<std::pair<Point, Point>> make_rivers();
 std::vector<std::vector<MapCell>> make_map();

@@ -5,15 +5,29 @@
 #include "map.hpp"
 #include "map_cell.hpp"
 #include "point.hpp"
+#include "runebound_fwd.hpp"
 
 namespace runebound::map {
+void to_json(nlohmann::json &json, const MapClient &map);
+
 struct MapClient {
 private:
-    friend struct ::runebound::client::Client;
     friend struct ::runebound::graphics::Board;
+    const std::vector<Point> directions_odd_column{{-1, 0}, {0, 1},  {1, 1},
+                                                   {1, 0},  {1, -1}, {0, -1}};
+    const std::vector<Point> directions_even_column{{-1, 0}, {-1, 1}, {0, 1},
+                                                    {1, 0},  {0, -1}, {-1, -1}};
     static const int m_size = STANDARD_SIZE;
     const std::set<std::pair<Point, Point>> m_rivers = make_rivers();
     std::vector<std::vector<MapCell>> m_map;
+
+    [[nodiscard]] bool check_neighbour_in_direction(
+        const Point &cell,
+        const Point &direction
+    ) const;
+
+    [[nodiscard]] std::vector<Point> get_all_neighbours(const Point &cell
+    ) const;
 
 public:
     MapClient() : m_rivers(make_rivers()), m_map(make_map()) {
@@ -23,11 +37,7 @@ public:
         m_map[row][column].reverse_token();
     }
 
-    friend void to_json(nlohmann::json &json, const MapClient &map) {
-        json["m_size"] = m_size;
-        json["m_rivers"] = map.m_rivers;
-        json["m_map"] = map.m_map;
-    }
+    friend void to_json(nlohmann::json &json, const MapClient &map);
 
     friend void from_json(const nlohmann::json &json, MapClient &map) {
         map.m_map = json["m_map"];
