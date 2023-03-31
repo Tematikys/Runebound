@@ -16,6 +16,7 @@ public:
 
     void render(SDL_Renderer *renderer, SDL_Color col, int size) const;
 
+    // TODO
     void half_render(SDL_Renderer *renderer, SDL_Color col, int size) const;
 
     [[nodiscard]] Point s() const {

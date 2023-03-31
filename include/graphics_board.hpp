@@ -25,10 +25,10 @@ private:
     ::std::vector<SDL_Color> m_river_color;
     ::std::size_t m_river_amount{0};
     // TODO
-    ::std::vector<bool> m_is_connected_to_town;
+    ::std::vector<bool> is_connected_to_city;
 
     // specials
-    ::std::vector<SquareShape> m_specials;
+    ::std::vector<PolygonShape> m_specials;
     ::std::vector<SDL_Color> m_special_fill_color;
     ::std::vector<SDL_Color> m_special_border_color;
     ::std::size_t m_special_amount{0};
@@ -50,21 +50,17 @@ public:
 
     explicit Board(const ::runebound::map::MapClient &map);
 
+    void add_cell(HexagonShape &hex, SDL_Color fill_col, SDL_Color border_col);
+
+    void add_river(Segment &seg, SDL_Color col);
+
+    void add_road(Segment &seg, SDL_Color col);
+
     void
-    add_cell(const HexagonShape &hex, SDL_Color fill_col, SDL_Color border_col);
-
-    void add_river(const Segment &seg, SDL_Color col);
-
-    void add_road(const Segment &seg, SDL_Color col);
+    add_token(CircleShape &cir, SDL_Color fill_col, SDL_Color border_col);
 
     void
-    add_token(const CircleShape &cir, SDL_Color fill_col, SDL_Color border_col);
-
-    void add_special(
-        const SquareShape &sqr,
-        SDL_Color fill_col,
-        SDL_Color border_col
-    );
+    add_special(PolygonShape &poly, SDL_Color fill_col, SDL_Color border_col);
 
     void render(SDL_Renderer *renderer) const;
 

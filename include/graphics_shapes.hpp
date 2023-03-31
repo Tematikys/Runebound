@@ -17,8 +17,7 @@ protected:
 public:
     PolygonShape() = default;
 
-    explicit PolygonShape(::std::vector<Point> vertexes)
-        : m_vertexes(std::move(vertexes)) {
+    explicit PolygonShape(::std::vector<Point> vertexes) : m_vertexes(std::move(vertexes)) {
         init_side_coefficients();
     }
 
@@ -49,23 +48,16 @@ public:
     HexagonShape(const Point &center, int radius);
 };
 
-class SquareShape : public PolygonShape {
-public:
-    SquareShape() = default;
-
-    SquareShape(const Point &center, int radius);
-};
-
 // basic circle class
 class CircleShape {
 private:
     Point m_center;
-    Sint16 m_radius{0};
+    int m_radius{0};
 
 public:
     CircleShape() = default;
 
-    CircleShape(const Point &center, Sint16 radius)
+    CircleShape(const Point &center, int radius)
         : m_center(center), m_radius(radius){};
 
     void render(
