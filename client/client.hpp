@@ -51,7 +51,7 @@ public:
         int fps
     );
 
-    void init_board(const ::runebound::map::Map &map);
+    void init_board(const ::runebound::map::MapClient &map);
 
     void handle_events();
 

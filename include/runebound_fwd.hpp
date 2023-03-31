@@ -16,10 +16,6 @@ static std::mt19937 rng(
 
 struct Point;
 
-namespace graphics {
-struct Board;
-}
-
 namespace token {
 struct Token;
 }  // namespace token
@@ -45,7 +41,9 @@ struct CardResearch;
 namespace client {
 struct Client;
 }
-
+namespace graphics {
+struct Board;
+}
 namespace map {
 std::set<std::pair<Point, Point>> make_rivers();
 std::vector<std::vector<MapCell>> make_map();

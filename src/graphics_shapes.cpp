@@ -162,13 +162,13 @@ bool PolygonShape::in_bounds(Point dot) const {
 // hexagon constructor from given center and radius
 HexagonShape::HexagonShape(const Point &center, int radius) {
     // rounded multiplication by cos(pi/6)
-    const int dx = (radius * 56756) >> 16;
-    m_vertexes.emplace_back(center.x(), center.y() - radius);
-    m_vertexes.emplace_back(center.x() + dx, center.y() - radius / 2);
-    m_vertexes.emplace_back(center.x() + dx, center.y() + radius / 2);
-    m_vertexes.emplace_back(center.x(), center.y() + radius);
-    m_vertexes.emplace_back(center.x() - dx, center.y() + radius / 2);
-    m_vertexes.emplace_back(center.x() - dx, center.y() - radius / 2);
+    const int dy = (radius * 56756) >> 16;
+    m_vertexes.emplace_back(center.x() - radius / 2, center.y() - dy);
+    m_vertexes.emplace_back(center.x() + radius / 2, center.y() - dy);
+    m_vertexes.emplace_back(center.x() + radius, center.y());
+    m_vertexes.emplace_back(center.x() + radius / 2, center.y() + dy);
+    m_vertexes.emplace_back(center.x() - radius / 2, center.y() + dy);
+    m_vertexes.emplace_back(center.x() - radius, center.y());
     init_side_coefficients();
 }
 

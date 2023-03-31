@@ -44,7 +44,7 @@ void Client::init_graphics(
     m_frame_time = 1000 / fps;
 }
 
-void Client::init_board(const ::runebound::map::Map &map) {
+void Client::init_board(const ::runebound::map::MapClient &map) {
     m_board = ::runebound::graphics::Board(map);
 }
 
@@ -68,15 +68,7 @@ void Client::render() {
 
 void Client::update() {
     ::runebound::graphics::update_mouse_pos(m_mouse_pos);
-
-    //    m_board.set_selected_hexagon(0xFFFF);
-    //    if (auto index =
-    //            m_board.in_bounds(::runebound::graphics::Point(m_mouse_pos)))
-    //            {
-    //        m_board.set_selected_hexagon(index.value());
-    //    }
     m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
-
     ++m_counter;
 }
 

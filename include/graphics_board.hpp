@@ -5,7 +5,7 @@
 #include <graphics_point.hpp>
 #include <graphics_segment.hpp>
 #include <graphics_shapes.hpp>
-#include <map.hpp>
+#include <map_client.hpp>
 #include <optional>
 #include <vector>
 
@@ -35,7 +35,7 @@ private:
 public:
     Board() = default;
 
-    explicit Board(const ::runebound::map::Map &map);
+    explicit Board(const ::runebound::map::MapClient &map);
 
     void add_hexagon(
         HexagonShape &hex,
@@ -50,14 +50,7 @@ public:
 
     void render(SDL_Renderer *renderer) const;
 
-    void set_selected_hexagon(::std::size_t index) {
-        m_selected_hexagon = index;
-    };
-
     void update_selection(const Point &dot);
-
-    [[nodiscard]] ::std::optional<::std::size_t> in_bounds(const Point &dot
-    ) const;
 };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_BOARD_HPP_

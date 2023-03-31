@@ -3,9 +3,9 @@
 int main(int, char *[]) {
     ::runebound::client::Client client;
 
-    client.init_graphics("Runebound-v0.1.1", 100, 100, 1280, 960, 60);
+    client.init_graphics("Runebound-v0.1.2", 100, 100, 900, 900, 60);
 
-    const ::runebound::map::Map map;
+    const ::runebound::map::MapClient map;
     client.init_board(map);
 
     while (client.running()) {

@@ -1,3 +1,4 @@
+#include <cmath>
 #include <graphics_board.hpp>
 #include <map>
 
@@ -16,20 +17,20 @@ int sign(int x) {
 namespace runebound::graphics {
 // constants for hexagons
 const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};
-const int HEXAGON_RADIUS = 40;
+const int HEXAGON_RADIUS = 30;
 
 // constants for rivers
 const ::std::map<::std::pair<int, int>, ::std::pair<int, int>>
-    RIVER_DIRECTIONS = {{{1, -1}, {0, 1}},  {{0, -1}, {1, 2}},
-                        {{-1, -1}, {2, 3}}, {{-1, 1}, {3, 4}},
-                        {{0, 1}, {4, 5}},   {{1, 1}, {5, 0}}};
+    RIVER_DIRECTIONS = {{{-1, 0}, {3, 4}}, {{-1, -1}, {2, 3}},
+                        {{-1, 1}, {4, 5}}, {{1, 0}, {0, 1}},
+                        {{1, -1}, {1, 2}}, {{1, 1}, {5, 0}}};
 
-Board::Board(const ::runebound::map::Map &map) {
+Board::Board(const ::runebound::map::MapClient &map) {
     for (int row = 0; row < ::runebound::map::STANDARD_SIZE; ++row) {
         for (int col = 0; col < ::runebound::map::STANDARD_SIZE; ++col) {
             // get necessary color
             SDL_Color fill_color;
-            switch (map.get_cell_map(::Point(row, col)).get_type_cell()) {
+            switch (map.m_map[row][col].get_type_cell()) {
                 case ::runebound::map::TypeCell::WATER:
                     fill_color = {0x37, 0x1A, 0xCA, 0xFF};
                     break;
@@ -51,28 +52,28 @@ Board::Board(const ::runebound::map::Map &map) {
             }
 
             // supportive variable
-            const int dx = (HEXAGON_RADIUS * 56756) >> 16;
+            const int dy = (HEXAGON_RADIUS * 56756) >> 16;
 
             Point center;
-            if (row % 2 == 0) {
+            if (col % 2 == 0) {
                 center = Point(
-                    dx * 2 * (1 + col), HEXAGON_RADIUS * (2 + row * 3) / 2
+                    HEXAGON_RADIUS * (2 + col * 3) / 2, dy * (1 + 2 * row)
                 );
             } else {
                 center = Point(
-                    dx * (1 + 2 * col), HEXAGON_RADIUS * (2 + row * 3) / 2
+                    HEXAGON_RADIUS * (2 + col * 3) / 2, dy * 2 * (1 + row)
                 );
             }
             HexagonShape hex = {center, HEXAGON_RADIUS};
 
             add_hexagon(hex, fill_color, SDL_Color{0x00, 0x00, 0x00, 0xFF});
             bool tr = true;
-            switch (map.get_cell_map(::Point(row, col)).get_token()) {
+            switch (map.m_map[row][col].get_token()) {
                 case ::runebound::AdventureType::MEETING:
                     fill_color = {0x9D, 0x00, 0xC4, 0xFF};
                     break;
                 case AdventureType::RESEARCH:
-                    fill_color = {0x00, 0xFF, 0x00, 0xFF};
+                    fill_color = {0x00, 0x7F, 0x00, 0xFF};
                     break;
                 case AdventureType::FIGHT:
                     fill_color = {0xC4, 0x90, 0x00, 0xFF};
@@ -87,13 +88,16 @@ Board::Board(const ::runebound::map::Map &map) {
             }
         }
     }
-    for (const auto &pair : map.get_rivers()) {
+    for (const auto &pair : map.m_rivers) {
         SDL_Color river_color = {0x37, 0x1A, 0xFA, 0xFF};
         auto [x1, y1] = pair.first;
         auto [x2, y2] = pair.second;
         auto [i, v] = *RIVER_DIRECTIONS.find(
-            {sign(x1 - x2), sign((2 * y1 + 1 - x1 % 2) - (2 * y2 + 1 - x2 % 2))}
+            {sign(x1 - x2) +
+                 (1 - ::std::abs(sign(x1 - x2))) * (2 * (y1 % 2) - 1),
+             sign(y1 - y2)}
         );
+
         HexagonShape hex =
             m_hexagons[x1 * ::runebound::map::STANDARD_SIZE + y1];
         Segment seg = {hex.get_vertex(v.first), hex.get_vertex(v.second)};
@@ -171,14 +175,5 @@ void Board::update_selection(const Point &dot) {
             break;
         }
     }
-}
-
-::std::optional<::std::size_t> Board::in_bounds(const Point &dot) const {
-    for (::std::size_t i = 0; i < m_hexagon_amount; ++i) {
-        if (m_hexagons[i].in_bounds(dot)) {
-            return i;
-        }
-    }
-    return {};
 }
 }  // namespace runebound::graphics

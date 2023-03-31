@@ -9,6 +9,7 @@
 namespace runebound::map {
 struct MapClient {
 private:
+    friend struct ::runebound::client::Client;
     friend struct ::runebound::graphics::Board;
     static const int m_size = STANDARD_SIZE;
     const std::set<std::pair<Point, Point>> m_rivers = make_rivers();
