@@ -42,7 +42,7 @@ const ::std::map<::std::pair<int, int>, ::std::pair<int, int>>
 
 // =============================================================================
 // TODO
-Point<int> centerize(int i, int j) {
+Point centerize(int i, int j) {
     static const int dy = (HEXAGON_RADIUS * 56756) >> 16;
     if (j % 2 == 0) {
         return {HEXAGON_RADIUS * (2 + j * 3) / 2, dy * (1 + 2 * i)};
@@ -72,8 +72,7 @@ Board::Board(const ::runebound::map::MapClient &map) {
                 auto [special_type_cell_key, special_fill_color] =
                     *SPECIAL_COLOR.find(special);
                 add_special(
-                    {center + Point<int>(HEXAGON_RADIUS / 2, 0),
-                     HEXAGON_RADIUS / 5},
+                    {center + Point(HEXAGON_RADIUS / 2, 0), HEXAGON_RADIUS / 5},
                     special_fill_color, {0x00, 0x00, 0x00, 0xFF}
                 );
             }
@@ -83,7 +82,7 @@ Board::Board(const ::runebound::map::MapClient &map) {
             if ((token = map.m_map[row][col].get_token()) !=
                 ::runebound::AdventureType::NOTHING) {
                 add_token(
-                    {center.cast_to<short>(), HEXAGON_RADIUS / 2},
+                    {center, HEXAGON_RADIUS / 2},
                     (*ADVENTURE_COLOR.find(token)).second,
                     {0x00, 0x00, 0x00, 0xFF}
                 );
@@ -94,19 +93,13 @@ Board::Board(const ::runebound::map::MapClient &map) {
                 for (auto [i, j] :
                      map.get_all_neighbours(::runebound::Point(row, col))) {
                     if (map.m_map[i][j].check_road()) {
-                        Segment<short> seg(
-                            center.cast_to<short>(),
-                            centerize(i, j).cast_to<short>()
-                        );
+                        Segment seg(center, centerize(i, j));
                         add_road(seg, {0x80, 0x80, 0x80, 0xFF});
                         m_is_connected_to_town.push_back(false);
                     }
                     if (map.m_map[i][j].get_type_cell() ==
                         ::runebound::map::TypeCell::TOWN) {
-                        Segment<short> seg(
-                            center.cast_to<short>(),
-                            centerize(i, j).cast_to<short>()
-                        );
+                        Segment seg(center, centerize(i, j));
                         add_road(seg, {0x80, 0x80, 0x80, 0xFF});
                         m_is_connected_to_town.push_back(true);
                     }
@@ -127,9 +120,7 @@ Board::Board(const ::runebound::map::MapClient &map) {
         );
 
         HexagonShape hex = m_cells[x1 * ::runebound::map::STANDARD_SIZE + y1];
-        Segment<short> seg = {
-            hex.get_vertex(v.first).cast_to<short>(),
-            hex.get_vertex(v.second).cast_to<short>()};
+        Segment seg = {hex.get_vertex(v.first), hex.get_vertex(v.second)};
         add_river(seg, river_color);
     }
 }
@@ -145,13 +136,13 @@ void Board::add_cell(
     ++m_cell_amount;
 }
 
-void Board::add_river(const Segment<short> &seg, SDL_Color col) {
+void Board::add_river(const Segment &seg, SDL_Color col) {
     m_rivers.push_back(seg);
     m_river_color.push_back(col);
     ++m_river_amount;
 }
 
-void Board::add_road(const Segment<short> &seg, SDL_Color col) {
+void Board::add_road(const Segment &seg, SDL_Color col) {
     m_roads.push_back(seg);
     m_road_color.push_back(col);
     ++m_road_amount;
@@ -198,9 +189,9 @@ void Board::render(SDL_Renderer *renderer) const {
     }
     for (::std::size_t i = 0; i < m_road_amount; ++i) {
         if (m_is_connected_to_town[i]) {
-            m_roads[i].half_render(renderer, m_road_color[i], short(7));
+            m_roads[i].half_render(renderer, m_road_color[i], 7);
         } else {
-            m_roads[i].render(renderer, m_road_color[i], short(7));
+            m_roads[i].render(renderer, m_road_color[i], 7);
         }
     }
 
@@ -224,7 +215,7 @@ void Board::render(SDL_Renderer *renderer) const {
     }
 }
 
-void Board::update_selection(const Point<int> &dot) {
+void Board::update_selection(const Point &dot) {
     m_selected_cell = 0xFFFF;
     m_selected_token = 0xFFFF;
     for (::std::size_t i = 0; i < m_cell_amount; ++i) {
@@ -234,7 +225,7 @@ void Board::update_selection(const Point<int> &dot) {
         }
     }
     for (::std::size_t i = 0; i < m_token_amount; ++i) {
-        if (m_tokens[i].in_bounds(dot.cast_to<short>())) {
+        if (m_tokens[i].in_bounds(dot)) {
             m_selected_token = i;
             break;
         }
