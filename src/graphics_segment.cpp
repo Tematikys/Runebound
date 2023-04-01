@@ -2,8 +2,7 @@
 #include <graphics_segment.hpp>
 
 namespace runebound::graphics {
-template <typename T>
-void Segment<T>::render(SDL_Renderer *renderer, SDL_Color col, T size) const {
+void Segment::render(SDL_Renderer *renderer, SDL_Color col, int size) const {
     thickLineRGBA(
         renderer, m_s.x(), m_s.y(), m_f.x(), m_f.y(), 2 * size + 1, col.r,
         col.g, col.b, col.a
@@ -17,8 +16,7 @@ void Segment<T>::render(SDL_Renderer *renderer, SDL_Color col, T size) const {
 }
 
 // TODO
-template <typename T>
-void Segment<T>::half_render(SDL_Renderer *renderer, SDL_Color col, T size)
+void Segment::half_render(SDL_Renderer *renderer, SDL_Color col, int size)
     const {
     thickLineRGBA(
         renderer, m_s.x(), m_s.y(), (m_s.x() + m_f.x()) / 2,
@@ -28,7 +26,4 @@ void Segment<T>::half_render(SDL_Renderer *renderer, SDL_Color col, T size)
         renderer, m_s.x(), m_s.y(), size, col.r, col.g, col.b, col.a
     );
 }
-
-template class Segment<int>;
-template class Segment<short>;
 }  // namespace runebound::graphics
