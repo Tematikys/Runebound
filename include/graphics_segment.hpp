@@ -5,30 +5,24 @@
 #include <graphics_point.hpp>
 
 namespace runebound::graphics {
-template <typename T>
 class Segment {
 private:
-    Point<T> m_s, m_f;
+    Point m_s, m_f;
 
 public:
     Segment() = default;
 
-    Segment(const Point<T> &s, const Point<T> &f) : m_s(s), m_f(f){};
+    Segment(const Point &s, const Point &f) : m_s(s), m_f(f){};
 
-    template <typename U>
-    Point<U> cast_to() const {
-        return Point<U>(static_cast<U>(m_s), static_cast<U>(m_f));
-    }
+    void render(SDL_Renderer *renderer, SDL_Color col, int size) const;
 
-    void render(SDL_Renderer *renderer, SDL_Color col, T size) const;
+    void half_render(SDL_Renderer *renderer, SDL_Color col, int size) const;
 
-    void half_render(SDL_Renderer *renderer, SDL_Color col, T size) const;
-
-    [[nodiscard]] Point<T> s() const {
+    [[nodiscard]] Point s() const {
         return m_s;
     };
 
-    [[nodiscard]] Point<T> f() const {
+    [[nodiscard]] Point f() const {
         return m_f;
     };
 };

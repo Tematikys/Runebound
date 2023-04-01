@@ -4,47 +4,33 @@
 #include <utility>
 
 namespace runebound::graphics {
-template <typename T>
 class Point;
-
-template <typename U>
-Point<U> operator+(const Point<U> &lhs, const Point<U> &rhs);
+Point operator+(const Point &, const Point &);
 
 // basic point class
-template <typename T>
 class Point {
 private:
-    T m_x, m_y;
+    int m_x, m_y;
 
 public:
     Point() : m_x(), m_y(){};
 
-    Point(T x, T y) : m_x(x), m_y(y){};
+    Point(int x, int y) : m_x(x), m_y(y){};
 
-    Point(const Point<T> &other) : m_x(other.x()), m_y(other.y()){};
+    Point(const Point &other) : m_x(other.x()), m_y(other.y()){};
 
-    explicit Point(::std::pair<T, T> coords)
+    explicit Point(::std::pair<int, int> coords)
         : m_x(coords.first), m_y(coords.second){};
 
-    template <typename U>
-    Point<U> cast_to() const {
-        return Point<U>(static_cast<U>(m_x), static_cast<U>(m_y));
-    }
-
-    [[nodiscard]] T x() const {
+    [[nodiscard]] int x() const {
         return m_x;
     };
 
-    [[nodiscard]] T y() const {
+    [[nodiscard]] int y() const {
         return m_y;
     };
 
-    //    Point<T> operator+(const Point<T> &other) const {
-    //        return {x() + other.x(), y() + other.y()};
-    //    }
-
-    template <typename U>
-    friend Point<U> operator+(const Point<U> &lhs, const Point<U> &rhs);
+    friend Point operator+(const Point &lhs, const Point &rhs);
 };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_POINT_HPP_
