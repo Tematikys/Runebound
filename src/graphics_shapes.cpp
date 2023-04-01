@@ -1,5 +1,6 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <algorithm>
+#include <graphics_segment.hpp>
 #include <graphics_shapes.hpp>
 
 namespace runebound::graphics {
@@ -17,8 +18,7 @@ void PolygonShape::init_side_coefficients() {
 void PolygonShape::render(
     SDL_Renderer *renderer,
     SDL_Color fill_color,
-    int x_offset,
-    int y_offset
+    SDL_Color border_color
 ) const {
     SDL_SetRenderDrawColor(
         renderer, fill_color.r, fill_color.g, fill_color.b, fill_color.a
@@ -78,10 +78,7 @@ void PolygonShape::render(
         while (y < m_vertexes[left_index].y() && y < m_vertexes[right_index].y()
         ) {
             // draw line
-            SDL_RenderDrawLine(
-                renderer, (left_x >> 16) + x_offset, y + y_offset,
-                (right_x >> 16) + x_offset, y + y_offset
-            );
+            SDL_RenderDrawLine(renderer, left_x >> 16, y, right_x >> 16, y);
             // lower y
             ++y;
             // shift xs
@@ -134,19 +131,9 @@ void PolygonShape::render(
         }
 
         // draw connecting line
-        SDL_RenderDrawLine(
-            renderer, (left_x >> 16) + x_offset, y + y_offset,
-            (right_x >> 16) + x_offset, y + y_offset
-        );
+        SDL_RenderDrawLine(renderer, left_x >> 16, y, right_x >> 16, y);
     }
-}
 
-void PolygonShape::render_border(
-    SDL_Renderer *renderer,
-    SDL_Color border_color,
-    int x_offset,
-    int y_offset
-) const {
     SDL_SetRenderDrawColor(
         renderer, border_color.r, border_color.g, border_color.b, border_color.a
     );
@@ -154,16 +141,15 @@ void PolygonShape::render_border(
     // draw every edge of polygon except last
     for (::std::size_t i = 0; i < get_number_of_vertexes(); ++i) {
         SDL_RenderDrawLine(
-            renderer, get_vertex(i).x() + x_offset,
-            get_vertex(i).y() + y_offset,
-            get_vertex((i + 1) % get_number_of_vertexes()).x() + x_offset,
-            get_vertex((i + 1) % get_number_of_vertexes()).y() + y_offset
+            renderer, get_vertex(i).x(), get_vertex(i).y(),
+            get_vertex((i + 1) % get_number_of_vertexes()).x(),
+            get_vertex((i + 1) % get_number_of_vertexes()).y()
         );
     }
 }
 
 // check that point is inside of polygon
-bool PolygonShape::in_bounds(const Point &dot) const {
+bool PolygonShape::in_bounds(Point<int> dot) const {
     return ::std::all_of(
         m_side_coefficients.begin(), m_side_coefficients.end(),
         [&](::std::tuple<int, int, int> coefficients) {
@@ -174,7 +160,7 @@ bool PolygonShape::in_bounds(const Point &dot) const {
 }
 
 // hexagon constructor from given center and radius
-HexagonShape::HexagonShape(const Point &center, int radius) {
+HexagonShape::HexagonShape(const Point<int> &center, int radius) {
     // rounded multiplication by cos(pi/6)
     const int dy = (radius * 56756) >> 16;
     m_vertexes.emplace_back(center.x() - radius / 2, center.y() - dy);
@@ -186,49 +172,32 @@ HexagonShape::HexagonShape(const Point &center, int radius) {
     init_side_coefficients();
 }
 
-SquareShape::SquareShape(const Point &center, int radius) {
-    m_vertexes.emplace_back(center + Point(-radius, -radius));
-    m_vertexes.emplace_back(center + Point(radius, -radius));
-    m_vertexes.emplace_back(center + Point(radius, radius));
-    m_vertexes.emplace_back(center + Point(-radius, radius));
+SquareShape::SquareShape(const Point<int> &center, int radius) {
+    m_vertexes.emplace_back(center + Point<int>(-radius, -radius));
+    m_vertexes.emplace_back(center + Point<int>(radius, -radius));
+    m_vertexes.emplace_back(center + Point<int>(radius, radius));
+    m_vertexes.emplace_back(center + Point<int>(-radius, radius));
     init_side_coefficients();
 }
 
 void CircleShape::render(
     SDL_Renderer *renderer,
     SDL_Color fill_color,
-    int x_offset,
-    int y_offset
+    SDL_Color border_color
 ) const {
     filledCircleRGBA(
-        renderer, m_center.x() + x_offset, m_center.y() + y_offset, m_radius,
-        fill_color.r, fill_color.g, fill_color.b, fill_color.a
+        renderer, m_center.x(), m_center.y(), m_radius, fill_color.r,
+        fill_color.g, fill_color.b, fill_color.a
     );
-}
-
-void CircleShape::render_border(
-    SDL_Renderer *renderer,
-    SDL_Color border_color,
-    int x_offset,
-    int y_offset
-) const {
     circleRGBA(
-        renderer, m_center.x() + x_offset, m_center.y() + y_offset, m_radius,
-        border_color.r, border_color.g, border_color.b, border_color.a
+        renderer, m_center.x(), m_center.y(), m_radius, border_color.r,
+        border_color.g, border_color.b, border_color.a
     );
 }
 
-bool CircleShape::in_bounds(const Point &dot) const {
-    int dx = (m_center.x() - dot.x());
-    int dy = (m_center.y() - dot.y());
+bool CircleShape::in_bounds(const Point<Sint16> &dot) const {
+    Sint16 dx = (m_center.x() - dot.x());
+    Sint16 dy = (m_center.y() - dot.y());
     return dx * dx + dy * dy < m_radius * m_radius;
-}
-
-RectangleShape::RectangleShape(int x, int y, int width, int height) {
-    m_vertexes.emplace_back(x, y);
-    m_vertexes.emplace_back(x + width, y);
-    m_vertexes.emplace_back(x + width, y + height);
-    m_vertexes.emplace_back(x, y + height);
-    init_side_coefficients();
 }
 }  // namespace runebound::graphics
