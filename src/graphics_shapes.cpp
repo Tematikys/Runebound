@@ -186,18 +186,18 @@ void CircleShape::render(
     SDL_Color border_color
 ) const {
     filledCircleRGBA(
-        renderer, m_center.x(), m_center.y(), m_radius, fill_color.r,
-        fill_color.g, fill_color.b, fill_color.a
+        renderer, (short)m_center.x(), (short)m_center.y(), m_radius,
+        fill_color.r, fill_color.g, fill_color.b, fill_color.a
     );
     circleRGBA(
-        renderer, m_center.x(), m_center.y(), m_radius, border_color.r,
-        border_color.g, border_color.b, border_color.a
+        renderer, (short)m_center.x(), (short)m_center.y(), m_radius,
+        border_color.r, border_color.g, border_color.b, border_color.a
     );
 }
 
 bool CircleShape::in_bounds(const Point &dot) const {
-    Sint16 dx = (m_center.x() - dot.x());
-    Sint16 dy = (m_center.y() - dot.y());
+    int dx = (m_center.x() - dot.x());
+    int dy = (m_center.y() - dot.y());
     return dx * dx + dy * dy < m_radius * m_radius;
 }
 }  // namespace runebound::graphics
