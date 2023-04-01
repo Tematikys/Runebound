@@ -11,13 +11,13 @@ namespace runebound::graphics {
 // basic polygon class
 class PolygonShape {
 protected:
-    ::std::vector<Point> m_vertexes;
+    ::std::vector<Point<int>> m_vertexes;
     ::std::vector<::std::tuple<int, int, int>> m_side_coefficients;
 
 public:
     PolygonShape() = default;
 
-    explicit PolygonShape(::std::vector<Point> vertexes) : m_vertexes(std::move(vertexes)) {
+    explicit PolygonShape(::std::vector<Point<int>> vertexes) : m_vertexes(std::move(vertexes)) {
         init_side_coefficients();
     }
 
@@ -29,9 +29,9 @@ public:
         SDL_Color border_color
     ) const;
 
-    [[nodiscard]] bool in_bounds(Point dot) const;
+    [[nodiscard]] bool in_bounds(Point<int> dot) const;
 
-    [[nodiscard]] Point get_vertex(::std::size_t index) const {
+    [[nodiscard]] Point<int> get_vertex(::std::size_t index) const {
         return m_vertexes[index];
     };
 
@@ -45,19 +45,26 @@ class HexagonShape : public PolygonShape {
 public:
     HexagonShape() = default;
 
-    HexagonShape(const Point &center, int radius);
+    HexagonShape(const Point<int> &center, int radius);
+};
+
+class SquareShape : public PolygonShape {
+public:
+    SquareShape() = default;
+
+    SquareShape(const Point<int> & center, int radius);
 };
 
 // basic circle class
 class CircleShape {
 private:
-    Point m_center;
-    int m_radius{0};
+    Point<Sint16> m_center;
+    Sint16 m_radius{0};
 
 public:
     CircleShape() = default;
 
-    CircleShape(const Point &center, int radius)
+    CircleShape(const Point<Sint16> &center, Sint16 radius)
         : m_center(center), m_radius(radius){};
 
     void render(
@@ -66,7 +73,7 @@ public:
         SDL_Color border_color
     ) const;
 
-    [[nodiscard]] bool in_bounds(const Point &dot) const;
+    [[nodiscard]] bool in_bounds(const Point<Sint16> &dot) const;
 };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_SHAPES_HPP_

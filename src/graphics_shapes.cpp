@@ -149,7 +149,7 @@ void PolygonShape::render(
 }
 
 // check that point is inside of polygon
-bool PolygonShape::in_bounds(Point dot) const {
+bool PolygonShape::in_bounds(Point<int> dot) const {
     return ::std::all_of(
         m_side_coefficients.begin(), m_side_coefficients.end(),
         [&](::std::tuple<int, int, int> coefficients) {
@@ -160,7 +160,7 @@ bool PolygonShape::in_bounds(Point dot) const {
 }
 
 // hexagon constructor from given center and radius
-HexagonShape::HexagonShape(const Point &center, int radius) {
+HexagonShape::HexagonShape(const Point<int> &center, int radius) {
     // rounded multiplication by cos(pi/6)
     const int dy = (radius * 56756) >> 16;
     m_vertexes.emplace_back(center.x() - radius / 2, center.y() - dy);
@@ -172,11 +172,11 @@ HexagonShape::HexagonShape(const Point &center, int radius) {
     init_side_coefficients();
 }
 
-SquareShape::SquareShape(const Point &center, int radius) {
-    m_vertexes.emplace_back(center + Point(-radius, -radius));
-    m_vertexes.emplace_back(center + Point(radius, -radius));
-    m_vertexes.emplace_back(center + Point(radius, radius));
-    m_vertexes.emplace_back(center + Point(-radius, radius));
+SquareShape::SquareShape(const Point<int> &center, int radius) {
+    m_vertexes.emplace_back(center + Point<int>(-radius, -radius));
+    m_vertexes.emplace_back(center + Point<int>(radius, -radius));
+    m_vertexes.emplace_back(center + Point<int>(radius, radius));
+    m_vertexes.emplace_back(center + Point<int>(-radius, radius));
     init_side_coefficients();
 }
 
@@ -186,18 +186,18 @@ void CircleShape::render(
     SDL_Color border_color
 ) const {
     filledCircleRGBA(
-        renderer, (short)m_center.x(), (short)m_center.y(), m_radius,
-        fill_color.r, fill_color.g, fill_color.b, fill_color.a
+        renderer, m_center.x(), m_center.y(), m_radius, fill_color.r,
+        fill_color.g, fill_color.b, fill_color.a
     );
     circleRGBA(
-        renderer, (short)m_center.x(), (short)m_center.y(), m_radius,
-        border_color.r, border_color.g, border_color.b, border_color.a
+        renderer, m_center.x(), m_center.y(), m_radius, border_color.r,
+        border_color.g, border_color.b, border_color.a
     );
 }
 
-bool CircleShape::in_bounds(const Point &dot) const {
-    int dx = (m_center.x() - dot.x());
-    int dy = (m_center.y() - dot.y());
+bool CircleShape::in_bounds(const Point<Sint16> &dot) const {
+    Sint16 dx = (m_center.x() - dot.x());
+    Sint16 dy = (m_center.y() - dot.y());
     return dx * dx + dy * dy < m_radius * m_radius;
 }
 }  // namespace runebound::graphics

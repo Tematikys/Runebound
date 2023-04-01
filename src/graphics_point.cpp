@@ -1,7 +1,10 @@
 #include <graphics_point.hpp>
 
 namespace runebound::graphics {
-Point operator+(const Point &lhs, const Point &rhs) {
-    return Point(lhs.x() + rhs.x(), lhs.y() + rhs.y());
+template <typename U>
+Point<U> operator+(const Point<U> &lhs, const Point<U> &rhs) {
+    return {lhs.x() + rhs.x(), lhs.y() + rhs.y()};
 }
+
+template Point<int> operator+(const Point<int> &, const Point<int> &);
 }  // namespace runebound::graphics
