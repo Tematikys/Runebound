@@ -22,6 +22,7 @@ struct Token;
 
 namespace character {
 struct Character;
+struct CharacterClient;
 }
 
 namespace map {
