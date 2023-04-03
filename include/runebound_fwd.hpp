@@ -4,6 +4,7 @@
 #include <chrono>
 #include <random>
 #include <set>
+#include <map>
 
 namespace runebound {
 enum class AdventureType { MEETING, RESEARCH, FIGHT, NOTHING };
@@ -33,6 +34,7 @@ struct MapClient;
 
 namespace game {
 struct Game;
+struct GameClient;
 }
 
 namespace cards {

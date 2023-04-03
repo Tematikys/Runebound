@@ -26,6 +26,7 @@ add_executable(${PROJECT_NAME}
             src/map_cell.cpp
             src/tokens.cpp
             src/builder_map.cpp
+            src/game_client.cpp
             src/character_client.cpp
             src/map_client.cpp
         )

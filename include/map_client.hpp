@@ -9,6 +9,7 @@
 #include "map_cell.hpp"
 #include "point.hpp"
 #include "runebound_fwd.hpp"
+#include "tokens.hpp"
 
 namespace runebound::map {
 void to_json(nlohmann::json &json, const MapClient &map);
@@ -41,6 +42,18 @@ public:
         make_connections_between_territory_names_and_cells(
             m_map, m_territory_name
         );
+    }
+
+    MapClient(const MapClient &) = default;
+    MapClient(MapClient &&) = default;
+    MapClient &operator=(const MapClient &other) {
+        m_map = other.m_map;
+        return *this;
+    }
+
+    MapClient &operator=(MapClient &&other) {
+        m_map = other.m_map;
+        return *this;
     }
 
     void reverse_token(int row, int column) {
