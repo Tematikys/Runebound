@@ -83,6 +83,9 @@ void Client::tick() {
 void Client::exit() {
     SDL_DestroyWindow(m_window);
     SDL_DestroyRenderer(m_renderer);
+    m_window = nullptr;
+    m_renderer = nullptr;
+
     SDL_Quit();
 }
 }  // namespace runebound::client
