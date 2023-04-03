@@ -79,6 +79,10 @@ public:
         return m_map[point.x][point.y];
     }
 
+    void reverse_token(const Point &point) {
+        m_map[point.x][point.y].reverse_token();
+    }
+
     [[nodiscard]] const std::vector<Point> &get_directions(const Point &point
     ) const;
 

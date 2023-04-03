@@ -29,6 +29,7 @@ public:
 
     void make_token(runebound::AdventureType token) {
         m_token = token;
+        m_side_token = runebound::Side::FRONT;
     }
 
     void make_special_type_cell(SpecialTypeCell special_type_cell) {

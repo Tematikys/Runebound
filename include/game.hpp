@@ -82,7 +82,7 @@ public:
     }
 
     void reverse_token(int row, int column) {
-        m_map.get_cell_map(Point(row, column)).reverse_token();
+        m_map.reverse_token(Point(row, column));
     }
 
     [[nodiscard]] Point get_position_character(
