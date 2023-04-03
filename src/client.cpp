@@ -1,9 +1,9 @@
 #include <iostream>
 #include <boost/asio.hpp>
+
 #include <chrono>
 #include <thread>
-#include "json.hpp"
-#include "json_fwd.hpp"
+#include <nlohmann/json.hpp>
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
@@ -73,6 +73,7 @@ int main() {
                 data["action type"] = "reverse token";
                 data["x"] = x;
                 data["y"] = y;
+
                 client.do_write(data.dump());
             }
 //            if (str == "add game") {

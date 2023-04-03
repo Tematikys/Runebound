@@ -5,10 +5,9 @@
 #include <set>
 #include <memory>
 #include <map>
-
+#include <nlohmann/json.hpp>
 #include "game.hpp"
-#include "json.hpp"
-#include "json_fwd.hpp"
+
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
@@ -16,7 +15,7 @@ using json = nlohmann::json;
 
 class Session;
 
-runebound::game::Game test_game();
+runebound::game::Game test_game;
 
 std::map<std::string, runebound::game::Game> games;
 std::set<Session*> sessions;
@@ -68,11 +67,14 @@ private:
                                         std::cout << "Received: " << message;
                                         write("Message getted\n");
                                         json data=json::parse(message);
-                                        std::cout<<data;
-
+                                        std::cout<<"OK\n";
                                         if (data["action type"]=="reverse token") {
-                                            std::cout<<data["x"]<<' '<<data["y"];
-//                                            test_game.reverse_token(data["x"],data["y"]);
+                                            int row=data["x"], column=data["y"];
+                                            std::cout<<row<<' '<<column<<'\n';
+                                            std::cout<<static_cast<int>(test_game.m_map.get_cell_map(runebound::Point(row, column)).get_side_token())<<'\n';
+                                            test_game.reverse_token(data["x"],data["y"]);
+                                            std::cout<<static_cast<int>(test_game.m_map.get_cell_map(runebound::Point(row, column)).get_side_token())<<'\n';
+
                                         }
                                         do_read();
                                     }
