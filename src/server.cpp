@@ -7,11 +7,16 @@
 #include <map>
 
 #include "game.hpp"
+#include "json.hpp"
+#include "json_fwd.hpp"
 
 using boost::asio::ip::tcp;
+using json = nlohmann::json;
+
 
 class Session;
 
+runebound::game::Game test_game();
 
 std::map<std::string, runebound::game::Game> games;
 std::set<Session*> sessions;
@@ -25,7 +30,7 @@ public:
     {
         std::cout<<"Some connected\n";
         sessions.insert(this);
-        write("Hello from server\n");
+//        write("Hello from server\n");
         do_read();
 
     }
@@ -62,30 +67,12 @@ private:
                                         std::string message(data_, length);
                                         std::cout << "Received: " << message;
                                         write("Message getted\n");
-                                        if (message=="get games\n") {
-                                            std::string str = "List of games: \n";
-                                            for (auto [game_name, game] : games){
-                                                str+=game_name+'\n';
-                                            }
-                                            write (str);
-                                            std::cout<<"Games sent"<<'\n';
+                                        json data=json::parse(message);
+                                        std::cout<<data;
 
-                                        }
-                                        if (message.find("add game ") == 0) {
-                                            std::string game_name=message.substr(9, message.size()-10);
-                                            games.emplace(game_name, runebound::game::Game());
-                                            write ("Game added "+game_name);
-                                            std::cout<<"Game added\n";
-                                        }
-                                        if (message.find("enter game ") == 0) {
-                                            std::string game_name=message.substr(11, message.size()-12);
-                                            game_=&games[game_name];
-                                            write("You are entered a game: "+game_name);
-                                        }
-                                        if (message=="notify all\n"){
-                                            for (auto session : sessions){
-                                                session->write("You are notified");
-                                            }
+                                        if (data["action type"]=="reverse token") {
+                                            std::cout<<data["x"]<<' '<<data["y"];
+//                                            test_game.reverse_token(data["x"],data["y"]);
                                         }
                                         do_read();
                                     }
