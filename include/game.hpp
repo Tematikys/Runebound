@@ -79,6 +79,10 @@ public:
         return m_map.get_size();
     }
 
+    void reverse_token(int row, int column) {
+        m_map.get_cell_map(Point(row, column)).reverse_token();
+    }
+
     [[nodiscard]] Point get_position_character(
         ::runebound::character::Character *chr
     ) const;
