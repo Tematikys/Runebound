@@ -1,226 +1,29 @@
 #include "map.hpp"
 #include <algorithm>
 #include <iostream>
-#include <json.hpp>
 #include <map>
+#include <nlohmann/json.hpp>
 #include <queue>
 #include "dice.hpp"
 
 namespace runebound {
 namespace map {
 
-void Map::make_row(
-    int row,
-    const std::vector<std::pair<TypeCell, int>> &elements
-) {
-    int column = 0;
-    for (const auto &one_type : elements) {
-        for (int i = 0; i < one_type.second; ++i) {
-            m_map[row][column] = MapCell(one_type.first);
-            column += 1;
+const std::vector<Point> &Map::get_directions(const Point &point) const {
+    if (point.y % 2 == 0) {
+        return directions_even_column;
+    }
+    return directions_odd_column;
+}
+
+bool Map::check_neighbour(const Point &lhs, const Point &rhs) const {
+    auto directions = get_directions(lhs);
+    for (const auto &direction : directions) {
+        if (lhs + direction == rhs) {
+            return true;
         }
     }
-}
-
-void Map::make_cells() {
-    make_row(
-        0,
-        std::vector{
-            std::pair(TypeCell::PLAIN, 7), std::pair(TypeCell::FOREST, 6),
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::MOUNTAINS, 1)}
-    );
-    make_row(
-        1,
-        std::vector{
-            std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::PLAIN, 5),
-            std::pair(TypeCell::FOREST, 4), std::pair(TypeCell::TOWN, 1),
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::MOUNTAINS, 2)}
-    );
-    make_row(
-        2,
-        std::vector{
-            std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::MOUNTAINS, 1),
-            std::pair(TypeCell::PLAIN, 5), std::pair(TypeCell::FOREST, 1),
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::MOUNTAINS, 3)}
-    );
-    make_row(
-        3,
-        std::vector{
-            std::pair(TypeCell::FOREST, 1), std::pair(TypeCell::PLAIN, 2),
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 8),
-            std::pair(TypeCell::MOUNTAINS, 3)}
-    );
-    make_row(
-        4,
-        std::vector{
-            std::pair(TypeCell::PLAIN, 5), std::pair(TypeCell::WATER, 1),
-            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::FOREST, 1),
-            std::pair(TypeCell::PLAIN, 1), std::pair(TypeCell::WATER, 1),
-            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::HILLS, 2)}
-    );
-    make_row(
-        5,
-        std::vector{
-            std::pair(TypeCell::PLAIN, 1), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::WATER, 2),
-            std::pair(TypeCell::TOWN, 1), std::pair(TypeCell::PLAIN, 4),
-            std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::HILLS, 2)}
-    );
-    make_row(
-        6,
-        std::vector{
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 1),
-            std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::PLAIN, 6),
-            std::pair(TypeCell::FOREST, 3), std::pair(TypeCell::HILLS, 2)}
-    );
-    make_row(
-        7,
-        std::vector{
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 4),
-            std::pair(TypeCell::WATER, 1), std::pair(TypeCell::PLAIN, 3),
-            std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 2),
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 2)}
-    );
-    make_row(
-        8,
-        std::vector{
-            std::pair(TypeCell::PLAIN, 10), std::pair(TypeCell::MOUNTAINS, 1),
-            std::pair(TypeCell::PLAIN, 4)}
-    );
-    make_row(
-        9,
-        std::vector{
-            std::pair(TypeCell::FOREST, 1), std::pair(TypeCell::PLAIN, 10),
-            std::pair(TypeCell::WATER, 1), std::pair(TypeCell::PLAIN, 3)}
-    );
-    make_row(
-        10,
-        std::vector{
-            std::pair(TypeCell::FOREST, 1), std::pair(TypeCell::PLAIN, 1),
-            std::pair(TypeCell::TOWN, 1), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::PLAIN, 6), std::pair(TypeCell::FOREST, 1)}
-    );
-    make_row(
-        11,
-        std::vector{
-            std::pair(TypeCell::PLAIN, 4), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 1),
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::WATER, 2),
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::TOWN, 1),
-            std::pair(TypeCell::FOREST, 1)}
-    );
-    make_row(
-        12,
-        std::vector{
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 2),
-            std::pair(TypeCell::MOUNTAINS, 2), std::pair(TypeCell::HILLS, 3),
-            std::pair(TypeCell::PLAIN, 5)}
-    );
-    make_row(
-        13,
-        std::vector{
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 2),
-            std::pair(TypeCell::MOUNTAINS, 3), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 5)}
-    );
-    make_row(
-        14,
-        std::vector{
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 2),
-            std::pair(TypeCell::MOUNTAINS, 3), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 5)}
-    );
-}
-
-void Map::make_rivers() {
-    m_rivers.insert({Point(2, 11), Point(3, 11)});
-    m_rivers.insert({Point(3, 11), Point(2, 11)});
-    m_rivers.insert({Point(3, 10), Point(3, 11)});
-    m_rivers.insert({Point(3, 11), Point(3, 10)});
-    m_rivers.insert({Point(4, 9), Point(5, 10)});
-    m_rivers.insert({Point(5, 10), Point(4, 9)});
-    m_rivers.insert({Point(4, 9), Point(5, 9)});
-    m_rivers.insert({Point(5, 9), Point(4, 9)});
-    m_rivers.insert({Point(5, 8), Point(5, 9)});
-    m_rivers.insert({Point(5, 9), Point(5, 8)});
-    m_rivers.insert({Point(5, 8), Point(6, 8)});
-    m_rivers.insert({Point(6, 8), Point(5, 8)});
-    m_rivers.insert({Point(5, 8), Point(5, 7)});
-    m_rivers.insert({Point(5, 7), Point(5, 8)});
-    m_rivers.insert({Point(5, 7), Point(4, 7)});
-    m_rivers.insert({Point(4, 7), Point(5, 7)});
-    m_rivers.insert({Point(5, 3), Point(6, 4)});
-    m_rivers.insert({Point(6, 4), Point(5, 3)});
-    m_rivers.insert({Point(6, 3), Point(6, 4)});
-    m_rivers.insert({Point(6, 4), Point(6, 3)});
-    m_rivers.insert({Point(6, 3), Point(7, 4)});
-    m_rivers.insert({Point(7, 4), Point(6, 3)});
-    m_rivers.insert({Point(6, 4), Point(7, 4)});
-    m_rivers.insert({Point(7, 4), Point(6, 4)});
-    m_rivers.insert({Point(7, 4), Point(6, 5)});
-    m_rivers.insert({Point(6, 5), Point(7, 4)});
-    m_rivers.insert({Point(7, 3), Point(7, 4)});
-    m_rivers.insert({Point(7, 4), Point(7, 3)});
-    m_rivers.insert({Point(7, 3), Point(8, 4)});
-    m_rivers.insert({Point(8, 4), Point(7, 3)});
-    m_rivers.insert({Point(8, 2), Point(8, 3)});
-    m_rivers.insert({Point(8, 3), Point(8, 2)});
-    m_rivers.insert({Point(9, 2), Point(8, 3)});
-    m_rivers.insert({Point(8, 3), Point(9, 2)});
-    m_rivers.insert({Point(9, 2), Point(9, 3)});
-    m_rivers.insert({Point(9, 3), Point(9, 2)});
-    m_rivers.insert({Point(9, 1), Point(9, 2)});
-    m_rivers.insert({Point(9, 2), Point(9, 1)});
-    m_rivers.insert({Point(9, 1), Point(10, 0)});
-    m_rivers.insert({Point(10, 0), Point(9, 1)});
-    m_rivers.insert({Point(9, 1), Point(9, 0)});
-    m_rivers.insert({Point(9, 0), Point(9, 1)});
-    m_rivers.insert({Point(8, 1), Point(9, 0)});
-    m_rivers.insert({Point(9, 0), Point(8, 1)});
-    m_rivers.insert({Point(8, 0), Point(9, 0)});
-    m_rivers.insert({Point(9, 0), Point(8, 0)});
-    m_rivers.insert({Point(8, 14), Point(9, 14)});
-    m_rivers.insert({Point(9, 14), Point(8, 14)});
-    m_rivers.insert({Point(8, 13), Point(9, 14)});
-    m_rivers.insert({Point(9, 14), Point(8, 13)});
-    m_rivers.insert({Point(8, 13), Point(9, 13)});
-    m_rivers.insert({Point(9, 13), Point(8, 13)});
-    m_rivers.insert({Point(9, 12), Point(9, 13)});
-    m_rivers.insert({Point(9, 13), Point(9, 12)});
-    m_rivers.insert({Point(10, 12), Point(9, 13)});
-    m_rivers.insert({Point(9, 13), Point(10, 12)});
-    m_rivers.insert({Point(10, 12), Point(10, 13)});
-    m_rivers.insert({Point(10, 13), Point(10, 12)});
-    m_rivers.insert({Point(11, 13), Point(10, 13)});
-    m_rivers.insert({Point(10, 13), Point(11, 13)});
-    m_rivers.insert({Point(12, 14), Point(11, 14)});
-    m_rivers.insert({Point(11, 14), Point(12, 14)});
-    m_rivers.insert({Point(12, 14), Point(12, 13)});
-    m_rivers.insert({Point(12, 13), Point(12, 14)});
-    m_rivers.insert({Point(11, 11), Point(12, 11)});
-    m_rivers.insert({Point(12, 11), Point(11, 11)});
-    m_rivers.insert({Point(11, 11), Point(12, 12)});
-    m_rivers.insert({Point(12, 12), Point(11, 11)});
-    m_rivers.insert({Point(11, 11), Point(12, 10)});
-    m_rivers.insert({Point(12, 10), Point(11, 11)});
-    m_rivers.insert({Point(11, 10), Point(12, 10)});
-    m_rivers.insert({Point(12, 10), Point(11, 10)});
-    m_rivers.insert({Point(11, 12), Point(12, 12)});
-    m_rivers.insert({Point(12, 12), Point(11, 12)});
-}
-
-void Map::make_map() {
-    m_map.resize(m_size, std::vector<MapCell>(m_size));
-    make_cells();
-    make_rivers();
-}
-
-const std::vector<Point> &Map::get_directions(int x) const {
-    if (x % 2 == 0) {
-        return directions_even_row;
-    }
-    return directions_odd_row;
+    return false;
 }
 
 std::vector<Point> Map::make_move(
@@ -250,9 +53,9 @@ std::vector<Point> Map::make_move(
             std::reverse(result.begin(), result.end());
             return result;
         }
-        for (const auto &direction : get_directions(current.x)) {
-            if (check_neighbour(current, direction)) {
-                auto new_point = get_neighbour(current, direction);
+        for (const auto &direction : get_directions(current)) {
+            if (check_neighbour_in_direction(current, direction)) {
+                auto new_point = get_neighbour_in_direction(current, direction);
                 if (!dist.count(new_point) &&
                         (get_cell_map(new_point).check_road() ||
                          (!check_river(current, new_point) &&
@@ -280,6 +83,9 @@ std::vector<Point> Map::check_move(
     const Point &end,
     std::vector<::runebound::dice::HandDice> dice_roll_results
 ) const {
+    if (check_neighbour(start, end)) {
+        return {start, end};
+    }
     do {
         auto result = make_move(
             start, end, dice_roll_results,
@@ -298,8 +104,8 @@ void to_json(nlohmann::json &json, const Map &map) {
     json["m_map"] = map.m_map;
     json["m_size"] = map.m_size;
     json["m_rivers"] = map.m_rivers;
-    json["directions_odd_row"] = map.directions_odd_row;
-    json["directions_even_row"] = map.directions_even_row;
+    json["directions_odd_row"] = map.directions_odd_column;
+    json["directions_even_row"] = map.directions_odd_column;
 }
 
 void from_json(const nlohmann::json &json, Map &map) {

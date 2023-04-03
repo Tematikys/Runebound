@@ -1,7 +1,8 @@
 #ifndef POINT_HPP_
 #define POINT_HPP_
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
+namespace runebound {
 struct Point {
 public:
     int x, y;
@@ -28,5 +29,10 @@ public:
         point.x = json["x"];
         point.y = json["y"];
     }
+
+    friend Point operator+(const Point &lhs, const Point &rhs) {
+        return Point(lhs.x + rhs.x, lhs.y + rhs.y);
+    }
 };
+}  // namespace runebound
 #endif  // POINT_HPP_

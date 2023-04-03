@@ -1,9 +1,9 @@
 #ifndef CARD_RESEARCH_HPP_
 #define CARD_RESEARCH_HPP_
 #include <algorithm>
-#include <json_fwd.hpp>
 #include <map>
 #include <memory>
+#include <nlohmann/json_fwd.hpp>
 #include <vector>
 #include "card_adventure.hpp"
 #include "dice.hpp"

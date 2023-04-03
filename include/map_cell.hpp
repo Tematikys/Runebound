@@ -1,8 +1,9 @@
 #ifndef FIELD_CELL_HPP_
 #define FIELD_CELL_HPP_
 
-#include <json_fwd.hpp>
 #include <memory>
+#include <nlohmann/json_fwd.hpp>
+#include <string>
 #include <utility>
 #include <vector>
 #include "runebound_fwd.hpp"
@@ -10,18 +11,9 @@
 namespace runebound {
 namespace map {
 
-const int COUNT_NEIGHBOUR = 6;
-
 enum class TypeCell { WATER, FOREST, MOUNTAINS, HILLS, PLAIN, TOWN };
 
-enum class Neighbour {
-    TOPRIGHT,
-    RIGHT,
-    BOTTOMRIGHT,
-    BOTTOMLEFT,
-    LEFT,
-    TOPLEFT
-};
+enum class SpecialTypeCell { SANCTUARY, FORTRESS, SETTLEMENT, NOTHING };
 
 void to_json(nlohmann::json &json, const MapCell &map_cell);
 void from_json(const nlohmann::json &json, MapCell &map_cell);
@@ -37,6 +29,10 @@ public:
 
     void make_token(runebound::AdventureType token) {
         m_token = token;
+    }
+
+    void make_special_type_cell(SpecialTypeCell special_type_cell) {
+        m_special_type_cell = special_type_cell;
     }
 
     [[nodiscard]] runebound::AdventureType get_token() const {
@@ -56,16 +52,24 @@ public:
         return m_type_cell;
     }
 
+    [[nodiscard]] SpecialTypeCell get_special_type_cell() const {
+        return m_special_type_cell;
+    }
+
     [[nodiscard]] bool check_road() const {
         return m_road;
     }
 
     void make_road() {
-        m_road = false;
+        m_road = true;
     }
 
-    [[nodiscard]] std::string get_special_type_cell() const {
-        return m_special_type_cell;
+    void make_name_territory(const std::string &name) {
+        m_territory_name = name;
+    }
+
+    [[nodiscard]] std::string get_territory_name() const {
+        return m_territory_name;
     }
 
     friend void to_json(nlohmann::json &json, const MapCell &map_cell);
@@ -73,8 +77,9 @@ public:
 
 private:
     TypeCell m_type_cell;
+    SpecialTypeCell m_special_type_cell = SpecialTypeCell::NOTHING;
     bool m_road = false;
-    std::string m_special_type_cell;
+    std::string m_territory_name;
     runebound::AdventureType m_token;
     runebound::Side m_side_token;
 };

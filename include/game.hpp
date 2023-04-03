@@ -1,9 +1,9 @@
 #ifndef GAME_HPP_
 #define GAME_HPP_
 
-#include <json_fwd.hpp>
 #include <map>
 #include <memory>
+#include <nlohmann/json_fwd.hpp>
 #include <utility>
 #include <vector>
 #include "card_research.hpp"
@@ -77,6 +77,10 @@ public:
 
     [[nodiscard]] int get_map_size() const {
         return m_map.get_size();
+    }
+
+    void reverse_token(int row, int column) {
+        m_map.get_cell_map(Point(row, column)).reverse_token();
     }
 
     [[nodiscard]] Point get_position_character(

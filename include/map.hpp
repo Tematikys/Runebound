@@ -2,7 +2,7 @@
 #define MAP_HPP_
 
 #include <iostream>
-#include <json_fwd.hpp>
+#include <nlohmann/json_fwd.hpp>
 #include <set>
 #include <vector>
 #include "dice.hpp"
@@ -22,10 +22,12 @@ private:
     std::vector<std::vector<MapCell>> m_map;  // [row][column]
     std::set<std::pair<Point, Point>> m_rivers;
     const int m_size;
-    const std::vector<Point> directions_odd_row{{0, -1}, {1, 0},  {0, 1},
-                                                {-1, 1}, {-1, 0}, {-1, -1}};
-    const std::vector<Point> directions_even_row{{1, -1}, {1, 0},  {1, 1},
-                                                 {0, 1},  {-1, 0}, {0, -1}};
+    const std::map<std::string, std::vector<Point>> m_territory_name;
+    const std::vector<Point> directions_odd_column{{-1, 0}, {0, 1},  {1, 1},
+                                                   {1, 0},  {1, -1}, {0, -1}};
+    const std::vector<Point> directions_even_column{{-1, 0}, {-1, 1}, {0, 1},
+                                                    {1, 0},  {0, -1}, {-1, -1}};
+
     [[nodiscard]] std::vector<Point> make_move(
         const Point &start,
         const Point &end,
@@ -33,36 +35,23 @@ private:
         int count_dice
     ) const;
 
-    void
-    make_row(int row, const std::vector<std::pair<TypeCell, int>> &elements);
-
-    void make_cells();
-    void make_rivers();
-    void make_map();
+    bool check_neighbour(const Point &lhs, const Point &rhs) const;
 
 public:
-    [[nodiscard]] int get_size() const {
-        return m_size;
-    }
-
-    Map() : m_size(STANDARD_SIZE) {
-        make_map();
-        m_rivers.insert({Point(0, 2), Point(1, 1)});
-        m_rivers.insert({Point(1, 1), Point(0, 2)});
-        m_rivers.insert({Point(0, 2), Point(1, 2)});
-        m_rivers.insert({Point(1, 2), Point(0, 2)});
-        m_rivers.insert({Point(1, 3), Point(0, 2)});
-        m_rivers.insert({Point(0, 2), Point(1, 3)});
-        m_map[2][0].make_token(runebound::AdventureType::FIGHT);
-        m_map[2][4].make_token(runebound::AdventureType::MEETING);
-        m_map[4][2].make_token(runebound::AdventureType::RESEARCH);
+    Map()
+        : m_size(STANDARD_SIZE),
+          m_map(make_map()),
+          m_territory_name(make_territory_name()) {
+        make_connections_between_territory_names_and_cells(
+            m_map, m_territory_name
+        );
     }
 
     Map(const Map &other)
         : m_rivers(other.m_rivers),
           m_size(other.m_size),
-          directions_odd_row(other.directions_odd_row),
-          directions_even_row(other.directions_even_row) {
+          directions_odd_column(other.directions_odd_column),
+          directions_even_column(other.directions_even_column) {
         m_map = other.m_map;
     }
 
@@ -70,8 +59,8 @@ public:
         : m_map(std::move(other.m_map)),
           m_rivers(std::move(other.m_rivers)),
           m_size(other.m_size),
-          directions_odd_row(other.directions_odd_row),
-          directions_even_row(other.directions_even_row) {
+          directions_odd_column(other.directions_odd_column),
+          directions_even_column(other.directions_even_column) {
     }
 
     Map &operator=(const Map &other) {
@@ -90,15 +79,20 @@ public:
         return m_map[point.x][point.y];
     }
 
-    [[nodiscard]] const std::vector<Point> &get_directions(int x) const;
+    [[nodiscard]] const std::vector<Point> &get_directions(const Point &point
+    ) const;
 
-    [[nodiscard]] Point
-    get_neighbour(const Point &point, const Point &direction) const {
+    [[nodiscard]] Point get_neighbour_in_direction(
+        const Point &point,
+        const Point &direction
+    ) const {
         return {point.x + direction.x, point.y + direction.y};
     }
 
-    [[nodiscard]] bool
-    check_neighbour(const Point &point, const Point &direction) const {
+    [[nodiscard]] bool check_neighbour_in_direction(
+        const Point &point,
+        const Point &direction
+    ) const {
         return (point.x + direction.x >= 0) &&
                (point.x + direction.x < m_size) &&
                (point.y + direction.y >= 0) && (point.y + direction.y < m_size);
@@ -106,6 +100,14 @@ public:
 
     bool check_river(const Point &lhs_point, const Point &rhs_point) const {
         return m_rivers.find({lhs_point, rhs_point}) != m_rivers.end();
+    }
+
+    [[nodiscard]] std::set<std::pair<Point, Point>> get_rivers() const {
+        return m_rivers;
+    }
+
+    [[nodiscard]] int get_size() const {
+        return m_size;
     }
 
     [[nodiscard]] std::vector<Point> check_move(

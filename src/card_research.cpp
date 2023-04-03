@@ -1,5 +1,5 @@
 #include "card_research.hpp"
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 namespace runebound {
 namespace cards {

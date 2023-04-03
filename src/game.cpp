@@ -1,5 +1,5 @@
 #include "game.hpp"
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include "point.hpp"
 #include "runebound_fwd.hpp"
 

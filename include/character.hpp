@@ -1,9 +1,9 @@
 #ifndef CHARACTER_HPP_
 #define CHARACTER_HPP_
 
-#include <json_fwd.hpp>
 #include <map>
 #include <memory>
+#include <nlohmann/json_fwd.hpp>
 #include <set>
 #include <string>
 #include <vector>
