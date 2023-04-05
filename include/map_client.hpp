@@ -46,6 +46,7 @@ public:
 
     MapClient(const MapClient &) = default;
     MapClient(MapClient &&) = default;
+
     MapClient &operator=(const MapClient &other) {
         m_map = other.m_map;
         return *this;

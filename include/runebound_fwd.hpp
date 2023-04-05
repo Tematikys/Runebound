@@ -2,9 +2,9 @@
 #define RUNEBOUND_FWD_HPP_
 
 #include <chrono>
+#include <map>
 #include <random>
 #include <set>
-#include <map>
 
 namespace runebound {
 enum class AdventureType { MEETING, RESEARCH, FIGHT, NOTHING };
@@ -24,7 +24,7 @@ struct Token;
 namespace character {
 struct Character;
 struct CharacterClient;
-}
+}  // namespace character
 
 namespace map {
 struct MapCell;
@@ -35,7 +35,7 @@ struct MapClient;
 namespace game {
 struct Game;
 struct GameClient;
-}
+}  // namespace game
 
 namespace cards {
 struct CardAdventure;

@@ -26,9 +26,9 @@ private:
     std::vector<unsigned int> m_cards;
     std::map<runebound::token::Token, int> m_tokens;
     int m_max_health;
+    int m_gold, m_health;
 
 public:
-    int m_gold, m_health;
     Point m_current_position;
 
     Character()
@@ -63,6 +63,14 @@ public:
 
     void add_action_points(unsigned int delta) {
         m_action_points += delta;
+    }
+
+    void update_health(int delta) {
+        m_health += delta;
+    }
+
+    int get_health() const {
+        return m_health;
     }
 
     unsigned int get_speed() const {
