@@ -14,7 +14,8 @@ enum class HandFightTokens {
     HIT,
     ENEMY_DAMAGE,
     DOUBLING,
-    SHIELD
+    SHIELD,
+    NOTHING
 };
 
 struct FightToken {
