@@ -6,18 +6,9 @@
 #include "character.hpp"
 #include "runebound_fwd.hpp"
 #include <exception>
+#include "fight_token.hpp"
 
 namespace runebound::fight {
-enum class HandFightTokens {
-    PHYSICAL_DAMAGE,
-    MAGICAL_DAMAGE,
-    DEXTERITY,
-    HIT,
-    ENEMY_DAMAGE,
-    DOUBLING,
-    SHIELD,
-    NOTHING
-};
 
 struct BadCombinationException : std::runtime_error {
     BadCombinationException() : std::runtime_error("Wrong combination of tokens") {}
@@ -25,18 +16,6 @@ struct BadCombinationException : std::runtime_error {
 
 enum class Participant { CHARACTER, ENEMY };
 
-struct FightToken {
-public:
-    bool first_lead;
-    bool second_lead;
-    HandFightTokens first;
-    HandFightTokens second;
-
-    bool operator==(const FightToken &token) const {
-        return first_lead == token.first_lead && second_lead ==
-                                                     token.second_lead && first == token.first && second == token.second;
-    }
-};
 
 struct Enemy {
 private:
@@ -50,6 +29,10 @@ public:
 
     int get_health() const {
         return m_health;
+    }
+
+    [[nodiscard]] std::vector <FightToken> get_fight_token() const {
+        return m_fight_tokens;
     }
 };
 
@@ -142,6 +125,28 @@ private:
         return true;
     }
 
+    void shuffle_all_tokens() {
+        m_character_remaining_tokens.clear();
+        m_enemy_remaining_tokens.clear();
+        std::vector<FightToken> enemy_tokens = m_enemy.get_fight_token();
+        std::vector<FightToken> character_tokens = m_enemy.get_fight_token();
+        for (auto &character_token : character_tokens) {
+            if (rng() % 2 == 0) {
+                m_character_remaining_tokens.push_back({character_token, character_token.first});
+            }
+            else {
+                m_character_remaining_tokens.push_back({character_token, character_token.second});
+            }
+        }
+        for (auto &enemy_token : enemy_tokens) {
+            if (rng() % 2 == 0) {
+                m_enemy_remaining_tokens.push_back({enemy_token, enemy_token.first});
+            }
+            else {
+                m_enemy_remaining_tokens.push_back({enemy_token, enemy_token.second});
+            }
+        }
+    }
 public:
     void make_progress(Participant participant, const std::vector <std::pair <FightToken, HandFightTokens>> &tokens) {
         if (!check_combination_tokens(tokens)) {
@@ -228,6 +233,10 @@ public:
                 return character_token.second;
             }
         }
+    }
+
+    void start_round() {
+        shuffle_all_tokens();
     }
 
 };

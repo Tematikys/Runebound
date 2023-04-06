@@ -26,6 +26,9 @@ struct Character;
 struct CharacterClient;
 }  // namespace character
 
+namespace fight {
+struct FightToken;
+} // namespace fight
 namespace map {
 struct MapCell;
 struct Map;

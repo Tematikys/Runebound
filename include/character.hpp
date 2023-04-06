@@ -11,6 +11,7 @@
 #include "point.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
+#include "fight_token.hpp"
 
 namespace runebound {
 namespace character {
@@ -27,6 +28,7 @@ private:
     std::map<runebound::token::Token, int> m_tokens;
     int m_max_health;
     int m_gold, m_health;
+    std::vector <::runebound::fight::FightToken> m_fight_tokens;
 
 public:
     Point m_current_position;
@@ -71,6 +73,10 @@ public:
 
     int get_health() const {
         return m_health;
+    }
+
+    [[nodiscard]] std::vector <::runebound::fight::FightToken> get_fight_token() const {
+        return m_fight_tokens;
     }
 
     unsigned int get_speed() const {
