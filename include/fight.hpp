@@ -14,6 +14,11 @@ struct BadCombinationException : std::runtime_error {
     BadCombinationException() : std::runtime_error("Wrong combination of tokens") {}
 };
 
+struct WrongCharacterTurnException : std::runtime_error {
+    WrongCharacterTurnException() : std::runtime_error("Wrong character turn") {}
+};
+
+
 enum class Participant { CHARACTER, ENEMY };
 
 
@@ -40,6 +45,7 @@ struct Fight {
 private:
     friend struct Character;
     friend struct Enemy;
+    Participant m_turn;
     std::shared_ptr<::runebound::character::Character> m_character;
     ::runebound::fight::Enemy m_enemy;
     std::vector <HandFightTokens> m_enemy_hand_tokens;
@@ -147,8 +153,29 @@ private:
             }
         }
     }
+
+    unsigned int count_initiative(const std::vector <std::pair<FightToken, HandFightTokens>> tokens) const {
+        unsigned int count = 0;
+        for (const auto &token : tokens) {
+            if (token.first.first == token.second) {
+                if (token.first.first_lead) {
+                    count += 1;
+                }
+            }
+            else {
+                if (token.first.second_lead) {
+                    count += 1;
+                }
+            }
+        }
+        return count;
+    }
 public:
     void make_progress(Participant participant, const std::vector <std::pair <FightToken, HandFightTokens>> &tokens) {
+        if (m_turn != participant) {
+            throw WrongCharacterTurnException();
+        }
+        m_turn = static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
         if (!check_combination_tokens(tokens)) {
             throw BadCombinationException();
         }
@@ -164,6 +191,7 @@ public:
                 }
 
                 default: {
+                    m_turn = static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
                     throw BadCombinationException();
                 }
             }
@@ -175,6 +203,7 @@ public:
                     break;
                 }
                 default: {
+                    m_turn = static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
                     throw BadCombinationException();
                 }
             }
@@ -235,8 +264,29 @@ public:
         }
     }
 
+    [[nodiscard]] Participant get_turn() const {
+        return m_turn;
+    }
+
+    [[nodiscard]] std::vector <std::pair <FightToken, HandFightTokens>> get_character_remaining_tokens() const {
+        return m_character_remaining_tokens;
+    }
+
+    [[nodiscard]] std::vector <std::pair <FightToken, HandFightTokens>> get_enemy_remaining_tokens() const {
+        return m_enemy_remaining_tokens;
+    }
+
+
     void start_round() {
         shuffle_all_tokens();
+        unsigned int count_initiatives_character = count_initiative(m_character_remaining_tokens);
+        unsigned int count_initiatives_enemy = count_initiative(m_enemy_remaining_tokens);
+        if (count_initiatives_character >= count_initiatives_enemy) {
+            m_turn = Participant::CHARACTER;
+        }
+        else {
+            m_turn = Participant::ENEMY;
+        }
     }
 
 };
