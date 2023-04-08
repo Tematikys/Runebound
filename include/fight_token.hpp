@@ -16,10 +16,13 @@ enum class HandFightTokens {
 
 struct FightToken {
 public:
-    bool first_lead;
-    bool second_lead;
     HandFightTokens first;
+    bool first_lead;
     HandFightTokens second;
+    bool second_lead;
+
+    FightToken(HandFightTokens first_, bool first_lead_, HandFightTokens second_, bool second_lead_) :
+    first(first_), first_lead(first_lead_), second(second_), second_lead(second_lead_) {}
 
     bool operator==(const FightToken &token) const {
         return first_lead == token.first_lead &&

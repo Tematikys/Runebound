@@ -44,9 +44,17 @@ struct Enemy {
 private:
     int m_health;
     const std::string m_name;
-    std::vector<FightToken> m_fight_tokens;
+    std::vector<FightToken> m_fight_tokens = {
+        FightToken(HandFightTokens::ENEMY_DAMAGE, 0, HandFightTokens::DEXTERITY, 0),
+        FightToken(HandFightTokens::NOTHING, 1, HandFightTokens::DOUBLING, 0),
+        FightToken(HandFightTokens::SHIELD, 0, HandFightTokens::ENEMY_DAMAGE, 0),
+        FightToken(HandFightTokens::ENEMY_DAMAGE, 0, HandFightTokens::NOTHING, 1),
+        FightToken(HandFightTokens::ENEMY_DAMAGE, 0, HandFightTokens::ENEMY_DAMAGE, 1), // THERE HIT
+    };
 
 public:
+    Enemy(int health, std::string name) : m_health(health), m_name(std::move(name)) {}
+
     void update_health(int delta) {
         m_health += delta;
     }
@@ -267,6 +275,9 @@ public:
                     make_doubling(Participant::CHARACTER, doubling_token.value());
                     break;
                 }
+                case (HandFightTokens::NOTHING): {
+                    break;
+                }
                 default: {
                     m_turn =
                         static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
@@ -295,6 +306,9 @@ public:
                 }
                 case (HandFightTokens::DOUBLING): {
                     make_doubling(Participant::CHARACTER, doubling_token.value());
+                    break;
+                }
+                case (HandFightTokens::NOTHING): {
                     break;
                 }
                 default: {
