@@ -2,55 +2,61 @@
 #define RUNEBOUND_CLIENT_HPP_
 
 #include <SDL2/SDL.h>
+#include <boost/asio.hpp>
 #include <graphics.hpp>
 #include <graphics_board.hpp>
-#include <graphics_button.hpp>
-#include <graphics_config.hpp>
-#include <graphics_main_menu.hpp>
-#include <map>
-#include <map_client.hpp>
-#include <network_client.hpp>
 #include <string>
 #include <vector>
+#include <utility>
 
 namespace runebound::client {
 // client class, is called in main function, contains everything that is in use
 class Client {
 private:
-    // network
+    // network variables
     ::boost::asio::io_context m_io_context;
-    ::boost::asio::executor_work_guard<::boost::asio::io_context::executor_type>
-        m_work_guard = ::boost::asio::make_work_guard(m_io_context);
-    ::runebound::network::Client m_network_client =
-        ::runebound::network::Client(m_io_context, "127.0.0.1", 4444, "client");
+    ::boost::asio::ip::tcp::socket m_socket;
+    ::std::thread m_thread;
 
-    // map and board
-    ::runebound::map::MapClient m_map;
+    // board
     ::runebound::graphics::Board m_board;
 
-    // graphics
-    SDL_Window *m_window = nullptr;
-    SDL_Renderer *m_renderer = nullptr;
-    ::std::map<::std::string, TTF_Font *> m_fonts;
+    // graphics variables
+    SDL_Window *m_window{nullptr};
+    SDL_Renderer *m_renderer{nullptr};
+    TTF_Font *m_font{nullptr};
     ::std::vector<::runebound::graphics::Texture> m_textures;
 
-    // buttons
-    ::std::vector<::runebound::graphics::RectButton> m_rect_buttons;
+    bool m_is_running{false};
+    int m_frame_time{};
+    unsigned long long m_counter{};
+    uint32_t m_prev_frame_time{};
 
-    // time
-    bool m_is_running = false;
-    uint32_t m_frame_time;
-    uint64_t m_counter = 0;
-    uint32_t m_prev_frame_time = 0;
-
-    // mouse
-    bool m_mouse_pressed = false;
-    ::runebound::graphics::Point m_mouse_pos;
+    ::std::pair<int, int> m_mouse_pos;
 
 public:
-    void init();
+    Client() : m_io_context(), m_socket(m_io_context){};
 
-    void init_graphics();
+    void init_network(const ::std::string &host, const ::std::string &port);
+
+    void start_network() {
+        m_thread = ::std::thread([this]() { m_io_context.run(); });
+    }
+
+    [[nodiscard]] ::std::string read_network();
+
+    void write_network(const ::std::string &str);
+
+    void init_graphics(
+        const char *title,
+        int x_pos,
+        int y_pos,
+        int width,
+        int height,
+        int fps
+    );
+
+    void init_board(const ::runebound::map::MapClient &map);
 
     void handle_events();
 

@@ -12,7 +12,7 @@ bool Texture::load_image_from_file(
 
     SDL_Surface *loaded_surface = IMG_Load(path.c_str());
     if (loaded_surface == nullptr) {
-        ::std::cout << "Unable to load image! SDL_image Error:\n"
+        ::std::cout << "Unable to load image %s! SDL_image Error: %s\n"
                     << path << ' ' << IMG_GetError() << '\n';
     } else {
         SDL_SetColorKey(
@@ -22,12 +22,13 @@ bool Texture::load_image_from_file(
 
         new_texture = SDL_CreateTextureFromSurface(renderer, loaded_surface);
         if (new_texture == nullptr) {
-            ::std::cout << "Unable to create texture from! SDL Error:\n"
+            ::std::cout << "Unable to create texture from %s! SDL Error: \n"
                         << path << ' ' << SDL_GetError() << '\n';
         } else {
             m_width = loaded_surface->w;
             m_height = loaded_surface->h;
         }
+
         SDL_FreeSurface(loaded_surface);
     }
 
@@ -38,25 +39,26 @@ bool Texture::load_image_from_file(
 bool Texture::load_from_string(
     SDL_Renderer *renderer,
     TTF_Font *font,
-    const ::std::string &text,
+    const std::string &text,
     SDL_Color color
 ) {
     free();
 
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), color);
     if (text_surface == nullptr) {
-        ::std::cout << "Unable to render text surface! SDL_ttf Error:\n"
+        ::std::cout << "Unable to render text surface! SDL_ttf Error: \n"
                     << TTF_GetError() << '\n';
     } else {
         m_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
         if (m_texture == nullptr) {
             ::std::cout
-                << "Unable to create texture from rendered text! SDL Error:\n"
-                << SDL_GetError() << '\n';
+                << "Unable to create texture from rendered text! SDL Error: \n"
+                << SDL_GetError();
         } else {
             m_width = text_surface->w;
             m_height = text_surface->h;
         }
+
         SDL_FreeSurface(text_surface);
     }
 
@@ -92,7 +94,15 @@ void Texture::render(
     );
 }
 
-bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
+bool SDL_init(
+    SDL_Window *&gWindow,
+    SDL_Renderer *&gRenderer,
+    const char *title,
+    int x_pos,
+    int y_pos,
+    int width,
+    int height
+) {
     // initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         ::std::cout << "SDL could not initialize! SDL Error:\n"
@@ -102,46 +112,44 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
 
     // enable linear texture filtering
     if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
-        ::std::cout << "Warning: Linear texture filtering not enabled!\n";
+        ::std::cout << "Warning: Linear texture filtering not enabled!";
     }
 
     // create window
-    window = SDL_CreateWindow(
-        WINDOW_TITLE.c_str(), WINDOWS_X_OFFSET, WINDOWS_Y_OFFSET, WINDOWS_WIDTH,
-        WINDOWS_HEIGHT, SDL_WINDOW_SHOWN
-    );
+    gWindow =
+        SDL_CreateWindow(title, x_pos, y_pos, width, height, SDL_WINDOW_SHOWN);
 
     // report error if appeared
-    if (window == nullptr) {
+    if (gWindow == nullptr) {
         ::std::cout << "Window could not be created! SDL Error:\n"
                     << SDL_GetError() << '\n';
         return false;
     }
 
     // create renderer
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 
     // report errors
-    if (renderer == nullptr) {
+    if (gRenderer == nullptr) {
         ::std::cout << "Renderer could not be created! SDL Error:\n"
                     << SDL_GetError() << '\n';
         return false;
     }
 
     // set default render color
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
     // flags for SDL_Image
     int imgFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {
-        ::std::cout << "SDL_image could not initialize! SDL_image Error:\n"
+        ::std::cout << "SDL_image could not initialize! SDL_image Error: \n"
                     << IMG_GetError() << '\n';
         return false;
     }
 
     // initialize TTF
     if (TTF_Init() == -1) {
-        ::std::cout << "SDL_ttf could not initialize! SDL_ttf Error:\n"
+        ::std::cout << "SDL_ttf could not initialize! SDL_ttf Error: \n"
                     << TTF_GetError() << '\n';
         return false;
     }
@@ -150,10 +158,8 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
     return true;
 }
 
-void update_mouse_pos(Point &pos) {
-    int x, y;
-    SDL_GetMouseState(&x, &y);
-    pos = Point(x, y);
+void update_mouse_pos(::std::pair<int, int> &pos) {
+    SDL_GetMouseState(&pos.first, &pos.second);
 }
 
 bool generate_text(
@@ -171,10 +177,10 @@ bool generate_text(
     return true;
 }
 
-bool load_font(TTF_Font *&font, const ::std::string &path, int font_size) {
+bool load_font(TTF_Font *&font, const std::string &path, int font_size) {
     font = TTF_OpenFont(path.c_str(), font_size);
     if (font == nullptr) {
-        ::std::cout << "Failed to load font! SDL_ttf Error:\n"
+        ::std::cout << "Failed to load font! SDL_ttf Error: \n"
                     << TTF_GetError() << '\n';
         return false;
     }
