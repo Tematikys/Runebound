@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.21)
 
 project(Runebound CXX)
 
@@ -43,5 +43,5 @@ add_executable(client
         ../tpl/SDL2/src/SDL2_framerate.cpp
         )
 
-target_link_libraries(client -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2)
+target_link_libraries(client -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf)
 target_link_libraries(client ws2_32)

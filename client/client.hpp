@@ -6,6 +6,7 @@
 #include <graphics.hpp>
 #include <graphics_board.hpp>
 #include <string>
+#include <vector>
 #include <utility>
 
 namespace runebound::client {
@@ -23,10 +24,14 @@ private:
     // graphics variables
     SDL_Window *m_window{nullptr};
     SDL_Renderer *m_renderer{nullptr};
+    TTF_Font *m_font{nullptr};
+    ::std::vector<::runebound::graphics::Texture> m_textures;
+
     bool m_is_running{false};
     int m_frame_time{};
     unsigned long long m_counter{};
     uint32_t m_prev_frame_time{};
+
     ::std::pair<int, int> m_mouse_pos;
 
 public:

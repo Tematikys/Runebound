@@ -42,6 +42,13 @@ void Client::init_graphics(
     }
     m_is_running = true;
     m_frame_time = 1000 / fps;
+
+    ::runebound::graphics::load_font(m_font, "../../data/fonts/lazy.ttf", 50);
+    m_textures.resize(m_textures.size() + 1);
+    m_textures.back() = ::runebound::graphics::Texture();
+    m_textures.back().load_from_string(
+        m_renderer, m_font, "test", {0xFF, 0x00, 0x00, 0xFF}
+    );
 }
 
 void Client::init_board(const ::runebound::map::MapClient &map) {
@@ -63,6 +70,10 @@ void Client::render() {
 
     m_board.render(m_renderer);
 
+    for (const auto &texture : m_textures) {
+        texture.render(m_renderer, 100, 100);
+    }
+    
     SDL_RenderPresent(m_renderer);
 }
 

@@ -2,6 +2,98 @@
 #include <iostream>
 
 namespace runebound::graphics {
+bool Texture::load_image_from_file(
+    SDL_Renderer *renderer,
+    const ::std::string &path
+) {
+    free();
+
+    SDL_Texture *new_texture = nullptr;
+
+    SDL_Surface *loaded_surface = IMG_Load(path.c_str());
+    if (loaded_surface == nullptr) {
+        ::std::cout << "Unable to load image %s! SDL_image Error: %s\n"
+                    << path << ' ' << IMG_GetError() << '\n';
+    } else {
+        SDL_SetColorKey(
+            loaded_surface, SDL_TRUE,
+            SDL_MapRGB(loaded_surface->format, 0xFF, 0xFF, 0xFF)
+        );
+
+        new_texture = SDL_CreateTextureFromSurface(renderer, loaded_surface);
+        if (new_texture == nullptr) {
+            ::std::cout << "Unable to create texture from %s! SDL Error: \n"
+                        << path << ' ' << SDL_GetError() << '\n';
+        } else {
+            m_width = loaded_surface->w;
+            m_height = loaded_surface->h;
+        }
+
+        SDL_FreeSurface(loaded_surface);
+    }
+
+    m_texture = new_texture;
+    return m_texture != nullptr;
+}
+
+bool Texture::load_from_string(
+    SDL_Renderer *renderer,
+    TTF_Font *font,
+    const std::string &text,
+    SDL_Color color
+) {
+    free();
+
+    SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), color);
+    if (text_surface == nullptr) {
+        ::std::cout << "Unable to render text surface! SDL_ttf Error: \n"
+                    << TTF_GetError() << '\n';
+    } else {
+        m_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+        if (m_texture == nullptr) {
+            ::std::cout
+                << "Unable to create texture from rendered text! SDL Error: \n"
+                << SDL_GetError();
+        } else {
+            m_width = text_surface->w;
+            m_height = text_surface->h;
+        }
+
+        SDL_FreeSurface(text_surface);
+    }
+
+    return m_texture != nullptr;
+}
+
+void Texture::free() {
+    if (m_texture != nullptr) {
+        SDL_DestroyTexture(m_texture);
+        m_texture = nullptr;
+        m_width = 0;
+        m_height = 0;
+    }
+}
+
+void Texture::render(
+    SDL_Renderer *renderer,
+    int x,
+    int y,
+    SDL_Rect *clip,
+    double angle,
+    SDL_Point *center,
+    SDL_RendererFlip flip
+) const {
+    SDL_Rect renderQuad = {x, y, m_width, m_height};
+    if (clip != nullptr) {
+        renderQuad.w = clip->w;
+        renderQuad.h = clip->h;
+    }
+
+    SDL_RenderCopyEx(
+        renderer, m_texture, clip, &renderQuad, angle, center, flip
+    );
+}
+
 bool SDL_init(
     SDL_Window *&gWindow,
     SDL_Renderer *&gRenderer,
@@ -19,7 +111,7 @@ bool SDL_init(
     }
 
     // enable linear texture filtering
-    if (SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1") == 0U) {
+    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
         ::std::cout << "Warning: Linear texture filtering not enabled!";
     }
 
@@ -47,11 +139,51 @@ bool SDL_init(
     // set default render color
     SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
+    // flags for SDL_Image
+    int imgFlags = IMG_INIT_PNG;
+    if (!(IMG_Init(imgFlags) & imgFlags)) {
+        ::std::cout << "SDL_image could not initialize! SDL_image Error: \n"
+                    << IMG_GetError() << '\n';
+        return false;
+    }
+
+    // initialize TTF
+    if (TTF_Init() == -1) {
+        ::std::cout << "SDL_ttf could not initialize! SDL_ttf Error: \n"
+                    << TTF_GetError() << '\n';
+        return false;
+    }
+
     // return true, if initialization was successful
     return true;
 }
 
 void update_mouse_pos(::std::pair<int, int> &pos) {
     SDL_GetMouseState(&pos.first, &pos.second);
+}
+
+bool generate_text(
+    SDL_Renderer *renderer,
+    Texture &texture,
+    const ::std::string &text,
+    TTF_Font *font,
+    SDL_Color color
+) {
+    if (!texture.load_from_string(renderer, font, text, color)) {
+        ::std::cout << "Failed to render text texture!\n";
+        return false;
+    }
+
+    return true;
+}
+
+bool load_font(TTF_Font *&font, const std::string &path, int font_size) {
+    font = TTF_OpenFont(path.c_str(), font_size);
+    if (font == nullptr) {
+        ::std::cout << "Failed to load font! SDL_ttf Error: \n"
+                    << TTF_GetError() << '\n';
+        return false;
+    }
+    return true;
 }
 }  // namespace runebound::graphics
