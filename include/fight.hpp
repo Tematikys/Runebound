@@ -8,6 +8,7 @@
 #include "fight_token.hpp"
 #include "runebound_fwd.hpp"
 
+
 namespace runebound::fight {
 
 struct BadCombinationException : std::runtime_error {
@@ -186,6 +187,25 @@ private:
         }
     }
 
+    void make_doubling(Participant participant, const FightToken &fight_token) {
+        if (participant == Participant::CHARACTER) {
+            for (auto &token : m_character_remaining_tokens) {
+                if (token.token == fight_token) {
+                    token.count *= 2;
+                }
+                return;
+            }
+        }
+        else {
+            for (auto &token : m_enemy_remaining_tokens) {
+                if (token.token == fight_token) {
+                    token.count *= 2;
+                }
+                return;
+            }
+        }
+    }
+
     static unsigned int count_initiative(
         const std::vector<TokenHandCount> &tokens
     ) {
@@ -209,7 +229,8 @@ public:
         Participant participant,
         const std::vector<TokenHandCount> &tokens,
         std::optional<FightToken> dexterity_token,
-        std::optional<Participant> dexterity_participant
+        std::optional<Participant> dexterity_participant,
+        std::optional<FightToken> doubling_token
     ) {
         if (m_turn != participant) {
             throw WrongCharacterTurnException();
@@ -242,6 +263,10 @@ public:
                     }
                     break;
                 }
+                case (HandFightTokens::DOUBLING): {
+                    make_doubling(Participant::CHARACTER, doubling_token.value());
+                    break;
+                }
                 default: {
                     m_turn =
                         static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
@@ -268,7 +293,10 @@ public:
                     }
                     break;
                 }
-
+                case (HandFightTokens::DOUBLING): {
+                    make_doubling(Participant::CHARACTER, doubling_token.value());
+                    break;
+                }
                 default: {
                     m_turn =
                         static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
@@ -277,6 +305,11 @@ public:
             }
         }
     }
+
+    bool check_end_fight() const {
+        return m_character->get_health() == 0 || m_enemy.get_health() == 0;
+    }
+
 
     HandFightTokens
     toss_token(Participant participant, const FightToken &token) {
