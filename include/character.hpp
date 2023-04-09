@@ -59,6 +59,25 @@ public:
           m_name(std::move(name)) {
     }
 
+    Character(
+        int gold,
+        int health,
+        Point current_position,
+        unsigned int hand_limit,
+        unsigned int speed,
+        std::string name,
+        const std::vector <fight::FightToken> fight_tokens
+    )
+        : m_gold(gold),
+          m_health(health),
+          m_max_health(health),
+          m_current_position(current_position),
+          m_hand_limit(hand_limit),
+          m_speed(speed),
+          m_name(std::move(name)),
+          m_fight_tokens(fight_tokens) {
+    }
+
     [[nodiscard]] std::string get_name() const {
         return m_name;
     }

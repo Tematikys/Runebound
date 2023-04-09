@@ -11,6 +11,8 @@
 #include "map.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
+#include <utility>
+#include <memory>
 
 namespace runebound {
 const int DECK_SIZE = 60;
@@ -62,19 +64,20 @@ public:
         return *this;
     }
 
-    ::runebound::character::Character *make_character(
+    std::shared_ptr<::runebound::character::Character> make_character(
         int gold,
         int health,
         const Point &current,
         unsigned int hand_limit,
         unsigned int speed,
-        std::string name
+        std::string name,
+        const std::vector <::runebound::fight::FightToken> tokens
     ) {
         m_characters.emplace_back(::runebound::character::Character(
-            gold, health, current, hand_limit, speed, name
+            gold, health, current, hand_limit, speed, name, tokens
         ));
         m_count_players += 1;
-        return &m_characters.back();
+        return std::make_shared<character::Character>(m_characters.back());
     }
 
     [[nodiscard]] int get_map_size() const {

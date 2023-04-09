@@ -155,7 +155,7 @@ private:
         }
     }
 
-    static bool check_combination_tokens(
+    bool check_combination_tokens(
         const std::vector<TokenHandCount> &tokens
     ) {
         for (std::size_t i = 1; i < tokens.size(); ++i) {
@@ -170,7 +170,7 @@ private:
         m_character_remaining_tokens.clear();
         m_enemy_remaining_tokens.clear();
         std::vector<FightToken> enemy_tokens = m_enemy.get_fight_token();
-        std::vector<FightToken> character_tokens = m_enemy.get_fight_token();
+        std::vector<FightToken> character_tokens = m_character.get()->get_fight_token();
         for (auto &character_token : character_tokens) {
             if (rng() % 2 == 0) {
                 m_character_remaining_tokens.push_back(
@@ -233,6 +233,9 @@ private:
     }
 
 public:
+    Fight(std::shared_ptr<character::Character> character, Enemy enemy) : m_character(std::move(character)), m_enemy(std::move(enemy)) {
+    }
+
     void make_progress(
         Participant participant,
         const std::vector<TokenHandCount> &tokens,
@@ -284,6 +287,9 @@ public:
                     throw BadCombinationException();
                 }
             }
+            for (auto token : tokens) {
+                erase_token(Participant::CHARACTER, token);
+            }
         } else {
             switch (tokens[0].hand) {
                 case (HandFightTokens::ENEMY_DAMAGE): {
@@ -316,6 +322,9 @@ public:
                         static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
                     throw BadCombinationException();
                 }
+            }
+            for (auto token : tokens) {
+                erase_token(Participant::ENEMY, token);
             }
         }
     }
@@ -351,8 +360,8 @@ public:
         }
     }
 
-    HandFightTokens
-    reverse_token(Participant participant, const FightToken &token) {
+
+    HandFightTokens reverse_token(Participant participant, const FightToken &token) {
         if (participant == Participant::ENEMY) {
             for (auto &enemy_token : m_enemy_remaining_tokens) {
                 if (token == enemy_token.token) {
