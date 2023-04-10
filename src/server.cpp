@@ -7,31 +7,38 @@
 #include <map>
 #include <nlohmann/json.hpp>
 #include "game.hpp"
+#include "game_client.hpp"
 
+#define BUFF_SIZE 65536
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
 
 
-class Session;
+//user - string с именем connection
+class Connection;
 
+std::vector<std::string> game_names;
+std::set<Connection *> connections;
 std::map<std::string, runebound::game::Game> games;
 std::map<std::string, std::set<std::string>> game_users;
 std::map<std::string, ::runebound::character::Character *> user_character;
-std::vector<std::string> game_names;
-std::set<Session *> sessions;
+std::map<std::string, Connection *> user_connection;
+std::map<std::string, ::runebound::map::MapClient> game_map;
 
-class Session : public std::enable_shared_from_this<Session> {
+class Connection : public std::enable_shared_from_this<Connection> {
 public:
-    Session(tcp::socket socket) : socket_(std::move(socket)) {}
+    Connection(tcp::socket socket) : socket_(std::move(socket)) {}
 
-    void send_games();
+    void send_game_names();
+
+    void send_game();
 
     void start() {
         std::cout << "Some connected\n";
-        sessions.insert(this);
+        connections.insert(this);
         do_read();
-        send_games();
+        send_game_names();
     }
 
     void write(const std::string &message) {
@@ -41,7 +48,7 @@ public:
                                      if (!ec) {
                                          std::cout << "Sent:{ \n " << message << "\n}\n";
                                      } else {
-                                         sessions.erase(this);
+                                         connections.erase(this);
                                          std::cout << "Disconnected" << std::endl;
                                      }
                                  });
@@ -52,61 +59,84 @@ public:
 private:
     void do_read() {
         auto self(shared_from_this());
-        socket_.async_read_some(boost::asio::buffer(data_, 1024),
+        socket_.async_read_some(boost::asio::buffer(data_, BUFF_SIZE),
                                 [this, self](boost::system::error_code ec, std::size_t length) {
                                     if (!ec) {
                                         std::string_view message(data_, length);
                                         std::cout << "Received: " << message;
                                         json data = json::parse(message);
                                         if (data["action type"] == "reverse token") {
-                                            std::string game_name = data["game name"];
-                                            auto game = games[game_name];
-                                            int row = data["x"], column = data["y"];
-                                            std::cout << row << ' ' << column << '\n';
-                                            std::cout << static_cast<int>(game.m_map.get_cell_map(
-                                                    runebound::Point(row, column)).get_side_token()) << '\n';
-                                            game.reverse_token(data["x"], data["y"]);
-                                            std::cout << static_cast<int>(game.m_map.get_cell_map(
-                                                    runebound::Point(row, column)).get_side_token()) << '\n';
-
+                                            int x = data["x"], y = data["y"];
+                                            m_game->reverse_token(x, y);
+//                                            for (const std::string &user_name: game_users[m_game_name]) {
+                                          send_game();
+//                                                user_connection[user_name]->send_game();
+//                                            }
                                         }
                                         if (data["action type"] == "add game") {
                                             std::string game_name = data["game name"];
                                             game_names.push_back(game_name);
                                             games[game_name] = runebound::game::Game();
-                                            for (auto session: sessions) {
-                                                session->send_games();
+                                            game_map[game_name] = runebound::map::MapClient();
+                                            for (auto session: connections) {
+                                                session->send_game_names();
                                             }
                                         }
                                         if (data["action type"] == "join game") {
                                             std::string game_name = data["game name"];
                                             std::string user_name = data["user name"];
-
-                                            game_ = &games[game_name];
+                                            m_user_name = user_name;
+                                            m_game_name = game_name;
+                                            m_game = &games[game_name];
                                             game_users[game_name].insert(user_name);
-                                            user_character[user_name] = game_->make_character(0, 0, {0, 0}, 0, 0,
-                                                                                              "zero");
+                                            user_character[user_name] = m_game->make_character(0, 0, {0, 0}, 0, 3,
+                                                                                               "zero");
+//                                            for (const std::string &user_name: game_users[game_name]) {
+                                          send_game();
+//                                                user_connection[user_name]->send_game();
+//                                            }
                                         }
+                                        if (data["action type"] == "make move") {
+                                            int x = data["x"], y = data["y"];
+                                            auto dice_result = runebound::dice::get_combination_of_dice(
+                                                    user_character[m_user_name]->get_speed());
+                                            m_game->make_move(user_character[m_user_name], {x, y}, dice_result);
+//                                            for (const std::string &user_name: game_users[m_game_name]) {
+                                          send_game();
+//                                                user_connection[user_name]->send_game();
+//                                            }
+                                        }
+
+
                                         do_read();
                                     } else {
-                                        sessions.erase(this);
+                                        connections.erase(this);
                                         std::cout << "Disconnected" << std::endl;
                                     }
                                 });
     }
 
-
-    runebound::game::Game *game_ = nullptr;
+    std::string m_user_name;
+    std::string m_game_name;
+    runebound::game::Game *m_game = nullptr;
     tcp::socket socket_;
-    char data_[1024];
+    char data_[BUFF_SIZE];
 };
 
-void Session::send_games() {
+void Connection::send_game_names() {
     json answer;
     answer["change type"] = "game names";
     answer["game names"] = game_names;
     write(answer.dump());
 }
+
+void Connection::send_game() {
+    json answer;
+    answer["change type"] = "game";
+    runebound::map::to_json(answer, game_map[m_game_name]);
+    write(answer.dump());
+}
+
 
 class Server {
 public:
@@ -121,7 +151,7 @@ private:
         acceptor_.async_accept(
                 [this](boost::system::error_code ec, tcp::socket socket) {
                     if (!ec) {
-                        std::make_shared<Session>(std::move(socket))->start();
+                        std::make_shared<Connection>(std::move(socket))->start();
                     }
 
                     do_accept();
