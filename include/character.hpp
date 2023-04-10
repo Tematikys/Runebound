@@ -66,7 +66,7 @@ public:
         unsigned int hand_limit,
         unsigned int speed,
         std::string name,
-        const std::vector <fight::FightToken> fight_tokens
+        const std::vector<fight::FightToken> fight_tokens
     )
         : m_gold(gold),
           m_health(health),

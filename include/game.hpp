@@ -11,8 +11,6 @@
 #include "map.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
-#include <utility>
-#include <memory>
 
 namespace runebound {
 const int DECK_SIZE = 60;
@@ -71,7 +69,7 @@ public:
         unsigned int hand_limit,
         unsigned int speed,
         std::string name,
-        const std::vector <::runebound::fight::FightToken> tokens
+        const std::vector<::runebound::fight::FightToken> tokens
     ) {
         m_characters.emplace_back(::runebound::character::Character(
             gold, health, current, hand_limit, speed, name, tokens
