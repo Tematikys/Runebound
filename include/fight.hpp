@@ -44,6 +44,7 @@ struct Enemy {
 private:
     int m_health;
     const std::string m_name;
+
     std::vector<FightToken> m_fight_tokens = {
         FightToken(
             HandFightTokens::ENEMY_DAMAGE,
@@ -94,7 +95,9 @@ struct Fight {
 private:
     friend struct Character;
     friend struct Enemy;
-    Participant m_turn;
+    Participant m_turn = Participant::CHARACTER;
+    bool m_pass_character = false;
+    bool m_pass_enemy = false;
     std::shared_ptr<::runebound::character::Character> m_character;
     ::runebound::fight::Enemy m_enemy;
     std::vector<TokenHandCount> m_enemy_remaining_tokens;
@@ -125,12 +128,22 @@ private:
 
     static int count_damage(const std::vector<TokenHandCount> &tokens);
 
+    void change_turn();
+
 public:
     Fight(std::shared_ptr<character::Character> character, Enemy enemy)
         : m_character(std::move(character)), m_enemy(std::move(enemy)) {
     }
 
-    bool check_end_round() const;
+    void pass_character() {
+        m_pass_character = true;
+    }
+
+    void pass_enemy() {
+        m_pass_enemy = true;
+    }
+
+    bool check_end_round();
 
     [[nodiscard]] int get_health_enemy() const {
         return m_enemy.get_health();
@@ -144,7 +157,7 @@ public:
         std::optional<TokenHandCount> doubling_token
     );
 
-    bool check_end_fight() const {
+    bool check_end_fight() {
         return m_character->get_health() == 0 || m_enemy.get_health() == 0;
     }
 

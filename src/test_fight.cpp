@@ -144,6 +144,7 @@ TEST_CASE("Fight") {
     auto character_remaining_tokens = fight.get_character_remaining_tokens();
     auto enemy_remaining_tokens = fight.get_enemy_remaining_tokens();
     while (true) {
+        Participant turn = fight.get_turn();
         if (fight.get_turn() == runebound::fight::Participant::CHARACTER) {
             std::cout << "CHARACTER\n";
         } else {
@@ -161,7 +162,7 @@ TEST_CASE("Fight") {
         }
         read_command(fight, character_remaining_tokens, enemy_remaining_tokens);
         if (fight.check_end_fight()) {
-            if (fight.get_turn() == runebound::fight::Participant::CHARACTER) {
+            if (turn == runebound::fight::Participant::ENEMY) {
                 std::cout << "ENEMY win!";
             } else {
                 std::cout << "CHARACTER win!";

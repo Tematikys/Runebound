@@ -152,39 +152,51 @@ int Fight::count_damage(const std::vector<TokenHandCount> &tokens) {
     return count;
 }
 
-bool Fight::check_end_round() const {
+bool Fight::check_end_round() {
     bool only_bad_tokens = true;
     if (m_turn == Participant::CHARACTER) {
         for (const auto &token : m_character_remaining_tokens) {
             if (token.hand != HandFightTokens::NOTHING &&
-                token.hand != HandFightTokens::DOUBLING) {
+                token.hand != HandFightTokens::DOUBLING &&
+                token.hand != HandFightTokens::SHIELD) {
                 only_bad_tokens = false;
             }
         }
         if (only_bad_tokens) {
-            return true;
+            m_pass_character = true;
         }
         if (m_character_remaining_tokens.size() == 1 &&
             m_character_remaining_tokens[0].hand ==
                 HandFightTokens::DEXTERITY) {
-            return true;
-        }
-    } else {
-        for (const auto &token : m_enemy_remaining_tokens) {
-            if (token.hand != HandFightTokens::NOTHING &&
-                token.hand != HandFightTokens::DOUBLING) {
-                only_bad_tokens = false;
-            }
-        }
-        if (only_bad_tokens) {
-            return true;
-        }
-        if (m_enemy_remaining_tokens.size() == 1 &&
-            m_enemy_remaining_tokens[0].hand == HandFightTokens::DEXTERITY) {
-            return true;
+            m_pass_character = true;
         }
     }
-    return false;
+    only_bad_tokens = true;
+    for (const auto &token : m_enemy_remaining_tokens) {
+        if (token.hand != HandFightTokens::NOTHING &&
+            token.hand != HandFightTokens::DOUBLING &&
+            token.hand != HandFightTokens::SHIELD) {
+            only_bad_tokens = false;
+        }
+    }
+    if (only_bad_tokens) {
+        m_pass_enemy = true;
+    }
+    if (m_enemy_remaining_tokens.size() == 1 &&
+        m_enemy_remaining_tokens[0].hand == HandFightTokens::DEXTERITY) {
+        m_pass_enemy = true;
+    }
+    return m_pass_character && m_pass_enemy;
+}
+
+void Fight::change_turn() {
+    if (m_pass_enemy) {
+        m_turn = Participant::CHARACTER;
+    } else if (m_pass_enemy) {
+        m_turn = Participant::ENEMY;
+    } else {
+        m_turn = static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
+    }
 }
 
 void Fight::make_progress(
@@ -197,10 +209,10 @@ void Fight::make_progress(
     if (m_turn != participant) {
         throw WrongCharacterTurnException();
     }
-    m_turn = static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
     if (!check_combination_tokens(tokens)) {
         throw BadCombinationException();
     }
+    change_turn();
     if (participant == Participant::CHARACTER) {
         switch (tokens[0].hand) {
             case (HandFightTokens::PHYSICAL_DAMAGE): {
@@ -229,7 +241,7 @@ void Fight::make_progress(
                 break;
             }
             default: {
-                m_turn = static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
+                change_turn();
                 throw BadCombinationException();
             }
         }
@@ -258,7 +270,7 @@ void Fight::make_progress(
                 break;
             }
             default: {
-                m_turn = static_cast<Participant>(static_cast<int>(m_turn) ^ 1);
+                change_turn();
                 throw BadCombinationException();
             }
         }
@@ -323,6 +335,8 @@ Fight::reverse_token(Participant participant, const TokenHandCount &token) {
 }
 
 void Fight::start_round() {
+    m_pass_character = false;
+    m_pass_enemy = false;
     shuffle_all_tokens();
     unsigned int count_initiatives_character =
         count_initiative(m_character_remaining_tokens);
