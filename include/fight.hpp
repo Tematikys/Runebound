@@ -93,8 +93,12 @@ private:
                  ++i) {
                 if (m_character_remaining_tokens[i].hand ==
                     HandFightTokens::SHIELD) {
-                    damage -= 1;
-                    shields.push_back(m_character_remaining_tokens[i]);
+                    auto harm = std::min(m_character_remaining_tokens[i].count, damage);
+                    damage -= harm;
+                    m_character_remaining_tokens[i].count -= harm;
+                    if (m_character_remaining_tokens[i].count == 0) {
+                        shields.push_back(m_character_remaining_tokens[i]);
+                    }
                     if (damage == 0) {
                         break;
                     }
@@ -107,6 +111,7 @@ private:
                 m_character->update_health(-m_character->get_health());
                 return true;
             }
+            std::cout << damage << '\n';
             m_character->update_health(-damage);
             return false;
         }
@@ -123,6 +128,7 @@ private:
         for (const auto &token : shields) {
             erase_token(Participant::ENEMY, token);
         }
+        std::cout << damage << '\n';
         if (m_enemy.get_health() <= damage) {
             m_enemy.update_health(-m_enemy.get_health());
             return true;
@@ -195,21 +201,21 @@ private:
         }
     }
 
-    void make_doubling(Participant participant, const FightToken &fight_token) {
+    void make_doubling(Participant participant, const TokenHandCount &fight_token) {
         if (participant == Participant::CHARACTER) {
             for (auto &token : m_character_remaining_tokens) {
-                if (token.token == fight_token) {
+                if (token == fight_token) {
                     token.count *= 2;
+                    return;
                 }
-                return;
             }
         }
         else {
             for (auto &token : m_enemy_remaining_tokens) {
-                if (token.token == fight_token) {
+                if (token == fight_token) {
                     token.count *= 2;
+                    return;
                 }
-                return;
             }
         }
     }
@@ -232,16 +238,58 @@ private:
         return count;
     }
 
+    int count_damage(const std::vector <TokenHandCount> &tokens) const {
+        int count = 0;
+        for (const auto &token : tokens) {
+            count += token.count;
+        }
+        return count;
+    }
+
 public:
     Fight(std::shared_ptr<character::Character> character, Enemy enemy) : m_character(std::move(character)), m_enemy(std::move(enemy)) {
     }
 
+    bool check_end_round() const {
+        bool only_bad_tokens = true;
+        if (m_turn == Participant::CHARACTER) {
+            for (const auto &token : m_character_remaining_tokens) {
+                if (token.hand != HandFightTokens::NOTHING && token.hand != HandFightTokens::DOUBLING) {
+                    only_bad_tokens = false;
+                }
+            }
+            if (only_bad_tokens) {
+                return true;
+            }
+            if (m_character_remaining_tokens.size() == 1 && m_character_remaining_tokens[0].hand == HandFightTokens::DEXTERITY) {
+                return true;
+            }
+        }
+        else {
+            for (const auto &token : m_enemy_remaining_tokens) {
+                if (token.hand != HandFightTokens::NOTHING && token.hand != HandFightTokens::DOUBLING) {
+                    only_bad_tokens = false;
+                }
+            }
+            if (only_bad_tokens) {
+                return true;
+            }
+            if (m_enemy_remaining_tokens.size() == 1 && m_enemy_remaining_tokens[0].hand == HandFightTokens::DEXTERITY) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    [[nodiscard]] int get_health_enemy() const {
+        return m_enemy.get_health();
+    }
     void make_progress(
         Participant participant,
         const std::vector<TokenHandCount> &tokens,
-        std::optional<FightToken> dexterity_token,
+        std::optional<TokenHandCount> dexterity_token,
         std::optional<Participant> dexterity_participant,
-        std::optional<FightToken> doubling_token
+        std::optional<TokenHandCount> doubling_token
     ) {
         if (m_turn != participant) {
             throw WrongCharacterTurnException();
@@ -254,13 +302,13 @@ public:
             switch (tokens[0].hand) {
                 case (HandFightTokens::PHYSICAL_DAMAGE): {
                     make_damage(
-                        Participant::ENEMY, static_cast<int>(tokens.size())
+                        Participant::ENEMY, count_damage(tokens)
                     );
                     break;
                 }
                 case (HandFightTokens::MAGICAL_DAMAGE): {
                     make_damage(
-                        Participant::ENEMY, static_cast<int>(tokens.size())
+                        Participant::ENEMY, count_damage(tokens)
                     );
                     break;
                 }
@@ -294,7 +342,7 @@ public:
             switch (tokens[0].hand) {
                 case (HandFightTokens::ENEMY_DAMAGE): {
                     make_damage(
-                        Participant::CHARACTER, static_cast<int>(tokens.size())
+                        Participant::CHARACTER, count_damage(tokens)
                     );
                     break;
                 }
@@ -311,7 +359,7 @@ public:
                     break;
                 }
                 case (HandFightTokens::DOUBLING): {
-                    make_doubling(Participant::CHARACTER, doubling_token.value());
+                    make_doubling(Participant::ENEMY, doubling_token.value());
                     break;
                 }
                 case (HandFightTokens::NOTHING): {
@@ -335,10 +383,10 @@ public:
 
 
     HandFightTokens
-    toss_token(Participant participant, const FightToken &token) {
+    toss_token(Participant participant, const TokenHandCount &token) {
         if (participant == Participant::ENEMY) {
             for (auto &enemy_token : m_enemy_remaining_tokens) {
-                if (token == enemy_token.token) {
+                if (token == enemy_token) {
                     if (rng() % 2 == 0) {
                         enemy_token.hand = enemy_token.token.first;
                     } else {
@@ -349,7 +397,7 @@ public:
             }
         }
         for (auto &character_token : m_character_remaining_tokens) {
-            if (token == character_token.token) {
+            if (token == character_token) {
                 if (rng() % 2 == 0) {
                     character_token.hand = character_token.token.first;
                 } else {
@@ -358,13 +406,14 @@ public:
                 return character_token.hand;
             }
         }
+        return HandFightTokens::NOTHING;
     }
 
 
-    HandFightTokens reverse_token(Participant participant, const FightToken &token) {
+    HandFightTokens reverse_token(Participant participant, const TokenHandCount &token) {
         if (participant == Participant::ENEMY) {
             for (auto &enemy_token : m_enemy_remaining_tokens) {
-                if (token == enemy_token.token) {
+                if (token == enemy_token) {
                     if (enemy_token.hand == enemy_token.token.second) {
                         enemy_token.hand = enemy_token.token.first;
                     } else {
@@ -375,7 +424,7 @@ public:
             }
         }
         for (auto &character_token : m_character_remaining_tokens) {
-            if (token == character_token.token) {
+            if (token == character_token) {
                 if (character_token.hand == character_token.token.second) {
                     character_token.hand = character_token.token.first;
                 } else {
@@ -384,6 +433,7 @@ public:
                 return character_token.hand;
             }
         }
+        return HandFightTokens::NOTHING;
     }
 
     [[nodiscard]] Participant get_turn() const {

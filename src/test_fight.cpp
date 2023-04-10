@@ -7,34 +7,35 @@ void print(const std::vector<runebound::fight::TokenHandCount> tokens) {
     for (auto token : tokens) {
         switch ( token.hand) {
             case (runebound::fight::HandFightTokens::MAGICAL_DAMAGE): {
-                std::cout << "MAGICAL\n";
+                std::cout << "MAGICAL";
                 break;
             }
             case (runebound::fight::HandFightTokens::PHYSICAL_DAMAGE): {
-                std::cout << "PHYSICAL\n";
+                std::cout << "PHYSICAL";
                 break;
             }
             case (runebound::fight::HandFightTokens::ENEMY_DAMAGE): {
-                std::cout << "ENEMY\n";
+                std::cout << "ENEMY";
                 break;
             }
             case (runebound::fight::HandFightTokens::DOUBLING): {
-                std::cout << "DOUBLING\n";
+                std::cout << "DOUBLING";
                 break;
             }
             case (runebound::fight::HandFightTokens::DEXTERITY): {
-                std::cout << "DEXTERITY\n";
+                std::cout << "DEXTERITY";
                 break;
             }
             case (runebound::fight::HandFightTokens::SHIELD): {
-                std::cout << "SHIELD\n";
+                std::cout << "SHIELD";
                 break;
             }
             case (runebound::fight::HandFightTokens::NOTHING): {
-                std::cout << "NOTHING\n";
+                std::cout << "NOTHING";
                 break;
             }
         }
+        std::cout << ' ' << token.count << '\n';
     }
     std::cout << '\n';
 }
@@ -42,14 +43,48 @@ void print(const std::vector<runebound::fight::TokenHandCount> tokens) {
 void read_command(runebound::fight::Fight &fight,
                   const std::vector<runebound::fight::TokenHandCount> &character_remaining_tokens,
                   const std::vector<runebound::fight::TokenHandCount> &enemy_remaining_tokens) {
-    int k;
+    int k, d;
     using namespace runebound::fight;
     std::cin >> k;
     if (fight.get_turn() == runebound::fight::Participant::CHARACTER) {
-        fight.make_progress(Participant::CHARACTER, {character_remaining_tokens[k - 1]}, std::nullopt, std::nullopt, std::nullopt);
+        if (character_remaining_tokens[k - 1].hand == HandFightTokens::DOUBLING) {
+            std::cin >> d;
+            fight.make_progress(Participant::CHARACTER, {character_remaining_tokens[k - 1]}, std::nullopt, std::nullopt, character_remaining_tokens[d - 1]);
+        }
+        else if (character_remaining_tokens[k - 1].hand == HandFightTokens::DEXTERITY) {
+            int p;
+            std::cin >> d >> p;
+            if (p == 0) {
+                fight.make_progress(Participant::CHARACTER, {character_remaining_tokens[k - 1]}, character_remaining_tokens[d - 1], Participant::CHARACTER, std::nullopt);
+            }
+            else {
+                fight.make_progress(Participant::CHARACTER, {character_remaining_tokens[k - 1]}, enemy_remaining_tokens[d - 1], Participant::ENEMY, std::nullopt);
+            }
+
+        }
+        else {
+            fight.make_progress(Participant::CHARACTER, {character_remaining_tokens[k - 1]}, std::nullopt, std::nullopt, std::nullopt);
+        }
     }
     else {
-        fight.make_progress(Participant::ENEMY, {enemy_remaining_tokens[k - 1]}, std::nullopt, std::nullopt, std::nullopt);
+        if (enemy_remaining_tokens[k - 1].hand == HandFightTokens::DOUBLING) {
+            std::cin >> d;
+            fight.make_progress(Participant::ENEMY, {enemy_remaining_tokens[k - 1]}, std::nullopt, std::nullopt, enemy_remaining_tokens[d - 1]);
+        }
+        else if (enemy_remaining_tokens[k - 1].hand == HandFightTokens::DEXTERITY) {
+            int p;
+            std::cin >> d >> p;
+            if (p == 0) {
+                fight.make_progress(Participant::ENEMY, {enemy_remaining_tokens[k - 1]}, character_remaining_tokens[d - 1], Participant::CHARACTER, std::nullopt);
+            }
+            else {
+                fight.make_progress(Participant::ENEMY, {enemy_remaining_tokens[k - 1]}, enemy_remaining_tokens[d - 1], Participant::ENEMY, std::nullopt);
+            }
+
+        }
+        else {
+            fight.make_progress(Participant::ENEMY, {enemy_remaining_tokens[k - 1]}, std::nullopt, std::nullopt, std::nullopt);
+        }
     }
 }
 TEST_CASE("Fight") {
@@ -81,8 +116,12 @@ TEST_CASE("Fight") {
         }
         print(character_remaining_tokens);
         print(enemy_remaining_tokens);
-        if (character_remaining_tokens.size() == 0 && enemy_remaining_tokens.size() == 0) {
+        std::cout << character->get_health() << ' ' << fight.get_health_enemy() << '\n';
+        if (fight.check_end_round()) {
             fight.start_round();
+            character_remaining_tokens = fight.get_character_remaining_tokens();
+            enemy_remaining_tokens = fight.get_enemy_remaining_tokens();
+            continue;
         }
         read_command(fight, character_remaining_tokens, enemy_remaining_tokens);
         if (fight.check_end_fight()) {
