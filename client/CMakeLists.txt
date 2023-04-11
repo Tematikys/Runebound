@@ -16,7 +16,7 @@ include_directories(${BOOST_INCLUDE_DIR})
 include_directories(${NLOHMANN_INCLUDE_DIR})
 include_directories(${SDL2_INCLUDE_DIR})
 
-link_directories(${BOOST_LIN_DIR})
+link_directories(${BOOST_LIB_DIR})
 link_directories(${SDL2_LIB_DIR})
 
 add_executable(client
@@ -44,4 +44,23 @@ add_executable(client
         )
 
 target_link_libraries(client -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf)
-target_link_libraries(client ws2_32)
+target_link_libraries(client ${Boost_LIBRARIES} ws2_32 wsock32)
+
+########################################################################################################################
+
+add_executable(server
+        ../src/card_adventure.cpp
+        ../src/card_research.cpp
+        ../src/character.cpp
+        ../src/dice.cpp
+        ../src/game.cpp
+        ../src/map.cpp
+        ../src/map_cell.cpp
+        ../src/tokens.cpp
+        ../src/builder_map.cpp
+        ../src/game_client.cpp
+        ../src/character_client.cpp
+        ../src/map_client.cpp
+        ../src/server.cpp
+        )
+target_link_libraries(server ${Boost_LIBRARIES} ws2_32 wsock32)

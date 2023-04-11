@@ -2,30 +2,6 @@
 #include <iostream>
 
 namespace runebound::client {
-void Client::init_network(
-    const ::std::string &host,
-    const ::std::string &port
-) {
-    m_socket = ::boost::asio::ip::tcp::socket(m_io_context);
-    ::boost::asio::ip::tcp::resolver resolver(m_io_context);
-    ::boost::asio::ip::tcp::resolver::results_type endpoints =
-        resolver.resolve(host, port);
-    ::boost::asio::connect(m_socket, endpoints);
-}
-
-::std::string Client::read_network() {
-    ::std::string buffer(1024, ' ');
-    ::std::size_t n =
-        m_socket.read_some(::boost::asio::buffer(buffer, buffer.size()));
-    return buffer.substr(0, n);
-}
-
-void Client::write_network(const ::std::string &str) {
-    ::boost::asio::write(
-        m_socket, ::boost::asio::buffer(str.data(), str.length())
-    );
-}
-
 void Client::init_graphics(
     const char *title,
     int x_pos,
@@ -44,11 +20,8 @@ void Client::init_graphics(
     m_frame_time = 1000 / fps;
 
     ::runebound::graphics::load_font(m_font, "../../data/fonts/lazy.ttf", 50);
-    m_textures.resize(m_textures.size() + 1);
-    m_textures.back() = ::runebound::graphics::Texture();
-    m_textures.back().load_from_string(
-        m_renderer, m_font, "test", {0xFF, 0x00, 0x00, 0xFF}
-    );
+
+    m_network_client.add_game("new game");
 }
 
 void Client::init_board(const ::runebound::map::MapClient &map) {
@@ -68,18 +41,35 @@ void Client::render() {
     SDL_SetRenderDrawColor(m_renderer, 0xEE, 0xEE, 0xEE, 0xFF);
     SDL_RenderClear(m_renderer);
 
-    m_board.render(m_renderer);
+    //    m_board.render(m_renderer);
 
-    for (const auto &texture : m_textures) {
-        texture.render(m_renderer, 100, 100);
+    int y_offset = 100;
+    int x_offset = 100;
+    for (const auto &texture : m_temp_textures_to_render) {
+        texture.render(m_renderer, x_offset, y_offset);
+        y_offset += texture.get_height();
     }
-    
+
     SDL_RenderPresent(m_renderer);
 }
 
 void Client::update() {
     ::runebound::graphics::update_mouse_pos(m_mouse_pos);
     m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
+    m_temp_textures_to_render.clear();
+
+    m_io_context.poll();
+
+    m_temp_textures_to_render.resize(m_network_client.game_names.size());
+    for (::std::size_t i = 0; i < m_network_client.game_names.size(); ++i) {
+        ::std::cout << m_network_client.game_names[i] << '\n';
+        m_temp_textures_to_render[i].load_from_string(
+            m_renderer, m_font, m_network_client.game_names[i],
+            {0xFF, 0x00, 0x00, 0xFF}
+        );
+    }
+    ::std::cout << '\n';
+
     ++m_counter;
 }
 
