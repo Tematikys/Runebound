@@ -10,8 +10,6 @@
 #include <utility>
 #include "game_client.hpp"
 
-#define BUFF_SIZE 65536
-
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
 
@@ -41,7 +39,7 @@ public:
         if (answer["change type"] == "game") {
             std::cout<<"Map changed, maybe\n";
 //                                            runebound::map::from_json(answer, m_map);
-//                                            но его пока нет
+//                                            но такого нет + Артём не сказал что ему передавать.
         }
     }
 
@@ -113,7 +111,6 @@ public:
 private:
     boost::asio::streambuf m_buffer;
     tcp::socket socket_;
-    char read_buffer_[BUFF_SIZE];
 };
 
 #endif  // CLIENT_HPP_

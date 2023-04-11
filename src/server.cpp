@@ -9,7 +9,6 @@
 #include "game.hpp"
 #include "game_client.hpp"
 
-#define BUFF_SIZE 65536
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
@@ -97,27 +96,8 @@ public:
         }
     }
 
-    tcp::socket &socket() { return socket_; }
 
 private:
-
-//    void splitIntToBytes(int value, char bytes[4]) {
-//        bytes[0] = static_cast<char>(value & 0xFF);
-//        bytes[1] = static_cast<char>((value >> 8) & 0xFF);
-//        bytes[2] = static_cast<char>((value >> 16) & 0xFF);
-//        bytes[3] = static_cast<char>((value >> 24) & 0xFF);
-//    }
-//
-//    int bytesToInt(const char bytes[4]) {
-//        int value = 0;
-//        value |= static_cast<unsigned char>(bytes[0]);
-//        value |= (static_cast<unsigned char>(bytes[1]) << 8);
-//        value |= (static_cast<unsigned char>(bytes[2]) << 16);
-//        value |= (static_cast<unsigned char>(bytes[3]) << 24);
-//        return value;
-//    }
-
-
 
     void do_read() {
         auto self(shared_from_this());
@@ -142,7 +122,6 @@ private:
     std::string m_game_name;
     runebound::game::Game *m_game = nullptr;
     tcp::socket socket_;
-    char data_[BUFF_SIZE];
 };
 
 void Connection::send_game_names() {
