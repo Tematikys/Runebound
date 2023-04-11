@@ -3,6 +3,7 @@
 
 #include "map_client.hpp"
 #include "runebound_fwd.hpp"
+#include "game.hpp"
 
 namespace runebound::game {
 void to_json(nlohmann::json &json, const GameClient &game);
@@ -15,6 +16,7 @@ private:
 public:
     GameClient() = default;
 
+    GameClient(const Game &game) : m_map(game.get_map()) {}
     friend void to_json(nlohmann::json &json, const GameClient &game);
     friend void from_json(const nlohmann::json &json, GameClient &game);
 };

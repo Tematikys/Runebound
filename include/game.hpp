@@ -28,7 +28,7 @@ private:
     std::vector<unsigned int> m_card_deck_research;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
-    unsigned int m_count_players;
+    unsigned int m_count_players = 0;
     std::vector<unsigned int> m_indexes_card_research;
     const std::vector<cards::CardResearch> ALL_CARDS_RESEARCH;
 
@@ -82,6 +82,9 @@ public:
         return m_map.get_size();
     }
 
+    [[nodiscard]] ::runebound::map::Map get_map() const {
+        return m_map;
+    }
     void reverse_token(int row, int column) {
         m_map.reverse_token(Point(row, column));
     }
