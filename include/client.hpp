@@ -1,3 +1,6 @@
+#ifndef CLIENT_HPP_
+#define CLIENT_HPP_
+
 #include <iostream>
 #include <boost/asio.hpp>
 
@@ -40,7 +43,7 @@ public:
                                         }
 
                                         if (answer["change type"] == "game") {
-                                            std::cout<<answer;
+                                            std::cout<<"Map changed, maybe\n";
 //                                            runebound::map::from_json(answer, m_map);
 //                                            но его пока нет
                                         }
@@ -105,3 +108,5 @@ private:
     tcp::socket socket_;
     char read_buffer_[BUFF_SIZE];
 };
+
+#endif  // CLIENT_HPP_

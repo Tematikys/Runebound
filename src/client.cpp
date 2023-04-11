@@ -16,7 +16,7 @@ int main() {
     std::cin >> user_name;
 
     boost::asio::io_context io_context;
-    auto work_guard = boost::asio::make_work_guard(io_context);
+    boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work_guard = boost::asio::make_work_guard(io_context);
     Client client(io_context, "127.0.0.1", 4444, user_name);
     try {
         //test commands begin
@@ -44,11 +44,13 @@ int main() {
         }
         std::cout << '\n';
         client.join_game("My game");
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         io_context.poll();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
         client.make_move(1, 0);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         io_context.poll();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
         client.reverse_token(1, 0);
 
 
