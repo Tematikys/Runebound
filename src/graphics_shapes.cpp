@@ -200,4 +200,12 @@ bool CircleShape::in_bounds(const Point &dot) const {
     int dy = (m_center.y() - dot.y());
     return dx * dx + dy * dy < m_radius * m_radius;
 }
+
+RectangleShape::RectangleShape(int x, int y, int width, int height) {
+    m_vertexes.emplace_back(x, y);
+    m_vertexes.emplace_back(x + width, y);
+    m_vertexes.emplace_back(x + width, y + height);
+    m_vertexes.emplace_back(x, y + height);
+    init_side_coefficients();
+}
 }  // namespace runebound::graphics

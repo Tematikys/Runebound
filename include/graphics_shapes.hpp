@@ -56,6 +56,13 @@ public:
     SquareShape(const Point &center, int radius);
 };
 
+class RectangleShape : public PolygonShape {
+public:
+    RectangleShape() = default;
+
+    RectangleShape(int x, int y, int width, int height);
+};
+
 // basic circle class
 class CircleShape {
 private:

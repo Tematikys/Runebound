@@ -30,6 +30,7 @@ add_executable(client
         ../src/game.cpp
         ../src/graphics.cpp
         ../src/graphics_board.cpp
+        ../src/graphics_button.cpp
         ../src/graphics_point.cpp
         ../src/graphics_segment.cpp
         ../src/graphics_shapes.cpp

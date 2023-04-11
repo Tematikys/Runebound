@@ -17,6 +17,13 @@ private:
 public:
     Texture() : m_texture(nullptr), m_width(0), m_height(0){};
 
+    Texture(Texture &&other) noexcept {
+        m_width = other.m_width;
+        m_height = other.m_height;
+        m_texture = other.m_texture;
+        other.m_texture = nullptr;
+    }
+
     ~Texture() {
         free();
     };
@@ -87,4 +94,4 @@ bool generate_text(
 
 bool load_font(TTF_Font *&font, const std::string &path, int font_size);
 }  // namespace runebound::graphics
-#endif  // RUNEBOUND_GRAPHICS_PP_
+#endif  // RUNEBOUND_GRAPHICS_HPP_
