@@ -172,18 +172,26 @@ HexagonShape::HexagonShape(const Point &center, int radius) {
     init_side_coefficients();
 }
 
+SquareShape::SquareShape(const Point &center, int radius) {
+    m_vertexes.emplace_back(center + Point(-radius, -radius));
+    m_vertexes.emplace_back(center + Point(radius, -radius));
+    m_vertexes.emplace_back(center + Point(radius, radius));
+    m_vertexes.emplace_back(center + Point(-radius, radius));
+    init_side_coefficients();
+}
+
 void CircleShape::render(
     SDL_Renderer *renderer,
     SDL_Color fill_color,
     SDL_Color border_color
 ) const {
     filledCircleRGBA(
-        renderer, m_center.x(), m_center.y(), m_radius, fill_color.r,
-        fill_color.g, fill_color.b, fill_color.a
+        renderer, (short)m_center.x(), (short)m_center.y(), m_radius,
+        fill_color.r, fill_color.g, fill_color.b, fill_color.a
     );
     circleRGBA(
-        renderer, m_center.x(), m_center.y(), m_radius, border_color.r,
-        border_color.g, border_color.b, border_color.a
+        renderer, (short)m_center.x(), (short)m_center.y(), m_radius,
+        border_color.r, border_color.g, border_color.b, border_color.a
     );
 }
 
