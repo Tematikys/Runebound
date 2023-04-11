@@ -31,36 +31,42 @@ public:
                               });
     }
 
-    void do_read() {
-        socket_.async_read_some(boost::asio::buffer(read_buffer_, BUFF_SIZE),
-                                [this](boost::system::error_code ec, std::size_t length) {
-                                    if (!ec) {
-                                        std::string_view stringView(read_buffer_, length);
-                                        json answer = json::parse(stringView);
+    void parse_message(std::string& message){
+        json answer = json::parse(message);
 
-                                        if (answer["change type"] == "game names") {
-                                            game_names = answer["game names"];
-                                        }
+        if (answer["change type"] == "game names") {
+            game_names = answer["game names"];
+        }
 
-                                        if (answer["change type"] == "game") {
-                                            std::cout<<"Map changed, maybe\n";
+        if (answer["change type"] == "game") {
+            std::cout<<"Map changed, maybe\n";
 //                                            runebound::map::from_json(answer, m_map);
 //                                            но его пока нет
-                                        }
-
-
-                                        do_read();
-                                    } else {
-                                        std::cerr << "Read failed: " << ec.message() << std::endl;
-                                        socket_.close();
-                                    }
-                                });
+        }
     }
 
+    void do_read() {
+        boost::asio::async_read_until(socket_, m_buffer, '\n',
+                                      [this](boost::system::error_code ec, std::size_t length) {
+                                          if (!ec) {
+                                              std::istream is(&m_buffer);
+                                              std::string message;
+                                              std::getline(is, message);
+                                              std::cout << "Received: " << message << " Length: " << length << '\n';
+                                              parse_message(message);
+                                              do_read();
+                                          } else {
+                                              std::cout << "Disconnected" << std::endl;
+                                          }
+                                      });
+    }
+
+
     void do_write(std::string str) {
-        socket_.async_write_some(boost::asio::buffer(str),
+        socket_.async_write_some(boost::asio::buffer(str+'\n'),
                                  [this, str](boost::system::error_code ec, std::size_t length) {
                                      if (!ec) {
+                                         std::cout<<"Sent:"<<str<<' '<<length<<'\n';
                                      } else {
                                          std::cerr << "Write failed: " << ec.message() << std::endl;
                                          socket_.close();
@@ -105,6 +111,7 @@ public:
     std::vector<std::string> game_names;
     runebound::map::MapClient m_map;
 private:
+    boost::asio::streambuf m_buffer;
     tcp::socket socket_;
     char read_buffer_[BUFF_SIZE];
 };
