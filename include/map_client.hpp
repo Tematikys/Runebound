@@ -46,7 +46,7 @@ public:
     }
 
     explicit MapClient(const Map &map) {
-        std::vector<std::vector<MapCell>> m_map = map.get_full_map();
+        m_map = map.get_full_map();
     }
 
     MapClient(const MapClient &) = default;
