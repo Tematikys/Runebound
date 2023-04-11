@@ -21,7 +21,14 @@ void Client::init_graphics(
 
     ::runebound::graphics::load_font(m_font, "../../data/fonts/lazy.ttf", 50);
 
-    m_network_client.add_game("new game");
+    ::runebound::graphics::Texture tex;
+    tex.load_from_string(
+        m_renderer, m_font, "button", {0xFF, 0x00, 0x00, 0xFF}
+    );
+    m_buttons.push_back(::runebound::graphics::RectButton(
+        100, 100, tex, []() { ::std::cout << "button clicked\n"; },
+        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    ));
 }
 
 void Client::init_board(const ::runebound::map::MapClient &map) {
@@ -30,9 +37,14 @@ void Client::init_board(const ::runebound::map::MapClient &map) {
 
 void Client::handle_events() {
     SDL_Event e;
-    while (SDL_PollEvent(&e) != 0) {
-        if (e.type == SDL_QUIT) {
-            m_is_running = false;
+    while (SDL_PollEvent(&e)) {
+        switch (e.type) {
+            case SDL_QUIT:
+                m_is_running = false;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                m_mouse_pressed = true;
+                break;
         }
     }
 }
@@ -50,6 +62,10 @@ void Client::render() {
         y_offset += texture.get_height();
     }
 
+    for (const auto &button : m_buttons) {
+        button.render(m_renderer);
+    }
+
     SDL_RenderPresent(m_renderer);
 }
 
@@ -58,18 +74,24 @@ void Client::update() {
     m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
     m_temp_textures_to_render.clear();
 
-    m_io_context.poll();
+    //    m_io_context.poll();
 
-    m_temp_textures_to_render.resize(m_network_client.game_names.size());
-    for (::std::size_t i = 0; i < m_network_client.game_names.size(); ++i) {
-        ::std::cout << m_network_client.game_names[i] << '\n';
-        m_temp_textures_to_render[i].load_from_string(
-            m_renderer, m_font, m_network_client.game_names[i],
-            {0xFF, 0x00, 0x00, 0xFF}
+    for (const auto &game_name : m_network_client.game_names) {
+        m_temp_textures_to_render.emplace_back();
+        m_temp_textures_to_render.back().load_from_string(
+            m_renderer, m_font, game_name, {0xFF, 0x00, 0x00, 0xFF}
         );
     }
-    ::std::cout << '\n';
 
+    for (const auto &button : m_buttons) {
+        if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos)) &&
+            m_mouse_pressed) {
+            m_mouse_pressed = false;
+            button.on_click();
+        }
+    }
+
+    m_mouse_pressed = false;
     ++m_counter;
 }
 

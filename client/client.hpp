@@ -5,6 +5,7 @@
 #include <client.hpp>
 #include <graphics.hpp>
 #include <graphics_board.hpp>
+#include <graphics_button.hpp>
 #include <string>
 #include <utility>
 #include <vector>
@@ -21,6 +22,10 @@ private:
     // board
     ::runebound::graphics::Board m_board;
 
+    // buttons
+    ::std::vector<::runebound::graphics::RectButton> m_buttons;
+
+    // network client
     ::Client m_network_client;
 
     // graphics variables
@@ -35,6 +40,7 @@ private:
     unsigned long long m_counter{};
     uint32_t m_prev_frame_time{};
 
+    bool m_mouse_pressed;
     ::std::pair<int, int> m_mouse_pos;
 
 public:
