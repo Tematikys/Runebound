@@ -75,6 +75,10 @@ public:
 
     ~Map() = default;
 
+    [[nodiscard]] std::vector<std::vector<MapCell>> get_full_map() const {
+        return m_map;
+    }
+
     [[nodiscard]] MapCell get_cell_map(const Point &point) const {
         return m_map[point.x][point.y];
     }
