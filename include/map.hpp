@@ -102,6 +102,10 @@ public:
         return m_rivers.find({lhs_point, rhs_point}) != m_rivers.end();
     }
 
+    void reverse_token(const Point &point) {
+        m_map[point.x][point.y].reverse_token();
+    }
+
     [[nodiscard]] std::set<std::pair<Point, Point>> get_rivers() const {
         return m_rivers;
     }
