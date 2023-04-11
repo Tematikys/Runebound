@@ -2,12 +2,12 @@
 #define RUNEBOUND_CLIENT_HPP_
 
 #include <SDL2/SDL.h>
-#include <boost/asio.hpp>
+#include <client.hpp>
 #include <graphics.hpp>
 #include <graphics_board.hpp>
 #include <string>
-#include <vector>
 #include <utility>
+#include <vector>
 
 namespace runebound::client {
 // client class, is called in main function, contains everything that is in use
@@ -21,11 +21,14 @@ private:
     // board
     ::runebound::graphics::Board m_board;
 
+    ::Client m_network_client;
+
     // graphics variables
     SDL_Window *m_window{nullptr};
     SDL_Renderer *m_renderer{nullptr};
     TTF_Font *m_font{nullptr};
     ::std::vector<::runebound::graphics::Texture> m_textures;
+    ::std::vector<::runebound::graphics::Texture> m_temp_textures_to_render;
 
     bool m_is_running{false};
     int m_frame_time{};
@@ -35,17 +38,10 @@ private:
     ::std::pair<int, int> m_mouse_pos;
 
 public:
-    Client() : m_io_context(), m_socket(m_io_context){};
-
-    void init_network(const ::std::string &host, const ::std::string &port);
-
-    void start_network() {
-        m_thread = ::std::thread([this]() { m_io_context.run(); });
-    }
-
-    [[nodiscard]] ::std::string read_network();
-
-    void write_network(const ::std::string &str);
+    Client(const std::string &host, int port, std::string user_name)
+        : m_io_context(),
+          m_socket(m_io_context),
+          m_network_client(m_io_context, host, port, std::move(user_name)){};
 
     void init_graphics(
         const char *title,
