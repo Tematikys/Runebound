@@ -130,6 +130,7 @@ private:
 
     void change_turn();
 
+    bool check_end_round_private(const std::vector <TokenHandCount> &tokens) const;
 public:
     Fight(std::shared_ptr<character::Character> character, Enemy enemy)
         : m_character(std::move(character)), m_enemy(std::move(enemy)) {

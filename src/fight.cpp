@@ -152,47 +152,45 @@ int Fight::count_damage(const std::vector<TokenHandCount> &tokens) {
     return count;
 }
 
-bool Fight::check_end_round() {
-    bool only_bad_tokens = true;
-    if (m_turn == Participant::CHARACTER) {
-        for (const auto &token : m_character_remaining_tokens) {
-            if (token.hand != HandFightTokens::NOTHING &&
-                token.hand != HandFightTokens::DOUBLING &&
-                token.hand != HandFightTokens::SHIELD) {
-                only_bad_tokens = false;
-            }
-        }
-        if (only_bad_tokens) {
-            m_pass_character = true;
-        }
-        if (m_character_remaining_tokens.size() == 1 &&
-            m_character_remaining_tokens[0].hand ==
-                HandFightTokens::DEXTERITY) {
-            m_pass_character = true;
-        }
-    }
-    only_bad_tokens = true;
-    for (const auto &token : m_enemy_remaining_tokens) {
+bool Fight::check_end_round_private(const std::vector <TokenHandCount> &tokens) const {
+    bool only_doubling = true;
+    for (const auto &token : tokens) {
         if (token.hand != HandFightTokens::NOTHING &&
-            token.hand != HandFightTokens::DOUBLING &&
-            token.hand != HandFightTokens::SHIELD) {
-            only_bad_tokens = false;
+            token.hand != HandFightTokens::DOUBLING) {
+            only_doubling = false;
         }
     }
-    if (only_bad_tokens) {
+    bool only_shield = true;
+    for (const auto &token : tokens) {
+        if (token.hand != HandFightTokens::NOTHING &&
+            token.hand != HandFightTokens::SHIELD) {
+            only_shield = false;
+        }
+    }
+    bool only_dexterity = false;
+    if (tokens.size() == 1 &&
+        tokens[0].hand ==
+            HandFightTokens::DEXTERITY) {
+        only_dexterity = true;
+    }
+    return only_dexterity || only_doubling || only_shield;
+}
+
+bool Fight::check_end_round() {
+    if (check_end_round_private(m_character_remaining_tokens)) {
+        m_pass_character = true;
+    }
+    if (check_end_round_private(m_enemy_remaining_tokens)) {
         m_pass_enemy = true;
     }
-    if (m_enemy_remaining_tokens.size() == 1 &&
-        m_enemy_remaining_tokens[0].hand == HandFightTokens::DEXTERITY) {
-        m_pass_enemy = true;
-    }
+    std::cout << m_pass_character << ' ' << m_pass_enemy << '\n';
     return m_pass_character && m_pass_enemy;
 }
 
 void Fight::change_turn() {
     if (m_pass_enemy) {
         m_turn = Participant::CHARACTER;
-    } else if (m_pass_enemy) {
+    } else if (m_pass_character) {
         m_turn = Participant::ENEMY;
     } else {
         m_turn = static_cast<Participant>(static_cast<int>(m_turn) ^ 1);

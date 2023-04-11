@@ -60,7 +60,7 @@ add_executable(${PROJECT_NAME}
             src/dice.cpp
             src/game.cpp
 #             src/graphics.cpp
-            # tpl/doctest/doctest_main.cpp
+            tpl/doctest/doctest_main.cpp
             src/map.cpp
             src/map_cell.cpp
             src/tokens.cpp
@@ -81,6 +81,4 @@ target_link_libraries(Client ${Boost_LIBRARIES})
 target_link_libraries(Client ws2_32)
 target_link_libraries(Client wsock32)
 
-
-#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} -lmingw32 -lSDL2main -lSDL2 -mwindows -lSDL2_image)
-
+target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
