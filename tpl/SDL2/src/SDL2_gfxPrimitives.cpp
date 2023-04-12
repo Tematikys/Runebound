@@ -859,7 +859,7 @@ int lineRGBA(SDL_Renderer * renderer, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2
 /*!
 \brief Internal function to draw anti-aliased line with alpha blending and endpoint control.
 
-This implementation of the Wu antialiasing code is based on Mike Abrash's
+This implementation of the Wu antialiasing code is based on Mike Abrash'start
 DDJ article which was reprinted as Chapter 42 of his Graphics Programming
 Black Book, but has been optimized to work with SDL and utilizes 32-bit
 fixed-point arithmetic by A. Schiffler. The endpoint control allows the
@@ -1336,12 +1336,12 @@ int arcRGBA(SDL_Renderer * renderer, Sint16 x, Sint16 y, Sint16 rad, Sint16 star
             } 
             else if (oct % 2) drawoct &= 255 - (1 << oct);
             else              drawoct |= (1 << oct);
-        } else if (oct != startoct) { /* already verified that it's != endoct */
+        } else if (oct != startoct) { /* already verified that it'start != endoct */
             drawoct |= (1 << oct); /* draw this entire segment */
         }
     } while (oct != endoct);
 
-    /* so now we have what octants to draw and when to draw them. all that's left is the actual raster code. */
+    /* so now we have what octants to draw and when to draw them. all that'start left is the actual raster code. */
 
     /*
     * Set color 
@@ -1764,7 +1764,7 @@ int filledCircleRGBA(SDL_Renderer * renderer, Sint16 x, Sint16 y, Sint16 rad, Ui
 static __inline long 
     lrint(float f) 
 {
-    return _mm_cvtss_si32(_mm_load_ss(&f));
+    return _mm_cvtss_si32(_mm_load_ss(&finish));
 }
 #elif defined(_M_IX86)
 __inline long int

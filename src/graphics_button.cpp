@@ -4,20 +4,28 @@ namespace runebound::graphics {
 RectButton::RectButton(
     int x,
     int y,
-    Texture &tex,
-    ::std::function<void()> func,
+    int width,
+    int height,
+    int texture_x_offset,
+    int texture_y_offset,
+    Texture &texture,
+    ::std::function<void()> on_click_function,
+    ::std::function<void()> on_cover_function,
     SDL_Color fill_color,
     SDL_Color border_color
 )
     : m_x(x),
       m_y(y),
-      m_texture(::std::move(tex)),
-      m_function(::std::move(func)),
+      m_width(width),
+      m_height(height),
+      m_texture_x_offset(texture_x_offset),
+      m_texture_y_offset(texture_y_offset),
+      m_texture(::std::move(texture)),
+      m_on_click_function(::std::move(on_click_function)),
+      m_on_cover_function(::std::move(on_cover_function)),
       m_fill_color(fill_color),
-      m_border_color(border_color) {
-    m_width = m_texture.get_width();
-    m_height = m_texture.get_height();
-    m_shape = RectangleShape(x, y, m_width, m_height);
+      m_border_color(border_color),
+      m_shape({x, y, m_width, m_height}) {
 }
 
 bool RectButton::in_bounds(const Point &p) const {
@@ -28,22 +36,40 @@ bool RectButton::in_bounds(const Point &p) const {
     return false;
 }
 
+void RectButton::render(SDL_Renderer *renderer, int x_offset, int y_offset)
+    const {
+    m_shape.render(renderer, m_fill_color, x_offset, y_offset);
+    m_shape.render_border(renderer, m_border_color, x_offset, y_offset);
+    m_texture.render(
+        renderer, m_x + m_texture_x_offset + x_offset,
+        m_y + m_texture_y_offset + y_offset
+    );
+}
+
 CircButton::CircButton(
     int x,
     int y,
-    Texture &tex,
-    ::std::function<void()> func,
+    int width,
+    int height,
+    int texture_x_offset,
+    int texture_y_offset,
+    Texture &texture,
+    ::std::function<void()> on_click_function,
+    ::std::function<void()> on_cover_function,
     SDL_Color fill_color,
     SDL_Color border_color
 )
     : m_x(x),
       m_y(y),
-      m_texture(::std::move(tex)),
-      m_function(::std::move(func)),
+      m_width(width),
+      m_height(height),
+      m_texture_x_offset(texture_x_offset),
+      m_texture_y_offset(texture_y_offset),
+      m_texture(::std::move(texture)),
+      m_on_click_function(::std::move(on_click_function)),
+      m_on_cover_function(::std::move(on_cover_function)),
       m_fill_color(fill_color),
       m_border_color(border_color) {
-    m_width = m_texture.get_width();
-    m_height = m_texture.get_height();
     m_center = Point(x + m_width / 2, y + m_height / 2);
     m_radius = (m_center.x() + m_center.y() - x - y) / 2;
     m_shape = CircleShape(m_center, m_radius);
@@ -56,5 +82,15 @@ bool CircButton::in_bounds(const Point &p) const {
         return true;
     }
     return false;
+}
+
+void CircButton::render(SDL_Renderer *renderer, int x_offset, int y_offset)
+    const {
+    m_shape.render(renderer, m_fill_color, x_offset, y_offset);
+    m_shape.render_border(renderer, m_border_color, x_offset, y_offset);
+    m_texture.render(
+        renderer, m_x + m_texture_x_offset + x_offset,
+        m_y + m_texture_y_offset + y_offset
+    );
 }
 }  // namespace runebound::graphics

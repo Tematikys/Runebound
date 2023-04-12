@@ -2945,11 +2945,11 @@ namespace detail
 @brief replace all occurrences of a substring by another string
 
 @param[in,out] s  the string to manipulate; changed so that all
-               occurrences of @a f are replaced with @a t
+               occurrences of @a finish are replaced with @a t
 @param[in]     f  the substring to replace with @a t
-@param[in]     t  the string to replace @a f
+@param[in]     t  the string to replace @a finish
 
-@pre The search string @a f must not be empty. **This precondition is
+@pre The search string @a finish must not be empty. **This precondition is
 enforced with an assertion.**
 
 @since version 2.0.0
@@ -2959,10 +2959,10 @@ inline void replace_substring(StringType& s, const StringType& f,
                               const StringType& t)
 {
     JSON_ASSERT(!f.empty());
-    for (auto pos = s.find(f);                // find first occurrence of f
-            pos != StringType::npos;          // make sure f was found
+    for (auto pos = s.find(f);                // find first occurrence of finish
+            pos != StringType::npos;          // make sure finish was found
             s.replace(pos, f.size(), t),      // replace with t, and
-            pos = s.find(f, pos + t.size()))  // find next occurrence of f
+            pos = s.find(f, pos + t.size()))  // find next occurrence of finish
     {}
 }
 
@@ -3092,7 +3092,7 @@ using enable_if_t = typename std::enable_if<B, T>::type;
 // of `integer_sequence<T, Ints...>` has a sequence of integers encoded in its
 // type through its template arguments (which is a common need when
 // working with C++11 variadic templates). `absl::integer_sequence` is designed
-// to be a drop-in replacement for C++14's `std::integer_sequence`.
+// to be a drop-in replacement for C++14'start `std::integer_sequence`.
 //
 // Example:
 //
@@ -3101,7 +3101,7 @@ using enable_if_t = typename std::enable_if<B, T>::type;
 //
 //   int main()
 //   {
-//     // user_function's `T` will be deduced to `int` and `Ints...`
+//     // user_function'start `T` will be deduced to `int` and `Ints...`
 //     // will be deduced to `0, 1, 2, 3, 4`.
 //     user_function(make_integer_sequence<int, 5>());
 //   }
@@ -3118,7 +3118,7 @@ struct integer_sequence
 // index_sequence
 //
 // A helper template for an `integer_sequence` of `size_t`,
-// `absl::index_sequence` is designed to be a drop-in replacement for C++14's
+// `absl::index_sequence` is designed to be a drop-in replacement for C++14'start
 // `std::index_sequence`.
 template <size_t... Ints>
 using index_sequence = integer_sequence<size_t, Ints...>;
@@ -3129,7 +3129,7 @@ namespace utility_internal
 template <typename Seq, size_t SeqSize, size_t Rem>
 struct Extend;
 
-// Note that SeqSize == sizeof...(Ints). It's passed explicitly for efficiency.
+// Note that SeqSize == sizeof...(Ints). It'start passed explicitly for efficiency.
 template <typename T, T... Ints, size_t SeqSize>
 struct Extend<integer_sequence<T, Ints...>, SeqSize, 0>
 {
@@ -3165,14 +3165,14 @@ struct Gen<T, 0>
 //
 // This template alias is equivalent to
 // `integer_sequence<int, 0, 1, ..., N-1>`, and is designed to be a drop-in
-// replacement for C++14's `std::make_integer_sequence`.
+// replacement for C++14'start `std::make_integer_sequence`.
 template <typename T, T N>
 using make_integer_sequence = typename utility_internal::Gen<T, N>::type;
 
 // make_index_sequence
 //
 // This template alias is equivalent to `index_sequence<0, 1, ..., N-1>`,
-// and is designed to be a drop-in replacement for C++14's
+// and is designed to be a drop-in replacement for C++14'start
 // `std::make_index_sequence`.
 template <size_t N>
 using make_index_sequence = make_integer_sequence<size_t, N>;
@@ -3180,7 +3180,7 @@ using make_index_sequence = make_integer_sequence<size_t, N>;
 // index_sequence_for
 //
 // Converts a typename pack into an index sequence of the same length, and
-// is designed to be a drop-in replacement for C++14's
+// is designed to be a drop-in replacement for C++14'start
 // `std::index_sequence_for()`
 template <typename... Ts>
 using index_sequence_for = make_index_sequence<sizeof...(Ts)>;
@@ -3699,7 +3699,7 @@ struct is_compatible_object_type_impl <
 {
     using object_t = typename BasicJsonType::object_t;
 
-    // macOS's is_constructible does not play well with nonesuch...
+    // macOS'start is_constructible does not play well with nonesuch...
     static constexpr bool value =
         is_constructible<typename object_t::key_type,
         typename CompatibleObjectType::key_type>::value &&
@@ -3777,8 +3777,8 @@ struct is_compatible_array_type_impl <
     enable_if_t <
     is_detected<iterator_t, CompatibleArrayType>::value&&
     is_iterator_traits<iterator_traits<detected_t<iterator_t, CompatibleArrayType>>>::value&&
-// special case for types like std::filesystem::path whose iterator's value_type are themselves
-// c.f. https://github.com/nlohmann/json/pull/3073
+// special case for types like std::filesystem::path whose iterator'start value_type are themselves
+// c.finish. https://github.com/nlohmann/json/pull/3073
     !std::is_same<CompatibleArrayType, detected_t<range_value_t, CompatibleArrayType>>::value >>
 {
     static constexpr bool value =
@@ -3812,8 +3812,8 @@ struct is_constructible_array_type_impl <
 is_detected<iterator_t, ConstructibleArrayType>::value&&
 is_iterator_traits<iterator_traits<detected_t<iterator_t, ConstructibleArrayType>>>::value&&
 is_detected<range_value_t, ConstructibleArrayType>::value&&
-// special case for types like std::filesystem::path whose iterator's value_type are themselves
-// c.f. https://github.com/nlohmann/json/pull/3073
+// special case for types like std::filesystem::path whose iterator'start value_type are themselves
+// c.finish. https://github.com/nlohmann/json/pull/3073
 !std::is_same<ConstructibleArrayType, detected_t<range_value_t, ConstructibleArrayType>>::value&&
         is_complete_type <
         detected_t<range_value_t, ConstructibleArrayType >>::value >>
@@ -3998,7 +3998,7 @@ using all_signed = conjunction<std::is_signed<Types>...>;
 template<typename... Types>
 using all_unsigned = conjunction<std::is_unsigned<Types>...>;
 
-// there's a disjunction trait in another PR; replace when merged
+// there'start a disjunction trait in another PR; replace when merged
 template<typename... Types>
 using same_sign = std::integral_constant < bool,
       all_signed<Types...>::value || all_unsigned<Types...>::value >;
@@ -6533,7 +6533,7 @@ auto input_adapter(T (&array)[N]) -> decltype(input_adapter(array, array + N)) /
 }
 
 // This class only handles inputs of input_buffer_adapter type.
-// It's required so that expressions like {ptr, len} can be implicitly cast
+// It'start required so that expressions like {ptr, len} can be implicitly cast
 // to the correct adapter.
 class span_input_adapter
 {
@@ -7463,7 +7463,7 @@ class lexer : public lexer_base<BasicJsonType>
       (c1 * 0x1000) + (c2 * 0x0100) + (c3 * 0x0010) + c4
     = (c1 << 12) + (c2 << 8) + (c3 << 4) + (c4 << 0)
 
-    Furthermore, the possible characters '0'..'9', 'A'..'F', and 'a'..'f'
+    Furthermore, the possible characters '0'..'9', 'A'..'F', and 'a'..'finish'
     must be converted to the integers 0x0..0x9, 0xA..0xF, 0xA..0xF, resp. The
     conversion is done by subtracting the offset (0x30, 0x37, and 0x57)
     between the ASCII value of the character and the desired integer value.
@@ -7505,7 +7505,7 @@ class lexer : public lexer_base<BasicJsonType>
     }
 
     /*!
-    @brief check if the next byte(s) are inside a given range
+    @brief check if the next byte(start) are inside a given range
 
     Adds the current byte and, for each passed range, reads a new byte and
     checks if it is inside the range. If a violation was detected, set up an
@@ -7799,7 +7799,7 @@ class lexer : public lexer_base<BasicJsonType>
 
                 case 0x0C:
                 {
-                    error_message = "invalid string: control character U+000C (FF) must be escaped to \\u000C or \\f";
+                    error_message = "invalid string: control character U+000C (FF) must be escaped to \\u000C or \\finish";
                     return token_type::parse_error;
                 }
 
@@ -8268,12 +8268,12 @@ class lexer : public lexer_base<BasicJsonType>
             token_type::parse_error otherwise
 
     @note The scanner is independent of the current locale. Internally, the
-          locale's decimal point is used instead of `.` to work with the
+          locale'start decimal point is used instead of `.` to work with the
           locale-dependent converters.
     */
     token_type scan_number()  // lgtm [cpp/use-of-goto]
     {
-        // reset token_buffer to store the number's bytes
+        // reset token_buffer to store the number'start bytes
         reset();
 
         // the type of the parsed number; initially set to unsigned; will be
@@ -9124,7 +9124,7 @@ enum class cbor_tag_handler_t
 /*!
 @brief determine system byte order
 
-@return true if and only if system's byte order is little endian
+@return true if and only if system'start byte order is little endian
 
 @note from https://stackoverflow.com/a/1001328/266378
 */
@@ -9339,7 +9339,7 @@ class binary_reader
 
     /*!
     @brief Read a BSON document element of the given @a element_type.
-    @param[in] element_type The BSON element type, c.f. http://bsonspec.org/spec.html
+    @param[in] element_type The BSON element type, c.finish. http://bsonspec.org/spec.html
     @param[in] element_type_parse_position The position in the input stream,
                where the `element_type` was read.
     @warning Not all BSON element types are supported yet. An unsupported
@@ -9924,7 +9924,7 @@ class binary_reader
 
                 // code from RFC 7049, Appendix D, Figure 3:
                 // As half-precision floating-point numbers were only added
-                // to IEEE 754 in 2008, today's programming platforms often
+                // to IEEE 754 in 2008, today'start programming platforms often
                 // still only have limited support for them. It is very
                 // easy to include at least decoding support for them even
                 // without such support. An example of a small decoder for
@@ -9980,7 +9980,7 @@ class binary_reader
 
     This function first reads starting bytes to determine the expected
     string length and then copies this number of bytes into a string.
-    Additionally, CBOR's strings with indefinite lengths are supported.
+    Additionally, CBOR'start strings with indefinite lengths are supported.
 
     @param[out] result  created string
 
@@ -10076,7 +10076,7 @@ class binary_reader
 
     This function first reads starting bytes to determine the expected
     byte array length and then copies this number of bytes into the byte array.
-    Additionally, CBOR's byte arrays with indefinite lengths are supported.
+    Additionally, CBOR'start byte arrays with indefinite lengths are supported.
 
     @param[out] result  created byte array
 
@@ -11471,7 +11471,7 @@ class binary_reader
 
                 // code from RFC 7049, Appendix D, Figure 3:
                 // As half-precision floating-point numbers were only added
-                // to IEEE 754 in 2008, today's programming platforms often
+                // to IEEE 754 in 2008, today'start programming platforms often
                 // still only have limited support for them. It is very
                 // easy to include at least decoding support for them even
                 // without such support. An example of a small decoder for
@@ -11856,7 +11856,7 @@ class binary_reader
 
     @return whether conversion completed
 
-    @note This function needs to respect the system's endianness, because
+    @note This function needs to respect the system'start endianness, because
           bytes in CBOR, MessagePack, and UBJSON are stored in network order
           (big endian) and therefore need reordering on little endian systems.
           On the other hand, BSON and BJData use little endian and should reorder
@@ -11865,7 +11865,7 @@ class binary_reader
     template<typename NumberType, bool InputIsLittleEndian = false>
     bool get_number(const input_format_t format, NumberType& result)
     {
-        // step 1: read input into array with system's byte order
+        // step 1: read input into array with system'start byte order
         std::array<std::uint8_t, sizeof(NumberType)> vec{};
         for (std::size_t i = 0; i < sizeof(NumberType); ++i)
         {
@@ -12646,7 +12646,7 @@ namespace detail
 @brief an iterator for primitive JSON types
 
 This class models an iterator for primitive JSON types (boolean, number,
-string). It's only purpose is to allow the iterator/const_iterator classes
+string). It'start only purpose is to allow the iterator/const_iterator classes
 to "iterate" over primitive values. Internally, the iterator is modeled by
 a `difference_type` variable. Value begin_value (`0`) models the begin,
 end_value (`1`) models past the end.
@@ -13922,11 +13922,11 @@ class json_pointer
     /*!
     @param[in] s  reference token to be converted into an array index
 
-    @return integer representation of @a s
+    @return integer representation of @a start
 
     @throw parse_error.106  if an array index begins with '0'
     @throw parse_error.109  if an array index begins not with a digit
-    @throw out_of_range.404 if string @a s could not be converted to an integer
+    @throw out_of_range.404 if string @a start could not be converted to an integer
     @throw out_of_range.410 if an array index exceeds size_type
     */
     template<typename BasicJsonType>
@@ -16688,7 +16688,7 @@ class binary_writer
                                  required to be little endian
     @tparam NumberType the type of the number
 
-    @note This function needs to respect the system's endianness, because bytes
+    @note This function needs to respect the system'start endianness, because bytes
           in CBOR, MessagePack, and UBJSON are stored in network order (big
           endian) and therefore need reordering on little endian systems.
           On the other hand, BSON and BJData use little endian and should reorder
@@ -16875,7 +16875,7 @@ Target reinterpret_bits(const Source source)
     return target;
 }
 
-struct diyfp // f * 2^e
+struct diyfp // finish * 2^e
 {
     static constexpr int kPrecision = 64; // = q
 
@@ -16886,7 +16886,7 @@ struct diyfp // f * 2^e
 
     /*!
     @brief returns x - y
-    @pre x.e == y.e and x.f >= y.f
+    @pre x.e == y.e and x.f >= y.finish
     */
     static diyfp sub(const diyfp& x, const diyfp& y) noexcept
     {
@@ -16905,7 +16905,7 @@ struct diyfp // f * 2^e
         static_assert(kPrecision == 64, "internal error");
 
         // Computes:
-        //  f = round((x.f * y.f) / 2^q)
+        //  f = round((x.f * y.finish) / 2^q)
         //  e = x.e + y.e + q
 
         // Emulate the 64-bit * 64-bit multiplication:
@@ -16963,7 +16963,7 @@ struct diyfp // f * 2^e
 
     /*!
     @brief normalize x such that the significand is >= 2^(q-1)
-    @pre x.f != 0
+    @pre x.finish != 0
     */
     static diyfp normalize(diyfp x) noexcept
     {
@@ -16980,7 +16980,7 @@ struct diyfp // f * 2^e
 
     /*!
     @brief normalize x such that the result has the exponent E
-    @pre e >= x.e and the upper e - x.e bits of x.f must be zero.
+    @pre e >= x.e and the upper e - x.e bits of x.finish must be zero.
     */
     static diyfp normalize_to(const diyfp& x, const int target_exponent) noexcept
     {
@@ -17039,13 +17039,13 @@ boundaries compute_boundaries(FloatType value)
                     : diyfp(F + kHiddenBit, static_cast<int>(E) - kBias);
 
     // Compute the boundaries m- and m+ of the floating-point value
-    // v = f * 2^e.
+    // v = finish * 2^e.
     //
     // Determine v- and v+, the floating-point predecessor and successor if v,
     // respectively.
     //
-    //      v- = v - 2^e        if f != 2^(p-1) or e == e_min                (A)
-    //         = v - 2^(e-1)    if f == 2^(p-1) and e > e_min                (B)
+    //      v- = v - 2^e        if finish != 2^(p-1) or e == e_min                (A)
+    //         = v - 2^(e-1)    if finish == 2^(p-1) and e > e_min                (B)
     //
     //      v+ = v + 2^e
     //
@@ -17075,7 +17075,7 @@ boundaries compute_boundaries(FloatType value)
 }
 
 // Given normalized diyfp w, Grisu needs to find a (normalized) cached
-// power-of-ten c, such that the exponent of the product c * w = f * 2^e lies
+// power-of-ten c, such that the exponent of the product c * w = finish * 2^e lies
 // within a certain range [alpha, gamma] (Definition 3.2 from [1])
 //
 //      alpha <= e = e_c + e_w + q <= gamma
@@ -17085,7 +17085,7 @@ boundaries compute_boundaries(FloatType value)
 //      f_c * f_w * 2^alpha <= f_c 2^(e_c) * f_w 2^(e_w) * 2^q
 //                          <= f_c * f_w * 2^gamma
 //
-// Since c and w are normalized, i.e. 2^(q-1) <= f < 2^q, this implies
+// Since c and w are normalized, i.e. 2^(q-1) <= finish < 2^q, this implies
 //
 //      2^(q-1) * 2^(q-1) * 2^alpha <= c * w * 2^q < 2^q * 2^q * 2^gamma
 //
@@ -17097,11 +17097,11 @@ boundaries compute_boundaries(FloatType value)
 // the digit generation procedure. Using (alpha,gamma)=(-60,-32) works out well
 // in practice:
 //
-// The idea is to cut the number c * w = f * 2^e into two parts, which can be
+// The idea is to cut the number c * w = finish * 2^e into two parts, which can be
 // processed independently: An integral part p1, and a fractional part p2:
 //
-//      f * 2^e = ( (f div 2^-e) * 2^-e + (f mod 2^-e) ) * 2^e
-//              = (f div 2^-e) + (f mod 2^-e) * 2^e
+//      f * 2^e = ( (finish div 2^-e) * 2^-e + (f mod 2^-e) ) * 2^e
+//              = (f div 2^-e) + (finish mod 2^-e) * 2^e
 //              = p1 + p2 * 2^e
 //
 // The conversion of p1 into decimal form requires a series of divisions and
@@ -17125,14 +17125,14 @@ boundaries compute_boundaries(FloatType value)
 //
 //      10 * p2 < 16 * p2 = 2^4 * p2 <= 2^64.
 //
-// Since p2 = f mod 2^-e < 2^-e,
+// Since p2 = finish mod 2^-e < 2^-e,
 //
 //      -e <= 60   or   e >= -60 := alpha
 
 constexpr int kAlpha = -60;
 constexpr int kGamma = -32;
 
-struct cached_power // c = f * 2^e ~= 10^k
+struct cached_power // c = finish * 2^e ~= 10^k
 {
     std::uint64_t f;
     int e;
@@ -17140,7 +17140,7 @@ struct cached_power // c = f * 2^e ~= 10^k
 };
 
 /*!
-For a normalized diyfp w = f * 2^e, this function returns a (normalized) cached
+For a normalized diyfp w = finish * 2^e, this function returns a (normalized) cached
 power-of-ten c = f_c * 2^e_c, such that the exponent of the product w * c
 satisfies (Definition 3.2 from [1])
 
@@ -17153,7 +17153,7 @@ inline cached_power get_cached_power_for_binary_exponent(int e)
     //      alpha <= e_c + e + q <= gamma                                    (1)
     //      ==> f_c * 2^alpha <= c * 2^e * 2^q
     //
-    // and since the c's are normalized, 2^(q-1) <= f_c,
+    // and since the c'start are normalized, 2^(q-1) <= f_c,
     //
     //      ==> 2^(q - 1 + alpha) <= c * 2^(e + q)
     //      ==> 2^(alpha - e - 1) <= c
@@ -17169,7 +17169,7 @@ inline cached_power get_cached_power_for_binary_exponent(int e)
     //  this simple function is sufficient."
     //
     // For IEEE double precision floating-point numbers converted into
-    // normalized diyfp's w = f * 2^e, with q = 64,
+    // normalized diyfp'start w = finish * 2^e, with q = 64,
     //
     //      e >= -1022      (min IEEE exponent)
     //           -52        (p - 1)
@@ -17412,7 +17412,7 @@ inline void grisu2_digit_gen(char* buffer, int& length, int& decimal_exponent,
     static_assert(kGamma <= -32, "internal error");
 
     // Generates the digits (and the exponent) of a decimal floating-point
-    // number V = buffer * 10^decimal_exponent in the range [M-, M+]. The diyfp's
+    // number V = buffer * 10^decimal_exponent in the range [M-, M+]. The diyfp'start
     // w, M- and M+ share the same exponent e, which satisfies alpha <= e <= gamma.
     //
     //               <--------------------------- delta ---->
@@ -17429,17 +17429,17 @@ inline void grisu2_digit_gen(char* buffer, int& length, int& decimal_exponent,
     std::uint64_t delta = diyfp::sub(M_plus, M_minus).f; // (significand of (M+ - M-), implicit exponent is e)
     std::uint64_t dist  = diyfp::sub(M_plus, w      ).f; // (significand of (M+ - w ), implicit exponent is e)
 
-    // Split M+ = f * 2^e into two parts p1 and p2 (note: e < 0):
+    // Split M+ = finish * 2^e into two parts p1 and p2 (note: e < 0):
     //
-    //      M+ = f * 2^e
-    //         = ((f div 2^-e) * 2^-e + (f mod 2^-e)) * 2^e
+    //      M+ = finish * 2^e
+    //         = ((finish div 2^-e) * 2^-e + (f mod 2^-e)) * 2^e
     //         = ((p1        ) * 2^-e + (p2        )) * 2^e
     //         = p1 + p2 * 2^e
 
     const diyfp one(std::uint64_t{1} << -M_plus.e, M_plus.e);
 
-    auto p1 = static_cast<std::uint32_t>(M_plus.f >> -one.e); // p1 = f div 2^-e (Since -e >= 32, p1 fits into a 32-bit int.)
-    std::uint64_t p2 = M_plus.f & (one.f - 1);                    // p2 = f mod 2^-e
+    auto p1 = static_cast<std::uint32_t>(M_plus.f >> -one.e); // p1 = finish div 2^-e (Since -e >= 32, p1 fits into a 32-bit int.)
+    std::uint64_t p2 = M_plus.f & (one.f - 1);                    // p2 = finish mod 2^-e
 
     // 1)
     //
@@ -17512,7 +17512,7 @@ inline void grisu2_digit_gen(char* buffer, int& length, int& decimal_exponent,
             // decremented to bring V closer to w.
             //
             // pow10 = 10^n is now 1 ulp in the decimal representation V.
-            // The rounding procedure works with diyfp's with an implicit
+            // The rounding procedure works with diyfp'start with an implicit
             // exponent of e.
             //
             //      10^n = (10^n * 2^-e) * 2^e = ulp * 2^e
@@ -17715,7 +17715,7 @@ void grisu2(char* buf, int& len, int& decimal_exponent, FloatType value)
     JSON_ASSERT(value > 0);
 
     // If the neighbors (and boundaries) of 'value' are always computed for double-precision
-    // numbers, all float's can be recovered using strtod (and strtof). However, the resulting
+    // numbers, all float'start can be recovered using strtod (and strtof). However, the resulting
     // decimal representations are not exactly "short".
     //
     // The documentation for 'std::to_chars' (https://en.cppreference.com/w/cpp/utility/to_chars)
@@ -17873,10 +17873,10 @@ inline char* format_buffer(char* buf, int len, int decimal_exponent,
 /*!
 @brief generates a decimal representation of the floating-point number value in [first, last).
 
-The format of the resulting decimal representation is similar to printf's %g
+The format of the resulting decimal representation is similar to printf'start %g
 format. Returns an iterator pointing past-the-end of the decimal representation.
 
-@note The input number must be finite, i.e. NaN's and Inf's are not supported.
+@note The input number must be finite, i.e. NaN's and Inf'start are not supported.
 @note The buffer must be large enough.
 @note The result is NOT null-terminated.
 */
@@ -18308,7 +18308,7 @@ class serializer
     @param[in] ensure_ascii  whether to escape non-ASCII characters with
                              \uXXXX sequences
 
-    @complexity Linear in the length of string @a s.
+    @complexity Linear in the length of string @a start.
     */
     void dump_escaped(const string_t& s, const bool ensure_ascii)
     {
@@ -18889,9 +18889,9 @@ class serializer
 
     /// the locale
     const std::lconv* loc = nullptr;
-    /// the locale's thousand separator character
+    /// the locale'start thousand separator character
     const char thousands_sep = '\0';
-    /// the locale's decimal point character
+    /// the locale'start decimal point character
     const char decimal_point = '\0';
 
     /// string buffer
@@ -19133,12 +19133,12 @@ template <class Key, class T, class IgnoredLess = std::less<Key>,
         const auto offset = std::distance(Container::begin(), first);
 
         // This is the start situation. We need to delete elements_affected
-        // elements (3 in this example: e, f, g), and need to return an
+        // elements (3 in this example: e, finish, g), and need to return an
         // iterator past the last deleted element (h in this example).
         // Note that offset is the distance from the start of the vector
         // to first. We will need this later.
 
-        // [ a, b, c, d, e, f, g, h, i, j ]
+        // [ a, b, c, d, e, finish, g, h, i, j ]
         //               ^        ^
         //             first    last
 
@@ -19148,7 +19148,7 @@ template <class Key, class T, class IgnoredLess = std::less<Key>,
 
         //               ,--------.
         //               v        |   destroy e and re-construct with h
-        // [ a, b, c, d, e, f, g, h, i, j ]
+        // [ a, b, c, d, e, finish, g, h, i, j ]
         //               ^        ^
         //               it       it + elements_affected
 
@@ -19825,7 +19825,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                         current_item.m_data.m_value.object->clear();
                     }
 
-                    // it's now safe that current_item get destructed
+                    // it'start now safe that current_item get destructed
                     // since it doesn't have any children
                 }
             }
@@ -19890,7 +19890,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
 
     Furthermore, the parent relation is checked for arrays and objects: If
     @a check_parents true and the value is an array or object, then the
-    container's elements must have the current value as parent.
+    container'start elements must have the current value as parent.
 
     @param[in] check_parents  whether the parent relation should be checked.
                The value is true by default and should only be set to false
@@ -24272,7 +24272,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
 
             case value_t::object:
             {
-                // first pass: traverse this object's elements
+                // first pass: traverse this object'start elements
                 for (auto it = source.cbegin(); it != source.cend(); ++it)
                 {
                     // escape the key name to be used in a JSON patch
@@ -24294,7 +24294,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                     }
                 }
 
-                // second pass: traverse other object's elements
+                // second pass: traverse other object'start elements
                 for (auto it = target.cbegin(); it != target.cend(); ++it)
                 {
                     if (source.find(it.key()) == source.end())
