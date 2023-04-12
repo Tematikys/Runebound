@@ -4,7 +4,7 @@
 #include <chrono>
 #include <thread>
 #include <nlohmann/json.hpp>
-#include "client.hpp"
+#include "network_client.hpp"
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;

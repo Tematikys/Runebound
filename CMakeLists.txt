@@ -33,7 +33,7 @@ add_executable(Server
         src/game_client.cpp
         src/character_client.cpp
         src/map_client.cpp
-        src/server.cpp
+        src/network_server.cpp
 
         )
 add_executable(Client
@@ -51,7 +51,7 @@ add_executable(Client
         src/game_client.cpp
         src/character_client.cpp
         src/map_client.cpp
-        src/client.cpp
+        src/network_client.cpp
 
         )
 
