@@ -103,6 +103,9 @@ namespace runebound::network {
             do_write(data.dump());
         }
 
+        const std::vector<std::string> &get_game_names() const {
+            return game_names;
+        }
 
     public:
         std::string m_user_name;
