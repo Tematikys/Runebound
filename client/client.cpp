@@ -2,66 +2,57 @@
 #include <iostream>
 
 namespace runebound::client {
-void Client::init_network(
-    const ::std::string &host,
-    const ::std::string &port
-) {
-    m_socket = ::boost::asio::ip::tcp::socket(m_io_context);
-    ::boost::asio::ip::tcp::resolver resolver(m_io_context);
-    ::boost::asio::ip::tcp::resolver::results_type endpoints =
-        resolver.resolve(host, port);
-    ::boost::asio::connect(m_socket, endpoints);
+void Client::init() {
+    init_graphics();
+    m_board = ::runebound::graphics::Board(m_map);
 }
 
-::std::string Client::read_network() {
-    ::std::string buffer(1024, ' ');
-    ::std::size_t n =
-        m_socket.read_some(::boost::asio::buffer(buffer, buffer.size()));
-    return buffer.substr(0, n);
-}
-
-void Client::write_network(const ::std::string &str) {
-    ::boost::asio::write(
-        m_socket, ::boost::asio::buffer(str.data(), str.length())
-    );
-}
-
-void Client::init_graphics(
-    const char *title,
-    int x_pos,
-    int y_pos,
-    int width,
-    int height,
-    int fps
-) {
-    if (!::runebound::graphics::SDL_init(
-            m_window, m_renderer, title, x_pos, y_pos, width, height
-        )) {
+void Client::init_graphics() {
+    if (!::runebound::graphics::SDL_init(m_window, m_renderer)) {
         ::std::cout << "Failed to initialize!\n";
         return;
     }
     m_is_running = true;
-    m_frame_time = 1000 / fps;
-}
+    m_frame_time = 1000 / ::runebound::graphics::WINDOWS_FPS;
 
-void Client::init_board(const ::runebound::map::MapClient &map) {
-    m_board = ::runebound::graphics::Board(map);
+    for (auto [path, font_name, size] : ::runebound::graphics::FONTS) {
+        m_fonts[font_name] = nullptr;
+        ::runebound::graphics::load_font(m_fonts[font_name], path, size);
+    }
+    ::runebound::graphics::Texture texture;
+    texture.load_from_string(
+        m_renderer, m_fonts["OpenSans"], "Exit", {0xFF, 0x00, 0x00, 0xFF}
+    );
+    m_rect_buttons.push_back(::runebound::graphics::RectButton(
+        700, 10, texture.get_width() + 10, texture.get_height() + 10, 5, 5,
+        texture, [&]() { m_is_running = false; }, []() {},
+        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    ));
 }
 
 void Client::handle_events() {
     SDL_Event e;
-    while (SDL_PollEvent(&e) != 0) {
-        if (e.type == SDL_QUIT) {
-            m_is_running = false;
+    while (SDL_PollEvent(&e)) {
+        switch (e.type) {
+            case SDL_QUIT:
+                m_is_running = false;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                m_mouse_pressed = true;
+                break;
         }
     }
 }
 
 void Client::render() {
-    SDL_SetRenderDrawColor(m_renderer, 0xEE, 0xEE, 0xEE, 0xFF);
+    SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(m_renderer);
 
     m_board.render(m_renderer);
+
+    for (const auto &button : m_rect_buttons) {
+        button.render(m_renderer);
+    }
 
     SDL_RenderPresent(m_renderer);
 }
@@ -69,6 +60,18 @@ void Client::render() {
 void Client::update() {
     ::runebound::graphics::update_mouse_pos(m_mouse_pos);
     m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
+
+    for (const auto &button : m_rect_buttons) {
+        if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
+            button.on_cover();
+            if (m_mouse_pressed) {
+                m_mouse_pressed = false;
+                button.on_click();
+            }
+        }
+    }
+
+    m_mouse_pressed = false;
     ++m_counter;
 }
 
@@ -86,6 +89,17 @@ void Client::exit() {
     m_window = nullptr;
     m_renderer = nullptr;
 
+    for (auto &[name, font] : m_fonts) {
+        TTF_CloseFont(font);
+        font = nullptr;
+    }
+
+    for (auto &texture : m_textures) {
+        texture.free();
+    }
+
+    TTF_Quit();
+    IMG_Quit();
     SDL_Quit();
 }
 }  // namespace runebound::client

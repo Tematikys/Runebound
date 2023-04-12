@@ -2,32 +2,32 @@
 #include <graphics_segment.hpp>
 
 namespace runebound::graphics {
-void Segment::render(SDL_Renderer *renderer, SDL_Color col, int size) const {
+void Segment::render(SDL_Renderer *renderer, SDL_Color color, int size) const {
     thickLineRGBA(
-        renderer, (short)m_s.x(), (short)m_s.y(), (short)m_f.x(),
-        (short)m_f.y(), 2 * size + 1, col.r, col.g, col.b, col.a
+        renderer, m_start.x(), m_start.y(), m_finish.x(), m_finish.y(),
+        2 * size + 1, color.r, color.g, color.b, color.a
     );
     filledCircleRGBA(
-        renderer, (short)m_s.x(), (short)m_s.y(), (short)size, col.r, col.g,
-        col.b, col.a
+        renderer, m_start.x(), m_start.y(), size, color.r, color.g, color.b,
+        color.a
     );
     filledCircleRGBA(
-        renderer, (short)m_f.x(), (short)m_f.y(), (short)size, col.r, col.g,
-        col.b, col.a
+        renderer, m_finish.x(), m_finish.y(), size, color.r, color.g, color.b,
+        color.a
     );
 }
 
 // TODO
-void Segment::half_render(SDL_Renderer *renderer, SDL_Color col, int size)
+void Segment::half_render(SDL_Renderer *renderer, SDL_Color color, int size)
     const {
     thickLineRGBA(
-        renderer, (short)m_s.x(), (short)m_s.y(),
-        (short)((m_s.x() + m_f.x()) / 2), (short)((m_s.y() + m_f.y()) / 2),
-        2 * size + 1, col.r, col.g, col.b, col.a
+        renderer, m_start.x(), m_start.y(), ((m_start.x() + m_finish.x()) / 2),
+        ((m_start.y() + m_finish.y()) / 2), 2 * size + 1, color.r, color.g,
+        color.b, color.a
     );
     filledCircleRGBA(
-        renderer, (short)m_s.x(), (short)m_s.y(), (short)size, col.r, col.g,
-        col.b, col.a
+        renderer, m_start.x(), m_start.y(), size, color.r, color.g, color.b,
+        color.a
     );
 }
 }  // namespace runebound::graphics
