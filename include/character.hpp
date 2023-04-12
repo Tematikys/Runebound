@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <nlohmann/json_fwd.hpp>
+#include <optional>
 #include <set>
 #include <string>
 #include <vector>
@@ -13,33 +14,39 @@
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
 
+// #include "fight.hpp"
+
 namespace runebound {
 namespace character {
 
 void to_json(nlohmann::json &json, const Character &character);
 void from_json(const nlohmann::json &json, Character &character);
 
+enum class StateCharacter { NORMAL_GAME, FIGHT };
+
 struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
     int m_action_points = 3;
     int m_max_action_points = 3;
+    StateCharacter m_current_state = StateCharacter::NORMAL_GAME;
     std::string m_name;
     std::vector<unsigned int> m_cards;
     std::map<runebound::token::Token, int> m_tokens;
     int m_max_health;
     int m_gold, m_health;
+    Point m_current_position;
+    std::shared_ptr<::runebound::fight::Fight> m_current_fight = nullptr;
     std::vector<::runebound::fight::FightToken> m_fight_tokens;
 
 public:
-    Point m_current_position;
-
     Character()
         : m_gold(0),
           m_health(0),
           m_hand_limit(0),
           m_speed(0),
-          m_max_health(0), m_max_action_points(0),
+          m_max_health(0),
+          m_max_action_points(0),
           m_current_position(0, 0) {
     }
 
@@ -58,6 +65,33 @@ public:
           m_hand_limit(hand_limit),
           m_speed(speed),
           m_name(std::move(name)) {
+    }
+
+    [[nodiscard]] Point get_position() const {
+        return m_current_position;
+    }
+
+    void set_position(const Point &new_position) {
+        m_current_position = new_position;
+    }
+
+    [[nodiscard]] StateCharacter get_state() const {
+        return m_current_state;
+    }
+
+    void start_fight(std::shared_ptr<::runebound::fight::Fight> fight) {
+        m_current_state = StateCharacter::FIGHT;
+        m_current_fight = std::move(fight);
+    }
+
+    void end_fight() {
+        m_current_state = StateCharacter::NORMAL_GAME;
+        m_current_fight = nullptr;
+    }
+
+    [[nodiscard]] std::shared_ptr<::runebound::fight::Fight> get_current_fight(
+    ) const {
+        return m_current_fight;
     }
 
     Character(

@@ -6,7 +6,7 @@
 namespace runebound {
 namespace game {
 
-
+/*
 void to_json(nlohmann::json &json, const Game &game) {
     json["m_map"] = game.m_map;
     json["m_characters"] = game.m_characters;
@@ -30,10 +30,11 @@ void from_json(const nlohmann::json &json, Game &game) {
     game.m_tokens = json["m_tokens"];
     game.m_turn = json["m_turn"];
 }
-
-Point Game::get_position_character(const std::shared_ptr<character::Character> &chr
+*/
+Point Game::get_position_character(
+    const std::shared_ptr<character::Character> &chr
 ) const {
-    return chr->m_current_position;
+    return chr->get_position();
 }
 
 std::vector<cards::CardResearch> Game::generate_all_cards_research() {
@@ -49,18 +50,18 @@ std::vector<cards::CardResearch> Game::generate_all_cards_research() {
 void Game::relax(std::shared_ptr<character::Character> chr) {
     check_turn(chr);
     check_sufficiency_action_points(1);
-    m_characters[m_turn].relax();
-    m_characters[m_turn].update_action_points(-1);
+    m_characters[m_turn]->relax();
+    m_characters[m_turn]->update_action_points(-1);
 }
 
 void Game::check_and_get_card_adventure_because_of_token(
     std::shared_ptr<character::Character> chr
 ) {
-    if (m_map.get_cell_map(chr->m_current_position).get_token() !=
+    if (m_map.get_cell_map(chr->get_position()).get_token() !=
             ::runebound::AdventureType::NOTHING &&
-        m_map.get_cell_map(chr->m_current_position).get_side_token() ==
+        m_map.get_cell_map(chr->get_position()).get_side_token() ==
             ::runebound::Side::FRONT) {
-        if (m_map.get_cell_map(chr->m_current_position).get_token() ==
+        if (m_map.get_cell_map(chr->get_position()).get_token() ==
             ::runebound::AdventureType::RESEARCH) {
             unsigned int card =
                 m_indexes_card_research[rng() % m_indexes_card_research.size()];
@@ -68,21 +69,29 @@ void Game::check_and_get_card_adventure_because_of_token(
             pop_element_from_vector(card, m_card_deck_research);
             pop_element_from_vector(card, m_indexes_card_research);
         }
-        m_map.get_cell_map(chr->m_current_position).reverse_token();
+        m_map.get_cell_map(chr->get_position()).reverse_token();
     }
 }
 
-void Game::reverse_token(std::shared_ptr<character::Character> chr, int row, int column) {
+void Game::reverse_token(std::shared_ptr<character::Character> chr) {
     check_turn(chr);
     check_sufficiency_action_points(2);
-    if (m_map.get_cell_map(Point(row, column)).get_side_token() == Side::BACK) {
+    Point position = chr->get_position();
+    if (m_map.get_cell_map(position).get_token() == AdventureType::NOTHING) {
+        throw NoTokenException();
+    }
+    if (m_map.get_cell_map(position).get_side_token() == Side::BACK) {
         throw BackSideTokenException();
     }
-    if (m_map.get_cell_map(Point(row, column)).get_token() == AdventureType::FIGHT) {
-        std::shared_ptr<::runebound::fight::Fight> fight = std::make_shared<::runebound::fight::Fight>(::runebound::fight::Fight(chr, ::runebound::fight::Enemy(5, "Standard")));
+    if (m_map.get_cell_map(position).get_token() == AdventureType::FIGHT) {
+        chr->start_fight(std::make_shared<::runebound::fight::Fight>(
+            ::runebound::fight::Fight(
+                chr, ::runebound::fight::Enemy(5, "Standard")
+            )
+        ));
     }
-    m_map.reverse_token(Point(row, column));
-    m_characters[m_turn].update_action_points(-2);
+    m_map.reverse_token(position);
+    m_characters[m_turn]->update_action_points(-2);
 }
 
 std::vector<Point> Game::make_move(
@@ -93,13 +102,13 @@ std::vector<Point> Game::make_move(
     check_turn(chr);
     check_sufficiency_action_points(2);
     std::vector<Point> result = m_map.check_move(
-        m_characters[m_turn].m_current_position, end, dice_roll_results
+        m_characters[m_turn]->get_position(), end, dice_roll_results
     );
     if (result.empty()) {
         throw InaccessibleMoveException();
     }
-    m_characters[m_turn].m_current_position = end;
-    m_characters[m_turn].update_action_points(-2);
+    m_characters[m_turn]->set_position(end);
+    m_characters[m_turn]->update_action_points(-2);
     return result;
 }
 

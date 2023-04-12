@@ -130,10 +130,17 @@ private:
 
     void change_turn();
 
-    [[nodiscard]] bool check_end_round_private(const std::vector <TokenHandCount> &tokens) const;
+    [[nodiscard]] bool check_end_round_private(
+        const std::vector<TokenHandCount> &tokens
+    ) const;
+
 public:
     Fight(std::shared_ptr<character::Character> character, Enemy enemy)
         : m_character(std::move(character)), m_enemy(std::move(enemy)) {
+    }
+
+    [[nodiscard]] std::shared_ptr<Enemy> get_enemy() const {
+        return std::make_shared<Enemy>(m_enemy);
     }
 
     void pass_character() {

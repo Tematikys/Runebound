@@ -33,10 +33,8 @@ bool Fight::make_damage(Participant participant, int damage) {
     }
     std::vector<TokenHandCount> shields;
     for (std::size_t i = 0; i < m_enemy_remaining_tokens.size(); ++i) {
-        if (m_enemy_remaining_tokens[i].hand ==
-            HandFightTokens::SHIELD) {
-            auto harm =
-                std::min(m_enemy_remaining_tokens[i].count, damage);
+        if (m_enemy_remaining_tokens[i].hand == HandFightTokens::SHIELD) {
+            auto harm = std::min(m_enemy_remaining_tokens[i].count, damage);
             damage -= harm;
             m_enemy_remaining_tokens[i].count -= harm;
             if (m_enemy_remaining_tokens[i].count == 0) {
@@ -158,7 +156,8 @@ int Fight::count_damage(const std::vector<TokenHandCount> &tokens) {
     return count;
 }
 
-bool Fight::check_end_round_private(const std::vector <TokenHandCount> &tokens) const {
+bool Fight::check_end_round_private(const std::vector<TokenHandCount> &tokens
+) const {
     bool only_doubling = true;
     for (const auto &token : tokens) {
         if (token.hand != HandFightTokens::NOTHING &&
@@ -174,9 +173,7 @@ bool Fight::check_end_round_private(const std::vector <TokenHandCount> &tokens) 
         }
     }
     bool only_dexterity = false;
-    if (tokens.size() == 1 &&
-        tokens[0].hand ==
-            HandFightTokens::DEXTERITY) {
+    if (tokens.size() == 1 && tokens[0].hand == HandFightTokens::DEXTERITY) {
         only_dexterity = true;
     }
     return only_dexterity || only_doubling || only_shield;

@@ -152,8 +152,8 @@ TEST_CASE("Fight") {
         }
         print(character_remaining_tokens);
         print(enemy_remaining_tokens);
-        std::cout << "CHARACTER HEALTH: " << character->get_health() << "; " << "ENEMY HEALTH: " << fight.get_health_enemy()
-                  << '\n';
+        std::cout << "CHARACTER HEALTH: " << character->get_health() << "; "
+                  << "ENEMY HEALTH: " << fight.get_health_enemy() << '\n';
         if (fight.check_end_round()) {
             fight.start_round();
             character_remaining_tokens = fight.get_character_remaining_tokens();

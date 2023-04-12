@@ -8,6 +8,7 @@
 #include <vector>
 #include "card_research.hpp"
 #include "character.hpp"
+#include "fight.hpp"
 #include "map.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
@@ -16,8 +17,8 @@ namespace runebound {
 const int DECK_SIZE = 60;
 
 namespace game {
-void to_json(nlohmann::json &json, const Game &game);
-void from_json(const nlohmann::json &json, Game &game);
+// void to_json(nlohmann::json &json, const Game &game);
+// void from_json(const nlohmann::json &json, Game &game);
 
 struct WrongCharacterTurnException : std::runtime_error {
     WrongCharacterTurnException()
@@ -32,18 +33,25 @@ struct NotEnoughActionPointsException : std::runtime_error {
 };
 
 struct InaccessibleMoveException : std::runtime_error {
-    InaccessibleMoveException()
-        : std::runtime_error("Can't make this move") {
+    InaccessibleMoveException() : std::runtime_error("Can't make this move") {
     }
 };
 
+struct BackSideTokenException : std::runtime_error {
+    BackSideTokenException() : std::runtime_error("Back side token") {
+    }
+};
+
+struct NoTokenException : std::runtime_error {
+    NoTokenException() : std::runtime_error("No token in this cell") {
+    }
+};
 
 struct Game {
-
-    ::runebound::map::Map m_map;
 private:
-
-    std::vector<::runebound::character::Character> m_characters;
+    ::runebound::map::Map m_map;
+    std::vector<std::shared_ptr<::runebound::character::Character>>
+        m_characters;
     std::vector<unsigned int> m_card_deck_research;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
@@ -64,17 +72,19 @@ private:
         vec.pop_back();
     }
 
-    void check_turn(const ::runebound::character::Character *chr) {
-        if (chr != &m_characters[m_turn]) {
+    void check_turn(const std::shared_ptr<character::Character> &chr) {
+        if (chr->get_name() != m_characters[m_turn]->get_name()) {
             throw WrongCharacterTurnException();
         }
     }
 
-    void check_sufficiency_action_points(const ::runebound::character::Character *chr, int necessary_action_points) {
-        if (m_characters[m_turn].get_action_points() < necessary_action_points) {
+    void check_sufficiency_action_points(int necessary_action_points) {
+        if (m_characters[m_turn]->get_action_points() <
+            necessary_action_points) {
             throw NotEnoughActionPointsException();
         }
     }
+
 public:
     Game() : ALL_CARDS_RESEARCH(std::move(generate_all_cards_research())) {
         m_card_deck_research.resize(DECK_SIZE);
@@ -94,10 +104,10 @@ public:
 
     void start_next_character_turn() {
         m_turn = (m_turn + 1) % m_count_players;
-        m_characters[m_turn].restore_action_points();
+        m_characters[m_turn]->restore_action_points();
     }
 
-    void relax(const ::runebound::character::Character *chr);
+    void relax(std::shared_ptr<character::Character> chr);
 
     std::shared_ptr<::runebound::character::Character> make_character(
         int gold,
@@ -108,11 +118,16 @@ public:
         std::string name,
         const std::vector<::runebound::fight::FightToken> tokens
     ) {
-        m_characters.emplace_back(::runebound::character::Character(
-            gold, health, current, hand_limit, speed, name, tokens
-        ));
+        m_characters.emplace_back(
+            std::make_shared<::runebound::character::Character>(
+                ::runebound::character::Character(
+                    gold, health, current, hand_limit, speed, std::move(name),
+                    tokens
+                )
+            )
+        );
         m_count_players += 1;
-        return std::make_shared<character::Character>(m_characters.back());
+        return m_characters.back();
     }
 
     [[nodiscard]] int get_map_size() const {
@@ -123,10 +138,10 @@ public:
         return m_map;
     }
 
-    void reverse_token(const ::runebound::character::Character *chr, int row, int column);
+    void reverse_token(std::shared_ptr<character::Character> chr);
 
     [[nodiscard]] Point get_position_character(
-        ::runebound::character::Character *chr
+        const std::shared_ptr<character::Character> &chr
     ) const;
 
     [[nodiscard]] unsigned int get_turn() const {
@@ -134,35 +149,23 @@ public:
     }
 
     void check_and_get_card_adventure_because_of_token(
-        ::runebound::character::Character *chr
+        std::shared_ptr<character::Character> chr
     );
 
-    std::vector<::runebound::dice::HandDice> throw_camping_dice(
-        const ::runebound::character::Character *chr
+    [[nodiscard]] std::vector<::runebound::dice::HandDice> throw_camping_dice(
+        const std::shared_ptr<character::Character> &chr
     ) const {
         return ::runebound::dice::get_combination_of_dice(chr->get_speed());
     }
 
     std::vector<Point> make_move(
-        const ::runebound::character::Character *chr,
+        const std::shared_ptr<character::Character> &chr,
         const Point &point,
         std::vector<::runebound::dice::HandDice> &dice_roll_results
     );
 
-    friend void to_json(nlohmann::json &json, const Game &game);
-    friend void from_json(const nlohmann::json &json, Game &game);
-
-    [[nodiscard]] nlohmann::json to_json() const {
-        nlohmann::json json;
-        ::runebound::game::to_json(json, *this);
-        return json;
-    }
-
-    static Game from_json(const nlohmann::json &json) {
-        Game game;
-        ::runebound::game::from_json(json, game);
-        return game;
-    }
+    // friend void to_json(nlohmann::json &json, const Game &game);
+    // friend void from_json(const nlohmann::json &json, Game &game);
 };
 }  // namespace game
 }  // namespace runebound
