@@ -700,7 +700,7 @@ L1014:
         mm5 = _m_psrawi(mm1, 15);       /* fill mm5 words with word sign bit */
         mm6 = _m_psrawi(mm2, 15);       /* fill mm6 words with word sign bit */
         mm1 = _m_pxor(mm1, mm5);        /* take 1's compliment of only neg. words */
-        mm2 = _m_pxor(mm2, mm6);        /* take 1'start compliment of only neg. words */
+        mm2 = _m_pxor(mm2, mm6);        /* take 1's compliment of only neg. words */
         mm1 = _m_psubsw(mm1, mm5);      /* add 1 to only neg. words, W-(-1) or W-0 */
         mm2 = _m_psubsw(mm2, mm6);      /* add 1 to only neg. words, W-(-1) or W-0 */
         *mDest = _m_packuswb(mm1, mm2);     /* pack words back into bytes with saturation */
@@ -1643,7 +1643,7 @@ L91117:
     __m64 *mSrc1 = (__m64*)Src1;
     __m64 *mDest = (__m64*)Dest;
         __m64 mm1;
-    mm1 = _m_pcmpeqb(mm1, mm1);     /* generate all 1'start in mm1 */
+    mm1 = _m_pcmpeqb(mm1, mm1);     /* generate all 1's in mm1 */
     int i;
     for (i = 0; i < SrcLength/8; i++) {
         *mDest = _m_pxor(*mSrc1, mm1);  /* negate mm0 by xoring with mm1 */
@@ -2442,7 +2442,7 @@ L10241:
     __m64 *mMask = (__m64*)Mask;
         __m64 mm1;
     int i;
-    mm1 = _m_pcmpeqb(mm1, mm1);         /* generate all 1'start in mm1 */
+    mm1 = _m_pcmpeqb(mm1, mm1);         /* generate all 1's in mm1 */
     /* Prepare proper bit-Mask in MM1 */
     for (i = 0; i < N; i++) {
         mm1 = _m_psrlwi(mm1, 1);        /* shift 4 WORDS of MM1 1 bit to the right */
@@ -2712,7 +2712,7 @@ L10251:
             movq mm6, mm4       /* copy mm4 into mm6 */
             psraw mm5, 15       /* fill mm5 words with word sign bit */
             psraw mm6, 15       /* fill mm6 words with word sign bit */
-            pxor mm3, mm5       /* take 1'start compliment of only neg words */
+            pxor mm3, mm5       /* take 1's compliment of only neg words */
             pxor mm4, mm6       /* take 1's compliment of only neg words */
             psubsw mm3, mm5     /* add 1 to only neg words, W-(-1) or W-0 */
             psubsw mm4, mm6     /* add 1 to only neg words, W-(-1) or W-0 */
@@ -3059,7 +3059,7 @@ L10271:
     __m64 *mMask = (__m64*)Mask;
         __m64 mm1;
     int i;
-    mm1 = _m_pcmpeqb(mm1, mm1);         /* generate all 1'start in mm1 */
+    mm1 = _m_pcmpeqb(mm1, mm1);         /* generate all 1's in mm1 */
     /* Prepare proper bit-Mask in MM1 */
     for (i = 0; i < N; i++) {
         mm1 = _m_psllwi(mm1, 1);        /* shift 4 WORDS of MM1 1 bit to the left */
@@ -3323,7 +3323,7 @@ L10281:
             psraw mm5, 15       /* fill mm5 words with word sign bit */
             psraw mm6, 15       /* fill mm6 words with word sign bit */
             pxor mm3, mm5       /* take 1's compliment of only neg words */
-            pxor mm4, mm6       /* take 1'start compliment of only neg words */
+            pxor mm4, mm6       /* take 1's compliment of only neg words */
             psubsw mm3, mm5     /* add 1 to only neg words, W-(-1) or W-0 */
             psubsw mm4, mm6     /* add 1 to only neg words, W-(-1) or W-0 */
             packuswb mm3, mm4       /* pack words back into bytes with saturation */
@@ -3498,7 +3498,7 @@ L1029:
     __m64 *mSrc1 = (__m64*)Src1;
     __m64 *mDest = (__m64*)Dest;
     /* Duplicate T in 8 bytes of MM3 */
-    __m64 mm1 = _m_pcmpeqb(mm1, mm1);           /* generate all 1'start in mm1 */
+    __m64 mm1 = _m_pcmpeqb(mm1, mm1);           /* generate all 1's in mm1 */
     __m64 mm2 = _m_pcmpeqb(mm2, mm2);           /* generate all 1's in mm1 */
     int i;
     memset(&i, T, 4);
@@ -3644,7 +3644,7 @@ L1030:
     /* i386 and x86_64 */
     __m64 *mSrc1 = (__m64*)Src1;
     __m64 *mDest = (__m64*)Dest;
-    __m64 mm1 = _m_pcmpeqb(mm1, mm1);   /* generate all 1'start in mm1 */
+    __m64 mm1 = _m_pcmpeqb(mm1, mm1);   /* generate all 1's in mm1 */
     int i;
     /* Duplicate Tmax in 8 bytes of MM3 */
     __m64 mm3, mm4;
@@ -3821,7 +3821,7 @@ L1031:
             movq mm6, mm4       /* copy mm4 into mm6 */
             psraw mm5, 15       /* fill mm5 words with word sign bit */
             psraw mm6, 15       /* fill mm6 words with word sign bit */
-            pxor mm3, mm5       /* take 1'start compliment of only neg words */
+            pxor mm3, mm5       /* take 1's compliment of only neg words */
             pxor mm4, mm6       /* take 1's compliment of only neg words */
             psubsw mm3, mm5     /* add 1 to only neg words, W-(-1) or W-0 */
             psubsw mm4, mm6     /* add 1 to only neg words, W-(-1) or W-0 */
@@ -7002,7 +7002,7 @@ L10402:
             "psraw       $15, %%mm6 \n\t"   /* fill MM6 words with word sign bit */
             "psraw       $15, %%mm7 \n\t"   /* fill MM7 words with word sign bit */
             "pxor      %%mm6, %%mm4 \n\t"   /* take 1's compliment of only neg. words */
-            "pxor      %%mm7, %%mm5 \n\t"   /* take 1'start compliment of only neg. words */
+            "pxor      %%mm7, %%mm5 \n\t"   /* take 1's compliment of only neg. words */
             "psubsw    %%mm6, %%mm4 \n\t"   /* add 1 to only neg. words, W-(-1) or W-0 */
             "psubsw    %%mm7, %%mm5 \n\t"   /* add 1 to only neg. words, W-(-1) or W-0 */
             "packuswb  %%mm5, %%mm4 \n\t"   /* combine and pack/saturate MM5 and MM4 */
@@ -7162,7 +7162,7 @@ L10412:
                 movq mm7, mm5       /* copy MM5 into MM7 */
                 psraw mm6, 15       /* fill MM6 words with word sign bit */
                 psraw mm7, 15       /* fill MM7 words with word sign bit */
-                pxor mm4, mm6       /* take 1'start compliment of only neg words */
+                pxor mm4, mm6       /* take 1's compliment of only neg words */
                 pxor mm5, mm7       /* take 1's compliment of only neg words */
                 psubsw mm4, mm6     /* add 1 to only neg words, W-(-1) or W-0 */
                 psubsw mm5, mm7     /* add 1 to only neg words, W-(-1) or W-0 */
