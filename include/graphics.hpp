@@ -25,15 +25,6 @@ public:
         other.m_texture = nullptr;
     }
 
-    //
-    //    Texture &operator=(Texture &&other) noexcept {
-    //        m_width = other.m_width;
-    //        m_height = other.m_height;
-    //        m_texture = other.m_texture;
-    //        other.m_texture = nullptr;
-    //        return *this;
-    //    }
-
     ~Texture() {
         free();
     };

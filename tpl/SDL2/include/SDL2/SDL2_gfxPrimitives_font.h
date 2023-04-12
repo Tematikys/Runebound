@@ -1256,7 +1256,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 102 0x66 'finish'
+	* 102 0x66 'f' 
 	*/
 	0x3c,			/* 00111100 */
 	0x66,			/* 01100110 */
@@ -1412,7 +1412,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 115 0x73 'start'
+	* 115 0x73 's' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -1568,7 +1568,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 128 0x80 'ÔøΩ' 
+	* 128 0x80 'Ä' 
 	*/
 	0x7c,			/* 01111100 */
 	0xc6,			/* 11000110 */
@@ -1580,7 +1580,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x78,			/* 01111000 */
 
 	/*
-	* 129 0x81 'ÔøΩ' 
+	* 129 0x81 'Å' 
 	*/
 	0xcc,			/* 11001100 */
 	0x00,			/* 00000000 */
@@ -1592,7 +1592,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 130 0x82 'ÔøΩ' 
+	* 130 0x82 'Ç' 
 	*/
 	0x0c,			/* 00001100 */
 	0x18,			/* 00011000 */
@@ -1604,7 +1604,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 131 0x83 'ÔøΩ' 
+	* 131 0x83 'É' 
 	*/
 	0x7c,			/* 01111100 */
 	0x82,			/* 10000010 */
@@ -1616,7 +1616,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 132 0x84 'ÔøΩ' 
+	* 132 0x84 'Ñ' 
 	*/
 	0xc6,			/* 11000110 */
 	0x00,			/* 00000000 */
@@ -1628,7 +1628,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 133 0x85 'ÔøΩ' 
+	* 133 0x85 'Ö' 
 	*/
 	0x30,			/* 00110000 */
 	0x18,			/* 00011000 */
@@ -1640,7 +1640,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 134 0x86 'ÔøΩ' 
+	* 134 0x86 'Ü' 
 	*/
 	0x30,			/* 00110000 */
 	0x30,			/* 00110000 */
@@ -1652,7 +1652,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 135 0x87 'ÔøΩ' 
+	* 135 0x87 'á' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -1664,7 +1664,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x38,			/* 00111000 */
 
 	/*
-	* 136 0x88 'ÔøΩ' 
+	* 136 0x88 'à' 
 	*/
 	0x7c,			/* 01111100 */
 	0x82,			/* 10000010 */
@@ -1676,7 +1676,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 137 0x89 'ÔøΩ' 
+	* 137 0x89 'â' 
 	*/
 	0xc6,			/* 11000110 */
 	0x00,			/* 00000000 */
@@ -1688,7 +1688,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 138 0x8a 'ÔøΩ' 
+	* 138 0x8a 'ä' 
 	*/
 	0x30,			/* 00110000 */
 	0x18,			/* 00011000 */
@@ -1700,7 +1700,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 139 0x8b 'ÔøΩ' 
+	* 139 0x8b 'ã' 
 	*/
 	0x66,			/* 01100110 */
 	0x00,			/* 00000000 */
@@ -1712,7 +1712,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 140 0x8c 'ÔøΩ' 
+	* 140 0x8c 'å' 
 	*/
 	0x7c,			/* 01111100 */
 	0x82,			/* 10000010 */
@@ -1724,7 +1724,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 141 0x8d 'ÔøΩ' 
+	* 141 0x8d 'ç' 
 	*/
 	0x30,			/* 00110000 */
 	0x18,			/* 00011000 */
@@ -1736,7 +1736,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 142 0x8e 'ÔøΩ' 
+	* 142 0x8e 'é' 
 	*/
 	0xc6,			/* 11000110 */
 	0x38,			/* 00111000 */
@@ -1748,7 +1748,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 143 0x8f 'ÔøΩ' 
+	* 143 0x8f 'è' 
 	*/
 	0x38,			/* 00111000 */
 	0x6c,			/* 01101100 */
@@ -1760,7 +1760,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 144 0x90 'ÔøΩ' 
+	* 144 0x90 'ê' 
 	*/
 	0x18,			/* 00011000 */
 	0x30,			/* 00110000 */
@@ -1772,7 +1772,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 145 0x91 'ÔøΩ' 
+	* 145 0x91 'ë' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -1784,7 +1784,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 146 0x92 'ÔøΩ' 
+	* 146 0x92 'í' 
 	*/
 	0x3e,			/* 00111110 */
 	0x6c,			/* 01101100 */
@@ -1796,7 +1796,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 147 0x93 'ÔøΩ' 
+	* 147 0x93 'ì' 
 	*/
 	0x7c,			/* 01111100 */
 	0x82,			/* 10000010 */
@@ -1808,7 +1808,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 148 0x94 'ÔøΩ' 
+	* 148 0x94 'î' 
 	*/
 	0xc6,			/* 11000110 */
 	0x00,			/* 00000000 */
@@ -1820,7 +1820,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 149 0x95 'ÔøΩ' 
+	* 149 0x95 'ï' 
 	*/
 	0x30,			/* 00110000 */
 	0x18,			/* 00011000 */
@@ -1832,7 +1832,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 150 0x96 'ÔøΩ' 
+	* 150 0x96 'ñ' 
 	*/
 	0x78,			/* 01111000 */
 	0x84,			/* 10000100 */
@@ -1844,7 +1844,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 151 0x97 'ÔøΩ' 
+	* 151 0x97 'ó' 
 	*/
 	0x60,			/* 01100000 */
 	0x30,			/* 00110000 */
@@ -1856,7 +1856,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 152 0x98 'ÔøΩ' 
+	* 152 0x98 'ò' 
 	*/
 	0xc6,			/* 11000110 */
 	0x00,			/* 00000000 */
@@ -1868,7 +1868,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0xfc,			/* 11111100 */
 
 	/*
-	* 153 0x99 'ÔøΩ' 
+	* 153 0x99 'ô' 
 	*/
 	0xc6,			/* 11000110 */
 	0x38,			/* 00111000 */
@@ -1880,7 +1880,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 154 0x9a 'ÔøΩ' 
+	* 154 0x9a 'ö' 
 	*/
 	0xc6,			/* 11000110 */
 	0x00,			/* 00000000 */
@@ -1892,7 +1892,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 155 0x9b 'ÔøΩ' 
+	* 155 0x9b 'õ' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -1904,7 +1904,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 156 0x9c 'ÔøΩ' 
+	* 156 0x9c 'ú' 
 	*/
 	0x38,			/* 00111000 */
 	0x6c,			/* 01101100 */
@@ -1916,7 +1916,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 157 0x9d 'ÔøΩ' 
+	* 157 0x9d 'ù' 
 	*/
 	0x66,			/* 01100110 */
 	0x66,			/* 01100110 */
@@ -1928,7 +1928,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 158 0x9e 'ÔøΩ' 
+	* 158 0x9e 'û' 
 	*/
 	0xf8,			/* 11111000 */
 	0xcc,			/* 11001100 */
@@ -1940,7 +1940,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0xc7,			/* 11000111 */
 
 	/*
-	* 159 0x9f 'ÔøΩ' 
+	* 159 0x9f 'ü' 
 	*/
 	0x0e,			/* 00001110 */
 	0x1b,			/* 00011011 */
@@ -1952,7 +1952,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 160 0xa0 'ÔøΩ' 
+	* 160 0xa0 '†' 
 	*/
 	0x18,			/* 00011000 */
 	0x30,			/* 00110000 */
@@ -1964,7 +1964,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 161 0xa1 'ÔøΩ' 
+	* 161 0xa1 '°' 
 	*/
 	0x0c,			/* 00001100 */
 	0x18,			/* 00011000 */
@@ -1976,7 +1976,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 162 0xa2 'ÔøΩ' 
+	* 162 0xa2 '¢' 
 	*/
 	0x0c,			/* 00001100 */
 	0x18,			/* 00011000 */
@@ -1988,7 +1988,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 163 0xa3 'ÔøΩ' 
+	* 163 0xa3 '£' 
 	*/
 	0x18,			/* 00011000 */
 	0x30,			/* 00110000 */
@@ -2000,7 +2000,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 164 0xa4 'ÔøΩ' 
+	* 164 0xa4 '§' 
 	*/
 	0x76,			/* 01110110 */
 	0xdc,			/* 11011100 */
@@ -2012,7 +2012,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 165 0xa5 'ÔøΩ' 
+	* 165 0xa5 '•' 
 	*/
 	0x76,			/* 01110110 */
 	0xdc,			/* 11011100 */
@@ -2024,7 +2024,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 166 0xa6 'ÔøΩ' 
+	* 166 0xa6 '¶' 
 	*/
 	0x3c,			/* 00111100 */
 	0x6c,			/* 01101100 */
@@ -2036,7 +2036,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 167 0xa7 'ÔøΩ' 
+	* 167 0xa7 'ß' 
 	*/
 	0x38,			/* 00111000 */
 	0x6c,			/* 01101100 */
@@ -2048,7 +2048,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 168 0xa8 'ÔøΩ' 
+	* 168 0xa8 '®' 
 	*/
 	0x18,			/* 00011000 */
 	0x00,			/* 00000000 */
@@ -2060,7 +2060,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 169 0xa9 'ÔøΩ' 
+	* 169 0xa9 '©' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2072,7 +2072,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 170 0xaa 'ÔøΩ' 
+	* 170 0xaa '™' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2084,7 +2084,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 171 0xab 'ÔøΩ' 
+	* 171 0xab '´' 
 	*/
 	0x63,			/* 01100011 */
 	0xe6,			/* 11100110 */
@@ -2096,7 +2096,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x0f,			/* 00001111 */
 
 	/*
-	* 172 0xac 'ÔøΩ' 
+	* 172 0xac '¨' 
 	*/
 	0x63,			/* 01100011 */
 	0xe6,			/* 11100110 */
@@ -2108,7 +2108,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x06,			/* 00000110 */
 
 	/*
-	* 173 0xad 'ÔøΩ' 
+	* 173 0xad '≠' 
 	*/
 	0x18,			/* 00011000 */
 	0x00,			/* 00000000 */
@@ -2120,7 +2120,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 174 0xae 'ÔøΩ' 
+	* 174 0xae 'Æ' 
 	*/
 	0x00,			/* 00000000 */
 	0x33,			/* 00110011 */
@@ -2132,7 +2132,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 175 0xaf 'ÔøΩ' 
+	* 175 0xaf 'Ø' 
 	*/
 	0x00,			/* 00000000 */
 	0xcc,			/* 11001100 */
@@ -2144,7 +2144,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 176 0xb0 'ÔøΩ' 
+	* 176 0xb0 '∞' 
 	*/
 	0x22,			/* 00100010 */
 	0x88,			/* 10001000 */
@@ -2156,7 +2156,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x88,			/* 10001000 */
 
 	/*
-	* 177 0xb1 'ÔøΩ' 
+	* 177 0xb1 '±' 
 	*/
 	0x55,			/* 01010101 */
 	0xaa,			/* 10101010 */
@@ -2168,7 +2168,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0xaa,			/* 10101010 */
 
 	/*
-	* 178 0xb2 'ÔøΩ' 
+	* 178 0xb2 '≤' 
 	*/
 	0x77,			/* 01110111 */
 	0xdd,			/* 11011101 */
@@ -2180,7 +2180,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0xdd,			/* 11011101 */
 
 	/*
-	* 179 0xb3 'ÔøΩ' 
+	* 179 0xb3 '≥' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2192,7 +2192,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 180 0xb4 'ÔøΩ' 
+	* 180 0xb4 '¥' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2204,7 +2204,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 181 0xb5 'ÔøΩ' 
+	* 181 0xb5 'µ' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2216,7 +2216,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 182 0xb6 'ÔøΩ' 
+	* 182 0xb6 '∂' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2228,7 +2228,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 183 0xb7 'ÔøΩ' 
+	* 183 0xb7 '∑' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2240,7 +2240,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 184 0xb8 'ÔøΩ' 
+	* 184 0xb8 '∏' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2252,7 +2252,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 185 0xb9 'ÔøΩ' 
+	* 185 0xb9 'π' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2264,7 +2264,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 186 0xba 'ÔøΩ' 
+	* 186 0xba '∫' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2276,7 +2276,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 187 0xbb 'ÔøΩ' 
+	* 187 0xbb 'ª' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2288,7 +2288,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 188 0xbc 'ÔøΩ' 
+	* 188 0xbc 'º' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2300,7 +2300,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 189 0xbd 'ÔøΩ' 
+	* 189 0xbd 'Ω' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2312,7 +2312,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 190 0xbe 'ÔøΩ' 
+	* 190 0xbe 'æ' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2324,7 +2324,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 191 0xbf 'ÔøΩ' 
+	* 191 0xbf 'ø' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2336,7 +2336,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 192 0xc0 'ÔøΩ' 
+	* 192 0xc0 '¿' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2348,7 +2348,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 193 0xc1 'ÔøΩ' 
+	* 193 0xc1 '¡' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2360,7 +2360,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 194 0xc2 'ÔøΩ' 
+	* 194 0xc2 '¬' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2372,7 +2372,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 195 0xc3 'ÔøΩ' 
+	* 195 0xc3 '√' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2384,7 +2384,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 196 0xc4 'ÔøΩ' 
+	* 196 0xc4 'ƒ' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2396,7 +2396,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 197 0xc5 'ÔøΩ' 
+	* 197 0xc5 '≈' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2408,7 +2408,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 198 0xc6 'ÔøΩ' 
+	* 198 0xc6 '∆' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2420,7 +2420,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 199 0xc7 'ÔøΩ' 
+	* 199 0xc7 '«' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2432,7 +2432,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 200 0xc8 'ÔøΩ' 
+	* 200 0xc8 '»' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2444,7 +2444,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 201 0xc9 'ÔøΩ' 
+	* 201 0xc9 '…' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2456,7 +2456,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 202 0xca 'ÔøΩ' 
+	* 202 0xca ' ' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2468,7 +2468,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 203 0xcb 'ÔøΩ' 
+	* 203 0xcb 'À' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2480,7 +2480,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 204 0xcc 'ÔøΩ' 
+	* 204 0xcc 'Ã' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2492,7 +2492,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 205 0xcd 'ÔøΩ' 
+	* 205 0xcd 'Õ' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2504,7 +2504,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 206 0xce 'ÔøΩ' 
+	* 206 0xce 'Œ' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2516,7 +2516,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 207 0xcf 'ÔøΩ' 
+	* 207 0xcf 'œ' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2528,7 +2528,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 208 0xd0 'ÔøΩ' 
+	* 208 0xd0 '–' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2540,7 +2540,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 209 0xd1 'ÔøΩ' 
+	* 209 0xd1 '—' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2552,7 +2552,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 210 0xd2 'ÔøΩ' 
+	* 210 0xd2 '“' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2564,7 +2564,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 211 0xd3 'ÔøΩ' 
+	* 211 0xd3 '”' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2576,7 +2576,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 212 0xd4 'ÔøΩ' 
+	* 212 0xd4 '‘' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2588,7 +2588,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 213 0xd5 'ÔøΩ' 
+	* 213 0xd5 '’' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2600,7 +2600,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 214 0xd6 'ÔøΩ' 
+	* 214 0xd6 '÷' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2612,7 +2612,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 215 0xd7 'ÔøΩ' 
+	* 215 0xd7 '◊' 
 	*/
 	0x36,			/* 00110110 */
 	0x36,			/* 00110110 */
@@ -2624,7 +2624,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x36,			/* 00110110 */
 
 	/*
-	* 216 0xd8 'ÔøΩ' 
+	* 216 0xd8 'ÿ' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2636,7 +2636,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 217 0xd9 'ÔøΩ' 
+	* 217 0xd9 'Ÿ' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2648,7 +2648,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 218 0xda 'ÔøΩ' 
+	* 218 0xda '⁄' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2660,7 +2660,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 219 0xdb 'ÔøΩ' 
+	* 219 0xdb '€' 
 	*/
 	0xff,			/* 11111111 */
 	0xff,			/* 11111111 */
@@ -2672,7 +2672,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0xff,			/* 11111111 */
 
 	/*
-	* 220 0xdc 'ÔøΩ' 
+	* 220 0xdc '‹' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2684,7 +2684,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0xff,			/* 11111111 */
 
 	/*
-	* 221 0xdd 'ÔøΩ' 
+	* 221 0xdd '›' 
 	*/
 	0xf0,			/* 11110000 */
 	0xf0,			/* 11110000 */
@@ -2696,7 +2696,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0xf0,			/* 11110000 */
 
 	/*
-	* 222 0xde 'ÔøΩ' 
+	* 222 0xde 'ﬁ' 
 	*/
 	0x0f,			/* 00001111 */
 	0x0f,			/* 00001111 */
@@ -2708,7 +2708,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x0f,			/* 00001111 */
 
 	/*
-	* 223 0xdf 'ÔøΩ' 
+	* 223 0xdf 'ﬂ' 
 	*/
 	0xff,			/* 11111111 */
 	0xff,			/* 11111111 */
@@ -2720,7 +2720,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 224 0xe0 'ÔøΩ' 
+	* 224 0xe0 '‡' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2732,7 +2732,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 225 0xe1 'ÔøΩ' 
+	* 225 0xe1 '·' 
 	*/
 	0x78,			/* 01111000 */
 	0xcc,			/* 11001100 */
@@ -2744,7 +2744,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 226 0xe2 'ÔøΩ' 
+	* 226 0xe2 '‚' 
 	*/
 	0xfe,			/* 11111110 */
 	0xc6,			/* 11000110 */
@@ -2756,7 +2756,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 227 0xe3 'ÔøΩ' 
+	* 227 0xe3 '„' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2768,7 +2768,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 228 0xe4 'ÔøΩ' 
+	* 228 0xe4 '‰' 
 	*/
 	0xfe,			/* 11111110 */
 	0xc6,			/* 11000110 */
@@ -2780,7 +2780,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 229 0xe5 'ÔøΩ' 
+	* 229 0xe5 'Â' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2792,7 +2792,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 230 0xe6 'ÔøΩ' 
+	* 230 0xe6 'Ê' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2804,7 +2804,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0xc0,			/* 11000000 */
 
 	/*
-	* 231 0xe7 'ÔøΩ' 
+	* 231 0xe7 'Á' 
 	*/
 	0x00,			/* 00000000 */
 	0x76,			/* 01110110 */
@@ -2816,7 +2816,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 232 0xe8 'ÔøΩ' 
+	* 232 0xe8 'Ë' 
 	*/
 	0x7e,			/* 01111110 */
 	0x18,			/* 00011000 */
@@ -2828,7 +2828,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x7e,			/* 01111110 */
 
 	/*
-	* 233 0xe9 'ÔøΩ' 
+	* 233 0xe9 'È' 
 	*/
 	0x38,			/* 00111000 */
 	0x6c,			/* 01101100 */
@@ -2840,7 +2840,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 234 0xea 'ÔøΩ' 
+	* 234 0xea 'Í' 
 	*/
 	0x38,			/* 00111000 */
 	0x6c,			/* 01101100 */
@@ -2852,7 +2852,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 235 0xeb 'ÔøΩ' 
+	* 235 0xeb 'Î' 
 	*/
 	0x0e,			/* 00001110 */
 	0x18,			/* 00011000 */
@@ -2864,7 +2864,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 236 0xec 'ÔøΩ' 
+	* 236 0xec 'Ï' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -2876,7 +2876,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 237 0xed 'ÔøΩ' 
+	* 237 0xed 'Ì' 
 	*/
 	0x06,			/* 00000110 */
 	0x0c,			/* 00001100 */
@@ -2888,7 +2888,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0xc0,			/* 11000000 */
 
 	/*
-	* 238 0xee 'ÔøΩ' 
+	* 238 0xee 'Ó' 
 	*/
 	0x1e,			/* 00011110 */
 	0x30,			/* 00110000 */
@@ -2900,7 +2900,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 239 0xef 'ÔøΩ' 
+	* 239 0xef 'Ô' 
 	*/
 	0x00,			/* 00000000 */
 	0x7c,			/* 01111100 */
@@ -2912,7 +2912,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 240 0xf0 'ÔøΩ' 
+	* 240 0xf0 '' 
 	*/
 	0x00,			/* 00000000 */
 	0xfe,			/* 11111110 */
@@ -2924,7 +2924,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 241 0xf1 'ÔøΩ' 
+	* 241 0xf1 'Ò' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2936,7 +2936,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 242 0xf2 'ÔøΩ' 
+	* 242 0xf2 'Ú' 
 	*/
 	0x30,			/* 00110000 */
 	0x18,			/* 00011000 */
@@ -2948,7 +2948,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 243 0xf3 'ÔøΩ' 
+	* 243 0xf3 'Û' 
 	*/
 	0x0c,			/* 00001100 */
 	0x18,			/* 00011000 */
@@ -2960,7 +2960,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 244 0xf4 'ÔøΩ' 
+	* 244 0xf4 'Ù' 
 	*/
 	0x0e,			/* 00001110 */
 	0x1b,			/* 00011011 */
@@ -2972,7 +2972,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x18,			/* 00011000 */
 
 	/*
-	* 245 0xf5 'ÔøΩ' 
+	* 245 0xf5 'ı' 
 	*/
 	0x18,			/* 00011000 */
 	0x18,			/* 00011000 */
@@ -2984,7 +2984,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x70,			/* 01110000 */
 
 	/*
-	* 246 0xf6 'ÔøΩ' 
+	* 246 0xf6 'ˆ' 
 	*/
 	0x00,			/* 00000000 */
 	0x18,			/* 00011000 */
@@ -2996,7 +2996,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 247 0xf7 'ÔøΩ' 
+	* 247 0xf7 '˜' 
 	*/
 	0x00,			/* 00000000 */
 	0x76,			/* 01110110 */
@@ -3008,7 +3008,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 248 0xf8 'ÔøΩ' 
+	* 248 0xf8 '¯' 
 	*/
 	0x38,			/* 00111000 */
 	0x6c,			/* 01101100 */
@@ -3020,7 +3020,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 249 0xf9 'ÔøΩ' 
+	* 249 0xf9 '˘' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -3032,7 +3032,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 250 0xfa 'ÔøΩ' 
+	* 250 0xfa '˙' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
@@ -3044,7 +3044,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 251 0xfb 'ÔøΩ' 
+	* 251 0xfb '˚' 
 	*/
 	0x0f,			/* 00001111 */
 	0x0c,			/* 00001100 */
@@ -3056,7 +3056,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x1c,			/* 00011100 */
 
 	/*
-	* 252 0xfc 'ÔøΩ' 
+	* 252 0xfc '¸' 
 	*/
 	0x6c,			/* 01101100 */
 	0x36,			/* 00110110 */
@@ -3068,7 +3068,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 253 0xfd 'ÔøΩ' 
+	* 253 0xfd '˝' 
 	*/
 	0x78,			/* 01111000 */
 	0x0c,			/* 00001100 */
@@ -3080,7 +3080,7 @@ static unsigned char gfxPrimitivesFontdata[GFX_FONTDATAMAX] = {
 	0x00,			/* 00000000 */
 
 	/*
-	* 254 0xfe 'ÔøΩ' 
+	* 254 0xfe '˛' 
 	*/
 	0x00,			/* 00000000 */
 	0x00,			/* 00000000 */
