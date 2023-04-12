@@ -25,6 +25,19 @@ struct WrongCharacterTurnException : std::runtime_error {
     }
 };
 
+struct NotEnoughActionPointsException : std::runtime_error {
+    NotEnoughActionPointsException()
+        : std::runtime_error("Not enough action points") {
+    }
+};
+
+struct InaccessibleMoveException : std::runtime_error {
+    InaccessibleMoveException()
+        : std::runtime_error("Can't make this move") {
+    }
+};
+
+
 struct Game {
 
     ::runebound::map::Map m_map;
@@ -73,13 +86,7 @@ public:
         m_characters[m_turn].restore_action_points();
     }
 
-    void relax(const ::runebound::character::Character *chr) {
-        if (chr != &m_characters[m_turn]) {
-            throw WrongCharacterTurnException();
-        }
-        m_characters[m_turn].relax();
-        m_characters[m_turn].update_action_points(-1);
-    }
+    void relax(const ::runebound::character::Character *chr);
 
     std::shared_ptr<::runebound::character::Character> make_character(
         int gold,

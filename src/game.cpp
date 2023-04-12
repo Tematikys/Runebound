@@ -46,6 +46,17 @@ std::vector<cards::CardResearch> Game::generate_all_cards_research() {
     return cards;
 }
 
+void Game::relax(const ::runebound::character::Character *chr) {
+    if (chr != &m_characters[m_turn]) {
+        throw WrongCharacterTurnException();
+    }
+    if (m_characters[m_turn].get_action_points() < 1) {
+        throw NotEnoughActionPointsException();
+    }
+    m_characters[m_turn].relax();
+    m_characters[m_turn].update_action_points(-1);
+}
+
 void Game::check_and_get_card_adventure_because_of_token(
     ::runebound::character::Character *chr
 ) {
@@ -73,13 +84,17 @@ std::vector<Point> Game::make_move(
     if (chr != &m_characters[m_turn]) {
         throw WrongCharacterTurnException();
     }
+    if (m_characters[m_turn].get_action_points() < 2) {
+        throw NotEnoughActionPointsException();
+    }
     std::vector<Point> result = m_map.check_move(
         m_characters[m_turn].m_current_position, end, dice_roll_results
     );
     if (result.empty()) {
-        return result;
+        throw InaccessibleMoveException();
     }
     m_characters[m_turn].m_current_position = end;
+    m_characters[m_turn].update_action_points(-2);
     return result;
 }
 
