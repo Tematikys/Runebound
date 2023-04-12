@@ -135,9 +135,9 @@ TEST_CASE("Fight") {
 
     std::shared_ptr<runebound::character::Character> character =
         game.make_character(
-            100, 10, ::runebound::Point(0, 0), 5, 5, "Katya", character_tokens
+            100, 7, ::runebound::Point(0, 0), 5, 5, "Katya", character_tokens
         );
-    auto enemy = Enemy(7, "ABC");
+    auto enemy = Enemy(5, "ABC");
     Fight fight = Fight(character, enemy);
     fight.start_round();
     Participant turn = fight.get_turn();
@@ -146,13 +146,13 @@ TEST_CASE("Fight") {
     while (true) {
         Participant turn = fight.get_turn();
         if (fight.get_turn() == runebound::fight::Participant::CHARACTER) {
-            std::cout << "CHARACTER\n";
+            std::cout << "CHARACTER turn\n";
         } else {
-            std::cout << "ENEMY\n";
+            std::cout << "ENEMY turn\n";
         }
         print(character_remaining_tokens);
         print(enemy_remaining_tokens);
-        std::cout << character->get_health() << ' ' << fight.get_health_enemy()
+        std::cout << "CHARACTER HEALTH: " << character->get_health() << "; " << "ENEMY HEALTH: " << fight.get_health_enemy()
                   << '\n';
         if (fight.check_end_round()) {
             fight.start_round();
@@ -163,9 +163,9 @@ TEST_CASE("Fight") {
         read_command(fight, character_remaining_tokens, enemy_remaining_tokens);
         if (fight.check_end_fight()) {
             if (turn == runebound::fight::Participant::ENEMY) {
-                std::cout << "ENEMY win!";
+                std::cout << "ENEMY win!\n";
             } else {
-                std::cout << "CHARACTER win!";
+                std::cout << "CHARACTER win!\n";
             }
             break;
         }

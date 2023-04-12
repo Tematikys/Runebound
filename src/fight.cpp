@@ -183,7 +183,6 @@ bool Fight::check_end_round() {
     if (check_end_round_private(m_enemy_remaining_tokens)) {
         m_pass_enemy = true;
     }
-    std::cout << m_pass_character << ' ' << m_pass_enemy << '\n';
     return m_pass_character && m_pass_enemy;
 }
 

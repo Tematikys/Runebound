@@ -60,7 +60,7 @@ add_executable(${PROJECT_NAME}
             src/dice.cpp
             src/game.cpp
 #             src/graphics.cpp
-            #tpl/doctest/doctest_main.cpp
+            # tpl/doctest/doctest_main.cpp
             src/map.cpp
             src/map_cell.cpp
             src/tokens.cpp
@@ -68,8 +68,7 @@ add_executable(${PROJECT_NAME}
             src/game_client.cpp
             src/character_client.cpp
             src/map_client.cpp
-           #  src/test_fight.cpp
-            #src/test_fight.cpp
+            # src/test_fight.cpp
             src/fight.cpp
             # src/main.cpp
         )
