@@ -31,7 +31,7 @@ void from_json(const nlohmann::json &json, Game &game) {
     game.m_turn = json["m_turn"];
 }
 
-Point Game::get_position_character(::runebound::character::Character *chr
+Point Game::get_position_character(const std::shared_ptr<character::Character> &chr
 ) const {
     return chr->m_current_position;
 }
@@ -46,15 +46,15 @@ std::vector<cards::CardResearch> Game::generate_all_cards_research() {
     return cards;
 }
 
-void Game::relax(const ::runebound::character::Character *chr) {
+void Game::relax(std::shared_ptr<character::Character> chr) {
     check_turn(chr);
-    check_sufficiency_action_points(chr, 1);
+    check_sufficiency_action_points(1);
     m_characters[m_turn].relax();
     m_characters[m_turn].update_action_points(-1);
 }
 
 void Game::check_and_get_card_adventure_because_of_token(
-    ::runebound::character::Character *chr
+    std::shared_ptr<character::Character> chr
 ) {
     if (m_map.get_cell_map(chr->m_current_position).get_token() !=
             ::runebound::AdventureType::NOTHING &&
@@ -72,20 +72,26 @@ void Game::check_and_get_card_adventure_because_of_token(
     }
 }
 
-void Game::reverse_token(const ::runebound::character::Character *chr, int row, int column) {
+void Game::reverse_token(std::shared_ptr<character::Character> chr, int row, int column) {
     check_turn(chr);
-    check_sufficiency_action_points(chr, 2);
+    check_sufficiency_action_points(2);
+    if (m_map.get_cell_map(Point(row, column)).get_side_token() == Side::BACK) {
+        throw BackSideTokenException();
+    }
+    if (m_map.get_cell_map(Point(row, column)).get_token() == AdventureType::FIGHT) {
+        std::shared_ptr<::runebound::fight::Fight> fight = std::make_shared<::runebound::fight::Fight>(::runebound::fight::Fight(chr, ::runebound::fight::Enemy(5, "Standard")));
+    }
     m_map.reverse_token(Point(row, column));
     m_characters[m_turn].update_action_points(-2);
 }
 
 std::vector<Point> Game::make_move(
-    const ::runebound::character::Character *chr,
+    const std::shared_ptr<character::Character> &chr,
     const Point &end,
     std::vector<::runebound::dice::HandDice> &dice_roll_results
 ) {
     check_turn(chr);
-    check_sufficiency_action_points(chr, 2);
+    check_sufficiency_action_points(2);
     std::vector<Point> result = m_map.check_move(
         m_characters[m_turn].m_current_position, end, dice_roll_results
     );
