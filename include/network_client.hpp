@@ -12,7 +12,7 @@
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
-namespace network {
+namespace runebound::network {
     class Client {
     public:
         Client(boost::asio::io_context &io_context, const std::string &host, int port, std::string user_name)
@@ -60,7 +60,7 @@ namespace network {
         }
 
 
-        void do_write(std::string str) {
+        void do_write(const std::string& str) {
             socket_.async_write_some(boost::asio::buffer(str + '\n'),
                                      [this, str](boost::system::error_code ec, std::size_t length) {
                                          if (!ec) {
