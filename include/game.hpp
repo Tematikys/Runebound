@@ -19,6 +19,12 @@ namespace game {
 void to_json(nlohmann::json &json, const Game &game);
 void from_json(const nlohmann::json &json, Game &game);
 
+struct WrongCharacterTurnException : std::runtime_error {
+    WrongCharacterTurnException()
+        : std::runtime_error("Wrong character's turn") {
+    }
+};
+
 struct Game {
 
     ::runebound::map::Map m_map;
@@ -60,6 +66,19 @@ public:
         m_tokens = other.m_tokens;
         m_turn = other.m_turn;
         return *this;
+    }
+
+    void start_next_character_turn() {
+        m_turn = (m_turn + 1) % m_count_players;
+        m_characters[m_turn].restore_action_points();
+    }
+
+    void relax(const ::runebound::character::Character *chr) {
+        if (chr != &m_characters[m_turn]) {
+            throw WrongCharacterTurnException();
+        }
+        m_characters[m_turn].relax();
+        m_characters[m_turn].update_action_points(-1);
     }
 
     std::shared_ptr<::runebound::character::Character> make_character(

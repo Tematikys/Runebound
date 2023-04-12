@@ -23,6 +23,7 @@ struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
     unsigned int m_action_points = 3;
+    unsigned int m_max_action_points = 3;
     std::string m_name;
     std::vector<unsigned int> m_cards;
     std::map<runebound::token::Token, int> m_tokens;
@@ -38,7 +39,7 @@ public:
           m_health(0),
           m_hand_limit(0),
           m_speed(0),
-          m_max_health(0),
+          m_max_health(0), m_max_action_points(0),
           m_current_position(0, 0) {
     }
 
@@ -82,15 +83,23 @@ public:
         return m_name;
     }
 
-    void add_action_points(unsigned int delta) {
+    void relax() {
+        m_health = m_max_health;
+    }
+
+    void update_action_points(int delta) {
         m_action_points += delta;
+    }
+
+    void restore_action_points() {
+        m_action_points = m_max_action_points;
     }
 
     void update_health(int delta) {
         m_health += delta;
     }
 
-    int get_health() const {
+    [[nodiscard]] int get_health() const {
         return m_health;
     }
 
@@ -99,7 +108,7 @@ public:
         return m_fight_tokens;
     }
 
-    unsigned int get_speed() const {
+    [[nodiscard]] unsigned int get_speed() const {
         return m_speed;
     }
 

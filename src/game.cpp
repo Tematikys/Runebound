@@ -6,6 +6,7 @@
 namespace runebound {
 namespace game {
 
+
 void to_json(nlohmann::json &json, const Game &game) {
     json["m_map"] = game.m_map;
     json["m_characters"] = game.m_characters;
@@ -70,17 +71,15 @@ std::vector<Point> Game::make_move(
     std::vector<::runebound::dice::HandDice> &dice_roll_results
 ) {
     if (chr != &m_characters[m_turn]) {
-        return {};
+        throw WrongCharacterTurnException();
     }
     std::vector<Point> result = m_map.check_move(
         m_characters[m_turn].m_current_position, end, dice_roll_results
     );
-
     if (result.empty()) {
         return result;
     }
     m_characters[m_turn].m_current_position = end;
-    m_turn = (m_turn + 1) % m_count_players;
     return result;
 }
 
