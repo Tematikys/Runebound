@@ -14,7 +14,7 @@ using boost::asio::ip::tcp;
 using json = nlohmann::json;
 
 
-//user - string с именем connection
+//user - это string с именем connection
 class Connection;
 
 std::vector<std::string> game_names;
@@ -27,7 +27,7 @@ std::map<std::string, ::runebound::map::MapClient> game_map;
 
 class Connection : public std::enable_shared_from_this<Connection> {
 public:
-    Connection(tcp::socket socket) : socket_(std::move(socket)) {}
+    explicit Connection(tcp::socket socket) : socket_(std::move(socket)) {}
 
     void send_game_names();
 
@@ -72,14 +72,12 @@ public:
             }
         }
         if (data["action type"] == "join game") {
-            std::string game_name = data["game name"];
-            std::string user_name = data["user name"];
-            m_user_name = user_name;
-            m_game_name = game_name;
-            m_game = &games[game_name];
+            m_game_name = data["game name"];
+            m_user_name = data["user name"];
+            m_game = &games[m_game_name];
             user_connection[m_user_name] = this;
-            game_users[game_name].insert(m_user_name);
-            user_character[user_name] = m_game->make_character(0, 0, {0, 0}, 0, 3,
+            game_users[m_game_name].insert(m_user_name);
+            user_character[m_user_name] = m_game->make_character(0, 0, {0, 0}, 0, 3,
                                                                m_user_name);
             for (const std::string &user_name: game_users[m_game_name]) {
                 user_connection[user_name]->send_game();
@@ -142,14 +140,14 @@ void Connection::send_game() {
 class Server {
 public:
     Server(boost::asio::io_context &io_context, short port)
-            : acceptor_(io_context, tcp::endpoint(tcp::v4(), port)) {
+            : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port)) {
         std::cout << "Server started\n";
         do_accept();
     }
 
 private:
     void do_accept() {
-        acceptor_.async_accept(
+        m_acceptor.async_accept(
                 [this](boost::system::error_code ec, tcp::socket socket) {
                     if (!ec) {
                         std::make_shared<Connection>(std::move(socket))->start();
@@ -159,7 +157,7 @@ private:
                 });
     }
 
-    tcp::acceptor acceptor_;
+    tcp::acceptor m_acceptor;
 };
 
 int main() {
