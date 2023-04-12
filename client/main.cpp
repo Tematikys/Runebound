@@ -1,12 +1,8 @@
 #include "client.hpp"
 
 int main(int, char *[]) {
-    ::runebound::client::Client client("127.0.0.1", 4444, "Carpet");
-
-    client.init_graphics("Runebound-v0.1.5", 100, 100, 1000, 1000, 60);
-
-    const ::runebound::map::MapClient map;
-    client.init_board(map);
+    ::runebound::client::Client client;
+    client.init();
 
     while (client.running()) {
         client.handle_events();

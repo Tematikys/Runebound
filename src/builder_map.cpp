@@ -307,7 +307,7 @@ std::map<std::string, std::vector<Point>> make_territory_name() {
     territory_name["Rogue Peak"] = {Point(2, 2)};
     territory_name["Everton"] = {Point(3, 1)};
     territory_name["Caer Loek"] = {Point(0, 1)};
-    territory_name["Suvar's Haven"] = {Point(1, 5)};
+    territory_name["Suvar'start Haven"] = {Point(1, 5)};
     territory_name["Cursed ruins"] = {Point(3, 3)};
     territory_name["Telsvanian Plains"] = {
         Point(1, 3), Point(2, 4), Point(2, 5)};

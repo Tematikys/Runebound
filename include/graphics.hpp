@@ -4,8 +4,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <graphics_config.hpp>
+#include <graphics_point.hpp>
 #include <string>
-#include <utility>
 
 namespace runebound::graphics {
 class Texture {
@@ -24,6 +25,15 @@ public:
         other.m_texture = nullptr;
     }
 
+    //
+    //    Texture &operator=(Texture &&other) noexcept {
+    //        m_width = other.m_width;
+    //        m_height = other.m_height;
+    //        m_texture = other.m_texture;
+    //        other.m_texture = nullptr;
+    //        return *this;
+    //    }
+
     ~Texture() {
         free();
     };
@@ -34,13 +44,13 @@ public:
     bool load_from_string(
         SDL_Renderer *renderer,
         TTF_Font *font,
-        const std::string &text,
+        const ::std::string &text,
         SDL_Color color
     );
 
     void free();
 
-    void set_color(Uint8 red, Uint8 green, Uint8 blue) {
+    void set_color(uint8_t red, uint8_t green, uint8_t blue) {
         SDL_SetTextureColorMod(m_texture, red, green, blue);
     };
 
@@ -48,7 +58,7 @@ public:
         SDL_SetTextureBlendMode(m_texture, blending);
     };
 
-    void set_alpha(Uint8 alpha) {
+    void set_alpha(uint8_t alpha) {
         SDL_SetTextureAlphaMod(m_texture, alpha);
     };
 
@@ -72,17 +82,9 @@ public:
 };
 
 // SDL init function
-bool SDL_init(
-    SDL_Window *&gWindow,
-    SDL_Renderer *&gRenderer,
-    const char *title,
-    int x_pos,
-    int y_pos,
-    int width,
-    int height
-);
+bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer);
 
-void update_mouse_pos(::std::pair<int, int> &pos);
+void update_mouse_pos(Point &pos);
 
 bool generate_text(
     SDL_Renderer *renderer,
@@ -92,6 +94,6 @@ bool generate_text(
     SDL_Color color
 );
 
-bool load_font(TTF_Font *&font, const std::string &path, int font_size);
+bool load_font(TTF_Font *&font, const ::std::string &path, int font_size);
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_HPP_
