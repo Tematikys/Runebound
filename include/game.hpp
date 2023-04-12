@@ -64,6 +64,17 @@ private:
         vec.pop_back();
     }
 
+    void check_turn(const ::runebound::character::Character *chr) {
+        if (chr != &m_characters[m_turn]) {
+            throw WrongCharacterTurnException();
+        }
+    }
+
+    void check_sufficiency_action_points(const ::runebound::character::Character *chr, int necessary_action_points) {
+        if (m_characters[m_turn].get_action_points() < necessary_action_points) {
+            throw NotEnoughActionPointsException();
+        }
+    }
 public:
     Game() : ALL_CARDS_RESEARCH(std::move(generate_all_cards_research())) {
         m_card_deck_research.resize(DECK_SIZE);
@@ -111,9 +122,8 @@ public:
     [[nodiscard]] ::runebound::map::Map get_map() const {
         return m_map;
     }
-    void reverse_token(int row, int column) {
-        m_map.reverse_token(Point(row, column));
-    }
+
+    void reverse_token(const ::runebound::character::Character *chr, int row, int column);
 
     [[nodiscard]] Point get_position_character(
         ::runebound::character::Character *chr
