@@ -13,6 +13,7 @@
 
 namespace runebound::map {
 void to_json(nlohmann::json &json, const MapClient &map);
+void from_json(const nlohmann::json &json, MapClient &map);
 
 struct MapClient {
 private:
@@ -44,8 +45,13 @@ public:
         );
     }
 
+    explicit MapClient(const Map &map) {
+        m_map = map.get_full_map();
+    }
+
     MapClient(const MapClient &) = default;
     MapClient(MapClient &&) = default;
+
     MapClient &operator=(const MapClient &other) {
         m_map = other.m_map;
         return *this;

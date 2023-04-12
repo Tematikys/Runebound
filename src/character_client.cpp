@@ -29,4 +29,4 @@ void from_json(const nlohmann::json &json, CharacterClient &character) {
     }
 }
 
-} // namespace runebound::character
+}  // namespace runebound::character

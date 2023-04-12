@@ -53,6 +53,25 @@ add_executable(Client
         src/map_client.cpp
         src/network_client.cpp
 
+add_executable(${PROJECT_NAME}
+            src/card_adventure.cpp
+            src/card_research.cpp
+            src/character.cpp
+            src/dice.cpp
+            src/game.cpp
+#             src/graphics.cpp
+            tpl/doctest/doctest_main.cpp
+            src/map.cpp
+            src/map_cell.cpp
+            src/tokens.cpp
+            src/builder_map.cpp
+            src/game_client.cpp
+            src/character_client.cpp
+            src/map_client.cpp
+            #src/test_fight.cpp
+            src/fight.cpp
+            #src/main.cpp
+            #src/test_game.cpp
         )
 
 
@@ -63,6 +82,4 @@ target_link_libraries(Client ${Boost_LIBRARIES})
 target_link_libraries(Client ws2_32)
 target_link_libraries(Client wsock32)
 
-
-#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} -lmingw32 -lSDL2main -lSDL2 -mwindows -lSDL2_image)
-
+target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
