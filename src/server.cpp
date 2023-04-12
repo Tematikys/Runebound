@@ -78,9 +78,9 @@ public:
             m_game_name = game_name;
             m_game = &games[game_name];
             user_connection[m_user_name] = this;
-            game_users[game_name].insert(user_name);
+            game_users[game_name].insert(m_user_name);
             user_character[user_name] = m_game->make_character(0, 0, {0, 0}, 0, 3,
-                                                               "zero");
+                                                               m_user_name);
             for (const std::string &user_name: game_users[m_game_name]) {
                 user_connection[user_name]->send_game();
             }
