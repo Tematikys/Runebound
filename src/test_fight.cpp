@@ -118,18 +118,23 @@ TEST_CASE("Fight") {
     ::runebound::game::Game game;
     std::vector<FightToken> character_tokens = {
         FightToken(
-            HandFightTokens::MAGICAL_DAMAGE, 0, HandFightTokens::DEXTERITY, 0
-        ),
-        FightToken(HandFightTokens::NOTHING, 1, HandFightTokens::DOUBLING, 0),
-        FightToken(
-            HandFightTokens::SHIELD, 0, HandFightTokens::PHYSICAL_DAMAGE, 0
+            HandFightTokens::MAGICAL_DAMAGE, 0, 1, HandFightTokens::DEXTERITY,
+            0, 1
         ),
         FightToken(
-            HandFightTokens::PHYSICAL_DAMAGE, 0, HandFightTokens::NOTHING, 1
+            HandFightTokens::NOTHING, 1, 1, HandFightTokens::DOUBLING, 0, 1
         ),
         FightToken(
-            HandFightTokens::PHYSICAL_DAMAGE, 0,
-            HandFightTokens::MAGICAL_DAMAGE, 1
+            HandFightTokens::SHIELD, 0, 1, HandFightTokens::PHYSICAL_DAMAGE, 0,
+            1
+        ),
+        FightToken(
+            HandFightTokens::PHYSICAL_DAMAGE, 0, 1, HandFightTokens::NOTHING, 1,
+            1
+        ),
+        FightToken(
+            HandFightTokens::PHYSICAL_DAMAGE, 0, 1,
+            HandFightTokens::MAGICAL_DAMAGE, 1, 1
         ),  // THERE HIT
     };
 

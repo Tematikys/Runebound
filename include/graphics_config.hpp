@@ -4,11 +4,12 @@
 #include <SDL2/SDL.h>
 #include <map.hpp>
 #include <string>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 namespace runebound::graphics {
-extern const ::std::vector<::std::tuple<::std::string, ::std::string, int>> FONTS;
+extern const ::std::vector<::std::tuple<::std::string, ::std::string, int>>
+    FONTS;
 extern const int HEXAGON_RADIUS;
 extern const SDL_Color SELECTED_COLOR;
 extern const ::std::map<::runebound::map::TypeCell, SDL_Color> CELL_FILL_COLOR;

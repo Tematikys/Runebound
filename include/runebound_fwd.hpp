@@ -31,6 +31,10 @@ struct FightToken;
 struct Fight;
 }  // namespace fight
 
+namespace generator {
+void generate_characters();
+}  // namespace generator
+
 namespace map {
 struct MapCell;
 struct Map;
