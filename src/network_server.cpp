@@ -1,20 +1,17 @@
-#include <iostream>
 #include <boost/asio.hpp>
-
 #include <deque>
-#include <set>
-#include <memory>
+#include <iostream>
 #include <map>
+#include <memory>
 #include <nlohmann/json.hpp>
+#include <set>
 #include "game.hpp"
 #include "game_client.hpp"
-
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
 
-
-//user - это string с именем connection
+// user - это string с именем connection
 class Connection;
 
 std::vector<std::string> game_names;
@@ -27,7 +24,8 @@ std::map<std::string, ::runebound::map::MapClient> game_map;
 
 class Connection : public std::enable_shared_from_this<Connection> {
 public:
-    explicit Connection(tcp::socket socket) : socket_(std::move(socket)) {}
+    explicit Connection(tcp::socket socket) : socket_(std::move(socket)) {
+    }
 
     void send_game_names();
 
@@ -42,15 +40,18 @@ public:
 
     void write(const std::string &message) {
         auto self(shared_from_this());
-        boost::asio::async_write(socket_, boost::asio::buffer(message+'\n'),
-                                 [this, self, message](boost::system::error_code ec, std::size_t length) {
-                                     if (!ec) {
-                                         std::cout << "Sent:{ \n " << message << "\n}\n";
-                                     } else {
-                                         connections.erase(this);
-                                         std::cout << "Disconnected" << std::endl;
-                                     }
-                                 });
+        boost::asio::async_write(
+            socket_, boost::asio::buffer(message + '\n'),
+            [this, self,
+             message](boost::system::error_code ec, std::size_t length) {
+                if (!ec) {
+                    std::cout << "Sent:{ \n " << message << "\n}\n";
+                } else {
+                    connections.erase(this);
+                    std::cout << "Disconnected" << std::endl;
+                }
+            }
+        );
     }
 
     void parse_message(std::string &message) {
@@ -58,7 +59,7 @@ public:
         if (data["action type"] == "reverse token") {
             int x = data["x"], y = data["y"];
             m_game->reverse_token(x, y);
-            for (const std::string &user_name: game_users[m_game_name]) {
+            for (const std::string &user_name : game_users[m_game_name]) {
                 user_connection[user_name]->send_game();
             }
         }
@@ -67,7 +68,7 @@ public:
             game_names.push_back(game_name);
             games[game_name] = runebound::game::Game();
             game_map[game_name] = runebound::map::MapClient();
-            for (auto session: connections) {
+            for (auto session : connections) {
                 session->send_game_names();
             }
         }
@@ -77,44 +78,47 @@ public:
             m_game = &games[m_game_name];
             user_connection[m_user_name] = this;
             game_users[m_game_name].insert(m_user_name);
-            user_character[m_user_name] = m_game->make_character(0, 0, {0, 0}, 0, 3,
-                                                               m_user_name);
-            for (const std::string &user_name: game_users[m_game_name]) {
+            user_character[m_user_name] =
+                m_game->make_character(0, 0, {0, 0}, 0, 3, m_user_name);
+            for (const std::string &user_name : game_users[m_game_name]) {
                 user_connection[user_name]->send_game();
             }
         }
         if (data["action type"] == "make move") {
             int x = data["x"], y = data["y"];
             auto dice_result = runebound::dice::get_combination_of_dice(
-                    user_character[m_user_name]->get_speed());
+                user_character[m_user_name]->get_speed()
+            );
             m_game->make_move(user_character[m_user_name], {x, y}, dice_result);
-            for (const std::string &user_name: game_users[m_game_name]) {
+            for (const std::string &user_name : game_users[m_game_name]) {
                 user_connection[user_name]->send_game();
             }
         }
     }
 
-
 private:
-
     void do_read() {
         auto self(shared_from_this());
 
-        boost::asio::async_read_until(socket_, m_buffer, '\n',
-                                      [this, self](boost::system::error_code ec, std::size_t length) {
-                                          if (!ec) {
-                                              std::istream is(&m_buffer);
-                                              std::string message;
-                                              std::getline(is, message);
-                                              std::cout << "Received: " << message << " Length: " << length << '\n';
-                                              parse_message(message);
-                                              do_read();
-                                          } else {
-                                              connections.erase(this);
-                                              std::cout << "Disconnected" << std::endl;
-                                          }
-                                      });
+        boost::asio::async_read_until(
+            socket_, m_buffer, '\n',
+            [this, self](boost::system::error_code ec, std::size_t length) {
+                if (!ec) {
+                    std::istream is(&m_buffer);
+                    std::string message;
+                    std::getline(is, message);
+                    std::cout << "Received: " << message
+                              << " Length: " << length << '\n';
+                    parse_message(message);
+                    do_read();
+                } else {
+                    connections.erase(this);
+                    std::cout << "Disconnected" << std::endl;
+                }
+            }
+        );
     }
+
     boost::asio::streambuf m_buffer;
     std::string m_user_name;
     std::string m_game_name;
@@ -136,11 +140,10 @@ void Connection::send_game() {
     write(answer.dump());
 }
 
-
 class Server {
 public:
     Server(boost::asio::io_context &io_context, short port)
-            : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port)) {
+        : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port)) {
         std::cout << "Server started\n";
         do_accept();
     }
@@ -148,13 +151,14 @@ public:
 private:
     void do_accept() {
         m_acceptor.async_accept(
-                [this](boost::system::error_code ec, tcp::socket socket) {
-                    if (!ec) {
-                        std::make_shared<Connection>(std::move(socket))->start();
-                    }
+            [this](boost::system::error_code ec, tcp::socket socket) {
+                if (!ec) {
+                    std::make_shared<Connection>(std::move(socket))->start();
+                }
 
-                    do_accept();
-                });
+                do_accept();
+            }
+        );
     }
 
     tcp::acceptor m_acceptor;
@@ -165,8 +169,7 @@ int main() {
         boost::asio::io_context io_context;
         Server server(io_context, 4444);
         io_context.run();
-    }
-    catch (std::exception &e) {
+    } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
 

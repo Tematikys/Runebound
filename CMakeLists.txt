@@ -18,40 +18,40 @@ link_directories(${SDL2_LIB_DIR})
 include_directories(${SDL2_INCLUDE_DIR})
 link_directories(${SDL2_LIB_DIR})
 
-add_executable(Server
-
-        src/card_adventure.cpp
-        src/card_research.cpp
-        src/character.cpp
-        src/dice.cpp
-        src/game.cpp
-        #             src/graphics.cpp
-        src/map.cpp
-        src/map_cell.cpp
-        src/tokens.cpp
-        src/builder_map.cpp
-        src/game_client.cpp
-        src/character_client.cpp
-        src/map_client.cpp
-        src/network_server.cpp
-
-        )
-add_executable(Client
-
-        src/card_adventure.cpp
-        src/card_research.cpp
-        src/character.cpp
-        src/dice.cpp
-        src/game.cpp
-        #             src/graphics.cpp
-        src/map.cpp
-        src/map_cell.cpp
-        src/tokens.cpp
-        src/builder_map.cpp
-        src/game_client.cpp
-        src/character_client.cpp
-        src/map_client.cpp
-        src/network_client.cpp
+#add_executable(Server
+#
+#        src/card_adventure.cpp
+#        src/card_research.cpp
+#        src/character.cpp
+#        src/dice.cpp
+#        src/game.cpp
+#        #             src/graphics.cpp
+#        src/map.cpp
+#        src/map_cell.cpp
+#        src/tokens.cpp
+#        src/builder_map.cpp
+#        src/game_client.cpp
+#        src/character_client.cpp
+#        src/map_client.cpp
+#        src/network_server.cpp
+#
+#        )
+#add_executable(Client
+#
+#        src/card_adventure.cpp
+#        src/card_research.cpp
+#        src/character.cpp
+#        src/dice.cpp
+#        src/game.cpp
+#        #             src/graphics.cpp
+#        src/map.cpp
+#        src/map_cell.cpp
+#        src/tokens.cpp
+#        src/builder_map.cpp
+#        src/game_client.cpp
+#        src/character_client.cpp
+#        src/map_client.cpp
+#        src/network_client.cpp
 
 add_executable(${PROJECT_NAME}
             src/card_adventure.cpp
@@ -71,15 +71,16 @@ add_executable(${PROJECT_NAME}
             #src/test_fight.cpp
             src/fight.cpp
             #src/main.cpp
-            #src/test_game.cpp
+            src/generator_characters.cpp
+            src/test_game.cpp
         )
 
 
-target_link_libraries(Server ${Boost_LIBRARIES})
-target_link_libraries(Server ws2_32)
-target_link_libraries(Server wsock32)
-target_link_libraries(Client ${Boost_LIBRARIES})
-target_link_libraries(Client ws2_32)
-target_link_libraries(Client wsock32)
+#target_link_libraries(Server ${Boost_LIBRARIES})
+#target_link_libraries(Server ws2_32)
+#target_link_libraries(Server wsock32)
+#target_link_libraries(Client ${Boost_LIBRARIES})
+#target_link_libraries(Client ws2_32)
+#target_link_libraries(Client wsock32)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
+#target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)

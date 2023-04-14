@@ -89,22 +89,24 @@ void Fight::shuffle_all_tokens() {
     for (auto &character_token : character_tokens) {
         if (rng() % 2 == 0) {
             m_character_remaining_tokens.push_back(
-                {character_token, character_token.first, 1}
+                {character_token, character_token.first,
+                 character_token.first_count}
             );
         } else {
             m_character_remaining_tokens.push_back(
-                {character_token, character_token.second, 1}
+                {character_token, character_token.second,
+                 character_token.second_count}
             );
         }
     }
     for (auto &enemy_token : enemy_tokens) {
         if (rng() % 2 == 0) {
             m_enemy_remaining_tokens.push_back(
-                {enemy_token, enemy_token.first, 1}
+                {enemy_token, enemy_token.first, enemy_token.first_count}
             );
         } else {
             m_enemy_remaining_tokens.push_back(
-                {enemy_token, enemy_token.second, 1}
+                {enemy_token, enemy_token.second, enemy_token.second_count}
             );
         }
     }

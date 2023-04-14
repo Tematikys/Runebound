@@ -49,26 +49,41 @@ private:
         FightToken(
             HandFightTokens::ENEMY_DAMAGE,
             0,
+            1,
             HandFightTokens::DEXTERITY,
-            0
+            0,
+            1
         ),
-        FightToken(HandFightTokens::NOTHING, 1, HandFightTokens::DOUBLING, 0),
+        FightToken(
+            HandFightTokens::NOTHING,
+            1,
+            1,
+            HandFightTokens::DOUBLING,
+            0,
+            1
+        ),
         FightToken(
             HandFightTokens::SHIELD,
             0,
-            HandFightTokens::ENEMY_DAMAGE,
-            0
-        ),
-        FightToken(
+            1,
             HandFightTokens::ENEMY_DAMAGE,
             0,
-            HandFightTokens::NOTHING,
             1
         ),
         FightToken(
             HandFightTokens::ENEMY_DAMAGE,
             0,
+            1,
+            HandFightTokens::NOTHING,
+            1,
+            1
+        ),
+        FightToken(
             HandFightTokens::ENEMY_DAMAGE,
+            0,
+            1,
+            HandFightTokens::ENEMY_DAMAGE,
+            1,
             1
         ),  // THERE HIT
     };

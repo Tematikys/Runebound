@@ -3,6 +3,10 @@
 #include <nlohmann/json.hpp>
 
 namespace runebound {
+
+void to_json(nlohmann::json &json, const Point &point);
+void from_json(const nlohmann::json &json, Point &point);
+
 struct Point {
 public:
     int x, y;
