@@ -10,7 +10,7 @@ namespace runebound::graphics {
 class MainMenu {
 private:
     int m_width, m_height, m_x, m_y;
-    ::std::vector<RectButton> m_buttons;
+    ::std::vector<Button> m_buttons;
     ::std::vector<Texture> m_textures;
     ::std::vector<Point> m_texture_pos;
     ::std::size_t m_texture_amount{0};
@@ -18,7 +18,7 @@ private:
 public:
     void render(SDL_Renderer *renderer);
 
-    void add_button(RectButton &but) {
+    void add_button(Button &but) {
         m_buttons.emplace_back(::std::move(but));
     }
 

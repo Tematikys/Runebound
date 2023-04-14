@@ -74,14 +74,14 @@ void Texture::free() {
 
 void Texture::render(
     SDL_Renderer *renderer,
-    int x_off,
-    int y_off,
+    int x,
+    int y,
     SDL_Rect *clip,
     double angle,
     SDL_Point *center,
     SDL_RendererFlip flip
 ) const {
-    SDL_Rect renderQuad = {x_off, y_off, m_width, m_height};
+    SDL_Rect renderQuad = {x, y, m_width, m_height};
     if (clip != nullptr) {
         renderQuad.w = clip->w;
         renderQuad.h = clip->h;
@@ -179,5 +179,18 @@ bool load_font(TTF_Font *&font, const ::std::string &path, int font_size) {
         return false;
     }
     return true;
+}
+
+void TextField::render(
+    SDL_Renderer *renderer,
+    TTF_Font *font,
+    SDL_Color color,
+    int x,
+    int y
+) const {
+    Texture texture;
+    generate_text(renderer, texture, m_text, font, color);
+    texture.render(renderer, x, y);
+    texture.free();
 }
 }  // namespace runebound::graphics

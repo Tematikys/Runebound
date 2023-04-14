@@ -1,8 +1,8 @@
 #include <graphics_config.hpp>
 
 namespace runebound::graphics {
-const ::std::vector<::std::tuple<::std::string, ::std::string, int>> FONTS = {
-    {"../../data/fonts/OpenSans-Regular.ttf", "OpenSans", 30}};
+const ::std::vector<::std::pair<::std::string, ::std::string>> FONTS = {
+    {"../../data/fonts/OpenSans-Regular.ttf", "OpenSans"}};
 
 const int HEXAGON_RADIUS = 30;
 const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};

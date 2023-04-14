@@ -15,22 +15,30 @@ void Client::init_graphics() {
     m_is_running = true;
     m_frame_time = 1000 / ::runebound::graphics::WINDOWS_FPS;
 
-    for (auto [path, font_name, size] : ::runebound::graphics::FONTS) {
-        m_fonts[font_name] = nullptr;
-        ::runebound::graphics::load_font(m_fonts[font_name], path, size);
-    }
+    load_fonts();
+
+    m_text_fields.emplace_back();
+    m_active_text_field = 0;
+
     ::runebound::graphics::Texture texture;
     texture.load_from_string(
-        m_renderer, m_fonts["OpenSans"], "    ", {0x00, 0x00, 0x00, 0xFF}
+        m_renderer, m_fonts["OpenSans50"], " ", {0x00, 0x00, 0x00, 0xFF}
     );
-    ::runebound::graphics::RectButton button(
+    m_buttons.push_back(::runebound::graphics::Button(
         10, 10, 10 + texture.get_width(), 10 + texture.get_height(), 5, 5,
-        texture, []() { ::std::cout << "Click!\n"; }, []() {},
+        texture, [&]() { m_active_text_field = 1; }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    );
-    m_text = ::std::move(::runebound::graphics::TextButton(
-        button, m_fonts["OpenSans"], {0x00, 0x00, 0x00, 0xFF}
     ));
+}
+
+void Client::load_fonts() {
+    for (auto [path, font_name] : ::runebound::graphics::FONTS) {
+        for (int i = 1; i < 201; ++i) {
+            ::std::string name = font_name + ::std::to_string(i);
+            m_fonts[name] = nullptr;
+            ::runebound::graphics::load_font(m_fonts[name], path, i);
+        }
+    }
 }
 
 void Client::handle_events() {
@@ -43,6 +51,34 @@ void Client::handle_events() {
             case SDL_MOUSEBUTTONDOWN:
                 m_mouse_pressed = true;
                 break;
+
+            case SDL_TEXTINPUT:
+                if (m_active_text_field != 0 &&
+                    !(SDL_GetModState() & KMOD_CTRL &&
+                      (event.text.text[0] == 'c' || event.text.text[0] == 'C' ||
+                       event.text.text[0] == 'v' || event.text.text[0] == 'V')
+                    )) {
+                    m_text_fields[m_active_text_field - 1].push(event.text.text
+                    );
+                }
+                break;
+            case SDL_KEYDOWN:
+                if (m_active_text_field == 0) {
+                    break;
+                }
+                if (event.key.keysym.sym == SDLK_BACKSPACE) {
+                    m_text_fields[m_active_text_field - 1].pop();
+                } else if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
+                    SDL_SetClipboardText(
+                        m_text_fields[m_active_text_field - 1].get().c_str()
+                    );
+                } else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
+                    m_text_fields[m_active_text_field - 1].clear();
+                    m_text_fields[m_active_text_field - 1].push(
+                        SDL_GetClipboardText()
+                    );
+                }
+                break;
         }
     }
 }
@@ -53,9 +89,13 @@ void Client::render() {
 
     //    m_board.render(m_renderer);
 
-    m_text.render(m_renderer);
+    for (const auto &field : m_text_fields) {
+        field.render(
+            m_renderer, m_fonts["OpenSans30"], {0, 0, 0, 255}, 100, 100
+        );
+    }
 
-    for (const auto &button : m_rect_buttons) {
+    for (const auto &button : m_buttons) {
         button.render(m_renderer);
     }
 
@@ -67,20 +107,8 @@ void Client::update() {
     m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
 
     m_io_context.poll();
-    if (m_mouse_pressed) {
-        if (m_text.in_bounds(m_mouse_pos)) {
-            m_text.on_click();
-            m_mouse_pressed = false;
-        } else {
-            m_text.deactivate();
-        }
-    } else {
-        if (m_text.in_bounds(m_mouse_pos)) {
-            m_text.on_cover();
-        }
-    }
 
-    for (const auto &button : m_rect_buttons) {
+    for (const auto &button : m_buttons) {
         if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
             button.on_cover();
             if (m_mouse_pressed) {

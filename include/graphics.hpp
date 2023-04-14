@@ -72,8 +72,8 @@ public:
 
     void render(
         SDL_Renderer *renderer,
-        int x_off,
-        int y_off,
+        int x,
+        int y,
         SDL_Rect *clip = nullptr,
         double angle = 0.0,
         SDL_Point *center = nullptr,
@@ -87,6 +87,40 @@ public:
     [[nodiscard]] int get_height() const {
         return m_height;
     };
+};
+
+class TextField {
+private:
+    ::std::string m_text;
+
+public:
+    TextField() : m_text(){};
+
+    void push(const ::std::string &suffix) {
+        m_text += suffix;
+    }
+
+    void pop() {
+        if (!m_text.empty()) {
+            m_text.pop_back();
+        }
+    }
+
+    void clear() {
+        m_text = "";
+    }
+
+    void render(
+        SDL_Renderer *renderer,
+        TTF_Font *font,
+        SDL_Color color,
+        int x,
+        int y
+    ) const;
+
+    [[nodiscard]] const ::std::string &get() const {
+        return m_text;
+    }
 };
 
 // SDL init function

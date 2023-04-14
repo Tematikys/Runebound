@@ -16,9 +16,6 @@ namespace runebound::client {
 // client class, is called in main function, contains everything that is in use
 class Client {
 private:
-    // TODO
-    ::runebound::graphics::TextButton m_text;
-
     // network
     ::boost::asio::io_context m_io_context;
     ::boost::asio::executor_work_guard<::boost::asio::io_context::executor_type>
@@ -30,14 +27,18 @@ private:
     ::runebound::game::GameClient m_game;
     ::runebound::graphics::Board m_board;
 
+    // text fields
+    ::std::vector<::runebound::graphics::TextField> m_text_fields;
+    ::std::size_t m_active_text_field;
+
+    // buttons
+    ::std::vector<::runebound::graphics::Button> m_buttons;
+
     // graphics
     SDL_Window *m_window = nullptr;
     SDL_Renderer *m_renderer = nullptr;
     ::std::map<::std::string, TTF_Font *> m_fonts;
     ::std::vector<::runebound::graphics::Texture> m_textures;
-
-    // buttons
-    ::std::vector<::runebound::graphics::RectButton> m_rect_buttons;
 
     // time
     bool m_is_running = false;
@@ -53,6 +54,8 @@ public:
     void init();
 
     void init_graphics();
+
+    void load_fonts();
 
     void handle_events();
 

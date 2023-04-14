@@ -12,7 +12,7 @@ private:
     ::std::vector<Texture> m_textures;
     ::std::vector<Point> m_texture_coords;
     ::std::size_t m_texture_amount;
-    ::std::vector<RectButton> m_buttons;
+    ::std::vector<Button> m_buttons;
 
 public:
     void render(SDL_Renderer *renderer) const;
