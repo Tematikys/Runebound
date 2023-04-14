@@ -31,7 +31,7 @@ void generate_characters() {
              fight::HandFightTokens::MAGICAL_DAMAGE, 0, 1
          )}
     );
-    write_to_file(master_thorn, "data/json/characters/master_thorn.json");
+    write_to_file(master_thorn, "../data/json/characters/master_thorn.json");
 
     ::runebound::character::Character elder_mok(
         2, 9, ::runebound::Point(13, 6), 3, 3, "Elder Mok",
@@ -48,7 +48,7 @@ void generate_characters() {
              fight::HandFightTokens::PHYSICAL_DAMAGE, 0, 1
          )}
     );
-    write_to_file(elder_mok, "data/json/characters/elder_mok.json");
+    write_to_file(elder_mok, "../data/json/characters/elder_mok.json");
 
     ::runebound::character::Character lissa(
         1, 9, ::runebound::Point(8, 13), 3, 3, "Lissa",
@@ -65,7 +65,7 @@ void generate_characters() {
              fight::HandFightTokens::PHYSICAL_DAMAGE, 1, 1
          )}
     );
-    write_to_file(lissa, "data/json/characters/lissa.json");
+    write_to_file(lissa, "../data/json/characters/lissa.json");
 
     ::runebound::character::Character laurel_from_bloodwood(
         2, 8, ::runebound::Point(3, 1), 4, 3, "Laurel from Bloodwood",
@@ -83,8 +83,7 @@ void generate_characters() {
          )}
     );
     write_to_file(
-        laurel_from_bloodwood,
-        "data/json/characters/laurel_from_bloodwood.json"
+        laurel_from_bloodwood, "../data/json/characters/laurel_from_bloodwood.json"
     );
 
     ::runebound::character::Character lord_hawthorne(
@@ -102,9 +101,7 @@ void generate_characters() {
              fight::HandFightTokens::NOTHING, 0, 1
          )}
     );
-    write_to_file(
-        lord_hawthorne, "data/json/characters/lord_hawthorne.json"
-    );
+    write_to_file(lord_hawthorne, "../data/json/characters/lord_hawthorne.json");
 
     ::runebound::character::Character corbin(
         2, 10, ::runebound::Point(11, 6), 3, 3, "Corbin",
@@ -121,6 +118,6 @@ void generate_characters() {
              fight::HandFightTokens::PHYSICAL_DAMAGE, 0, 1
          )}
     );
-    write_to_file(corbin, "data/json/characters/corbin.json");
+    write_to_file(corbin, "../data/json/characters/corbin.json");
 }
 }  // namespace runebound::generator
