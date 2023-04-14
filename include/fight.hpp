@@ -40,12 +40,15 @@ public:
 
 enum class Participant { CHARACTER, ENEMY };
 
+void to_json(nlohmann::json &json, const Enemy &enemy);
+void from_json(const nlohmann::json &json, Enemy &enemy);
+
 struct Enemy {
 private:
     int m_health;
-    const std::string m_name;
+    std::string m_name;
 
-    std::vector<FightToken> m_fight_tokens = {
+    const std::vector<FightToken> m_fight_tokens = {
         FightToken(
             HandFightTokens::ENEMY_DAMAGE,
             0,
@@ -89,6 +92,8 @@ private:
     };
 
 public:
+    Enemy() : m_health(0) {}
+
     Enemy(int health, std::string name)
         : m_health(health), m_name(std::move(name)) {
     }
@@ -97,13 +102,24 @@ public:
         m_health += delta;
     }
 
-    int get_health() const {
+    [[nodiscard]] int get_health() const {
         return m_health;
     }
 
     [[nodiscard]] std::vector<FightToken> get_fight_token() const {
         return m_fight_tokens;
     }
+
+    friend void to_json(nlohmann::json &json, const Enemy &enemy) {
+        json["m_name"] = enemy.m_name;
+        json["m_health"] = enemy.m_health;
+    }
+
+    friend void from_json(const nlohmann::json &json, Enemy &enemy) {
+        enemy.m_name = json["m_name"];
+        enemy.m_health = json["m_health"];
+    }
+
 };
 
 struct Fight {
