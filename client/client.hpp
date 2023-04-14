@@ -2,13 +2,12 @@
 #define RUNEBOUND_CLIENT_HPP_
 
 #include <SDL2/SDL.h>
+#include <game_client.hpp>
 #include <graphics.hpp>
 #include <graphics_board.hpp>
 #include <graphics_button.hpp>
 #include <graphics_config.hpp>
-#include <graphics_main_menu.hpp>
 #include <map>
-#include <map_client.hpp>
 #include <network_client.hpp>
 #include <string>
 #include <vector>
@@ -24,8 +23,8 @@ private:
     ::runebound::network::Client m_network_client =
         ::runebound::network::Client(m_io_context, "127.0.0.1", 4444, "client");
 
-    // map and board
-    ::runebound::map::MapClient m_map;
+    // game and board
+    ::runebound::game::GameClient m_game;
     ::runebound::graphics::Board m_board;
 
     // graphics

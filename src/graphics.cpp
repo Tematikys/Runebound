@@ -74,14 +74,14 @@ void Texture::free() {
 
 void Texture::render(
     SDL_Renderer *renderer,
-    int x,
-    int y,
+    int x_off,
+    int y_off,
     SDL_Rect *clip,
     double angle,
     SDL_Point *center,
     SDL_RendererFlip flip
 ) const {
-    SDL_Rect renderQuad = {x, y, m_width, m_height};
+    SDL_Rect renderQuad = {x_off, y_off, m_width, m_height};
     if (clip != nullptr) {
         renderQuad.w = clip->w;
         renderQuad.h = clip->h;

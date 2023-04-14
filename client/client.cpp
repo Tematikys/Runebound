@@ -4,7 +4,7 @@
 namespace runebound::client {
 void Client::init() {
     init_graphics();
-    m_board = ::runebound::graphics::Board(m_map);
+    m_board = ::runebound::graphics::Board(m_game.m_map);
 }
 
 void Client::init_graphics() {
@@ -19,15 +19,6 @@ void Client::init_graphics() {
         m_fonts[font_name] = nullptr;
         ::runebound::graphics::load_font(m_fonts[font_name], path, size);
     }
-    ::runebound::graphics::Texture texture;
-    texture.load_from_string(
-        m_renderer, m_fonts["OpenSans"], "Exit", {0xFF, 0x00, 0x00, 0xFF}
-    );
-    m_rect_buttons.push_back(::runebound::graphics::RectButton(
-        700, 10, texture.get_width() + 10, texture.get_height() + 10, 5, 5,
-        texture, [&]() { m_is_running = false; }, []() {},
-        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    ));
 }
 
 void Client::handle_events() {
@@ -48,7 +39,7 @@ void Client::render() {
     SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(m_renderer);
 
-    m_board.render(m_renderer);
+    //    m_board.render(m_renderer);
 
     for (const auto &button : m_rect_buttons) {
         button.render(m_renderer);
@@ -60,6 +51,8 @@ void Client::render() {
 void Client::update() {
     ::runebound::graphics::update_mouse_pos(m_mouse_pos);
     m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
+
+    m_io_context.poll();
 
     for (const auto &button : m_rect_buttons) {
         if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {

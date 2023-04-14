@@ -26,8 +26,11 @@ add_executable(client
         ../src/card_adventure.cpp
         ../src/card_research.cpp
         ../src/character.cpp
+        ../src/character_client.cpp
         ../src/dice.cpp
+        ../src/fight.cpp
         ../src/game.cpp
+        ../src/game_client.cpp
         ../src/graphics.cpp
         ../src/graphics_board.cpp
         ../src/graphics_button.cpp
@@ -36,6 +39,7 @@ add_executable(client
         ../src/graphics_point.cpp
         ../src/graphics_segment.cpp
         ../src/graphics_shapes.cpp
+        ../src/graphics_window.cpp
         ../src/map.cpp
         ../src/map_cell.cpp
         ../src/map_client.cpp
