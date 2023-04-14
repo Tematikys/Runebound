@@ -79,47 +79,68 @@ add_executable(network_client
         src/builder_map.cpp
         src/card_adventure.cpp
         src/card_fight.cpp
-        src/card_research.cpp
-        src/character.cpp
-        src/character_client.cpp
-        src/dice.cpp
-        src/fight.cpp
-        src/game.cpp
-        src/game_client.cpp
         src/generator_cards_fight.cpp
-        src/generator_characters.cpp
-        src/map.cpp
-        src/map_cell.cpp
-        src/map_client.cpp
-        src/network_client.cpp
-        src/tokens.cpp)
-target_link_libraries(network_client ${Boost_LIBRARIES} ws2_32 wsock32)
-# ===== NETWORK CLIENT ===== #
+        )
+
+
+
+
+
+
+
+add_executable(${PROJECT_NAME}
+            src/card_adventure.cpp
+            src/card_research.cpp
+            src/character.cpp
+            src/dice.cpp
+            src/game.cpp
+#             src/graphics.cpp
+            #tpl/doctest/doctest_main.cpp
+            src/map.cpp
+            src/map_cell.cpp
+            src/tokens.cpp
+            src/builder_map.cpp
+            src/game_client.cpp
+            src/character_client.cpp
+            src/map_client.cpp
+            #src/test_fight.cpp
+            src/fight.cpp
+            src/main.cpp
+            src/generator_characters.cpp
+            #src/test_game.cpp
+            src/card_fight.cpp
+            src/generator_cards_fight.cpp
+        )
+
+
+
+target_link_libraries(Server ${Boost_LIBRARIES})
+target_link_libraries(Server ws2_32)
+target_link_libraries(Server wsock32)
+target_link_libraries(Client ${Boost_LIBRARIES})
+target_link_libraries(Client ws2_32)
+target_link_libraries(Client wsock32)
 
 # ===== LOGICS? ===== #
-add_executable(${PROJECT_NAME}
-        src/card_adventure.cpp
-        src/card_research.cpp
-        src/character.cpp
-        src/dice.cpp
-        src/game.cpp
-        tpl/doctest/doctest_main.cpp
-        src/map.cpp
-        src/map_cell.cpp
-        src/tokens.cpp
-        src/builder_map.cpp
-        src/game_client.cpp
-        src/character_client.cpp
-        src/map_client.cpp
-        #src/test_fight.cpp
-        src/fight.cpp
-        src/generator_characters.cpp
-        src/test_game.cpp
-        src/card_fight.cpp
-        src/generator_cards_fight.cpp)
+#add_executable(${PROJECT_NAME}
+#        src/card_adventure.cpp
+#        src/card_research.cpp
+#        src/character.cpp
+#        src/dice.cpp
+#        src/game.cpp
+#        src/graphics.cpp
+#        tpl/doctest/doctest_main.cpp
+#        src/map.cpp
+#        src/map_cell.cpp
+#        src/tokens.cpp
+#        src/builder_map.cpp
+#        src/game_client.cpp
+#        src/character_client.cpp
+#        src/map_client.cpp
+#        # src/test_fight.cpp
+#        src/fight.cpp
+#        # src/main.cpp
+#        src/generator_characters.cpp
+#        src/test_game.cpp)
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
 # ===== LOGICS? ===== #
-
-
-
-
