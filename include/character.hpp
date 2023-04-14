@@ -13,6 +13,7 @@
 #include "point.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
+#include <fstream>
 
 // #include "fight.hpp"
 
@@ -23,6 +24,7 @@ void to_json(nlohmann::json &json, const Character &character);
 void from_json(const nlohmann::json &json, Character &character);
 
 enum class StateCharacter { NORMAL_GAME, FIGHT };
+enum class StandardCharacter { LISSA, CORBAN, ELDER_MOK, LAUREL_FROM_BLOODWOOD, LORD_HAWTHORNE, MASTER_THORN };
 
 struct Character {
 private:
@@ -39,6 +41,7 @@ private:
     std::shared_ptr<::runebound::fight::Fight> m_current_fight = nullptr;
     std::vector<::runebound::fight::FightToken> m_fight_tokens;
 
+    void load_character_from_file(const std::string &file);
 public:
     Character()
         : m_gold(0),
@@ -66,6 +69,8 @@ public:
           m_speed(speed),
           m_name(std::move(name)) {
     }
+
+    explicit Character(const StandardCharacter &chr);
 
     [[nodiscard]] Point get_position() const {
         return m_current_position;

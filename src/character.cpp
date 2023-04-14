@@ -6,6 +6,43 @@
 
 namespace runebound {
 namespace character {
+
+void Character::load_character_from_file(const std::string &file) {
+    std::ifstream in(file);
+    nlohmann::json json_character;
+    in >> json_character;
+    ::runebound::character::from_json(json_character, *this);
+}
+
+Character::Character(const StandardCharacter &chr) {
+    switch (chr) {
+        case (StandardCharacter::LISSA): {
+            load_character_from_file("../data/json/lissa.json");
+            break;
+        }
+        case (StandardCharacter::MASTER_THORN): {
+            load_character_from_file("../data/json/master_thorn.json");
+            break;
+        }
+        case (StandardCharacter::CORBAN): {
+            load_character_from_file("../data/json/corban.json");
+            break;
+        }
+        case (StandardCharacter::LORD_HAWTHORNE): {
+            load_character_from_file("../data/json/lord_hawthorne.json");
+            break;
+        }
+        case (StandardCharacter::LAUREL_FROM_BLOODWOOD): {
+            load_character_from_file("../data/json/laurel_from_bloodwood.json");
+            break;
+        }
+        case (StandardCharacter::ELDER_MOK): {
+            load_character_from_file("../data/json/elder_mok.json");
+            break;
+        }
+    }
+}
+
 void Character::pop_card(unsigned int card) {
     for (std::size_t i = 0; i < m_cards.size(); ++i) {
         if (m_cards[i] == card) {
