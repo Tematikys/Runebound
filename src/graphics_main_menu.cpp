@@ -3,7 +3,7 @@
 namespace runebound::graphics {
 void MainMenu::render(SDL_Renderer *renderer) {
     for (const auto &but : m_buttons) {
-        but.render(renderer, m_x, m_y);
+        but.render(renderer);
     }
     for (::std::size_t i = 0; i < m_texture_amount; ++i) {
         m_textures[i].render(

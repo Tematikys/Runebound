@@ -16,6 +16,9 @@ namespace runebound::client {
 // client class, is called in main function, contains everything that is in use
 class Client {
 private:
+    // TODO
+    ::runebound::graphics::TextButton m_text;
+
     // network
     ::boost::asio::io_context m_io_context;
     ::boost::asio::executor_work_guard<::boost::asio::io_context::executor_type>

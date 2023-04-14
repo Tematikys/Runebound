@@ -19,19 +19,9 @@ public:
 
     void init_side_coefficients();
 
-    void render(
-        SDL_Renderer *renderer,
-        SDL_Color fill_color,
-        int x_offset = 0,
-        int y_offset = 0
-    ) const;
+    void render(SDL_Renderer *renderer, SDL_Color fill_color) const;
 
-    void render_border(
-        SDL_Renderer *renderer,
-        SDL_Color border_color,
-        int x_offset = 0,
-        int y_offset = 0
-    ) const;
+    void render_border(SDL_Renderer *renderer, SDL_Color border_color) const;
 
     [[nodiscard]] bool in_bounds(const Point &dot) const;
 
@@ -78,19 +68,9 @@ public:
     CircleShape(const Point &center, int radius)
         : m_center(center), m_radius(radius){};
 
-    void render(
-        SDL_Renderer *renderer,
-        SDL_Color fill_color,
-        int x_offset = 0,
-        int y_offset = 0
-    ) const;
+    void render(SDL_Renderer *renderer, SDL_Color fill_color) const;
 
-    void render_border(
-        SDL_Renderer *renderer,
-        SDL_Color border_color,
-        int x_offset = 0,
-        int y_offset = 0
-    ) const;
+    void render_border(SDL_Renderer *renderer, SDL_Color border_color) const;
 
     [[nodiscard]] bool in_bounds(const Point &dot) const;
 };

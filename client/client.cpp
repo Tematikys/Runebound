@@ -19,12 +19,24 @@ void Client::init_graphics() {
         m_fonts[font_name] = nullptr;
         ::runebound::graphics::load_font(m_fonts[font_name], path, size);
     }
+    ::runebound::graphics::Texture texture;
+    texture.load_from_string(
+        m_renderer, m_fonts["OpenSans"], "    ", {0x00, 0x00, 0x00, 0xFF}
+    );
+    ::runebound::graphics::RectButton button(
+        10, 10, 10 + texture.get_width(), 10 + texture.get_height(), 5, 5,
+        texture, []() { ::std::cout << "Click!\n"; }, []() {},
+        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    );
+    m_text = ::std::move(::runebound::graphics::TextButton(
+        button, m_fonts["OpenSans"], {0x00, 0x00, 0x00, 0xFF}
+    ));
 }
 
 void Client::handle_events() {
-    SDL_Event e;
-    while (SDL_PollEvent(&e)) {
-        switch (e.type) {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
             case SDL_QUIT:
                 m_is_running = false;
                 break;
@@ -41,6 +53,8 @@ void Client::render() {
 
     //    m_board.render(m_renderer);
 
+    m_text.render(m_renderer);
+
     for (const auto &button : m_rect_buttons) {
         button.render(m_renderer);
     }
@@ -53,6 +67,18 @@ void Client::update() {
     m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
 
     m_io_context.poll();
+    if (m_mouse_pressed) {
+        if (m_text.in_bounds(m_mouse_pos)) {
+            m_text.on_click();
+            m_mouse_pressed = false;
+        } else {
+            m_text.deactivate();
+        }
+    } else {
+        if (m_text.in_bounds(m_mouse_pos)) {
+            m_text.on_cover();
+        }
+    }
 
     for (const auto &button : m_rect_buttons) {
         if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {

@@ -36,13 +36,11 @@ bool RectButton::in_bounds(const Point &p) const {
     return false;
 }
 
-void RectButton::render(SDL_Renderer *renderer, int x_offset, int y_offset)
-    const {
-    m_shape.render(renderer, m_fill_color, x_offset, y_offset);
-    m_shape.render_border(renderer, m_border_color, x_offset, y_offset);
+void RectButton::render(SDL_Renderer *renderer) const {
+    m_shape.render(renderer, m_fill_color);
+    m_shape.render_border(renderer, m_border_color);
     m_texture.render(
-        renderer, m_x + m_texture_x_offset + x_offset,
-        m_y + m_texture_y_offset + y_offset
+        renderer, m_x + m_texture_x_offset, m_y + m_texture_y_offset
     );
 }
 
@@ -84,13 +82,11 @@ bool CircButton::in_bounds(const Point &p) const {
     return false;
 }
 
-void CircButton::render(SDL_Renderer *renderer, int x_offset, int y_offset)
-    const {
-    m_shape.render(renderer, m_fill_color, x_offset, y_offset);
-    m_shape.render_border(renderer, m_border_color, x_offset, y_offset);
+void CircButton::render(SDL_Renderer *renderer) const {
+    m_shape.render(renderer, m_fill_color);
+    m_shape.render_border(renderer, m_border_color);
     m_texture.render(
-        renderer, m_x + m_texture_x_offset + x_offset,
-        m_y + m_texture_y_offset + y_offset
+        renderer, m_x + m_texture_x_offset, m_y + m_texture_y_offset
     );
 }
 }  // namespace runebound::graphics

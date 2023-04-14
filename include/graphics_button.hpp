@@ -91,8 +91,7 @@ public:
         m_on_cover_function();
     }
 
-    void render(SDL_Renderer *renderer, int x_offset = 0, int y_offset = 0)
-        const;
+    void render(SDL_Renderer *renderer) const;
 
     void update_texture(Texture &texture) {
         m_texture.free();
@@ -135,8 +134,7 @@ public:
         m_on_cover_function();
     }
 
-    void render(SDL_Renderer *renderer, int x_offset = 0, int y_offset = 0)
-        const;
+    void render(SDL_Renderer *renderer) const;
 };
 
 class InputHandler {
@@ -179,32 +177,33 @@ public:
     }
 
     void update() {
-        if (m_active) {
-            SDL_Event e;
-            while (SDL_PollEvent(&e)) {
-                switch (e.type) {
-                    case SDL_TEXTINPUT:
-                        if (!(SDL_GetModState() & KMOD_CTRL &&
-                              (e.text.text[0] == 'c' || e.text.text[0] == 'C' ||
-                               e.text.text[0] == 'v' || e.text.text[0] == 'V')
-                            )) {
-                            m_text += e.text.text;
-                            m_update - true;
-                        }
-                        break;
-                    case SDL_KEYDOWN:
-                        if (e.key.keysym.sym == SDLK_BACKSPACE &&
-                            m_text.length() > 0) {
-                            m_text.pop_back();
-                            m_update = true;
-                        } else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
-                            SDL_SetClipboardText(m_text.c_str());
-                        } else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
-                            m_text = SDL_GetClipboardText();
-                            m_update = true;
-                        }
-                        break;
-                }
+        m_update = false;
+        if (!m_active) {
+            return;
+        }
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            switch (e.type) {
+                case SDL_TEXTINPUT:
+                    if (!(SDL_GetModState() & KMOD_CTRL &&
+                          (e.text.text[0] == 'c' || e.text.text[0] == 'C' ||
+                           e.text.text[0] == 'v' || e.text.text[0] == 'V'))) {
+                        m_text += e.text.text;
+                        m_update = true;
+                    }
+                    break;
+                case SDL_KEYDOWN:
+                    if (e.key.keysym.sym == SDLK_BACKSPACE &&
+                        m_text.length() > 0) {
+                        m_text.pop_back();
+                        m_update = true;
+                    } else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
+                        SDL_SetClipboardText(m_text.c_str());
+                    } else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
+                        m_text = SDL_GetClipboardText();
+                        m_update = true;
+                    }
+                    break;
             }
         }
     }
@@ -257,7 +256,11 @@ public:
         m_button.on_cover();
     }
 
-    void render(SDL_Renderer *renderer, int x_offset = 0, int y_offset = 0) {
+    void update() {
+        m_handler.update();
+    }
+
+    void render(SDL_Renderer *renderer) {
         m_handler.update();
         if (m_handler.is_update()) {
             Texture new_texture;
@@ -266,7 +269,7 @@ public:
             );
             m_button.update_texture(new_texture);
         }
-        m_button.render(renderer, x_offset, y_offset);
+        m_button.render(renderer);
     }
 };
 }  // namespace runebound::graphics
