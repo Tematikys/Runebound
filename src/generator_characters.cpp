@@ -32,6 +32,7 @@ void generate_characters() {
          )}
     );
     write_to_file(master_thorn, "../data/json/master_thorn.json");
+
     ::runebound::character::Character elder_mok(
         2, 9, ::runebound::Point(13, 6), 3, 3, "Elder Mok",
         {::runebound::fight::FightToken(
@@ -48,6 +49,7 @@ void generate_characters() {
          )}
     );
     write_to_file(elder_mok, "../data/json/elder_mok.json");
+
     ::runebound::character::Character lissa(
         1, 9, ::runebound::Point(8, 13), 3, 3, "Lissa",
         {::runebound::fight::FightToken(
@@ -64,6 +66,7 @@ void generate_characters() {
          )}
     );
     write_to_file(lissa, "../data/json/lissa.json");
+
     ::runebound::character::Character laurel_from_bloodwood(
         2, 8, ::runebound::Point(3, 1), 4, 3, "Laurel from Bloodwood",
         {::runebound::fight::FightToken(

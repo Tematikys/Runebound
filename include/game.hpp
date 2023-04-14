@@ -47,6 +47,12 @@ struct NoTokenException : std::runtime_error {
     }
 };
 
+struct CharacterAlreadySelected : std::runtime_error {
+    CharacterAlreadySelected()
+        : std::runtime_error("This character is already selected") {
+    }
+};
+
 struct Game {
 private:
     ::runebound::map::Map m_map;
@@ -58,6 +64,13 @@ private:
     unsigned int m_count_players = 0;
     std::vector<unsigned int> m_indexes_card_research;
     const std::vector<cards::CardResearch> ALL_CARDS_RESEARCH;
+    std::set<character::StandardCharacter> m_remaining_standard_characters = {
+        character::StandardCharacter::LISSA,
+        character::StandardCharacter::CORBIN,
+        character::StandardCharacter::ELDER_MOK,
+        character::StandardCharacter::LAUREL_FROM_BLOODWOOD,
+        character::StandardCharacter::LORD_HAWTHORNE,
+        character::StandardCharacter::MASTER_THORN};
 
     std::vector<cards::CardResearch> generate_all_cards_research();
 
@@ -109,6 +122,11 @@ public:
 
     void relax(std::shared_ptr<character::Character> chr);
 
+    [[nodiscard]] std::set<::runebound::character::StandardCharacter>
+    get_remaining_standard_characters() const {
+        return m_remaining_standard_characters;
+    }
+
     std::shared_ptr<::runebound::character::Character> make_character(
         int gold,
         int health,
@@ -129,6 +147,10 @@ public:
         m_count_players += 1;
         return m_characters.back();
     }
+
+    std::shared_ptr<::runebound::character::Character> make_character(
+        const ::runebound::character::StandardCharacter &name
+    );
 
     [[nodiscard]] int get_map_size() const {
         return m_map.get_size();

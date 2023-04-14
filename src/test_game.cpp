@@ -6,18 +6,23 @@ TEST_CASE("game") {
     using namespace runebound::fight;
     std::vector<FightToken> character_tokens = {
         FightToken(
-            HandFightTokens::MAGICAL_DAMAGE, 0, HandFightTokens::DEXTERITY, 0
-        ),
-        FightToken(HandFightTokens::NOTHING, 1, HandFightTokens::DOUBLING, 0),
-        FightToken(
-            HandFightTokens::SHIELD, 0, HandFightTokens::PHYSICAL_DAMAGE, 0
+            HandFightTokens::MAGICAL_DAMAGE, 0, 1, HandFightTokens::DEXTERITY,
+            0, 1
         ),
         FightToken(
-            HandFightTokens::PHYSICAL_DAMAGE, 0, HandFightTokens::NOTHING, 1
+            HandFightTokens::NOTHING, 1, 1, HandFightTokens::DOUBLING, 0, 1
         ),
         FightToken(
-            HandFightTokens::PHYSICAL_DAMAGE, 0,
-            HandFightTokens::MAGICAL_DAMAGE, 1
+            HandFightTokens::SHIELD, 0, 1, HandFightTokens::PHYSICAL_DAMAGE, 0,
+            1
+        ),
+        FightToken(
+            HandFightTokens::PHYSICAL_DAMAGE, 0, 1, HandFightTokens::NOTHING, 1,
+            1
+        ),
+        FightToken(
+            HandFightTokens::PHYSICAL_DAMAGE, 0, 1,
+            HandFightTokens::MAGICAL_DAMAGE, 1, 1
         ),
     };
 
@@ -50,4 +55,34 @@ TEST_CASE("game") {
     CHECK(third->get_state() == runebound::character::StateCharacter::FIGHT);
     auto fight = third->get_current_fight();
     CHECK(fight != nullptr);
+}
+
+TEST_CASE("generating characters") {
+    ::runebound::game::Game game;
+    auto remaining_characters = game.get_remaining_standard_characters();
+    CHECK(remaining_characters.size() == 6);
+    auto lissa =
+        game.make_character(runebound::character::StandardCharacter::LISSA);
+    remaining_characters = game.get_remaining_standard_characters();
+    CHECK(remaining_characters.size() == 5);
+    CHECK(lissa->get_name() == "Lissa");
+    auto corbin =
+        game.make_character(runebound::character::StandardCharacter::CORBIN);
+    CHECK(
+        corbin->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
+    remaining_characters = game.get_remaining_standard_characters();
+    CHECK(remaining_characters.size() == 4);
+    CHECK(corbin->get_name() == "Corbin");
+    std::vector<runebound::dice::HandDice> dice_res{
+        runebound::dice::HandDice::JOKER};
+    CHECK(lissa->get_action_points() == 3);
+    game.make_move(lissa, runebound::Point(9, 13), dice_res);
+    CHECK(lissa->get_action_points() == 1);
+    game.relax(lissa);
+    CHECK(lissa->get_action_points() == 0);
+    game.start_next_character_turn();
+    CHECK(corbin->get_action_points() == 3);
+    game.make_move(corbin, runebound::Point(12, 6), dice_res);
+    CHECK(corbin->get_action_points() == 1);
 }

@@ -37,6 +37,22 @@ Point Game::get_position_character(
     return chr->get_position();
 }
 
+std::shared_ptr<::runebound::character::Character> Game::make_character(
+    const ::runebound::character::StandardCharacter &name
+) {
+    if (m_remaining_standard_characters.count(name) == 0) {
+        throw CharacterAlreadySelected();
+    }
+    m_characters.emplace_back(
+        std::make_shared<::runebound::character::Character>(
+            ::runebound::character::Character(name)
+        )
+    );
+    m_count_players += 1;
+    m_remaining_standard_characters.erase(name);
+    return m_characters.back();
+}
+
 std::vector<cards::CardResearch> Game::generate_all_cards_research() {
     std::vector<cards::CardResearch> cards;
     m_indexes_card_research.resize(DECK_SIZE);
