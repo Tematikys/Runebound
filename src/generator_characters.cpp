@@ -64,5 +64,57 @@ void generate_characters() {
          )}
     );
     write_to_file(lissa, "../data/json/lissa.json");
+    ::runebound::character::Character laurel_from_bloodwood(
+        2, 8, ::runebound::Point(3, 1), 4, 3, "Laurel from Bloodwood",
+        {::runebound::fight::FightToken(
+             fight::HandFightTokens::PHYSICAL_DAMAGE, 0, 2,
+             fight::HandFightTokens::MAGICAL_DAMAGE, 0, 1
+         ),
+         ::runebound::fight::FightToken(
+             fight::HandFightTokens::SHIELD, 0, 1,
+             fight::HandFightTokens::PHYSICAL_DAMAGE, 1, 1
+         ),
+         ::runebound::fight::FightToken(
+             fight::HandFightTokens::PHYSICAL_DAMAGE, 1, 1,
+             fight::HandFightTokens::DEXTERITY, 0, 1
+         )}
+    );
+    write_to_file(
+        laurel_from_bloodwood, "../data/json/laurel_from_bloodwood.json"
+    );
+
+    ::runebound::character::Character lord_hawthorne(
+        3, 9, ::runebound::Point(13, 12), 3, 3, "Lord Hawthorne",
+        {::runebound::fight::FightToken(
+             fight::HandFightTokens::PHYSICAL_DAMAGE, 0, 2,
+             fight::HandFightTokens::SHIELD, 0, 1
+         ),
+         ::runebound::fight::FightToken(
+             fight::HandFightTokens::PHYSICAL_DAMAGE, 1, 1,
+             fight::HandFightTokens::DEXTERITY, 0, 1
+         ),
+         ::runebound::fight::FightToken(
+             fight::HandFightTokens::PHYSICAL_DAMAGE, 1, 1,
+             fight::HandFightTokens::NOTHING, 0, 1
+         )}
+    );
+    write_to_file(lord_hawthorne, "../data/json/lord_hawthorne.json");
+
+    ::runebound::character::Character corbin(
+        2, 10, ::runebound::Point(11, 6), 3, 3, "Corbin",
+        {::runebound::fight::FightToken(
+             fight::HandFightTokens::PHYSICAL_DAMAGE, 0, 2,
+             fight::HandFightTokens::MAGICAL_DAMAGE, 0, 1
+         ),
+         ::runebound::fight::FightToken(
+             fight::HandFightTokens::PHYSICAL_DAMAGE, 1, 1,
+             fight::HandFightTokens::SHIELD, 0, 1
+         ),
+         ::runebound::fight::FightToken(
+             fight::HandFightTokens::DEXTERITY, 0, 1,
+             fight::HandFightTokens::PHYSICAL_DAMAGE, 0, 1
+         )}
+    );
+    write_to_file(corbin, "../data/json/corbin.json");
 }
 }  // namespace runebound::generator
