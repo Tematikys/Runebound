@@ -119,10 +119,6 @@ namespace runebound::network {
             return game_names;
         }
 
-//        [[nodiscard]] const std::vector<std::string> &get_remaining_characters() const {
-//            return game_names;
-//        }
-
         [[nodiscard]] int get_game_names_size() const {
             return game_names.size();
         }
