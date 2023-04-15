@@ -42,8 +42,8 @@ namespace runebound::network {
             }
 
             if (answer["change type"] == "game") {
-                std::cout << "Map changed, maybe\n";
-                runebound::map::from_json(answer, m_map);
+                std::cout << "Game changed, maybe\n";
+                runebound::game::from_json(answer, m_game_client);
             }
         }
 
@@ -111,14 +111,30 @@ namespace runebound::network {
             do_write(data.dump());
         }
 
-        const std::vector<std::string> &get_game_names() const {
+        [[nodiscard]] const std::vector<std::string> &get_game_names() const {
             return game_names;
         }
+
+//        [[nodiscard]] const std::vector<std::string> &get_remaining_characters() const {
+//            return game_names;
+//        }
+
+        [[nodiscard]] int get_game_names_size() const {
+            return game_names.size();
+        }
+
+        [[nodiscard]] const runebound::game::GameClient &get_game_client() const {
+            return m_game_client;
+        }
+
+
 
     public:
         std::string m_user_name;
         std::vector<std::string> game_names;
-        runebound::map::MapClient m_map;
+        runebound::game::GameClient m_game_client;
+
+
 
     private:
         boost::asio::streambuf m_buffer;
