@@ -27,6 +27,8 @@ public:
         other.m_texture = nullptr;
     }
 
+    Texture(const Texture &other) = delete;
+
     Texture &operator=(Texture &&other) noexcept {
         m_width = other.m_width;
         m_height = other.m_height;
@@ -36,6 +38,8 @@ public:
         other.m_texture = nullptr;
         return *this;
     }
+
+    Texture &operator=(const Texture &other) = delete;
 
     ~Texture() {
         free();
@@ -87,40 +91,6 @@ public:
     [[nodiscard]] int get_height() const {
         return m_height;
     };
-};
-
-class TextField {
-private:
-    ::std::string m_text;
-
-public:
-    TextField() : m_text(){};
-
-    void push(const ::std::string &suffix) {
-        m_text += suffix;
-    }
-
-    void pop() {
-        if (!m_text.empty()) {
-            m_text.pop_back();
-        }
-    }
-
-    void clear() {
-        m_text = "";
-    }
-
-    void render(
-        SDL_Renderer *renderer,
-        TTF_Font *font,
-        SDL_Color color,
-        int x,
-        int y
-    ) const;
-
-    [[nodiscard]] const ::std::string &get() const {
-        return m_text;
-    }
 };
 
 // SDL init function

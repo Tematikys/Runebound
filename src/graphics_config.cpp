@@ -2,7 +2,7 @@
 
 namespace runebound::graphics {
 const ::std::vector<::std::pair<::std::string, ::std::string>> FONTS = {
-    {"../../data/fonts/OpenSans-Regular.ttf", "OpenSans"}};
+    {"data/fonts/FreeMono.ttf", "FreeMono"}};
 
 const int HEXAGON_RADIUS = 30;
 const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};

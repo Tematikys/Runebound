@@ -50,10 +50,15 @@ public:
 };
 
 class RectangleShape : public PolygonShape {
+private:
+    SDL_Rect m_rect{};
+
 public:
     RectangleShape() = default;
 
     RectangleShape(int x, int y, int width, int height);
+
+    [[nodiscard]] const SDL_Rect &get_rect() const;
 };
 
 // basic circle class

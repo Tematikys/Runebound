@@ -65,6 +65,8 @@ public:
           m_shape(::std::move(other.m_shape)) {
     }
 
+    Button(const Button &other) = delete;
+
     Button &operator=(Button &&other) noexcept {
         m_x = other.m_x;
         m_y = other.m_y;
@@ -79,6 +81,12 @@ public:
         m_on_cover_function = ::std::move(other.m_on_cover_function);
         m_shape = ::std::move(other.m_shape);
         return *this;
+    }
+
+    Button &operator=(const Button &other) = delete;
+
+    ~Button() {
+        m_texture.free();
     }
 
     [[nodiscard]] bool in_bounds(const Point &p) const;
@@ -96,6 +104,73 @@ public:
     void update_texture(Texture &texture) {
         m_texture.free();
         m_texture = ::std::move(texture);
+    }
+
+    [[nodiscard]] const SDL_Rect &get_rect() const {
+        return m_shape.get_rect();
+    }
+};
+
+class TextField {
+private:
+    ::std::string m_text;
+    int m_max_text_len = 0;
+    Button m_button;
+
+public:
+    TextField() : m_text(), m_button(){};
+
+    TextField(::std::string text, Button &button, int max_len = 0)
+        : m_text(::std::move(text)),
+          m_button(::std::move(button)),
+          m_max_text_len(max_len){};
+
+    void push(const ::std::string &suffix) {
+        if (m_max_text_len == 0) {
+            m_text += suffix;
+        } else {
+            if (suffix.length() + m_text.length() <= m_max_text_len) {
+                m_text += suffix;
+            }
+        }
+    }
+
+    void pop() {
+        if (!m_text.empty()) {
+            m_text.pop_back();
+        }
+    }
+
+    void clear() {
+        m_text = "";
+    }
+
+    void on_click() const {
+        m_button.on_click();
+    }
+
+    void on_cover() const {
+        m_button.on_cover();
+    }
+
+    [[nodiscard]] bool in_bounds(const Point &p) const {
+        return m_button.in_bounds(p);
+    }
+
+    void render(
+        SDL_Renderer *renderer,
+        TTF_Font *font,
+        SDL_Color color,
+        int x,
+        int y,
+        SDL_Rect *clip = nullptr,
+        double angle = 0.0,
+        SDL_Point *center = nullptr,
+        SDL_RendererFlip flip = SDL_FLIP_NONE
+    ) const;
+
+    [[nodiscard]] const ::std::string &get() const {
+        return m_text;
     }
 };
 }  // namespace runebound::graphics

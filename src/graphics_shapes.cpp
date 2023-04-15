@@ -204,6 +204,11 @@ RectangleShape::RectangleShape(int x, int y, int width, int height) {
     m_vertexes.emplace_back(x + width, y);
     m_vertexes.emplace_back(x + width, y + height);
     m_vertexes.emplace_back(x, y + height);
+    m_rect = SDL_Rect(x, y, width, height);
     init_side_coefficients();
+}
+
+const SDL_Rect &RectangleShape::get_rect() const {
+    return m_rect;
 }
 }  // namespace runebound::graphics

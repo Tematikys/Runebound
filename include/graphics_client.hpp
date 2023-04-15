@@ -16,6 +16,12 @@ namespace runebound::client {
 // client class, is called in main function, contains everything that is in use
 class Client {
 private:
+    // TODO
+    ::std::size_t m_start_game_index = 0;
+    ::std::size_t m_show_amount = 10;
+    bool m_joined_to_game = false;
+    ::std::vector<::runebound::graphics::Button> m_games_to_render;
+
     // network
     ::boost::asio::io_context m_io_context;
     ::boost::asio::executor_work_guard<::boost::asio::io_context::executor_type>
@@ -54,6 +60,8 @@ public:
     void init();
 
     void init_graphics();
+
+    void init_board();
 
     void load_fonts();
 

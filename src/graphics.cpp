@@ -180,17 +180,4 @@ bool load_font(TTF_Font *&font, const ::std::string &path, int font_size) {
     }
     return true;
 }
-
-void TextField::render(
-    SDL_Renderer *renderer,
-    TTF_Font *font,
-    SDL_Color color,
-    int x,
-    int y
-) const {
-    Texture texture;
-    generate_text(renderer, texture, m_text, font, color);
-    texture.render(renderer, x, y);
-    texture.free();
-}
 }  // namespace runebound::graphics

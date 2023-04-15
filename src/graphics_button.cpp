@@ -43,4 +43,22 @@ void Button::render(SDL_Renderer *renderer) const {
         renderer, m_x + m_texture_x_offset, m_y + m_texture_y_offset
     );
 }
+
+void TextField::render(
+    SDL_Renderer *renderer,
+    TTF_Font *font,
+    SDL_Color color,
+    int x,
+    int y,
+    SDL_Rect *clip,
+    double angle,
+    SDL_Point *center,
+    SDL_RendererFlip flip
+) const {
+    m_button.render(renderer);
+    Texture texture;
+    generate_text(renderer, texture, m_text, font, color);
+    texture.render(renderer, x, y, clip, angle, center, flip);
+    texture.free();
+}
 }  // namespace runebound::graphics
