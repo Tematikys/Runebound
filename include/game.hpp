@@ -81,6 +81,7 @@ private:
         }
     }
 
+
     void check_sufficiency_action_points(int necessary_action_points) {
         if (m_characters[m_turn]->get_action_points() <
             necessary_action_points) {
@@ -95,7 +96,6 @@ private:
         generate_all_cards_research();
         generate_all_cards_fight();
     }
-
 public:
     Game() {
         generate_all_cards();
@@ -110,14 +110,11 @@ public:
         return *this;
     }
 
-    void take_token(const std::shared_ptr<character::Character> &chr);
 
     void start_next_character_turn() {
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
     }
-
-    void end_fight(const std::shared_ptr<character::Character> &chr);
 
     void relax(std::shared_ptr<character::Character> chr);
 

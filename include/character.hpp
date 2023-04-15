@@ -42,7 +42,7 @@ private:
     std::string m_name;
     std::set<unsigned int> m_cards_research;
     std::set<unsigned int> m_cards_fight;
-    std::set<std::pair<AdventureType, unsigned int>> m_trophies;
+    std::set <std::pair<AdventureType, unsigned int>> m_trophies;
 
     std::map<runebound::token::Token, int> m_tokens;
     int m_max_health;
@@ -87,10 +87,6 @@ public:
         return m_current_position;
     }
 
-    [[nodiscard]] unsigned int get_card_fight() const {
-        return *(--m_cards_fight.end());
-    }
-
     void set_position(const Point &new_position) {
         m_current_position = new_position;
     }
@@ -104,23 +100,9 @@ public:
         m_current_fight = std::move(fight);
     }
 
-    void change_gold(int delta_gold) {
-        m_gold += delta_gold;
-    }
-
-    void end_fight();
-
-    void add_trophy(AdventureType type, unsigned int card) {
-        m_trophies.insert({type, card});
-    }
-
-    [[nodiscard]] std::set<std::pair<AdventureType, unsigned int>> get_trophies(
-    ) const {
-        return m_trophies;
-    }
-
-    [[nodiscard]] std::set<unsigned int> get_cards_fight() const {
-        return m_cards_fight;
+    void end_fight() {
+        m_current_state = StateCharacter::NORMAL_GAME;
+        m_current_fight = nullptr;
     }
 
     [[nodiscard]] std::shared_ptr<::runebound::fight::Fight> get_current_fight(

@@ -1,9 +1,9 @@
 #include "game.hpp"
-#include <filesystem>
 #include <nlohmann/json.hpp>
-#include "card_fight.hpp"
 #include "point.hpp"
 #include "runebound_fwd.hpp"
+#include "card_fight.hpp"
+#include <filesystem>
 
 namespace runebound {
 namespace game {
@@ -100,15 +100,13 @@ void Game::check_and_get_card_adventure_because_of_token(
             unsigned int card =
                 m_card_deck_research[rng() % m_card_deck_research.size()];
             chr->add_card(AdventureType::RESEARCH, card);
-            m_card_deck_research.erase(std::find(
-                m_card_deck_research.begin(), m_card_deck_research.end(), card
-            ));
+            pop_element_from_vector(card, m_card_deck_research);
         }
         m_map.get_cell_map(chr->get_position()).reverse_token();
     }
 }
 
-void Game::take_token(const std::shared_ptr<character::Character> &chr) {
+void Game::reverse_token(std::shared_ptr<character::Character> chr) {
     check_turn(chr);
     check_sufficiency_action_points(2);
     Point position = chr->get_position();
@@ -119,28 +117,14 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         throw BackSideTokenException();
     }
     if (m_map.get_cell_map(position).get_token() == AdventureType::FIGHT) {
-        unsigned int card = m_card_deck_fight[rng() % m_card_deck_fight.size()];
-        chr->add_card(AdventureType::FIGHT, card);
-        m_card_deck_fight.erase(
-            std::find(m_card_deck_fight.begin(), m_card_deck_fight.end(), card)
-        );
-        chr->start_fight(std::make_shared<fight::Fight>(
-            chr, m_all_cards_fight[card].get_enemy()
+        chr->start_fight(std::make_shared<::runebound::fight::Fight>(
+            ::runebound::fight::Fight(
+                chr, ::runebound::fight::Enemy(5, "Standard")
+            )
         ));
     }
     m_map.reverse_token(position);
     m_characters[m_turn]->update_action_points(-2);
-}
-
-void Game::end_fight(const std::shared_ptr<character::Character> &chr) {
-    if (chr->get_current_fight()->get_winner() ==
-        fight::Participant::CHARACTER) {
-        chr->change_gold(
-            m_all_cards_fight[chr->get_card_fight()].get_gold_award()
-        );
-        chr->add_trophy(AdventureType::FIGHT, chr->get_card_fight());
-    }
-    chr->end_fight();
 }
 
 std::vector<Point> Game::make_move(

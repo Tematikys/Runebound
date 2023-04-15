@@ -10,11 +10,6 @@ protected:
     bool m_trophy = false;
     ::runebound::AdventureType m_card_type;
 public:
-    CardAdventure(const CardAdventure &) = delete;
-    CardAdventure(CardAdventure &&) = delete;
-    CardAdventure &operator=(const CardAdventure &) = delete;
-    CardAdventure &operator=(CardAdventure &&) = delete;
-    CardAdventure() = default;
     virtual ~CardAdventure() = default;
 
     [[nodiscard]] virtual ::runebound::AdventureType get_card_type() {
