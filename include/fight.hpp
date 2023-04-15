@@ -22,6 +22,10 @@ struct WrongCharacterTurnException : std::runtime_error {
     }
 };
 
+struct FightIsStillOnException : std::runtime_error {
+    FightIsStillOnException() : std::runtime_error("The fight is still on") {
+    }
+};
 struct TokenHandCount {
 public:
     FightToken token;
@@ -174,6 +178,13 @@ public:
         : m_character(std::move(character)), m_enemy(std::move(enemy)) {
     }
 
+    [[nodiscard]] Participant get_winner() const {
+        if (!check_end_fight()) {
+            throw FightIsStillOnException();
+        }
+        return m_turn;
+    }
+
     [[nodiscard]] std::shared_ptr<Enemy> get_enemy() const {
         return std::make_shared<Enemy>(m_enemy);
     }
@@ -200,7 +211,7 @@ public:
         std::optional<TokenHandCount> doubling_token
     );
 
-    bool check_end_fight() {
+    bool check_end_fight() const {
         return m_character->get_health() == 0 || m_enemy.get_health() == 0;
     }
 

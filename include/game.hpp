@@ -117,8 +117,6 @@ public:
         return m_last_dice_result;
     }
 
-    void take_token(const std::shared_ptr<character::Character> &chr);
-
     void start_next_character_turn() {
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
