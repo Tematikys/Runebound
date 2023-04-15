@@ -2,9 +2,9 @@
 #include <map>
 #include <memory>
 #include <nlohmann/json.hpp>
-#include "fight_token.hpp"
 #include "card_fight.hpp"
 #include "fight.hpp"
+#include "fight_token.hpp"
 
 namespace runebound {
 namespace character {
@@ -23,7 +23,8 @@ Character::Character(const StandardCharacter &chr) {
             break;
         }
         case (StandardCharacter::MASTER_THORN): {
-            load_character_from_file("../data/json/characters/master_thorn.json");
+            load_character_from_file("../data/json/characters/master_thorn.json"
+            );
             break;
         }
         case (StandardCharacter::CORBIN): {
@@ -31,11 +32,15 @@ Character::Character(const StandardCharacter &chr) {
             break;
         }
         case (StandardCharacter::LORD_HAWTHORNE): {
-            load_character_from_file("../data/json/characters/lord_hawthorne.json");
+            load_character_from_file(
+                "../data/json/characters/lord_hawthorne.json"
+            );
             break;
         }
         case (StandardCharacter::LAUREL_FROM_BLOODWOOD): {
-            load_character_from_file("../data/json/characters/laurel_from_bloodwood.json");
+            load_character_from_file(
+                "../data/json/characters/laurel_from_bloodwood.json"
+            );
             break;
         }
         case (StandardCharacter::ELDER_MOK): {
@@ -53,6 +58,7 @@ void Character::add_card(AdventureType type, unsigned int card) {
         m_cards_research.insert(card);
     }
 }
+
 void Character::pop_card(AdventureType type, unsigned int card) {
     if (type == AdventureType::RESEARCH) {
         m_cards_research.erase(card);
@@ -83,7 +89,6 @@ void to_json(nlohmann::json &json, const Character &character) {
     json["m_cards_research"] = character.m_cards_research;
     json["m_fight_tokens"] = character.m_fight_tokens;
     json["m_trophies"] = character.m_trophies;
-
 }
 
 void from_json(const nlohmann::json &json, Character &character) {
@@ -113,10 +118,9 @@ void from_json(const nlohmann::json &json, Character &character) {
     }
     character.m_trophies.clear();
     for (const auto &card : json["m_trophies"]) {
-        std::pair <::runebound::AdventureType, unsigned int> card_int = card;
+        std::pair<::runebound::AdventureType, unsigned int> card_int = card;
         character.m_trophies.insert(card_int);
     }
-
 }
 }  // namespace character
 }  // namespace runebound

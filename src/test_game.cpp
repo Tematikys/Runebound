@@ -89,9 +89,12 @@ TEST_CASE("generating characters") {
 
 TEST_CASE("card_fight") {
     ::runebound::game::Game game;
-    auto lord = game.make_character(runebound::character::StandardCharacter::LORD_HAWTHORNE);
+    auto lord = game.make_character(
+        runebound::character::StandardCharacter::LORD_HAWTHORNE
+    );
     std::vector<runebound::dice::HandDice> dice_res{
-        runebound::dice::HandDice::PLAIN, runebound::dice::HandDice::PLAIN_FOREST};
+        runebound::dice::HandDice::PLAIN,
+        runebound::dice::HandDice::PLAIN_FOREST};
     game.make_move(lord, runebound::Point(13, 14), dice_res);
     CHECK(lord->get_position() == runebound::Point(13, 14));
     game.relax(lord);
@@ -100,6 +103,11 @@ TEST_CASE("card_fight") {
     game.take_token(lord);
     CHECK(lord->get_state() == runebound::character::StateCharacter::FIGHT);
     auto fight = lord->get_current_fight();
-    std::cout << fight->get_enemy()->get_name() << ' ' << fight->get_enemy()->get_health() << '\n';
-    
+    CHECK(lord->get_cards_fight().size() == 1);
+    CHECK(lord->get_trophies().size() == 0);
+    fight->get_enemy()->update_health(-fight->get_enemy()->get_health());
+    fight->check_end_fight();
+    game.end_fight(lord);
+    CHECK(lord->get_cards_fight().size() == 0);
+    CHECK(lord->get_trophies().size() == 1);
 }
