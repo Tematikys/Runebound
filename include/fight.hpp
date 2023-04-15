@@ -106,6 +106,10 @@ public:
         return m_health;
     }
 
+    [[nodiscard]] std::string get_name() const {
+        return m_name;
+    }
+
     [[nodiscard]] std::vector<FightToken> get_fight_token() const {
         return m_fight_tokens;
     }
