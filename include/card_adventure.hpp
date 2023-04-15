@@ -9,6 +9,7 @@ struct CardAdventure {
 protected:
     bool m_trophy = false;
     ::runebound::AdventureType m_card_type;
+
 public:
     virtual ~CardAdventure() = default;
 

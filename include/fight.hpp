@@ -26,6 +26,7 @@ struct FightIsStillOnException : std::runtime_error {
     FightIsStillOnException() : std::runtime_error("The fight is still on") {
     }
 };
+
 struct TokenHandCount {
 public:
     FightToken token;
@@ -96,7 +97,8 @@ private:
     };
 
 public:
-    Enemy() : m_health(0) {}
+    Enemy() : m_health(0) {
+    }
 
     Enemy(int health, std::string name)
         : m_health(health), m_name(std::move(name)) {
@@ -127,7 +129,6 @@ public:
         enemy.m_name = json["m_name"];
         enemy.m_health = json["m_health"];
     }
-
 };
 
 struct Fight {
@@ -185,8 +186,8 @@ public:
         return m_turn;
     }
 
-    [[nodiscard]] std::shared_ptr<Enemy> get_enemy() const {
-        return std::make_shared<Enemy>(m_enemy);
+    [[nodiscard]] Enemy *get_enemy() {
+        return &m_enemy;
     }
 
     void pass_character() {

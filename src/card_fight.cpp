@@ -15,4 +15,4 @@ void from_json(const nlohmann::json &json, CardFight &card) {
     card.m_trophy = json["m_trophy"];
     card.m_card_type = json["m_card_type"];
 }
-} // namespace runebound::cards
+}  // namespace runebound::cards

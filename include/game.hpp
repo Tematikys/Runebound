@@ -81,7 +81,6 @@ private:
         }
     }
 
-
     void check_sufficiency_action_points(int necessary_action_points) {
         if (m_characters[m_turn]->get_action_points() <
             necessary_action_points) {
@@ -96,6 +95,7 @@ private:
         generate_all_cards_research();
         generate_all_cards_fight();
     }
+
 public:
     Game() {
         generate_all_cards();
