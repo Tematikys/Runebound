@@ -22,7 +22,6 @@ std::map<std::string, runebound::game::Game> games;
 std::map<std::string, std::set<std::string>> game_users;
 std::map<std::string, std::shared_ptr<runebound::character::Character>> user_character;
 std::map<std::string, Connection *> user_connection;
-std::map<std::string, ::runebound::map::MapClient> game_map;
 
 class Connection : public std::enable_shared_from_this<Connection> {
 public:
@@ -69,7 +68,6 @@ public:
             std::string game_name = data["game name"];
             game_names.push_back(game_name);
             games[game_name] = runebound::game::Game();
-            game_map[game_name] = runebound::map::MapClient();
             for (auto session : connections) {
                 session->send_game_names();
             }
@@ -138,7 +136,7 @@ void Connection::send_game_names() {
 void Connection::send_game() {
     json answer;
     answer["change type"] = "game";
-    runebound::map::to_json(answer, game_map[m_game_name]);
+    runebound::game::to_json(answer, ::runebound::game::GameClient(*m_game));
     write(answer.dump());
 }
 
