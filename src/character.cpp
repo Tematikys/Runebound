@@ -4,6 +4,7 @@
 #include <nlohmann/json.hpp>
 #include "fight_token.hpp"
 #include "card_fight.hpp"
+#include "fight.hpp"
 
 namespace runebound {
 namespace character {
@@ -61,6 +62,11 @@ void Character::pop_card(AdventureType type, unsigned int card) {
     }
 }
 
+void Character::end_fight() {
+    m_cards_fight.erase(--m_cards_fight.end());
+    m_current_state = StateCharacter::NORMAL_GAME;
+    m_current_fight = nullptr;
+}
 void to_json(nlohmann::json &json, const Character &character) {
     json["m_hand_limit"] = character.m_hand_limit;
     json["m_speed"] = character.m_speed;
