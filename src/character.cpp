@@ -2,9 +2,8 @@
 #include <map>
 #include <memory>
 #include <nlohmann/json.hpp>
-#include "card_fight.hpp"
-#include "fight.hpp"
 #include "fight_token.hpp"
+#include "card_fight.hpp"
 
 namespace runebound {
 namespace character {
@@ -19,32 +18,27 @@ void Character::load_character_from_file(const std::string &file) {
 Character::Character(const StandardCharacter &chr) {
     switch (chr) {
         case (StandardCharacter::LISSA): {
-            load_character_from_file("../data/json/characters/lissa.json");
+            load_character_from_file("../data/json/lissa.json");
             break;
         }
         case (StandardCharacter::MASTER_THORN): {
-            load_character_from_file("../data/json/characters/master_thorn.json"
-            );
+            load_character_from_file("../data/json/master_thorn.json");
             break;
         }
         case (StandardCharacter::CORBIN): {
-            load_character_from_file("../data/json/characters/corbin.json");
+            load_character_from_file("../data/json/corbin.json");
             break;
         }
         case (StandardCharacter::LORD_HAWTHORNE): {
-            load_character_from_file(
-                "../data/json/characters/lord_hawthorne.json"
-            );
+            load_character_from_file("../data/json/lord_hawthorne.json");
             break;
         }
         case (StandardCharacter::LAUREL_FROM_BLOODWOOD): {
-            load_character_from_file(
-                "../data/json/characters/laurel_from_bloodwood.json"
-            );
+            load_character_from_file("../data/json/laurel_from_bloodwood.json");
             break;
         }
         case (StandardCharacter::ELDER_MOK): {
-            load_character_from_file("../data/json/characters/elder_mok.json");
+            load_character_from_file("../data/json/elder_mok.json");
             break;
         }
     }
@@ -58,7 +52,6 @@ void Character::add_card(AdventureType type, unsigned int card) {
         m_cards_research.insert(card);
     }
 }
-
 void Character::pop_card(AdventureType type, unsigned int card) {
     if (type == AdventureType::RESEARCH) {
         m_cards_research.erase(card);
@@ -66,12 +59,6 @@ void Character::pop_card(AdventureType type, unsigned int card) {
     if (type == AdventureType::FIGHT) {
         m_cards_fight.erase(card);
     }
-}
-
-void Character::end_fight() {
-    m_cards_fight.erase(--m_cards_fight.end());
-    m_current_state = StateCharacter::NORMAL_GAME;
-    m_current_fight = nullptr;
 }
 
 void to_json(nlohmann::json &json, const Character &character) {
@@ -88,7 +75,6 @@ void to_json(nlohmann::json &json, const Character &character) {
     json["m_cards_fight"] = character.m_cards_fight;
     json["m_cards_research"] = character.m_cards_research;
     json["m_fight_tokens"] = character.m_fight_tokens;
-    json["m_trophies"] = character.m_trophies;
 }
 
 void from_json(const nlohmann::json &json, Character &character) {
@@ -116,11 +102,7 @@ void from_json(const nlohmann::json &json, Character &character) {
         unsigned int card_int = card;
         character.m_cards_research.insert(card_int);
     }
-    character.m_trophies.clear();
-    for (const auto &card : json["m_trophies"]) {
-        std::pair<::runebound::AdventureType, unsigned int> card_int = card;
-        character.m_trophies.insert(card_int);
-    }
+
 }
 }  // namespace character
 }  // namespace runebound

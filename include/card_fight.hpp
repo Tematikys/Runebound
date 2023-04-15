@@ -9,6 +9,8 @@
 
 namespace runebound::cards {
 
+struct CardFight;
+
 void to_json(nlohmann::json &json, const CardFight &card);
 void from_json(const nlohmann::json &json, CardFight &card);
 
@@ -20,6 +22,8 @@ private:
 public:
      ::runebound::AdventureType m_card_type =
         ::runebound::AdventureType::FIGHT;
+
+     CardFight() : m_gold_award(0) {}
 
      CardFight(int health, const std::string &name_enemy, int gold) : m_enemy(fight::Enemy(health, name_enemy)), m_gold_award(gold) {}
 

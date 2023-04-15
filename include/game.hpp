@@ -6,13 +6,13 @@
 #include <nlohmann/json_fwd.hpp>
 #include <utility>
 #include <vector>
-#include "card_fight.hpp"
 #include "card_research.hpp"
 #include "character.hpp"
 #include "fight.hpp"
 #include "map.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
+#include "card_fight.hpp"
 
 namespace runebound {
 const int DECK_SIZE = 15;
@@ -75,11 +75,24 @@ private:
         character::StandardCharacter::LORD_HAWTHORNE,
         character::StandardCharacter::MASTER_THORN};
 
+
+    template <typename T>
+    void pop_element_from_vector(T element, std::vector<T> &vec) {
+        for (std::size_t i = 0; i < vec.size(); ++i) {
+            if (vec[i] == element) {
+                std::swap(vec[i], vec.back());
+                break;
+            }
+        }
+        vec.pop_back();
+    }
+
     void check_turn(const std::shared_ptr<character::Character> &chr) {
         if (chr->get_name() != m_characters[m_turn]->get_name()) {
             throw WrongCharacterTurnException();
         }
     }
+
 
     void check_sufficiency_action_points(int necessary_action_points) {
         if (m_characters[m_turn]->get_action_points() <
@@ -95,7 +108,6 @@ private:
         generate_all_cards_research();
         generate_all_cards_fight();
     }
-
 public:
     Game() {
         generate_all_cards();
@@ -110,27 +122,13 @@ public:
         return *this;
     }
 
-    void take_token(const std::shared_ptr<character::Character> &chr);
 
     void start_next_character_turn() {
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
     }
 
-    void end_fight(const std::shared_ptr<character::Character> &chr);
-
     void relax(std::shared_ptr<character::Character> chr);
-
-
-    [[nodiscard]] std::vector<::runebound::character::Character> get_character_without_shared_ptr() const {
-        std::vector<::runebound::character::Character> result;
-        for (const auto& character : m_characters){
-            result.push_back(*character);
-        }
-        return result;
-    }
-
-
 
     [[nodiscard]] std::set<::runebound::character::StandardCharacter>
     get_remaining_standard_characters() const {
@@ -169,6 +167,8 @@ public:
     [[nodiscard]] ::runebound::map::Map get_map() const {
         return m_map;
     }
+
+    void reverse_token(std::shared_ptr<character::Character> chr);
 
     [[nodiscard]] Point get_position_character(
         const std::shared_ptr<character::Character> &chr
