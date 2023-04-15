@@ -56,43 +56,48 @@ public:
     }
 
     void parse_message(std::string &message) {
-        json data = json::parse(message);
-        if (data["action type"] == "reverse token") {
-            int x = data["x"], y = data["y"];
-            m_game->reverse_token(user_character[m_user_name]);
-            for (const std::string &user_name : game_users[m_game_name]) {
-                user_connection[user_name]->send_game();
+        try {
+            json data = json::parse(message);
+            if (data["action type"] == "reverse token") {
+                m_game->reverse_token(user_character[m_user_name]);
+                for (const std::string &user_name: game_users[m_game_name]) {
+                    user_connection[user_name]->send_game();
+                }
             }
-        }
-        if (data["action type"] == "add game") {
-            std::string game_name = data["game name"];
-            game_names.push_back(game_name);
-            games[game_name] = runebound::game::Game();
-            for (auto session : connections) {
-                session->send_game_names();
+            if (data["action type"] == "add game") {
+                std::string game_name = data["game name"];
+                game_names.push_back(game_name);
+                games[game_name] = runebound::game::Game();
+                for (auto session: connections) {
+                    session->send_game_names();
+                }
             }
-        }
-        if (data["action type"] == "join game") {
-            m_game_name = data["game name"];
-            m_user_name = data["user name"];
-            m_game = &games[m_game_name];
-            user_connection[m_user_name] = this;
-            game_users[m_game_name].insert(m_user_name);
-            user_character[m_user_name] =
-                m_game->make_character(runebound::character::StandardCharacter::LISSA);
-            for (const std::string &user_name : game_users[m_game_name]) {
-                user_connection[user_name]->send_game();
+            if (data["action type"] == "join game") {
+                m_game_name = data["game name"];
+                m_user_name = data["user name"];
+                runebound::character::StandardCharacter character = data["character"];
+                m_game = &games[m_game_name];
+                user_connection[m_user_name] = this;
+                game_users[m_game_name].insert(m_user_name);
+                user_character[m_user_name] =
+                        m_game->make_character(character);
+                for (const std::string &user_name: game_users[m_game_name]) {
+                    user_connection[user_name]->send_game();
+                }
             }
-        }
-        if (data["action type"] == "make move") {
-            int x = data["x"], y = data["y"];
-            auto dice_result = runebound::dice::get_combination_of_dice(
-                user_character[m_user_name]->get_speed()
-            );
-            m_game->make_move(user_character[m_user_name], {x, y}, dice_result);
-            for (const std::string &user_name : game_users[m_game_name]) {
-                user_connection[user_name]->send_game();
+            if (data["action type"] == "make move") {
+                int x = data["x"], y = data["y"];
+                auto dice_result = runebound::dice::get_combination_of_dice(
+                        user_character[m_user_name]->get_speed()
+                );
+                m_game->make_move(user_character[m_user_name], {x, y}, dice_result);
+                for (const std::string &user_name: game_users[m_game_name]) {
+                    user_connection[user_name]->send_game();
+                }
             }
+        } catch (std::exception& e) {
+            std::cout<<e.what()<<'\n';
+            write(e.what());
         }
     }
 

@@ -95,11 +95,12 @@ namespace runebound::network {
             do_write(data.dump());
         }
 
-        void join_game(const std::string &game_name) {
+        void join_game(const std::string &game_name, runebound::character::StandardCharacter character) {
             json data;
             data["action type"] = "join game";
             data["game name"] = game_name;
             data["user name"] = m_user_name;
+            data["character"] = character;
             do_write(data.dump());
         }
 

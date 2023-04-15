@@ -41,7 +41,7 @@ int main() {
             std::cout << e << '\n';
         }
         std::cout << '\n';
-        client.join_game("My game");
+        client.join_game("My game", runebound::character::StandardCharacter::CORBIN);
         io_context.poll();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
