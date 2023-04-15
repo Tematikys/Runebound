@@ -46,7 +46,7 @@ namespace runebound::network {
                 runebound::game::from_json(answer, m_game_client);
             }
             if (answer["change type"] == "exception") {
-                std::cout << answer["exception"] << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+                std::cout << "Eception: " << answer["exception"] << "\n";
             }
         }
 
@@ -96,7 +96,7 @@ namespace runebound::network {
             do_write(data.dump());
         }
 
-        void join_game(const std::string &game_name){
+        void join_game(const std::string &game_name) {
             json data;
             data["action type"] = "join game";
             data["game name"] = game_name;
@@ -110,7 +110,6 @@ namespace runebound::network {
             data["character"] = character;
             do_write(data.dump());
         }
-
 
 
         void make_move(int x, int y) {
@@ -134,9 +133,7 @@ namespace runebound::network {
         }
 
 
-
-
-       void exit() {
+        void exit() {
             io_context_.stop();
         };
 
@@ -150,7 +147,7 @@ namespace runebound::network {
     private:
         boost::asio::streambuf m_buffer;
         tcp::socket socket_;
-        boost::asio::io_context& io_context_;
+        boost::asio::io_context &io_context_;
     };
 }  // namespace runebound::network
 #endif  // CLIENT_HPP_
