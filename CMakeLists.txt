@@ -105,7 +105,6 @@ add_executable(${PROJECT_NAME}
             src/map_client.cpp
             #src/test_fight.cpp
             src/fight.cpp
-            #src/main.cpp
             src/generator_characters.cpp
             #src/test_game.cpp
             src/card_fight.cpp
