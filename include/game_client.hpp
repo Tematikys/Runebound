@@ -35,5 +35,6 @@ namespace runebound::game {
         friend void from_json(const nlohmann::json &json, GameClient &game);
     };
 
+
 }  // namespace runebound::game
 #endif  // GAME_CLIENT_HPP_

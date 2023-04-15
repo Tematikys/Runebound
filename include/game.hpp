@@ -122,6 +122,7 @@ public:
 
     void relax(std::shared_ptr<character::Character> chr);
 
+
     [[nodiscard]] const std::vector<std::shared_ptr<::runebound::character::Character>> &get_characters() const {
         return m_characters;
     }
@@ -133,6 +134,7 @@ public:
         }
         return result;
     }
+
 
 
     [[nodiscard]] std::set<::runebound::character::StandardCharacter>
