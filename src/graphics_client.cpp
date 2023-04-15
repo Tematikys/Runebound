@@ -178,7 +178,8 @@ void Client::update() {
                 texture.get_width(), texture.get_height(), 0, 0, texture,
                 [i, this]() {
                     this->m_network_client.join_game(
-                        this->m_network_client.get_game_names()[i]
+                        this->m_network_client.get_game_names()[i],
+                        ::runebound::character::StandardCharacter::LISSA
                     );
                     this->m_joined_to_game = true;
                     this->init_board();

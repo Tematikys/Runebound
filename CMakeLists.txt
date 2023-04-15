@@ -20,6 +20,7 @@ link_directories(${SDL2_LIB_DIR})
 add_executable(graphics_client
         src/builder_map.cpp
         src/card_adventure.cpp
+        src/card_fight.cpp
         src/card_research.cpp
         src/character.cpp
         src/character_client.cpp
@@ -27,6 +28,8 @@ add_executable(graphics_client
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
+        src/generator_cards_fight.cpp
+        src/generator_characters.cpp
         src/graphics.cpp
         src/graphics_board.cpp
         src/graphics_button.cpp
@@ -52,47 +55,45 @@ target_link_libraries(graphics_client ${Boost_LIBRARIES} ws2_32 wsock32)
 
 # ===== NETWORK SERVER ===== #
 add_executable(network_server
+        src/builder_map.cpp
         src/card_adventure.cpp
+        src/card_fight.cpp
         src/card_research.cpp
         src/character.cpp
+        src/character_client.cpp
         src/dice.cpp
+        src/fight.cpp
         src/game.cpp
+        src/game_client.cpp
+        src/generator_cards_fight.cpp
+        src/generator_characters.cpp
         src/map.cpp
         src/map_cell.cpp
-        src/tokens.cpp
-        src/builder_map.cpp
-        src/game_client.cpp
-        src/character_client.cpp
         src/map_client.cpp
         src/network_server.cpp
-        src/fight.cpp
-        src/generator_characters.cpp
-        src/card_fight.cpp
-        src/generator_cards_fight.cpp
-        )
-
-        
-        src/generator_characters.cpp)
+        src/tokens.cpp)
 target_link_libraries(network_server ${Boost_LIBRARIES} ws2_32 wsock32)
 # ===== NETWORK SERVER ===== #
 
 # ===== NETWORK CLIENT ===== #
 add_executable(network_client
+        src/builder_map.cpp
         src/card_adventure.cpp
+        src/card_fight.cpp
         src/card_research.cpp
         src/character.cpp
+        src/character_client.cpp
         src/dice.cpp
+        src/fight.cpp
         src/game.cpp
+        src/game_client.cpp
+        src/generator_cards_fight.cpp
+        src/generator_characters.cpp
         src/map.cpp
         src/map_cell.cpp
-        src/tokens.cpp
-        src/builder_map.cpp
-        src/game_client.cpp
-        src/character_client.cpp
         src/map_client.cpp
         src/network_client.cpp
-        src/fight.cpp
-        src/generator_characters.cpp)
+        src/tokens.cpp)
 target_link_libraries(network_client ${Boost_LIBRARIES} ws2_32 wsock32)
 # ===== NETWORK CLIENT ===== #
 
@@ -118,3 +119,4 @@ target_link_libraries(network_client ${Boost_LIBRARIES} ws2_32 wsock32)
 #        src/generator_characters.cpp
 #        src/test_game.cpp)
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
+# ===== LOGICS? ===== #
