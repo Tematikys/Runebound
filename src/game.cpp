@@ -88,6 +88,7 @@ void Game::relax(std::shared_ptr<character::Character> chr) {
     m_characters[m_turn]->update_action_points(-1);
 }
 
+
 void Game::check_and_get_card_adventure_because_of_token(
     std::shared_ptr<character::Character> chr
 ) {
@@ -106,7 +107,7 @@ void Game::check_and_get_card_adventure_because_of_token(
     }
 }
 
-void Game::reverse_token(std::shared_ptr<character::Character> chr) {
+void Game::take_token(const std::shared_ptr<character::Character> &chr) {
     check_turn(chr);
     check_sufficiency_action_points(2);
     Point position = chr->get_position();
@@ -117,11 +118,9 @@ void Game::reverse_token(std::shared_ptr<character::Character> chr) {
         throw BackSideTokenException();
     }
     if (m_map.get_cell_map(position).get_token() == AdventureType::FIGHT) {
-        chr->start_fight(std::make_shared<::runebound::fight::Fight>(
-            ::runebound::fight::Fight(
-                chr, ::runebound::fight::Enemy(5, "Standard")
-            )
-        ));
+        unsigned int card = m_card_deck_fight[rng() % m_card_deck_fight.size()];
+        chr->add_card(AdventureType::FIGHT, card);
+        m_card_deck_fight.erase(std::find(m_card_deck_fight.begin(), m_card_deck_fight.end(), card));
     }
     m_map.reverse_token(position);
     m_characters[m_turn]->update_action_points(-2);
