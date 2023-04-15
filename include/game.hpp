@@ -75,18 +75,6 @@ private:
         character::StandardCharacter::LORD_HAWTHORNE,
         character::StandardCharacter::MASTER_THORN};
 
-
-    template <typename T>
-    void pop_element_from_vector(T element, std::vector<T> &vec) {
-        for (std::size_t i = 0; i < vec.size(); ++i) {
-            if (vec[i] == element) {
-                std::swap(vec[i], vec.back());
-                break;
-            }
-        }
-        vec.pop_back();
-    }
-
     void check_turn(const std::shared_ptr<character::Character> &chr) {
         if (chr->get_name() != m_characters[m_turn]->get_name()) {
             throw WrongCharacterTurnException();
@@ -122,13 +110,14 @@ public:
         return *this;
     }
 
-
     void take_token(const std::shared_ptr<character::Character> &chr);
 
     void start_next_character_turn() {
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
     }
+
+    void end_fight(const std::shared_ptr<character::Character> &chr);
 
     void relax(std::shared_ptr<character::Character> chr);
 
