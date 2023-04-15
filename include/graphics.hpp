@@ -12,22 +12,43 @@ namespace runebound::graphics {
 class Texture {
 private:
     SDL_Texture *m_texture;
-    int m_width;
-    int m_height;
+    int m_x, m_y;
+    int m_width, m_height;
 
 public:
-    Texture() : m_texture(nullptr), m_width(0), m_height(0){};
+    Texture() : m_texture(nullptr), m_x(0), m_y(0), m_width(0), m_height(0){};
 
-    Texture(Texture &&other) noexcept {
-        m_width = other.m_width;
-        m_height = other.m_height;
-        m_texture = other.m_texture;
+    Texture(Texture &&other) noexcept
+        : m_width(other.m_width),
+          m_height(other.m_height),
+          m_x(other.m_x),
+          m_y(other.m_y),
+          m_texture(other.m_texture) {
         other.m_texture = nullptr;
     }
+
+    Texture(const Texture &other) = delete;
+
+    Texture &operator=(Texture &&other) noexcept {
+        m_width = other.m_width;
+        m_height = other.m_height;
+        m_x = other.m_x;
+        m_y = other.m_y;
+        m_texture = other.m_texture;
+        other.m_texture = nullptr;
+        return *this;
+    }
+
+    Texture &operator=(const Texture &other) = delete;
 
     ~Texture() {
         free();
     };
+
+    void set_coords(int x, int y) {
+        m_x = x;
+        m_y = y;
+    }
 
     bool
     load_image_from_file(SDL_Renderer *renderer, const ::std::string &path);

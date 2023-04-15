@@ -1,4 +1,4 @@
-#include "client.hpp"
+#include "graphics_client.hpp"
 
 int main(int, char *[]) {
     ::runebound::client::Client client;

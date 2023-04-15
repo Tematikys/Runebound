@@ -2,13 +2,12 @@
 #define RUNEBOUND_CLIENT_HPP_
 
 #include <SDL2/SDL.h>
+#include <game_client.hpp>
 #include <graphics.hpp>
 #include <graphics_board.hpp>
 #include <graphics_button.hpp>
 #include <graphics_config.hpp>
-#include <graphics_main_menu.hpp>
 #include <map>
-#include <map_client.hpp>
 #include <network_client.hpp>
 #include <string>
 #include <vector>
@@ -17,6 +16,12 @@ namespace runebound::client {
 // client class, is called in main function, contains everything that is in use
 class Client {
 private:
+    // TODO
+    ::std::size_t m_start_game_index = 0;
+    ::std::size_t m_show_amount = 10;
+    bool m_joined_to_game = false;
+    ::std::vector<::runebound::graphics::Button> m_games_to_render;
+
     // network
     ::boost::asio::io_context m_io_context;
     ::boost::asio::executor_work_guard<::boost::asio::io_context::executor_type>
@@ -24,18 +29,22 @@ private:
     ::runebound::network::Client m_network_client =
         ::runebound::network::Client(m_io_context, "127.0.0.1", 4444, "client");
 
-    // map and board
-    ::runebound::map::MapClient m_map;
+    // game and board
+    ::runebound::game::GameClient m_game;
     ::runebound::graphics::Board m_board;
+
+    // text fields
+    ::std::vector<::runebound::graphics::TextField> m_text_fields;
+    ::std::size_t m_active_text_field;
+
+    // buttons
+    ::std::vector<::runebound::graphics::Button> m_buttons;
 
     // graphics
     SDL_Window *m_window = nullptr;
     SDL_Renderer *m_renderer = nullptr;
     ::std::map<::std::string, TTF_Font *> m_fonts;
     ::std::vector<::runebound::graphics::Texture> m_textures;
-
-    // buttons
-    ::std::vector<::runebound::graphics::RectButton> m_rect_buttons;
 
     // time
     bool m_is_running = false;
@@ -51,6 +60,10 @@ public:
     void init();
 
     void init_graphics();
+
+    void init_board();
+
+    void load_fonts();
 
     void handle_events();
 
