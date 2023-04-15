@@ -128,7 +128,5 @@ std::vector<Point> Game::make_move(
     return result;
 }
 
-
-
 }  // namespace game
 }  // namespace runebound

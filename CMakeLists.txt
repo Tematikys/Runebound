@@ -63,27 +63,27 @@ add_executable(Client
 
 
 
-#add_executable(${PROJECT_NAME}
-#            src/card_adventure.cpp
-#            src/card_research.cpp
-#            src/character.cpp
-#            src/dice.cpp
-#            src/game.cpp
-##             src/graphics.cpp
-#            tpl/doctest/doctest_main.cpp
-#            src/map.cpp
-#            src/map_cell.cpp
-#            src/tokens.cpp
-#            src/builder_map.cpp
-#            src/game_client.cpp
-#            src/character_client.cpp
-#            src/map_client.cpp
-#            #src/test_fight.cpp
-#            src/fight.cpp
-#            #src/main.cpp
-#            src/generator_characters.cpp
-#            src/test_game.cpp
-#        )
+add_executable(${PROJECT_NAME}
+            src/card_adventure.cpp
+            src/card_research.cpp
+            src/character.cpp
+            src/dice.cpp
+            src/game.cpp
+#             src/graphics.cpp
+            tpl/doctest/doctest_main.cpp
+            src/map.cpp
+            src/map_cell.cpp
+            src/tokens.cpp
+            src/builder_map.cpp
+            src/game_client.cpp
+            src/character_client.cpp
+            src/map_client.cpp
+            #src/test_fight.cpp
+            src/fight.cpp
+            #src/main.cpp
+            src/generator_characters.cpp
+            src/test_game.cpp
+        )
 
 
 target_link_libraries(Server ${Boost_LIBRARIES})
