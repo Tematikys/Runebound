@@ -138,7 +138,7 @@ void Game::end_fight(const std::shared_ptr<character::Character> &chr) {
         chr->change_gold(
             m_all_cards_fight[chr->get_card_fight()].get_gold_award()
         );
-        chr->make_trophy(AdventureType::FIGHT, chr->get_card_fight());
+        chr->add_trophy(AdventureType::FIGHT, chr->get_card_fight());
     }
     chr->end_fight();
 }

@@ -111,7 +111,7 @@ public:
 
     void end_fight();
 
-    void make_trophy(AdventureType type, unsigned int card) {
+    void add_trophy(AdventureType type, unsigned int card) {
         m_trophies.insert({type, card});
     }
 
