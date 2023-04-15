@@ -51,7 +51,7 @@ TEST_CASE("game") {
     );
     game.start_next_character_turn();
     CHECK(game.get_turn() == 2);
-    game.reverse_token(third);
+    game.take_token(third);
     CHECK(third->get_state() == runebound::character::StateCharacter::FIGHT);
     auto fight = third->get_current_fight();
     CHECK(fight != nullptr);
@@ -85,4 +85,21 @@ TEST_CASE("generating characters") {
     CHECK(corbin->get_action_points() == 3);
     game.make_move(corbin, runebound::Point(12, 6), dice_res);
     CHECK(corbin->get_action_points() == 1);
+}
+
+TEST_CASE("card_fight") {
+    ::runebound::game::Game game;
+    auto lord = game.make_character(runebound::character::StandardCharacter::LORD_HAWTHORNE);
+    std::vector<runebound::dice::HandDice> dice_res{
+        runebound::dice::HandDice::PLAIN, runebound::dice::HandDice::PLAIN_FOREST};
+    game.make_move(lord, runebound::Point(13, 14), dice_res);
+    CHECK(lord->get_position() == runebound::Point(13, 14));
+    game.relax(lord);
+    CHECK(lord->get_action_points() == 0);
+    game.start_next_character_turn();
+    game.take_token(lord);
+    CHECK(lord->get_state() == runebound::character::StateCharacter::FIGHT);
+    auto fight = lord->get_current_fight();
+    std::cout << fight->get_enemy()->get_name() << ' ' << fight->get_enemy()->get_health() << '\n';
+    
 }
