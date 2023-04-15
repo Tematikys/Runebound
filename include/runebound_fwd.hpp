@@ -51,7 +51,7 @@ struct GameClient;
 namespace cards {
 struct CardAdventure;
 struct CardResearch;
-//struct CardFight;
+struct CardFight;
 }  // namespace cards
 
 namespace client {

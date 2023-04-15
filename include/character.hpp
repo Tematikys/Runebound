@@ -87,6 +87,10 @@ public:
         return m_current_position;
     }
 
+    [[nodiscard]] unsigned int get_card_fight() const {
+        return *(--m_cards_fight.end());
+    }
+
     void set_position(const Point &new_position) {
         m_current_position = new_position;
     }
@@ -100,9 +104,14 @@ public:
         m_current_fight = std::move(fight);
     }
 
-    void end_fight() {
-        m_current_state = StateCharacter::NORMAL_GAME;
-        m_current_fight = nullptr;
+    void change_gold(int delta_gold) {
+        m_gold += delta_gold;
+    }
+
+    void end_fight();
+
+    void make_trophy(AdventureType type, unsigned int card) {
+        m_trophies.insert({type, card});
     }
 
     [[nodiscard]] std::shared_ptr<::runebound::fight::Fight> get_current_fight(

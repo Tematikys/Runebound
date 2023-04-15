@@ -110,13 +110,14 @@ public:
         return *this;
     }
 
-
     void take_token(const std::shared_ptr<character::Character> &chr);
 
     void start_next_character_turn() {
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
     }
+
+    void end_fight(const std::shared_ptr<character::Character> &chr);
 
     void relax(std::shared_ptr<character::Character> chr);
 

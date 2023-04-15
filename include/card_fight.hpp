@@ -31,6 +31,10 @@ public:
          return m_enemy;
      }
 
+     [[nodiscard]]  int get_gold_award() const {
+         return m_gold_award;
+     }
+
      friend void to_json(nlohmann::json &json, const CardFight &card);
      friend void from_json(const nlohmann::json &json, CardFight &card);
 
