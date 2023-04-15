@@ -55,7 +55,10 @@ add_executable(Client
         src/network_client.cpp
         src/fight.cpp
         src/generator_characters.cpp
+
         )
+
+        
 
 
 
@@ -82,11 +85,13 @@ add_executable(${PROJECT_NAME}
             src/test_game.cpp
         )
 
+
 target_link_libraries(Server ${Boost_LIBRARIES})
 target_link_libraries(Server ws2_32)
 target_link_libraries(Server wsock32)
 target_link_libraries(Client ${Boost_LIBRARIES})
 target_link_libraries(Client ws2_32)
 target_link_libraries(Client wsock32)
+
 
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
