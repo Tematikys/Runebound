@@ -45,6 +45,9 @@ namespace runebound::network {
                 std::cout << "Game changed, maybe\n";
                 runebound::game::from_json(answer, m_game_client);
             }
+            if (answer["change type"] == "exception") {
+                std::cout << answer["exception"] << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+            }
         }
 
         void do_read() {
@@ -95,11 +98,12 @@ namespace runebound::network {
             do_write(data.dump());
         }
 
-        void join_game(const std::string &game_name) {
+        void join_game(const std::string &game_name, runebound::character::StandardCharacter character) {
             json data;
             data["action type"] = "join game";
             data["game name"] = game_name;
             data["user name"] = m_user_name;
+            data["character"] = character;
             do_write(data.dump());
         }
 
@@ -115,10 +119,6 @@ namespace runebound::network {
             return game_names;
         }
 
-//        [[nodiscard]] const std::vector<std::string> &get_remaining_characters() const {
-//            return game_names;
-//        }
-
         [[nodiscard]] int get_game_names_size() const {
             return game_names.size();
         }
@@ -128,12 +128,10 @@ namespace runebound::network {
         }
 
 
-
     public:
         std::string m_user_name;
         std::vector<std::string> game_names;
         runebound::game::GameClient m_game_client;
-
 
 
     private:

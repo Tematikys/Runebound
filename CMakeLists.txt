@@ -63,6 +63,7 @@ add_executable(Client
 
 
 
+
 add_executable(${PROJECT_NAME}
             src/card_adventure.cpp
             src/card_research.cpp
@@ -86,6 +87,7 @@ add_executable(${PROJECT_NAME}
             src/card_fight.cpp
             src/generator_cards_fight.cpp
         )
+
 
 
 target_link_libraries(Server ${Boost_LIBRARIES})
