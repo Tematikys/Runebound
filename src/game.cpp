@@ -67,7 +67,7 @@ void Game::generate_all_cards_research() {
 void Game::generate_all_cards_fight() {
     std::vector<cards::CardResearch> cards;
     m_card_deck_fight.resize(DECK_SIZE);
-    std::string path = "../data/json/cards/cards_fight";
+    std::string path = "data/json/cards/cards_fight";
     for (const auto &entry : std::filesystem::directory_iterator(path)) {
         nlohmann::json json;
         std::ifstream in(entry.path());
