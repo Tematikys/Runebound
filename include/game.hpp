@@ -123,6 +123,8 @@ public:
     }
 
 
+    void take_token(const std::shared_ptr<character::Character> &chr);
+
     void start_next_character_turn() {
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
@@ -167,8 +169,6 @@ public:
     [[nodiscard]] ::runebound::map::Map get_map() const {
         return m_map;
     }
-
-    void reverse_token(std::shared_ptr<character::Character> chr);
 
     [[nodiscard]] Point get_position_character(
         const std::shared_ptr<character::Character> &chr
