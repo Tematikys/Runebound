@@ -42,22 +42,23 @@ public:
     void write(const std::string &message) {
         auto self(shared_from_this());
         boost::asio::async_write(
-            socket_, boost::asio::buffer(message + '\n'),
-            [this, self,
-             message](boost::system::error_code ec, std::size_t length) {
-                if (!ec) {
-                    std::cout << "Sent:{ \n " << message << "\n}\n";
-                } else {
-                    connections.erase(this);
-                    std::cout << "Disconnected" << std::endl;
+                socket_, boost::asio::buffer(message + '\n'),
+                [this, self,
+                        message](boost::system::error_code ec, std::size_t length) {
+                    if (!ec) {
+                        std::cout << "Sent:{ \n " << message << "\n}\n";
+                    } else {
+                        connections.erase(this);
+                        std::cout << "Disconnected" << std::endl;
+                    }
                 }
-            }
         );
     }
 
     void parse_message(std::string &message) {
         try {
             json data = json::parse(message);
+
             if (data["action type"] == "reverse token") {
                 m_game->reverse_token(user_character[m_user_name]);
                 for (const std::string &user_name: game_users[m_game_name]) {
@@ -95,9 +96,12 @@ public:
                     user_connection[user_name]->send_game();
                 }
             }
-        } catch (std::exception& e) {
-            std::cout<<e.what()<<'\n';
-            write(e.what());
+        } catch (std::exception &e) {
+            std::cout << e.what() << '\n';
+            json answer;
+            answer["change type"] = "exception";
+            answer["exception"] = e.what();
+            write(answer.dump());
         }
     }
 
@@ -106,21 +110,21 @@ private:
         auto self(shared_from_this());
 
         boost::asio::async_read_until(
-            socket_, m_buffer, '\n',
-            [this, self](boost::system::error_code ec, std::size_t length) {
-                if (!ec) {
-                    std::istream is(&m_buffer);
-                    std::string message;
-                    std::getline(is, message);
-                    std::cout << "Received: " << message
-                              << " Length: " << length << '\n';
-                    parse_message(message);
-                    do_read();
-                } else {
-                    connections.erase(this);
-                    std::cout << "Disconnected" << std::endl;
+                socket_, m_buffer, '\n',
+                [this, self](boost::system::error_code ec, std::size_t length) {
+                    if (!ec) {
+                        std::istream is(&m_buffer);
+                        std::string message;
+                        std::getline(is, message);
+                        std::cout << "Received: " << message
+                                  << " Length: " << length << '\n';
+                        parse_message(message);
+                        do_read();
+                    } else {
+                        connections.erase(this);
+                        std::cout << "Disconnected" << std::endl;
+                    }
                 }
-            }
         );
     }
 
@@ -148,7 +152,7 @@ void Connection::send_game() {
 class Server {
 public:
     Server(boost::asio::io_context &io_context, short port)
-        : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port)) {
+            : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port)) {
         std::cout << "Server started\n";
         do_accept();
     }
@@ -156,13 +160,13 @@ public:
 private:
     void do_accept() {
         m_acceptor.async_accept(
-            [this](boost::system::error_code ec, tcp::socket socket) {
-                if (!ec) {
-                    std::make_shared<Connection>(std::move(socket))->start();
-                }
+                [this](boost::system::error_code ec, tcp::socket socket) {
+                    if (!ec) {
+                        std::make_shared<Connection>(std::move(socket))->start();
+                    }
 
-                do_accept();
-            }
+                    do_accept();
+                }
         );
     }
 

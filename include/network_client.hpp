@@ -45,6 +45,9 @@ namespace runebound::network {
                 std::cout << "Game changed, maybe\n";
                 runebound::game::from_json(answer, m_game_client);
             }
+            if (answer["change type"] == "exception") {
+                std::cout << answer["exception"] << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+            }
         }
 
         void do_read() {
@@ -129,12 +132,10 @@ namespace runebound::network {
         }
 
 
-
     public:
         std::string m_user_name;
         std::vector<std::string> game_names;
         runebound::game::GameClient m_game_client;
-
 
 
     private:

@@ -126,7 +126,7 @@ public:
         return m_characters;
     }
 
-    [[nodiscard]] const std::vector<::runebound::character::Character> get_character_without_shared_ptr() const {
+    [[nodiscard]] std::vector<::runebound::character::Character> get_character_without_shared_ptr() const {
         std::vector<::runebound::character::Character> result;
         for (const auto& character : m_characters){
             result.push_back(*character);
