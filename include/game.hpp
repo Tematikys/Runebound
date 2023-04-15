@@ -6,13 +6,13 @@
 #include <nlohmann/json_fwd.hpp>
 #include <utility>
 #include <vector>
+#include "card_fight.hpp"
 #include "card_research.hpp"
 #include "character.hpp"
 #include "fight.hpp"
 #include "map.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
-#include "card_fight.hpp"
 
 namespace runebound {
 const int DECK_SIZE = 15;
@@ -81,7 +81,6 @@ private:
         }
     }
 
-
     void check_sufficiency_action_points(int necessary_action_points) {
         if (m_characters[m_turn]->get_action_points() <
             necessary_action_points) {
@@ -96,6 +95,7 @@ private:
         generate_all_cards_research();
         generate_all_cards_fight();
     }
+
 public:
     Game() {
         generate_all_cards();
