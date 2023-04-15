@@ -40,7 +40,10 @@ private:
     int m_max_action_points = 3;
     StateCharacter m_current_state = StateCharacter::NORMAL_GAME;
     std::string m_name;
-    std::vector<unsigned int> m_cards;
+    std::set<unsigned int> m_cards_research;
+    std::set<unsigned int> m_cards_fight;
+    std::set <std::pair<AdventureType, unsigned int>> m_trophies;
+
     std::map<runebound::token::Token, int> m_tokens;
     int m_max_health;
     int m_gold, m_health;
@@ -163,11 +166,9 @@ public:
         return m_action_points;
     }
 
-    void add_card(unsigned int card) {
-        m_cards.push_back(card);
-    }
+    void add_card(AdventureType type, unsigned int card);
 
-    void pop_card(unsigned int card);
+    void pop_card(AdventureType type, unsigned int card);
 
     friend void to_json(nlohmann::json &json, const Character &character);
     friend void from_json(const nlohmann::json &json, Character &character);

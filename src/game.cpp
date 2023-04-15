@@ -2,6 +2,8 @@
 #include <nlohmann/json.hpp>
 #include "point.hpp"
 #include "runebound_fwd.hpp"
+#include "card_fight.hpp"
+#include <filesystem>
 
 namespace runebound {
 namespace game {
@@ -53,14 +55,30 @@ std::shared_ptr<::runebound::character::Character> Game::make_character(
     return m_characters.back();
 }
 
-std::vector<cards::CardResearch> Game::generate_all_cards_research() {
+void Game::generate_all_cards_research() {
     std::vector<cards::CardResearch> cards;
-    m_indexes_card_research.resize(DECK_SIZE);
+    m_card_deck_research.resize(DECK_SIZE);
     for (int i = 0; i < DECK_SIZE; ++i) {
-        cards.emplace_back(cards::CardResearch());
-        m_indexes_card_research[i] = i;
+        m_all_cards_research.emplace_back(cards::CardResearch());
+        m_card_deck_research[i] = i;
     }
-    return cards;
+}
+
+void Game::generate_all_cards_fight() {
+    std::vector<cards::CardResearch> cards;
+    m_card_deck_fight.resize(DECK_SIZE);
+    std::string path = "../data/json/cards/cards_fight";
+    for (const auto &entry : std::filesystem::directory_iterator(path)) {
+        nlohmann::json json;
+        std::ifstream in(entry.path());
+        in >> json;
+        cards::CardFight card;
+        ::runebound::cards::from_json(json, card);
+        m_all_cards_fight.push_back(card);
+    }
+    for (int i = 0; i < DECK_SIZE; ++i) {
+        m_card_deck_fight[i] = i;
+    }
 }
 
 void Game::relax(std::shared_ptr<character::Character> chr) {
@@ -80,10 +98,9 @@ void Game::check_and_get_card_adventure_because_of_token(
         if (m_map.get_cell_map(chr->get_position()).get_token() ==
             ::runebound::AdventureType::RESEARCH) {
             unsigned int card =
-                m_indexes_card_research[rng() % m_indexes_card_research.size()];
-            chr->add_card(card);
+                m_card_deck_research[rng() % m_card_deck_research.size()];
+            chr->add_card(AdventureType::RESEARCH, card);
             pop_element_from_vector(card, m_card_deck_research);
-            pop_element_from_vector(card, m_indexes_card_research);
         }
         m_map.get_cell_map(chr->get_position()).reverse_token();
     }

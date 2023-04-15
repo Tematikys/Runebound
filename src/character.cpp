@@ -3,6 +3,7 @@
 #include <memory>
 #include <nlohmann/json.hpp>
 #include "fight_token.hpp"
+#include "card_fight.hpp"
 
 namespace runebound {
 namespace character {
@@ -43,14 +44,21 @@ Character::Character(const StandardCharacter &chr) {
     }
 }
 
-void Character::pop_card(unsigned int card) {
-    for (std::size_t i = 0; i < m_cards.size(); ++i) {
-        if (m_cards[i] == card) {
-            std::swap(m_cards[i], m_cards.back());
-            break;
-        }
+void Character::add_card(AdventureType type, unsigned int card) {
+    if (type == AdventureType::FIGHT) {
+        m_cards_fight.insert(card);
     }
-    m_cards.pop_back();
+    if (type == AdventureType::RESEARCH) {
+        m_cards_research.insert(card);
+    }
+}
+void Character::pop_card(AdventureType type, unsigned int card) {
+    if (type == AdventureType::RESEARCH) {
+        m_cards_research.erase(card);
+    }
+    if (type == AdventureType::FIGHT) {
+        m_cards_fight.erase(card);
+    }
 }
 
 void to_json(nlohmann::json &json, const Character &character) {
@@ -64,7 +72,8 @@ void to_json(nlohmann::json &json, const Character &character) {
     json["m_max_health"] = character.m_max_health;
     json["m_current_position"] = character.m_current_position;
     json["m_tokens"] = character.m_tokens;
-    json["m_cards"] = character.m_cards;
+    json["m_cards_fight"] = character.m_cards_fight;
+    json["m_cards_research"] = character.m_cards_research;
     json["m_fight_tokens"] = character.m_fight_tokens;
 }
 
@@ -79,14 +88,21 @@ void from_json(const nlohmann::json &json, Character &character) {
     character.m_max_health = json["m_max_health"];
     character.m_current_position = json["m_current_position"];
     character.m_tokens = json["m_tokens"];
-    character.m_cards.clear();
+    character.m_fight_tokens.clear();
     for (const auto &fight_token : json["m_fight_tokens"]) {
         character.m_fight_tokens.push_back(fight_token);
     }
-    for (const auto &card : json["m_cards"]) {
-        character.m_cards.push_back(card);
+    character.m_cards_fight.clear();
+    for (const auto &card : json["m_cards_fight"]) {
+        unsigned int card_int = card;
+        character.m_cards_fight.insert(card_int);
     }
-    character.m_fight_tokens.clear();
+    character.m_cards_research.clear();
+    for (const auto &card : json["m_cards_research"]) {
+        unsigned int card_int = card;
+        character.m_cards_research.insert(card_int);
+    }
+
 }
 }  // namespace character
 }  // namespace runebound
