@@ -10,7 +10,6 @@ set(SDL2_INCLUDE_DIR "tpl/SDL2/include/")
 set(SDL2_LIB_DIR "tpl/SDL2/lib/")
 
 include_directories("include/")
-include_directories(${BOOST_INCLUDE_DIR})
 include_directories(${NLOHMANN_INCLUDE_DIR})
 include_directories(${SDL2_INCLUDE_DIR})
 
