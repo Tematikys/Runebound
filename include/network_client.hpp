@@ -46,7 +46,7 @@ namespace runebound::network {
                 runebound::game::from_json(answer, m_game_client);
             }
             if (answer["change type"] == "exception") {
-                std::cout << "Eception: " << answer["exception"] << "\n";
+                std::cout << "Exception: " << answer["exception"] << "\n";
             }
         }
 
