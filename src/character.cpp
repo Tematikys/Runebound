@@ -19,32 +19,32 @@ void Character::load_character_from_file(const std::string &file) {
 Character::Character(const StandardCharacter &chr) {
     switch (chr) {
         case (StandardCharacter::LISSA): {
-            load_character_from_file("../data/json/characters/lissa.json");
+            load_character_from_file("data/json/characters/lissa.json");
             break;
         }
         case (StandardCharacter::MASTER_THORN): {
-            load_character_from_file("../data/json/characters/master_thorn.json"
+            load_character_from_file("data/json/characters/master_thorn.json"
             );
             break;
         }
         case (StandardCharacter::CORBIN): {
-            load_character_from_file("../data/json/characters/corbin.json");
+            load_character_from_file("data/json/characters/corbin.json");
             break;
         }
         case (StandardCharacter::LORD_HAWTHORNE): {
             load_character_from_file(
-                "../data/json/characters/lord_hawthorne.json"
+                "data/json/characters/lord_hawthorne.json"
             );
             break;
         }
         case (StandardCharacter::LAUREL_FROM_BLOODWOOD): {
             load_character_from_file(
-                "../data/json/characters/laurel_from_bloodwood.json"
+                "data/json/characters/laurel_from_bloodwood.json"
             );
             break;
         }
         case (StandardCharacter::ELDER_MOK): {
-            load_character_from_file("../data/json/characters/elder_mok.json");
+            load_character_from_file("data/json/characters/elder_mok.json");
             break;
         }
     }
