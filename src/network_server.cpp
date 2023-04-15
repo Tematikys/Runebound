@@ -60,7 +60,7 @@ public:
             json data = json::parse(message);
 
             if (data["action type"] == "reverse token") {
-                m_game->reverse_token(user_character[m_user_name]);
+                m_game->take_token(user_character[m_user_name]);
                 for (const std::string &user_name: game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
                 }

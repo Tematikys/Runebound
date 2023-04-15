@@ -11,13 +11,13 @@ namespace runebound::game {
     void from_json(const nlohmann::json &json, GameClient &game);
 
     struct GameClient {
-    private:
+    public:
         friend struct ::runebound::game::Game;
         ::runebound::map::MapClient m_map;
         std::vector<::runebound::character::Character>
                 m_characters;
         std::vector<::runebound::character::StandardCharacter> m_remaining_standard_characters;
-    public:
+
         GameClient() = default;
 
         explicit GameClient(const Game &game) : m_map(game.get_map()),
