@@ -13,7 +13,7 @@ void to_json(nlohmann::json &json, const CharacterClient &character);
 void from_json(const nlohmann::json &json, CharacterClient &character);
 
 struct CharacterClient {
-private:
+public:
     unsigned int m_hand_limit;
     unsigned int m_current_action_points = 3;
     unsigned int m_max_action_points = 3;
@@ -23,7 +23,7 @@ private:
     std::vector<unsigned int> m_cards;
     std::map<::runebound::token::Token, int> m_tokens;
 
-public:
+
     friend void to_json(nlohmann::json &json, const CharacterClient &character);
     friend void
     from_json(const nlohmann::json &json, CharacterClient &character);

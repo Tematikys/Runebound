@@ -36,6 +36,8 @@ add_executable(Server
         src/network_server.cpp
         src/fight.cpp
         src/generator_characters.cpp
+        src/card_fight.cpp
+        src/generator_cards_fight.cpp
         )
 add_executable(Client
 
@@ -55,7 +57,8 @@ add_executable(Client
         src/network_client.cpp
         src/fight.cpp
         src/generator_characters.cpp
-
+        src/card_fight.cpp
+        src/generator_cards_fight.cpp
         )
 
         

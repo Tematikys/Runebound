@@ -83,11 +83,9 @@ namespace runebound::network {
             );
         }
 
-        void reverse_token(int x, int y) {
+        void take_token() {
             json data;
-            data["action type"] = "reverse token";
-            data["x"] = x;
-            data["y"] = y;
+            data["action type"] = "take token";
             do_write(data.dump());
         }
 
