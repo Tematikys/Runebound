@@ -58,6 +58,9 @@ private:
     ::runebound::map::Map m_map;
     std::vector<std::shared_ptr<::runebound::character::Character>>
         m_characters;
+
+
+private:
     std::vector<unsigned int> m_card_deck_research;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
@@ -121,6 +124,11 @@ public:
     }
 
     void relax(std::shared_ptr<character::Character> chr);
+
+    [[nodiscard]] const std::vector<std::shared_ptr<::runebound::character::Character>> &get_characters() const {
+        return m_characters;
+    }
+
 
     [[nodiscard]] std::set<::runebound::character::StandardCharacter>
     get_remaining_standard_characters() const {
