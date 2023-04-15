@@ -6,14 +6,24 @@
 namespace runebound::cards {
 
 struct CardAdventure {
-    CardAdventure(const CardAdventure &) = delete;
-    CardAdventure(CardAdventure &&) = delete;
-    CardAdventure &operator=(const CardAdventure &) = delete;
-    CardAdventure &operator=(CardAdventure &&) = delete;
-    CardAdventure() = default;
-    virtual ~CardAdventure() = default;
-    virtual nlohmann::json to_json() = 0;
+protected:
+    bool m_trophy = false;
     ::runebound::AdventureType m_card_type;
+
+public:
+    virtual ~CardAdventure() = default;
+
+    [[nodiscard]] virtual ::runebound::AdventureType get_card_type() {
+        return m_card_type;
+    }
+
+    [[nodiscard]] virtual bool check_trophy() const {
+        return m_trophy;
+    }
+
+    void virtual make_trophy() {
+        m_trophy = true;
+    }
 };
 
 }  // namespace runebound::cards

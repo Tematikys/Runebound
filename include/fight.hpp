@@ -22,6 +22,11 @@ struct WrongCharacterTurnException : std::runtime_error {
     }
 };
 
+struct FightIsStillOnException : std::runtime_error {
+    FightIsStillOnException() : std::runtime_error("The fight is still on") {
+    }
+};
+
 struct TokenHandCount {
 public:
     FightToken token;
@@ -40,12 +45,15 @@ public:
 
 enum class Participant { CHARACTER, ENEMY };
 
+void to_json(nlohmann::json &json, const Enemy &enemy);
+void from_json(const nlohmann::json &json, Enemy &enemy);
+
 struct Enemy {
 private:
     int m_health;
-    const std::string m_name;
+    std::string m_name;
 
-    std::vector<FightToken> m_fight_tokens = {
+    const std::vector<FightToken> m_fight_tokens = {
         FightToken(
             HandFightTokens::ENEMY_DAMAGE,
             0,
@@ -89,6 +97,9 @@ private:
     };
 
 public:
+    Enemy() : m_health(0) {
+    }
+
     Enemy(int health, std::string name)
         : m_health(health), m_name(std::move(name)) {
     }
@@ -97,12 +108,26 @@ public:
         m_health += delta;
     }
 
-    int get_health() const {
+    [[nodiscard]] int get_health() const {
         return m_health;
+    }
+
+    [[nodiscard]] std::string get_name() const {
+        return m_name;
     }
 
     [[nodiscard]] std::vector<FightToken> get_fight_token() const {
         return m_fight_tokens;
+    }
+
+    friend void to_json(nlohmann::json &json, const Enemy &enemy) {
+        json["m_name"] = enemy.m_name;
+        json["m_health"] = enemy.m_health;
+    }
+
+    friend void from_json(const nlohmann::json &json, Enemy &enemy) {
+        enemy.m_name = json["m_name"];
+        enemy.m_health = json["m_health"];
     }
 };
 
@@ -154,8 +179,15 @@ public:
         : m_character(std::move(character)), m_enemy(std::move(enemy)) {
     }
 
-    [[nodiscard]] std::shared_ptr<Enemy> get_enemy() const {
-        return std::make_shared<Enemy>(m_enemy);
+    [[nodiscard]] Participant get_winner() const {
+        if (!check_end_fight()) {
+            throw FightIsStillOnException();
+        }
+        return m_turn;
+    }
+
+    [[nodiscard]] Enemy *get_enemy() {
+        return &m_enemy;
     }
 
     void pass_character() {
@@ -180,7 +212,7 @@ public:
         std::optional<TokenHandCount> doubling_token
     );
 
-    bool check_end_fight() {
+    bool check_end_fight() const {
         return m_character->get_health() == 0 || m_enemy.get_health() == 0;
     }
 

@@ -109,8 +109,6 @@ public:
         return m_outcomes;
     }
 
-    nlohmann::json to_json() override;
-
     friend void to_json(nlohmann::json &json, const CardResearch &card);
 
     friend void from_json(const nlohmann::json &json, CardResearch &card);

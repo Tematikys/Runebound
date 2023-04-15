@@ -6,6 +6,7 @@
 #include <nlohmann/json_fwd.hpp>
 #include <utility>
 #include <vector>
+#include "card_fight.hpp"
 #include "card_research.hpp"
 #include "character.hpp"
 #include "fight.hpp"
@@ -14,7 +15,7 @@
 #include "tokens.hpp"
 
 namespace runebound {
-const int DECK_SIZE = 60;
+const int DECK_SIZE = 15;
 
 namespace game {
 // void to_json(nlohmann::json &json, const Game &game);
@@ -58,12 +59,14 @@ private:
     ::runebound::map::Map m_map;
     std::vector<std::shared_ptr<::runebound::character::Character>>
         m_characters;
-    std::vector<unsigned int> m_card_deck_research;
+    std::vector<unsigned int> m_card_deck_research, m_card_deck_fight;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
-    std::vector<unsigned int> m_indexes_card_research;
-    const std::vector<cards::CardResearch> ALL_CARDS_RESEARCH;
+
+    std::vector<cards::CardResearch> m_all_cards_research;
+    std::vector<cards::CardFight> m_all_cards_fight;
+
     std::set<character::StandardCharacter> m_remaining_standard_characters = {
         character::StandardCharacter::LISSA,
         character::StandardCharacter::CORBIN,
@@ -71,19 +74,6 @@ private:
         character::StandardCharacter::LAUREL_FROM_BLOODWOOD,
         character::StandardCharacter::LORD_HAWTHORNE,
         character::StandardCharacter::MASTER_THORN};
-
-    std::vector<cards::CardResearch> generate_all_cards_research();
-
-    template <typename T>
-    void pop_element_from_vector(T element, std::vector<T> &vec) {
-        for (std::size_t i = 0; i < vec.size(); ++i) {
-            if (vec[i] == element) {
-                std::swap(vec[i], vec.back());
-                break;
-            }
-        }
-        vec.pop_back();
-    }
 
     void check_turn(const std::shared_ptr<character::Character> &chr) {
         if (chr->get_name() != m_characters[m_turn]->get_name()) {
@@ -98,12 +88,17 @@ private:
         }
     }
 
+    void generate_all_cards_fight();
+    void generate_all_cards_research();
+
+    void generate_all_cards() {
+        generate_all_cards_research();
+        generate_all_cards_fight();
+    }
+
 public:
-    Game() : ALL_CARDS_RESEARCH(std::move(generate_all_cards_research())) {
-        m_card_deck_research.resize(DECK_SIZE);
-        for (int i = 0; i < DECK_SIZE; ++i) {
-            m_card_deck_research[i] = i;
-        }
+    Game() {
+        generate_all_cards();
     };
 
     Game &operator=(const Game &other) {
@@ -115,10 +110,14 @@ public:
         return *this;
     }
 
+    void take_token(const std::shared_ptr<character::Character> &chr);
+
     void start_next_character_turn() {
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
     }
+
+    void end_fight(const std::shared_ptr<character::Character> &chr);
 
     void relax(std::shared_ptr<character::Character> chr);
 
@@ -170,8 +169,6 @@ public:
     [[nodiscard]] ::runebound::map::Map get_map() const {
         return m_map;
     }
-
-    void reverse_token(std::shared_ptr<character::Character> chr);
 
     [[nodiscard]] Point get_position_character(
         const std::shared_ptr<character::Character> &chr
