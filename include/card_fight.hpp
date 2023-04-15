@@ -25,8 +25,8 @@ public:
     CardFight() : m_gold_award(0) {
     }
 
-    CardFight(int health, const std::string &name_enemy, int gold)
-        : m_enemy(fight::Enemy(health, name_enemy)), m_gold_award(gold) {
+    CardFight(int health, const std::string &enemy_name, int gold)
+        : m_enemy(fight::Enemy(health, enemy_name)), m_gold_award(gold) {
     }
 
     [[nodiscard]] fight::Enemy get_enemy() const {
