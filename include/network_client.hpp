@@ -129,7 +129,7 @@ namespace runebound::network {
             return game_names.size();
         }
 
-        [[nodiscard]] const runebound::game::GameClient &get_self_game_client() const {
+        [[nodiscard]] const runebound::game::GameClient &get_game_client() const {
             return m_game_client;
         }
 
