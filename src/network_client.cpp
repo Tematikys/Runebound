@@ -49,7 +49,7 @@ int main() {
         io_context.poll();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-        client.reverse_token(1, 0);
+        client.take_token();
 
         // test commands end
         // needs a cycle with sleep and poll, to make some commands, I think.
