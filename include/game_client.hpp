@@ -22,9 +22,9 @@ namespace runebound::game {
 
         explicit GameClient(const Game &game) : m_map(game.get_map()),
                                                 m_characters(game.get_character_without_shared_ptr()) {
-            auto set_remaining = game.get_remaining_standard_characters();
-            std::vector<::runebound::character::StandardCharacter> vec_remaining(set_remaining.begin(),
-                                                                                 set_remaining.end());
+            auto set_remaining = std::move(game.get_remaining_standard_characters());
+            std::vector<::runebound::character::StandardCharacter> vec_remaining(game.get_remaining_standard_characters().begin(),
+                                                                                 game.get_remaining_standard_characters().end());
             m_remaining_standard_characters = std::move(vec_remaining);
 
 
