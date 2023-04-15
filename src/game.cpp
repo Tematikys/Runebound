@@ -1,5 +1,7 @@
 #include "game.hpp"
+#include <filesystem>
 #include <nlohmann/json.hpp>
+#include "card_fight.hpp"
 #include "point.hpp"
 #include "runebound_fwd.hpp"
 
@@ -53,14 +55,30 @@ std::shared_ptr<::runebound::character::Character> Game::make_character(
     return m_characters.back();
 }
 
-std::vector<cards::CardResearch> Game::generate_all_cards_research() {
+void Game::generate_all_cards_research() {
     std::vector<cards::CardResearch> cards;
-    m_indexes_card_research.resize(DECK_SIZE);
+    m_card_deck_research.resize(DECK_SIZE);
     for (int i = 0; i < DECK_SIZE; ++i) {
-        cards.emplace_back(cards::CardResearch());
-        m_indexes_card_research[i] = i;
+        m_all_cards_research.emplace_back(cards::CardResearch());
+        m_card_deck_research[i] = i;
     }
-    return cards;
+}
+
+void Game::generate_all_cards_fight() {
+    std::vector<cards::CardResearch> cards;
+    m_card_deck_fight.resize(DECK_SIZE);
+    std::string path = "../data/json/cards/cards_fight";
+    for (const auto &entry : std::filesystem::directory_iterator(path)) {
+        nlohmann::json json;
+        std::ifstream in(entry.path());
+        in >> json;
+        cards::CardFight card;
+        ::runebound::cards::from_json(json, card);
+        m_all_cards_fight.push_back(card);
+    }
+    for (int i = 0; i < DECK_SIZE; ++i) {
+        m_card_deck_fight[i] = i;
+    }
 }
 
 void Game::relax(std::shared_ptr<character::Character> chr) {
@@ -80,16 +98,17 @@ void Game::check_and_get_card_adventure_because_of_token(
         if (m_map.get_cell_map(chr->get_position()).get_token() ==
             ::runebound::AdventureType::RESEARCH) {
             unsigned int card =
-                m_indexes_card_research[rng() % m_indexes_card_research.size()];
-            chr->add_card(card);
-            pop_element_from_vector(card, m_card_deck_research);
-            pop_element_from_vector(card, m_indexes_card_research);
+                m_card_deck_research[rng() % m_card_deck_research.size()];
+            chr->add_card(AdventureType::RESEARCH, card);
+            m_card_deck_research.erase(std::find(
+                m_card_deck_research.begin(), m_card_deck_research.end(), card
+            ));
         }
         m_map.get_cell_map(chr->get_position()).reverse_token();
     }
 }
 
-void Game::reverse_token(std::shared_ptr<character::Character> chr) {
+void Game::take_token(const std::shared_ptr<character::Character> &chr) {
     check_turn(chr);
     check_sufficiency_action_points(2);
     Point position = chr->get_position();
@@ -100,14 +119,28 @@ void Game::reverse_token(std::shared_ptr<character::Character> chr) {
         throw BackSideTokenException();
     }
     if (m_map.get_cell_map(position).get_token() == AdventureType::FIGHT) {
-        chr->start_fight(std::make_shared<::runebound::fight::Fight>(
-            ::runebound::fight::Fight(
-                chr, ::runebound::fight::Enemy(5, "Standard")
-            )
+        unsigned int card = m_card_deck_fight[rng() % m_card_deck_fight.size()];
+        chr->add_card(AdventureType::FIGHT, card);
+        m_card_deck_fight.erase(
+            std::find(m_card_deck_fight.begin(), m_card_deck_fight.end(), card)
+        );
+        chr->start_fight(std::make_shared<fight::Fight>(
+            chr, m_all_cards_fight[card].get_enemy()
         ));
     }
     m_map.reverse_token(position);
     m_characters[m_turn]->update_action_points(-2);
+}
+
+void Game::end_fight(const std::shared_ptr<character::Character> &chr) {
+    if (chr->get_current_fight()->get_winner() ==
+        fight::Participant::CHARACTER) {
+        chr->change_gold(
+            m_all_cards_fight[chr->get_card_fight()].get_gold_award()
+        );
+        chr->add_trophy(AdventureType::FIGHT, chr->get_card_fight());
+    }
+    chr->end_fight();
 }
 
 std::vector<Point> Game::make_move(

@@ -52,6 +52,7 @@ void read_command(
     if (fight.get_turn() == runebound::fight::Participant::CHARACTER) {
         if (character_remaining_tokens[k - 1].hand ==
             HandFightTokens::DOUBLING) {
+            std::cout << "doubling\n";
             std::cin >> d;
             fight.make_progress(
                 Participant::CHARACTER, {character_remaining_tokens[k - 1]},
@@ -59,6 +60,8 @@ void read_command(
             );
         } else if (character_remaining_tokens[k - 1].hand == HandFightTokens::DEXTERITY) {
             int p;
+            std::cout << "dexterity\n";
+
             std::cin >> d >> p;
             if (p == 0) {
                 fight.make_progress(
@@ -75,6 +78,7 @@ void read_command(
             }
 
         } else {
+            std::cout << "damage\n";
             fight.make_progress(
                 Participant::CHARACTER, {character_remaining_tokens[k - 1]},
                 std::nullopt, std::nullopt, std::nullopt
@@ -82,6 +86,7 @@ void read_command(
         }
     } else {
         if (enemy_remaining_tokens[k - 1].hand == HandFightTokens::DOUBLING) {
+            std::cout << "doubling\n";
             std::cin >> d;
             fight.make_progress(
                 Participant::ENEMY, {enemy_remaining_tokens[k - 1]},
@@ -89,6 +94,7 @@ void read_command(
             );
         } else if (enemy_remaining_tokens[k - 1].hand == HandFightTokens::DEXTERITY) {
             int p;
+            std::cout << "dexterity\n";
             std::cin >> d >> p;
             if (p == 0) {
                 fight.make_progress(
@@ -105,6 +111,7 @@ void read_command(
             }
 
         } else {
+            std::cout << "damage\n";
             fight.make_progress(
                 Participant::ENEMY, {enemy_remaining_tokens[k - 1]},
                 std::nullopt, std::nullopt, std::nullopt

@@ -82,7 +82,9 @@ add_executable(${PROJECT_NAME}
             src/fight.cpp
             #src/main.cpp
             src/generator_characters.cpp
-            src/test_game.cpp
+            #src/test_game.cpp
+            src/card_fight.cpp
+            src/generator_cards_fight.cpp
         )
 
 

@@ -29,10 +29,12 @@ struct CharacterClient;
 namespace fight {
 struct FightToken;
 struct Fight;
+struct Enemy;
 }  // namespace fight
 
 namespace generator {
 void generate_characters();
+void generate_cards_fight();
 }  // namespace generator
 
 namespace map {
@@ -49,6 +51,7 @@ struct GameClient;
 namespace cards {
 struct CardAdventure;
 struct CardResearch;
+struct CardFight;
 }  // namespace cards
 
 namespace client {
