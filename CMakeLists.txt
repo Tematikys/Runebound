@@ -103,7 +103,7 @@ add_executable(${PROJECT_NAME}
             src/game_client.cpp
             src/character_client.cpp
             src/map_client.cpp
-            #src/test_fight.cpp
+            src/test_fight.cpp
             src/fight.cpp
             #src/main.cpp
             src/generator_characters.cpp
