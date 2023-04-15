@@ -5,6 +5,8 @@
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <set>
+#include "character.hpp"
+#include "fight.hpp"
 #include "game.hpp"
 #include "game_client.hpp"
 
@@ -18,7 +20,7 @@ std::vector<std::string> game_names;
 std::set<Connection *> connections;
 std::map<std::string, runebound::game::Game> games;
 std::map<std::string, std::set<std::string>> game_users;
-std::map<std::string, ::runebound::character::Character *> user_character;
+std::map<std::string, std::shared_ptr<runebound::character::Character>> user_character;
 std::map<std::string, Connection *> user_connection;
 std::map<std::string, ::runebound::map::MapClient> game_map;
 
@@ -58,7 +60,7 @@ public:
         json data = json::parse(message);
         if (data["action type"] == "reverse token") {
             int x = data["x"], y = data["y"];
-            m_game->reverse_token(x, y);
+            m_game->reverse_token(user_character[m_user_name]);
             for (const std::string &user_name : game_users[m_game_name]) {
                 user_connection[user_name]->send_game();
             }
@@ -79,7 +81,7 @@ public:
             user_connection[m_user_name] = this;
             game_users[m_game_name].insert(m_user_name);
             user_character[m_user_name] =
-                m_game->make_character(0, 0, {0, 0}, 0, 3, m_user_name);
+                m_game->make_character(runebound::character::StandardCharacter::LISSA);
             for (const std::string &user_name : game_users[m_game_name]) {
                 user_connection[user_name]->send_game();
             }
