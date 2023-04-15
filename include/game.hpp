@@ -122,11 +122,11 @@ public:
 
     void relax(std::shared_ptr<character::Character> chr);
 
-    [[nodiscard]] std::vector<std::shared_ptr<::runebound::character::Character>> get_characters() const {
+    [[nodiscard]] const std::vector<std::shared_ptr<::runebound::character::Character>> &get_characters() const {
         return m_characters;
     }
 
-    [[nodiscard]] std::vector<::runebound::character::Character> get_character_without_shared_ptr() const {
+    [[nodiscard]] const std::vector<::runebound::character::Character> get_character_without_shared_ptr() const {
         std::vector<::runebound::character::Character> result;
         for (const auto& character : m_characters){
             result.push_back(*character);
