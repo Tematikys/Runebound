@@ -43,7 +43,7 @@ private:
     std::string m_name;
     std::set<unsigned int> m_cards_research;
     std::set<unsigned int> m_cards_fight;
-    std::set <std::pair<AdventureType, unsigned int>> m_trophies;
+    std::set<std::pair<AdventureType, unsigned int>> m_trophies;
 
     std::map<runebound::token::Token, int> m_tokens;
     int m_max_health;
@@ -113,6 +113,15 @@ public:
 
     void make_trophy(AdventureType type, unsigned int card) {
         m_trophies.insert({type, card});
+    }
+
+    [[nodiscard]] std::set<std::pair<AdventureType, unsigned int>> get_trophies(
+    ) const {
+        return m_trophies;
+    }
+
+    [[nodiscard]] std::set<unsigned int> get_cards_fight() const {
+        return m_cards_fight;
     }
 
     [[nodiscard]] std::shared_ptr<::runebound::fight::Fight> get_current_fight(
