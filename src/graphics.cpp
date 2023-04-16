@@ -13,7 +13,7 @@ bool Texture::load_image_from_file(
     SDL_Surface *loaded_surface = IMG_Load(path.c_str());
     if (loaded_surface == nullptr) {
         ::std::cout << "Unable to load image! SDL_image Error:\n"
-                    << path << ' ' << IMG_GetError() << '\n';
+                    << path << ' ' << IMG_GetError() << ::std::endl;
     } else {
         SDL_SetColorKey(
             loaded_surface, SDL_TRUE,
@@ -23,7 +23,7 @@ bool Texture::load_image_from_file(
         new_texture = SDL_CreateTextureFromSurface(renderer, loaded_surface);
         if (new_texture == nullptr) {
             ::std::cout << "Unable to create texture from! SDL Error:\n"
-                        << path << ' ' << SDL_GetError() << '\n';
+                        << path << ' ' << SDL_GetError() << ::std::endl;
         } else {
             m_width = loaded_surface->w;
             m_height = loaded_surface->h;
@@ -46,13 +46,13 @@ bool Texture::load_from_string(
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), color);
     if (text_surface == nullptr) {
         ::std::cout << "Unable to render text surface! SDL_ttf Error:\n"
-                    << TTF_GetError() << '\n';
+                    << TTF_GetError() << ::std::endl;
     } else {
         m_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
         if (m_texture == nullptr) {
             ::std::cout
                 << "Unable to create texture from rendered text! SDL Error:\n"
-                << SDL_GetError() << '\n';
+                << SDL_GetError() << ::std::endl;
         } else {
             m_width = text_surface->w;
             m_height = text_surface->h;
@@ -96,13 +96,14 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
     // initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         ::std::cout << "SDL could not initialize! SDL Error:\n"
-                    << SDL_GetError() << '\n';
+                    << SDL_GetError() << ::std::endl;
         return false;
     }
 
     // enable linear texture filtering
     if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
-        ::std::cout << "Warning: Linear texture filtering not enabled!\n";
+        ::std::cout << "Warning: Linear texture filtering not enabled!"
+                    << ::std::endl;
     }
 
     // create window
@@ -114,7 +115,7 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
     // report error if appeared
     if (window == nullptr) {
         ::std::cout << "Window could not be created! SDL Error:\n"
-                    << SDL_GetError() << '\n';
+                    << SDL_GetError() << ::std::endl;
         return false;
     }
 
@@ -124,7 +125,7 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
     // report errors
     if (renderer == nullptr) {
         ::std::cout << "Renderer could not be created! SDL Error:\n"
-                    << SDL_GetError() << '\n';
+                    << SDL_GetError() << ::std::endl;
         return false;
     }
 
@@ -135,14 +136,14 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
     int imgFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {
         ::std::cout << "SDL_image could not initialize! SDL_image Error:\n"
-                    << IMG_GetError() << '\n';
+                    << IMG_GetError() << ::std::endl;
         return false;
     }
 
     // initialize TTF
     if (TTF_Init() == -1) {
         ::std::cout << "SDL_ttf could not initialize! SDL_ttf Error:\n"
-                    << TTF_GetError() << '\n';
+                    << TTF_GetError() << ::std::endl;
         return false;
     }
 
@@ -164,7 +165,7 @@ bool generate_text(
     SDL_Color color
 ) {
     if (!texture.load_from_string(renderer, font, text, color)) {
-        ::std::cout << "Failed to render text texture!\n";
+        ::std::cout << "Failed to render text texture!" << ::std::endl;
         return false;
     }
 
@@ -175,7 +176,7 @@ bool load_font(TTF_Font *&font, const ::std::string &path, int font_size) {
     font = TTF_OpenFont(path.c_str(), font_size);
     if (font == nullptr) {
         ::std::cout << "Failed to load font! SDL_ttf Error:\n"
-                    << TTF_GetError() << '\n';
+                    << TTF_GetError() << ::std::endl;
         return false;
     }
     return true;

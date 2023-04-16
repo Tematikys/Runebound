@@ -22,19 +22,7 @@ private:
     RectangleShape m_shape;
 
 public:
-    Button()
-        : m_x(0),
-          m_y(0),
-          m_width(0),
-          m_height(0),
-          m_texture_x_offset(0),
-          m_texture_y_offset(0),
-          m_texture(),
-          m_fill_color(),
-          m_border_color(),
-          m_on_click_function(),
-          m_on_cover_function(),
-          m_shape(){};
+    Button();
 
     Button(
         int x,
@@ -50,38 +38,11 @@ public:
         SDL_Color border_color = {0x00, 0x00, 0x00, 0xFF}
     );
 
-    Button(Button &&other) noexcept
-        : m_x(other.m_x),
-          m_y(other.m_y),
-          m_width(other.m_width),
-          m_height(other.m_height),
-          m_texture_x_offset(other.m_texture_x_offset),
-          m_texture_y_offset(other.m_texture_y_offset),
-          m_texture(::std::move(other.m_texture)),
-          m_fill_color(other.m_fill_color),
-          m_border_color(other.m_border_color),
-          m_on_click_function(::std::move(other.m_on_click_function)),
-          m_on_cover_function(::std::move(other.m_on_cover_function)),
-          m_shape(::std::move(other.m_shape)) {
-    }
+    Button(Button &&other) noexcept;
 
     Button(const Button &other) = delete;
 
-    Button &operator=(Button &&other) noexcept {
-        m_x = other.m_x;
-        m_y = other.m_y;
-        m_width = other.m_width;
-        m_height = other.m_height;
-        m_texture_x_offset = other.m_texture_x_offset;
-        m_texture_y_offset = other.m_texture_y_offset;
-        m_texture = ::std::move(other.m_texture);
-        m_fill_color = other.m_fill_color;
-        m_border_color = other.m_border_color;
-        m_on_click_function = ::std::move(other.m_on_click_function);
-        m_on_cover_function = ::std::move(other.m_on_cover_function);
-        m_shape = ::std::move(other.m_shape);
-        return *this;
-    }
+    Button &operator=(Button &&other) noexcept;
 
     Button &operator=(const Button &other) = delete;
 
@@ -120,20 +81,9 @@ private:
 public:
     TextField() : m_text(), m_button(){};
 
-    TextField(::std::string text, Button &button, int max_len = 0)
-        : m_text(::std::move(text)),
-          m_button(::std::move(button)),
-          m_max_text_len(max_len){};
+    TextField(::std::string text, Button &button, int max_len = 0);
 
-    void push(const ::std::string &suffix) {
-        if (m_max_text_len == 0) {
-            m_text += suffix;
-        } else {
-            if (suffix.length() + m_text.length() <= m_max_text_len) {
-                m_text += suffix;
-            }
-        }
-    }
+    void push(const ::std::string &suffix);
 
     void pop() {
         if (!m_text.empty()) {

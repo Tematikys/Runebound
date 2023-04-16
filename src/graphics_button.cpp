@@ -1,6 +1,20 @@
 #include <graphics_button.hpp>
 
 namespace runebound::graphics {
+Button::Button()
+    : m_x(0),
+      m_y(0),
+      m_width(0),
+      m_height(0),
+      m_texture_x_offset(0),
+      m_texture_y_offset(0),
+      m_texture(),
+      m_fill_color(),
+      m_border_color(),
+      m_on_click_function(),
+      m_on_cover_function(),
+      m_shape(){};
+
 Button::Button(
     int x,
     int y,
@@ -28,6 +42,37 @@ Button::Button(
       m_shape({x, y, m_width, m_height}) {
 }
 
+Button::Button(Button &&other) noexcept
+    : m_x(other.m_x),
+      m_y(other.m_y),
+      m_width(other.m_width),
+      m_height(other.m_height),
+      m_texture_x_offset(other.m_texture_x_offset),
+      m_texture_y_offset(other.m_texture_y_offset),
+      m_texture(::std::move(other.m_texture)),
+      m_fill_color(other.m_fill_color),
+      m_border_color(other.m_border_color),
+      m_on_click_function(::std::move(other.m_on_click_function)),
+      m_on_cover_function(::std::move(other.m_on_cover_function)),
+      m_shape(::std::move(other.m_shape)) {
+}
+
+Button &Button::operator=(Button &&other) noexcept {
+    m_x = other.m_x;
+    m_y = other.m_y;
+    m_width = other.m_width;
+    m_height = other.m_height;
+    m_texture_x_offset = other.m_texture_x_offset;
+    m_texture_y_offset = other.m_texture_y_offset;
+    m_texture = ::std::move(other.m_texture);
+    m_fill_color = other.m_fill_color;
+    m_border_color = other.m_border_color;
+    m_on_click_function = ::std::move(other.m_on_click_function);
+    m_on_cover_function = ::std::move(other.m_on_cover_function);
+    m_shape = ::std::move(other.m_shape);
+    return *this;
+}
+
 bool Button::in_bounds(const Point &p) const {
     if (m_x <= p.x() && p.x() < m_x + m_width && m_y <= p.y() &&
         p.y() < m_y + m_height) {
@@ -42,6 +87,21 @@ void Button::render(SDL_Renderer *renderer) const {
     m_texture.render(
         renderer, m_x + m_texture_x_offset, m_y + m_texture_y_offset
     );
+}
+
+TextField::TextField(::std::string text, Button &button, int max_len)
+    : m_text(::std::move(text)),
+      m_button(::std::move(button)),
+      m_max_text_len(max_len){};
+
+void TextField::push(const ::std::string &suffix) {
+    if (m_max_text_len == 0) {
+        m_text += suffix;
+    } else {
+        if (suffix.length() + m_text.length() <= m_max_text_len) {
+            m_text += suffix;
+        }
+    }
 }
 
 void TextField::render(

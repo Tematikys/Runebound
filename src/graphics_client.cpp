@@ -1,3 +1,4 @@
+#define DEBUG_INFO
 #include "graphics_client.hpp"
 #include <iostream>
 
@@ -8,7 +9,9 @@ void Client::init() {
 
 void Client::init_graphics() {
     if (!::runebound::graphics::SDL_init(m_window, m_renderer)) {
-        ::std::cout << "Failed to initialize!\n";
+#ifdef DEBUG_INFO
+        ::std::cout << "[[debug_info]] :: FAILED TO INTI SDL!" << ::std::endl;
+#endif
         return;
     }
     m_is_running = true;
@@ -51,6 +54,11 @@ void Client::init_graphics() {
         [&is_running = m_is_running]() { is_running = false; }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
+#ifdef DEBUG_INFO
+    ::std::cout << "[[debug_info]] :: ================ END OF GRAPHICS INIT "
+                   "================"
+                << ::std::endl;
+#endif
 }
 
 void Client::init_board() {
@@ -64,16 +72,24 @@ void Client::load_fonts() {
             ::std::string name = font_name + ::std::to_string(i);
             m_fonts[name] = nullptr;
             ::runebound::graphics::load_font(m_fonts[name], path, i);
+#ifdef DEBUG_INFO
             if (m_fonts[name] == nullptr) {
-                ::std::cout << "Failed to load: " << name << ::std::endl;
+                ::std::cout << "[[debug_info]] :: FAILED TO LOAD: " << name
+                            << ::std::endl;
             } else {
-                ::std::cout << "Success to load: " << name << ::std::endl;
+                ::std::cout << "[[debug_info]] :: SUCCESS TO LOAD: " << name
+                            << ::std::endl;
             }
+#endif
         }
     }
 }
 
 void Client::handle_events() {
+#ifdef DEBUG_INFO
+    ::std::cout << "[[debug_info]] :: " << m_counter << " HANDLE EVENTS"
+                << ::std::endl;
+#endif
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -127,23 +143,35 @@ void Client::handle_events() {
 }
 
 void Client::render() {
+#ifdef DEBUG_INFO
+    ::std::cout << "[[debug_info]] :: " << m_counter << " RENDER"
+                << ::std::endl;
+#endif
     SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(m_renderer);
-
     if (!m_joined_to_game) {
         for (const auto &button : m_games_to_render) {
             button.render(m_renderer);
         }
-
+#ifdef DEBUG_INFO
+        ::std::cout << "[[debug_info]] :: " << m_counter << " GAMES RENDERED"
+                    << ::std::endl;
+#endif
         for (const auto &field : m_text_fields) {
             field.render(
                 m_renderer, m_fonts["FreeMono50"], {0, 0, 0, 255}, 0, 0
             );
         }
-
+#ifdef DEBUG_INFO
+        ::std::cout << "[[debug_info]] :: " << m_counter << " FIELDS RENDERED"
+                    << ::std::endl;
+#endif
         for (const auto &button : m_buttons) {
             button.render(m_renderer);
         }
+#ifdef DEBUG_INFO
+        ::std::cout << "[[debug_info]] :: BUTTON RENDERED" << ::std::endl;
+#endif
     } else {
         m_board.render(m_renderer);
     }
@@ -151,6 +179,10 @@ void Client::render() {
 }
 
 void Client::update() {
+#ifdef DEBUG_INFO
+    ::std::cout << "[[debug_info]] :: " << m_counter << " UPDATE"
+                << ::std::endl;
+#endif
     ::runebound::graphics::update_mouse_pos(m_mouse_pos);
     m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
 
@@ -228,6 +260,9 @@ void Client::update() {
 }
 
 void Client::tick() {
+#ifdef DEBUG_INFO
+    ::std::cout << "[[debug_info]] :: " << m_counter << " TICK" << ::std::endl;
+#endif
     uint32_t cur_frame_time = SDL_GetTicks();
     if (cur_frame_time < m_frame_time + m_prev_frame_time) {
         SDL_Delay(m_frame_time - cur_frame_time + m_prev_frame_time);
@@ -236,22 +271,28 @@ void Client::tick() {
 }
 
 void Client::exit() {
-    SDL_DestroyWindow(m_window);
-    SDL_DestroyRenderer(m_renderer);
-    m_window = nullptr;
-    m_renderer = nullptr;
-
-    for (auto &[name, font] : m_fonts) {
-        TTF_CloseFont(font);
-        font = nullptr;
-    }
-
-    for (auto &texture : m_textures) {
-        texture.free();
-    }
-
-    TTF_Quit();
-    IMG_Quit();
-    SDL_Quit();
+#ifdef DEBUG_INFO
+    ::std::cout << "[[debug_info]] :: " << m_counter << " EXITING"
+                << ::std::endl;
+#endif
+    //    m_games_to_render.~vector<::runebound::graphics::Button>();
+    //    m_text_fields.~vector<::runebound::graphics::TextField>();
+    //    m_buttons.~vector<::runebound::graphics::Button>();
+    //    for (auto &[name, font] : m_fonts) {
+    //        TTF_CloseFont(font);
+    //        font = nullptr;
+    //    }
+    //    for (auto &texture : m_textures) {
+    //        texture.free();
+    //    }
+    //
+    //    SDL_DestroyWindow(m_window);
+    //    SDL_DestroyRenderer(m_renderer);
+    //    m_window = nullptr;
+    //    m_renderer = nullptr;
+    //
+    //    TTF_Quit();
+    //    IMG_Quit();
+    //    SDL_Quit();
 }
 }  // namespace runebound::client
