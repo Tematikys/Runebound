@@ -8,6 +8,7 @@
 
 namespace runebound::graphics {
 extern const ::std::vector<::std::pair<::std::string, ::std::string>> FONTS;
+extern const ::std::vector<::std::pair<::std::string, ::std::string>> IMAGES;
 extern const int HEXAGON_RADIUS;
 extern const SDL_Color SELECTED_COLOR;
 extern const ::std::map<::runebound::map::TypeCell, SDL_Color> CELL_FILL_COLOR;

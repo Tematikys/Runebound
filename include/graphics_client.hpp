@@ -35,6 +35,7 @@ private:
     SDL_Window *m_window = nullptr;
     SDL_Renderer *m_renderer = nullptr;
     ::std::map<::std::string, TTF_Font *> m_fonts;
+    ::std::map<::std::string, ::runebound::graphics::Texture> m_images;
 
     // main menu window
     ::std::vector<::runebound::graphics::Texture> m_main_menu_textures;
@@ -70,6 +71,8 @@ public:
     void init_main_menu();
 
     void load_fonts();
+
+    void load_images();
 
     void game_handle_events(SDL_Event &event);
 

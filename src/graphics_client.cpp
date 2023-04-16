@@ -18,6 +18,7 @@ void Client::init_graphics() {
     m_frame_time = 1000 / ::runebound::graphics::WINDOWS_FPS;
     m_main_menu_active_text_field = 0;
     load_fonts();
+    load_images();
 }
 
 void Client::init_game() {
@@ -29,9 +30,9 @@ void Client::init_game() {
     );
     m_game_buttons.push_back(::runebound::graphics::Button(
         638, 0, texture.get_width(), texture.get_height(), 0, 0, texture,
-        [&is_joined_to_game = m_joined_to_game, &character_selected = m_character_selected]() {
-            is_joined_to_game = false;
-            character_selected = false;
+        [this]() {
+            this->m_joined_to_game = false;
+            this->m_character_selected = false;
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
@@ -110,6 +111,13 @@ void Client::load_fonts() {
                 return;
             }
         }
+    }
+}
+
+void Client::load_images() {
+    for (auto [path, name] : ::runebound::graphics::IMAGES) {
+        m_images[name] = ::runebound::graphics::Texture();
+        m_images[name].load_image_from_file(m_renderer, path);
     }
 }
 
@@ -239,7 +247,7 @@ void Client::render() {
 #ifdef DEBUG_INFO
     ::std::cout << "[info] :: " << m_counter << " RENDER" << ::std::endl;
 #endif
-    SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(m_renderer, 127, 127, 127, 255);
     SDL_RenderClear(m_renderer);
 
     if (m_joined_to_game) {
@@ -426,6 +434,8 @@ void Client::exit() {
 #ifdef DEBUG_INFO
     ::std::cout << "[info] :: " << m_counter << " EXIT" << ::std::endl;
 #endif
+    m_network_client.exit();
+
     m_game_list.clear();
     m_main_menu_text_fields.clear();
     m_main_menu_buttons.clear();
@@ -440,6 +450,10 @@ void Client::exit() {
     m_game_buttons.clear();
     for (auto &texture : m_game_textures) {
         texture.free();
+    }
+
+    for (auto &[name, image] : m_images) {
+        image.free();
     }
 
     SDL_DestroyRenderer(m_renderer);
