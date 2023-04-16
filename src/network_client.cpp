@@ -14,7 +14,7 @@ int main() {
     std::cin >> user_name;
 
     boost::asio::io_context io_context;
-    boost::asio::executor_work_guard <boost::asio::io_context::executor_type>
+    boost::asio::executor_work_guard<boost::asio::io_context::executor_type>
             work_guard = boost::asio::make_work_guard(io_context);
     runebound::network::Client client(io_context, "127.0.0.1", 4444, user_name);
     try {
@@ -42,11 +42,25 @@ int main() {
         }
         std::cout << '\n';
         client.join_game("My game");
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         io_context.poll();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::cout << "################";
+        for (auto e: client.get_game_client().m_remaining_standard_characters) {
+            std::cout << static_cast<int>(e);
+        }
+        io_context.poll();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         client.select_character(runebound::character::StandardCharacter::CORBIN);
-
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        io_context.poll();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::cout << "################";
+        for (auto e: client.get_game_client().m_remaining_standard_characters) {
+            std::cout << static_cast<int>(e);
+        }
+        io_context.poll();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         client.make_move(1, 0);
         io_context.poll();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -55,7 +69,11 @@ int main() {
 
         int counter = 0;
         while (!io_context.stopped()) {
-                std::cout<<counter;
+            std::cout << counter;
+            if (counter == 50) {
+                client.exit_game();
+
+            }
             if (counter == 100) {
 //                return 0;
                 client.exit();

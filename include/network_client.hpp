@@ -45,6 +45,7 @@ namespace runebound::network {
                 std::cout << "Game changed, maybe\n";
                 runebound::game::from_json(answer, m_game_client);
             }
+
             if (answer["change type"] == "exception") {
                 std::cout << "Exception: " << answer["exception"] << "\n";
             }
@@ -101,6 +102,12 @@ namespace runebound::network {
             data["action type"] = "join game";
             data["game name"] = game_name;
             data["user name"] = m_user_name;
+            do_write(data.dump());
+        }
+
+        void exit_game() {
+            json data;
+            data["action type"] = "exit game";
             do_write(data.dump());
         }
 

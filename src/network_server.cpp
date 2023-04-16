@@ -88,10 +88,22 @@ public:
                 }
             }
 
+            if (data["action type"] == "exit game") {
+                game_users[m_game_name].erase(m_user_name);
+//                m_game->delete_character(user_character[m_user_name]);
+                user_character[m_user_name] = nullptr;
+                m_game = nullptr;
+                m_game_name = "";
+
+
+                for (const std::string &user_name: game_users[m_game_name]) {
+                    user_connection[user_name]->send_game();
+                }
+            }
+
 
             if (data["action type"] == "select character") {
                 runebound::character::StandardCharacter character = data["character"];
-
                 user_character[m_user_name] =
                         m_game->make_character(character);
 
