@@ -108,8 +108,6 @@ void TextField::render(
     SDL_Renderer *renderer,
     TTF_Font *font,
     SDL_Color color,
-    int x,
-    int y,
     SDL_Rect *clip,
     double angle,
     SDL_Point *center,
@@ -118,7 +116,10 @@ void TextField::render(
     m_button.render(renderer);
     Texture texture;
     generate_text(renderer, texture, m_text, font, color);
-    texture.render(renderer, x, y, clip, angle, center, flip);
+    texture.render(
+        renderer, m_button.get_coords().x(), m_button.get_coords().y(), clip,
+        angle, center, flip
+    );
     texture.free();
 }
 }  // namespace runebound::graphics

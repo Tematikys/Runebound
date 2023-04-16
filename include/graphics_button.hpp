@@ -67,8 +67,8 @@ public:
         m_texture = ::std::move(texture);
     }
 
-    [[nodiscard]] const SDL_Rect &get_rect() const {
-        return m_shape.get_rect();
+    [[nodiscard]] Point get_coords() const {
+        return {m_x, m_y};
     }
 };
 
@@ -111,8 +111,6 @@ public:
         SDL_Renderer *renderer,
         TTF_Font *font,
         SDL_Color color,
-        int x,
-        int y,
         SDL_Rect *clip = nullptr,
         double angle = 0.0,
         SDL_Point *center = nullptr,
