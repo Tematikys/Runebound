@@ -74,23 +74,30 @@ public:
                 }
             }
 
-
             if (data["action type"] == "join game") {
                 m_game_name = data["game name"];
                 m_user_name = data["user name"];
-                runebound::character::StandardCharacter character = data["character"];
 
                 m_game = &games[m_game_name];
                 user_connection[m_user_name] = this;
                 game_users[m_game_name].insert(m_user_name);
+
+
+                for (const std::string &user_name: game_users[m_game_name]) {
+                    user_connection[user_name]->send_game();
+                }
+            }
+
+
+            if (data["action type"] == "select character") {
+                runebound::character::StandardCharacter character = data["character"];
+
                 user_character[m_user_name] =
                         m_game->make_character(character);
 
                 for (const std::string &user_name: game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
                 }
-                std::cout<<"F";
-
             }
             if (data["action type"] == "make move") {
                 int x = data["x"], y = data["y"];

@@ -21,7 +21,7 @@ namespace runebound::network {
                 int port,
                 std::string user_name
         )
-                : socket_(io_context), m_user_name(std::move(user_name)) {
+                : socket_(io_context), m_user_name(std::move(user_name)), io_context_(io_context) {
             tcp::resolver resolver(io_context);
             auto endpoints =
                     tcp::endpoint(boost::asio::ip::address::from_string(host), port);
@@ -46,7 +46,7 @@ namespace runebound::network {
                 runebound::game::from_json(answer, m_game_client);
             }
             if (answer["change type"] == "exception") {
-                std::cout << answer["exception"] << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+                std::cout << "Exception: " << answer["exception"] << "\n";
             }
         }
 
@@ -96,14 +96,21 @@ namespace runebound::network {
             do_write(data.dump());
         }
 
-        void join_game(const std::string &game_name, runebound::character::StandardCharacter character) {
+        void join_game(const std::string &game_name) {
             json data;
             data["action type"] = "join game";
             data["game name"] = game_name;
             data["user name"] = m_user_name;
+            do_write(data.dump());
+        }
+
+        void select_character(runebound::character::StandardCharacter character) {
+            json data;
+            data["action type"] = "select character";
             data["character"] = character;
             do_write(data.dump());
         }
+
 
         void make_move(int x, int y) {
             json data;
@@ -126,6 +133,11 @@ namespace runebound::network {
         }
 
 
+        void exit() {
+            io_context_.stop();
+        };
+
+
     public:
         std::string m_user_name;
         std::vector<std::string> game_names;
@@ -135,6 +147,7 @@ namespace runebound::network {
     private:
         boost::asio::streambuf m_buffer;
         tcp::socket socket_;
+        boost::asio::io_context &io_context_;
     };
 }  // namespace runebound::network
 #endif  // CLIENT_HPP_
