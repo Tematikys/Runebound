@@ -2,6 +2,7 @@
 #define RUNEBOUND_CLIENT_HPP_
 
 #include <SDL2/SDL.h>
+#include <character.hpp>
 #include <game_client.hpp>
 #include <graphics.hpp>
 #include <graphics_board.hpp>
@@ -17,7 +18,7 @@ namespace runebound::client {
 class Client {
 private:
     // network
-    bool m_is_joined_to_game = false;
+    bool m_joined_to_game = false;
     ::boost::asio::io_context m_io_context;
     ::boost::asio::executor_work_guard<::boost::asio::io_context::executor_type>
         m_work_guard = ::boost::asio::make_work_guard(m_io_context);
@@ -25,7 +26,6 @@ private:
         ::runebound::network::Client(m_io_context, "127.0.0.1", 4444, "client");
 
     // game and board
-    ::runebound::game::GameClient m_game;
     ::runebound::graphics::Board m_board;
     ::std::size_t m_game_list_start_index = 0;
     ::std::size_t m_game_list_show_amount = 10;
@@ -36,11 +36,17 @@ private:
     SDL_Renderer *m_renderer = nullptr;
     ::std::map<::std::string, TTF_Font *> m_fonts;
 
-    // main menu
+    // main menu window
     ::std::vector<::runebound::graphics::Texture> m_main_menu_textures;
     ::std::vector<::runebound::graphics::Button> m_main_menu_buttons;
     ::std::vector<::runebound::graphics::TextField> m_main_menu_text_fields;
-    ::std::size_t m_main_menu_active_text_field;
+    ::std::size_t m_main_menu_active_text_field = 0;
+
+    // game window
+    ::std::vector<::runebound::graphics::Texture> m_game_textures;
+    ::std::vector<::runebound::graphics::Button> m_game_buttons;
+    ::std::vector<::runebound::graphics::Button> m_character_list;
+    bool m_character_selected = false;
 
     // time
     bool m_is_running = false;
@@ -59,9 +65,15 @@ public:
 
     void init_board();
 
+    void init_game();
+
     void init_main_menu();
 
     void load_fonts();
+
+    void game_handle_events(SDL_Event &event);
+
+    void main_menu_handle_events(SDL_Event &event);
 
     void handle_events();
 

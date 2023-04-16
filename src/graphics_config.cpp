@@ -4,7 +4,7 @@ namespace runebound::graphics {
 const ::std::vector<::std::pair<::std::string, ::std::string>> FONTS = {
     {"data/fonts/FreeMono.ttf", "FreeMono"}};
 
-const int HEXAGON_RADIUS = 30;
+const int HEXAGON_RADIUS = 26;
 const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};
 
 const ::std::map<::runebound::map::TypeCell, SDL_Color> CELL_FILL_COLOR = {
