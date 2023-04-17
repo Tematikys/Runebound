@@ -11,7 +11,7 @@ void write_to_file(
     nlohmann::json json;
     std::ofstream out(file);
     to_json(json, character);
-    out << json;
+    out << json.dump(4);
 }
 }  // namespace
 

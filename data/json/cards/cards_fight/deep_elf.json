@@ -1,1 +1,9 @@
-{"m_card_type":2,"m_enemy":{"m_health":5,"m_name":"Deep Elf"},"m_gold_award":2,"m_trophy":false}
+{
+    "m_card_type": 2,
+    "m_enemy": {
+        "m_health": 5,
+        "m_name": "Deep Elf"
+    },
+    "m_gold_award": 2,
+    "m_trophy": false
+}

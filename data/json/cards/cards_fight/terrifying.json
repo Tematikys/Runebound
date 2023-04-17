@@ -1,1 +1,9 @@
-{"m_card_type":2,"m_enemy":{"m_health":7,"m_name":"Terrifying"},"m_gold_award":3,"m_trophy":false}
+{
+    "m_card_type": 2,
+    "m_enemy": {
+        "m_health": 7,
+        "m_name": "Terrifying"
+    },
+    "m_gold_award": 3,
+    "m_trophy": false
+}

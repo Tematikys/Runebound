@@ -17,6 +17,7 @@ void Character::load_character_from_file(const std::string &file) {
 }
 
 Character::Character(const StandardCharacter &chr) {
+    m_standard_character = chr;
     switch (chr) {
         case (StandardCharacter::LISSA): {
             load_character_from_file("data/json/characters/lissa.json");
@@ -89,6 +90,7 @@ void to_json(nlohmann::json &json, const Character &character) {
     json["m_cards_research"] = character.m_cards_research;
     json["m_fight_tokens"] = character.m_fight_tokens;
     json["m_trophies"] = character.m_trophies;
+    json["m_standard_character"] = character.m_standard_character;
 }
 
 void from_json(const nlohmann::json &json, Character &character) {
@@ -102,6 +104,7 @@ void from_json(const nlohmann::json &json, Character &character) {
     character.m_max_health = json["m_max_health"];
     character.m_current_position = json["m_current_position"];
     character.m_tokens = json["m_tokens"];
+    character.m_standard_character = json["m_standard_character"];
     character.m_fight_tokens.clear();
     for (const auto &fight_token : json["m_fight_tokens"]) {
         character.m_fight_tokens.push_back(fight_token);

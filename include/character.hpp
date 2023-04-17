@@ -38,6 +38,7 @@ private:
     unsigned int m_hand_limit, m_speed;
     int m_action_points = 3;
     int m_max_action_points = 3;
+    StandardCharacter m_standard_character = StandardCharacter::LISSA;
     StateCharacter m_current_state = StateCharacter::NORMAL_GAME;
     std::string m_name;
     std::set<unsigned int> m_cards_research;
@@ -195,6 +196,10 @@ public:
         nlohmann::json json;
         ::runebound::character::to_json(json, *this);
         return json;
+    }
+
+    [[nodiscard]] StandardCharacter get_standard_character() const {
+        return m_standard_character;
     }
 
     static Character from_json(const nlohmann::json &json) {
