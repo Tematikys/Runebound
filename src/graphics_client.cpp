@@ -365,6 +365,7 @@ void Client::main_menu_update() {
 #ifdef DEBUG_INFO
     ::std::cout << "[info] :: MAIN MENU UPDATE" << ::std::endl;
 #endif
+    init_board();
     m_game_list.clear();
 
     for (::std::size_t i = m_game_list_start_index;
