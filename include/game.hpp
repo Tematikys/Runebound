@@ -122,12 +122,21 @@ public:
         m_characters[m_turn]->restore_action_points();
     }
 
-    std::vector<dice::HandDice> throw_dice(
+    std::vector<dice::HandDice> throw_movement_dice(
         const std::shared_ptr<character::Character> &chr
     ) {
         check_turn(chr);
         m_last_dice_result =
             ::runebound::dice::get_combination_of_dice(chr->get_speed());
+        return m_last_dice_result;
+    }
+
+    std::vector<dice::HandDice> throw_relax_dice(
+        const std::shared_ptr<character::Character> &chr
+    ) {
+        check_turn(chr);
+        m_last_dice_result =
+            ::runebound::dice::get_combination_of_dice(5);
         return m_last_dice_result;
     }
 

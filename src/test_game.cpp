@@ -93,7 +93,7 @@ TEST_CASE("generating characters") {
         lissa->get_standard_character() ==
         runebound::character::StandardCharacter::LISSA
     );
-    auto res = game.throw_dice(corbin);
+    auto res = game.throw_movement_dice(corbin);
     CHECK(res == game.get_last_dice_result());
     CHECK(static_cast<unsigned int>(res.size()) == corbin->get_speed());
 }
