@@ -1,1 +1,9 @@
-{"m_card_type":2,"m_enemy":{"m_health":6,"m_name":"Witch"},"m_gold_award":2,"m_trophy":false}
+{
+    "m_card_type": 2,
+    "m_enemy": {
+        "m_health": 6,
+        "m_name": "Witch"
+    },
+    "m_gold_award": 2,
+    "m_trophy": false
+}
