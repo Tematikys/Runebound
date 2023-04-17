@@ -17,6 +17,7 @@ namespace runebound::game {
         std::vector<::runebound::character::Character>
                 m_characters;
         std::vector<::runebound::character::StandardCharacter> m_remaining_standard_characters;
+        std::vector <dice::HandDice> m_last_dice_result;
 
         GameClient() = default;
 
