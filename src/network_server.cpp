@@ -20,7 +20,8 @@ std::vector<std::string> game_names;
 std::set<Connection *> connections;
 std::map<std::string, runebound::game::Game> games;
 std::map<std::string, std::set<std::string>> game_users;
-std::map<std::string, std::shared_ptr<runebound::character::Character>> user_character;
+std::map<std::string, std::shared_ptr<runebound::character::Character>>
+    user_character;
 std::map<std::string, Connection *> user_connection;
 
 class Connection : public std::enable_shared_from_this<Connection> {
@@ -42,16 +43,16 @@ public:
     void write(const std::string &message) {
         auto self(shared_from_this());
         boost::asio::async_write(
-                socket_, boost::asio::buffer(message + '\n'),
-                [this, self,
-                        message](boost::system::error_code ec, std::size_t length) {
-                    if (!ec) {
-                        std::cout << "Sent:{ \n " << message << "\n}\n";
-                    } else {
-                        connections.erase(this);
-                        std::cout << "Disconnected" << std::endl;
-                    }
+            socket_, boost::asio::buffer(message + '\n'),
+            [this, self,
+             message](boost::system::error_code ec, std::size_t length) {
+                if (!ec) {
+                    std::cout << "Sent:{ \n " << message << "\n}\n";
+                } else {
+                    connections.erase(this);
+                    std::cout << "Disconnected" << std::endl;
                 }
+            }
         );
     }
 
@@ -61,7 +62,7 @@ public:
 
             if (data["action type"] == "take token") {
                 m_game->take_token(user_character[m_user_name]);
-                for (const std::string &user_name: game_users[m_game_name]) {
+                for (const std::string &user_name : game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
                 }
             }
@@ -69,7 +70,7 @@ public:
                 std::string game_name = data["game name"];
                 game_names.push_back(game_name);
                 games[game_name] = runebound::game::Game();
-                for (auto session: connections) {
+                for (auto session : connections) {
                     session->send_game_names();
                 }
             }
@@ -77,16 +78,17 @@ public:
             if (data["action type"] == "join game") {
                 m_game_name = data["game name"];
                 m_user_name = data["user name"];
+                m_user_name+=std::to_string(counter++);
 
                 m_game = &games[m_game_name];
                 user_connection[m_user_name] = this;
                 game_users[m_game_name].insert(m_user_name);
 
-
-                for (const std::string &user_name: game_users[m_game_name]) {
+                for (const std::string &user_name : game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
                 }
             }
+
 
             if (data["action type"] == "exit game") {
                 game_users[m_game_name].erase(m_user_name);
@@ -107,17 +109,19 @@ public:
                 user_character[m_user_name] =
                         m_game->make_character(character);
 
-                for (const std::string &user_name: game_users[m_game_name]) {
+                for (const std::string &user_name : game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
                 }
             }
             if (data["action type"] == "make move") {
                 int x = data["x"], y = data["y"];
                 auto dice_result = runebound::dice::get_combination_of_dice(
-                        user_character[m_user_name]->get_speed()
+                    user_character[m_user_name]->get_speed()
                 );
-                m_game->make_move(user_character[m_user_name], {x, y}, dice_result);
-                for (const std::string &user_name: game_users[m_game_name]) {
+                m_game->make_move(
+                    user_character[m_user_name], {x, y}, dice_result
+                );
+                for (const std::string &user_name : game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
                 }
             }
@@ -135,24 +139,24 @@ private:
         auto self(shared_from_this());
 
         boost::asio::async_read_until(
-                socket_, m_buffer, '\n',
-                [this, self](boost::system::error_code ec, std::size_t length) {
-                    if (!ec) {
-                        std::istream is(&m_buffer);
-                        std::string message;
-                        std::getline(is, message);
-                        std::cout << "Received: " << message
-                                  << " Length: " << length << '\n';
-                        parse_message(message);
-                        do_read();
-                    } else {
-                        connections.erase(this);
-                        std::cout << "Disconnected" << std::endl;
-                    }
+            socket_, m_buffer, '\n',
+            [this, self](boost::system::error_code ec, std::size_t length) {
+                if (!ec) {
+                    std::istream is(&m_buffer);
+                    std::string message;
+                    std::getline(is, message);
+                    std::cout << "Received: " << message
+                              << " Length: " << length << '\n';
+                    parse_message(message);
+                    do_read();
+                } else {
+                    connections.erase(this);
+                    std::cout << "Disconnected" << std::endl;
                 }
+            }
         );
     }
-
+    int counter=0;
     boost::asio::streambuf m_buffer;
     std::string m_user_name;
     std::string m_game_name;
@@ -177,7 +181,7 @@ void Connection::send_game() {
 class Server {
 public:
     Server(boost::asio::io_context &io_context, short port)
-            : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port)) {
+        : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port)) {
         std::cout << "Server started\n";
         do_accept();
     }
@@ -185,13 +189,13 @@ public:
 private:
     void do_accept() {
         m_acceptor.async_accept(
-                [this](boost::system::error_code ec, tcp::socket socket) {
-                    if (!ec) {
-                        std::make_shared<Connection>(std::move(socket))->start();
-                    }
-
-                    do_accept();
+            [this](boost::system::error_code ec, tcp::socket socket) {
+                if (!ec) {
+                    std::make_shared<Connection>(std::move(socket))->start();
                 }
+
+                do_accept();
+            }
         );
     }
 

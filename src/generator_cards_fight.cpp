@@ -9,7 +9,7 @@ void write_to_file(
     nlohmann::json json;
     std::ofstream out(file);
     to_json(json, card);
-    out << json;
+    out << json.dump(4);
 }
 }  // namespace
 
@@ -27,8 +27,7 @@ void generate_cards_fight() {
         "data/json/cards/cards_fight/ettin.json"
     );
     write_to_file(
-        cards::CardFight(8, "Ogre", 3),
-        "data/json/cards/cards_fight/ogre.json"
+        cards::CardFight(8, "Ogre", 3), "data/json/cards/cards_fight/ogre.json"
     );
     write_to_file(
         cards::CardFight(5, "Deep Elf", 2),

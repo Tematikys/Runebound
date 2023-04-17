@@ -11,7 +11,7 @@ void write_to_file(
     nlohmann::json json;
     std::ofstream out(file);
     to_json(json, character);
-    out << json;
+    out << json.dump(4);
 }
 }  // namespace
 
@@ -83,8 +83,7 @@ void generate_characters() {
          )}
     );
     write_to_file(
-        laurel_from_bloodwood,
-        "data/json/characters/laurel_from_bloodwood.json"
+        laurel_from_bloodwood, "data/json/characters/laurel_from_bloodwood.json"
     );
 
     ::runebound::character::Character lord_hawthorne(
@@ -102,9 +101,7 @@ void generate_characters() {
              fight::HandFightTokens::NOTHING, 0, 1
          )}
     );
-    write_to_file(
-        lord_hawthorne, "data/json/characters/lord_hawthorne.json"
-    );
+    write_to_file(lord_hawthorne, "data/json/characters/lord_hawthorne.json");
 
     ::runebound::character::Character corbin(
         2, 10, ::runebound::Point(11, 6), 3, 3, "Corbin",

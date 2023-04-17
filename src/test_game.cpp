@@ -85,6 +85,17 @@ TEST_CASE("generating characters") {
     CHECK(corbin->get_action_points() == 3);
     game.make_move(corbin, runebound::Point(12, 6), dice_res);
     CHECK(corbin->get_action_points() == 1);
+    CHECK(
+        corbin->get_standard_character() ==
+        runebound::character::StandardCharacter::CORBIN
+    );
+    CHECK(
+        lissa->get_standard_character() ==
+        runebound::character::StandardCharacter::LISSA
+    );
+    auto res = game.throw_movement_dice(corbin);
+    CHECK(res == game.get_last_dice_result());
+    CHECK(static_cast<unsigned int>(res.size()) == corbin->get_speed());
 }
 
 TEST_CASE("card_fight") {

@@ -21,7 +21,9 @@ namespace runebound::network {
                 int port,
                 std::string user_name
         )
-                : socket_(io_context), m_user_name(std::move(user_name)), io_context_(io_context) {
+                : socket_(io_context),
+                  m_user_name(std::move(user_name)),
+                  io_context_(io_context) {
             tcp::resolver resolver(io_context);
             auto endpoints =
                     tcp::endpoint(boost::asio::ip::address::from_string(host), port);
@@ -45,7 +47,6 @@ namespace runebound::network {
                 std::cout << "Game changed, maybe\n";
                 runebound::game::from_json(answer, m_game_client);
             }
-
             if (answer["change type"] == "exception") {
                 std::cout << "Exception: " << answer["exception"] << "\n";
             }
@@ -105,19 +106,12 @@ namespace runebound::network {
             do_write(data.dump());
         }
 
-        void exit_game() {
-            json data;
-            data["action type"] = "exit game";
-            do_write(data.dump());
-        }
-
         void select_character(runebound::character::StandardCharacter character) {
             json data;
             data["action type"] = "select character";
             data["character"] = character;
             do_write(data.dump());
         }
-
 
         void make_move(int x, int y) {
             json data;
@@ -127,9 +121,17 @@ namespace runebound::network {
             do_write(data.dump());
         }
 
+
+        void exit_game() {
+            json data;
+            data["action type"] = "exit game";
+            do_write(data.dump());
+        }
+
         [[nodiscard]] const std::vector<std::string> &get_game_names() const {
             return game_names;
         }
+
 
         [[nodiscard]] int get_game_names_size() const {
             return game_names.size();
@@ -139,17 +141,14 @@ namespace runebound::network {
             return m_game_client;
         }
 
-
         void exit() {
             io_context_.stop();
         };
-
 
     public:
         std::string m_user_name;
         std::vector<std::string> game_names;
         runebound::game::GameClient m_game_client;
-
 
     private:
         boost::asio::streambuf m_buffer;
