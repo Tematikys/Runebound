@@ -2,8 +2,6 @@
 #include "game.hpp"
 
 TEST_CASE("game") {
-    ::runebound::generator::generate_characters();
-    ::runebound::generator::generate_cards_fight();
     ::runebound::game::Game game;
     using namespace runebound::fight;
     std::vector<FightToken> character_tokens = {
@@ -87,6 +85,8 @@ TEST_CASE("generating characters") {
     CHECK(corbin->get_action_points() == 3);
     game.make_move(corbin, runebound::Point(12, 6), dice_res);
     CHECK(corbin->get_action_points() == 1);
+    CHECK(corbin->get_standard_character() == runebound::character::StandardCharacter::CORBIN);
+    CHECK(lissa->get_standard_character() == runebound::character::StandardCharacter::LISSA);
 }
 
 TEST_CASE("card_fight") {

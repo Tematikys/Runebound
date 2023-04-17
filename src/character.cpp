@@ -17,7 +17,6 @@ void Character::load_character_from_file(const std::string &file) {
 }
 
 Character::Character(const StandardCharacter &chr) {
-    m_standard_character = chr;
     switch (chr) {
         case (StandardCharacter::LISSA): {
             load_character_from_file("data/json/characters/lissa.json");
@@ -47,6 +46,7 @@ Character::Character(const StandardCharacter &chr) {
             break;
         }
     }
+    m_standard_character = chr;
 }
 
 void Character::add_card(AdventureType type, unsigned int card) {
