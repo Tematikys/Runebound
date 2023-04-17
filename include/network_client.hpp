@@ -1,6 +1,9 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
+//#define NETWORK_DEBUG_INFO
+
+
 #include <boost/asio.hpp>
 #include <chrono>
 #include <iostream>
@@ -11,6 +14,8 @@
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
+
+#define NETWORK_DEBUG_INFO
 
 namespace runebound::network {
     class Client {
@@ -60,8 +65,10 @@ namespace runebound::network {
                             std::istream is(&m_buffer);
                             std::string message;
                             std::getline(is, message);
+#ifdef NETWORK_DEBUG_INFO
                             std::cout << "Received: " << message
                                       << " Length: " << length << '\n';
+#endif
                             parse_message(message);
                             do_read();
                         } else {
@@ -75,8 +82,12 @@ namespace runebound::network {
             socket_.async_write_some(
                     boost::asio::buffer(str + '\n'),
                     [this, str](boost::system::error_code ec, std::size_t length) {
+
                         if (!ec) {
+#ifdef NETWORK_DEBUG_INFO
                             std::cout << "Sent:" << str << ' ' << length << '\n';
+#endif
+
                         } else {
                             std::cerr << "Write failed: " << ec.message() << std::endl;
                             socket_.close();

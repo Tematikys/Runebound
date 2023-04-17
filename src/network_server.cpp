@@ -10,10 +10,13 @@
 #include "game.hpp"
 #include "game_client.hpp"
 
+//#define NETWORK_DEBUG_INFO
+
+
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
 
-// user - это string с именем connection
+
 class Connection;
 
 std::vector<std::string> game_names;
@@ -47,8 +50,12 @@ public:
             [this, self,
              message](boost::system::error_code ec, std::size_t length) {
                 if (!ec) {
-                    std::cout << "Sent:{ \n " << message << "\n}\n";
+#ifdef NETWORK_DEBUG_INFO
+
+                    std::cout << "Sent:" << message << ' ' << length << std::endl;
+#endif
                 } else {
+                    std::cerr << "Write failed: " << ec.message() << std::endl;
                     connections.erase(this);
                     std::cout << "Disconnected" << std::endl;
                 }
@@ -145,8 +152,10 @@ private:
                     std::istream is(&m_buffer);
                     std::string message;
                     std::getline(is, message);
+#ifdef NETWORK_DEBUG_INFO
                     std::cout << "Received: " << message
-                              << " Length: " << length << '\n';
+                              << ' ' << length << '\n';
+#endif
                     parse_message(message);
                     do_read();
                 } else {
