@@ -24,8 +24,7 @@ Character::Character(const StandardCharacter &chr) {
             break;
         }
         case (StandardCharacter::MASTER_THORN): {
-            load_character_from_file("data/json/characters/master_thorn.json"
-            );
+            load_character_from_file("data/json/characters/master_thorn.json");
             break;
         }
         case (StandardCharacter::CORBIN): {
@@ -33,8 +32,7 @@ Character::Character(const StandardCharacter &chr) {
             break;
         }
         case (StandardCharacter::LORD_HAWTHORNE): {
-            load_character_from_file(
-                "data/json/characters/lord_hawthorne.json"
+            load_character_from_file("data/json/characters/lord_hawthorne.json"
             );
             break;
         }

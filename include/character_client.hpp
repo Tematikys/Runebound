@@ -23,7 +23,6 @@ public:
     std::vector<unsigned int> m_cards;
     std::map<::runebound::token::Token, int> m_tokens;
 
-
     friend void to_json(nlohmann::json &json, const CharacterClient &character);
     friend void
     from_json(const nlohmann::json &json, CharacterClient &character);

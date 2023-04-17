@@ -64,7 +64,7 @@ private:
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
 
-    std::vector <dice::HandDice> m_last_dice_result;
+    std::vector<dice::HandDice> m_last_dice_result;
     std::vector<cards::CardResearch> m_all_cards_research;
     std::vector<cards::CardFight> m_all_cards_fight;
 
@@ -113,7 +113,7 @@ public:
 
     void take_token(const std::shared_ptr<character::Character> &chr);
 
-    [[nodiscard]] std::vector <dice::HandDice> get_last_dice_result() const {
+    [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
         return m_last_dice_result;
     }
 
@@ -122,9 +122,12 @@ public:
         m_characters[m_turn]->restore_action_points();
     }
 
-    std::vector <dice::HandDice> throw_dice(const std::shared_ptr<character::Character> &chr) {
+    std::vector<dice::HandDice> throw_dice(
+        const std::shared_ptr<character::Character> &chr
+    ) {
         check_turn(chr);
-        m_last_dice_result = ::runebound::dice::get_combination_of_dice(chr->get_speed());
+        m_last_dice_result =
+            ::runebound::dice::get_combination_of_dice(chr->get_speed());
         return m_last_dice_result;
     }
 
@@ -132,10 +135,10 @@ public:
 
     void relax(std::shared_ptr<character::Character> chr);
 
-
-    [[nodiscard]] std::vector<::runebound::character::Character> get_character_without_shared_ptr() const {
+    [[nodiscard]] std::vector<::runebound::character::Character>
+    get_character_without_shared_ptr() const {
         std::vector<::runebound::character::Character> result;
-        for (const auto& character : m_characters){
+        for (const auto &character : m_characters) {
             result.push_back(*character);
         }
         return result;
