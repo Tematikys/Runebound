@@ -139,6 +139,12 @@ public:
         return m_last_dice_result;
     }
 
+    std::vector <dice::HandDice> throw_dice(const std::shared_ptr<character::Character> &chr) {
+        check_turn(chr);
+        m_last_dice_result = ::runebound::dice::get_combination_of_dice(chr->get_speed());
+        return m_last_dice_result;
+    }
+
     void end_fight(const std::shared_ptr<character::Character> &chr);
 
     void relax(std::shared_ptr<character::Character> chr);
