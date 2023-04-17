@@ -24,6 +24,7 @@ std::map<std::string, std::set<std::string>> game_users;
 std::map<std::string, std::shared_ptr<runebound::character::Character>>
     user_character;
 std::map<std::string, Connection *> user_connection;
+int counter = 0;
 
 class Connection : public std::enable_shared_from_this<Connection> {
 public:
@@ -153,7 +154,6 @@ private:
           }
         });
   }
-  int counter = 0;
   boost::asio::streambuf m_buffer;
   std::string m_user_name;
   std::string m_game_name;
