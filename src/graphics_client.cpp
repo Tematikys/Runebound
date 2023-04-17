@@ -216,6 +216,37 @@ void Client::game_render() {
 #endif
     if (m_character_selected) {
         m_board.render(m_renderer);
+        for (auto &character :
+             m_network_client.get_game_client().m_characters) {
+            ::runebound::graphics::Point center =
+                ::runebound::graphics::get_center_of_hexagon(
+                    character.get_position().x, character.get_position().y
+                );
+            ::std::string name = character.get_name();
+            if (name == "Corbin") {
+                name = "CORBIN";
+            }
+            if (name == "Elder Mok") {
+                name = "ELDER_MOK";
+            }
+            if (name == "Laurel from Bloodwood") {
+                name = "LAUREL_FROM_BLOODWOOD";
+            }
+            if (name == "Lissa") {
+                name = "LISSA";
+            }
+            if (name == "Lord Hawthorne") {
+                name = "LORD_HAWTHORNE";
+            }
+            if (name == "Master Thorn") {
+                name = "MASTER_THORN";
+            }
+            auto &texture = m_images[name];
+            texture.render(
+                m_renderer, -texture.get_width() / 2 + center.x(),
+                -texture.get_height() / 2 + center.y()
+            );
+        }
     } else {
         for (const auto &button : m_character_list) {
             button.render(m_renderer);
@@ -247,7 +278,7 @@ void Client::render() {
 #ifdef DEBUG_INFO
     ::std::cout << "[info] :: " << m_counter << " RENDER" << ::std::endl;
 #endif
-    SDL_SetRenderDrawColor(m_renderer, 127, 127, 127, 255);
+    SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
 
     if (m_joined_to_game) {

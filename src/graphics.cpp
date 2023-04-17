@@ -92,6 +92,18 @@ void Texture::render(
     );
 }
 
+Point get_center_of_hexagon(int i, int j) {
+    static const int dy = (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
+    if (j % 2 == 0) {
+        return {
+            ::runebound::graphics::HEXAGON_RADIUS * (2 + j * 3) / 2,
+            dy * (1 + 2 * i)};
+    }
+    return {
+        ::runebound::graphics::HEXAGON_RADIUS * (2 + j * 3) / 2,
+        dy * 2 * (1 + i)};
+}
+
 bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
     // initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {

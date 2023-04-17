@@ -5,22 +5,11 @@ namespace {
 int sign(int x) {
     return (x > 0) - (x < 0);
 }
-
-::runebound::graphics::Point get_center_of_hexagon(int i, int j) {
-    static const int dy = (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
-    if (j % 2 == 0) {
-        return {
-            ::runebound::graphics::HEXAGON_RADIUS * (2 + j * 3) / 2,
-            dy * (1 + 2 * i)};
-    }
-    return {
-        ::runebound::graphics::HEXAGON_RADIUS * (2 + j * 3) / 2,
-        dy * 2 * (1 + i)};
-}
 }  // namespace
 
 namespace runebound::graphics {
 Board::Board(const ::runebound::map::MapClient &map) {
+    int couter = 0;
     for (int row = 0; row < ::runebound::map::STANDARD_SIZE; ++row) {
         for (int col = 0; col < ::runebound::map::STANDARD_SIZE; ++col) {
             auto center = get_center_of_hexagon(row, col);
@@ -37,6 +26,7 @@ Board::Board(const ::runebound::map::MapClient &map) {
             ::runebound::map::SpecialTypeCell special;
             if ((special = map.m_map[row][col].get_special_type_cell()) !=
                 ::runebound::map::SpecialTypeCell::NOTHING) {
+                ++couter;
                 auto [special_type_cell_key, special_fill_color] =
                     *SPECIAL_COLOR.find(special);
                 add_special(
@@ -91,6 +81,7 @@ Board::Board(const ::runebound::map::MapClient &map) {
         Segment seg = {hex.get_vertex(v.first), hex.get_vertex(v.second)};
         add_river(seg, river_color);
     }
+    ::std::cout << m_specials.size() << ' ' << couter << ::std::endl;
 }
 
 void Board::add_cell(

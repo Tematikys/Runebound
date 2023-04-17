@@ -93,6 +93,8 @@ public:
     };
 };
 
+Point get_center_of_hexagon(int i, int j);
+
 // SDL init function
 bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer);
 
