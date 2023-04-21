@@ -89,6 +89,9 @@ void to_json(nlohmann::json &json, const Character &character) {
     json["m_fight_tokens"] = character.m_fight_tokens;
     json["m_trophies"] = character.m_trophies;
     json["m_standard_character"] = character.m_standard_character;
+    json["m_body"] = character.m_body;
+    json["m_intelligence"] = character.m_intelligence;
+    json["m_spirit"] = character.m_spirit;
 }
 
 void from_json(const nlohmann::json &json, Character &character) {
@@ -103,6 +106,9 @@ void from_json(const nlohmann::json &json, Character &character) {
     character.m_current_position = json["m_current_position"];
     character.m_tokens = json["m_tokens"];
     character.m_standard_character = json["m_standard_character"];
+    character.m_body = json["m_body"];
+    character.m_intelligence = json["m_intelligence"];
+    character.m_spirit = json["m_spirit"];
     character.m_fight_tokens.clear();
     for (const auto &fight_token : json["m_fight_tokens"]) {
         character.m_fight_tokens.push_back(fight_token);

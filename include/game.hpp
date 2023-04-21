@@ -135,8 +135,7 @@ public:
         const std::shared_ptr<character::Character> &chr
     ) {
         check_turn(chr);
-        m_last_dice_result =
-            ::runebound::dice::get_combination_of_dice(5);
+        m_last_dice_result = ::runebound::dice::get_combination_of_dice(5);
         return m_last_dice_result;
     }
 
@@ -178,7 +177,7 @@ public:
             std::make_shared<::runebound::character::Character>(
                 ::runebound::character::Character(
                     gold, health, current, hand_limit, speed, std::move(name),
-                    tokens
+                    tokens, 0, 0, 0
                 )
             )
         );

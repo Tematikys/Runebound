@@ -36,6 +36,9 @@ enum class StandardCharacter {
 struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
+    int m_body = 0;
+    int m_intelligence = 0;
+    int m_spirit = 0;
     int m_action_points = 3;
     int m_max_action_points = 3;
     StandardCharacter m_standard_character = StandardCharacter::LISSA;
@@ -136,7 +139,11 @@ public:
         unsigned int hand_limit,
         unsigned int speed,
         std::string name,
-        const std::vector<fight::FightToken> fight_tokens
+        std::vector<fight::FightToken> fight_tokens,
+        int body,
+        int intelligence,
+        int spirit
+
     )
         : m_gold(gold),
           m_health(health),
@@ -145,7 +152,10 @@ public:
           m_hand_limit(hand_limit),
           m_speed(speed),
           m_name(std::move(name)),
-          m_fight_tokens(fight_tokens) {
+          m_fight_tokens(std::move(fight_tokens)),
+          m_body(body),
+          m_intelligence(intelligence),
+          m_spirit(spirit) {
     }
 
     [[nodiscard]] std::string get_name() const {
