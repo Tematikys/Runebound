@@ -52,6 +52,7 @@ namespace cards {
 struct CardAdventure;
 struct CardResearch;
 struct CardFight;
+struct SkillCard;
 }  // namespace cards
 
 namespace client {
