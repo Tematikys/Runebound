@@ -1,0 +1,15 @@
+{
+    "first_option": {
+        "change_characteristic": 0,
+        "characteristic": 0,
+        "gold": 2
+    },
+    "m_card_name": "Coven of Necromancers",
+    "m_card_type": 0,
+    "m_trophy": false,
+    "second_option": {
+        "change_characteristic": 2,
+        "characteristic": 2,
+        "gold": 1
+    }
+}

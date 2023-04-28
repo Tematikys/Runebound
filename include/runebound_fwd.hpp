@@ -37,6 +37,7 @@ struct Enemy;
 namespace generator {
 void generate_characters();
 void generate_cards_fight();
+void generate_cards_meeting();
 }  // namespace generator
 
 namespace map {
@@ -51,6 +52,7 @@ struct GameClient;
 }  // namespace game
 
 namespace cards {
+struct Meeting;
 struct CardAdventure;
 struct CardResearch;
 struct CardFight;
