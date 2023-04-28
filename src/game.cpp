@@ -102,6 +102,23 @@ void Game::generate_all_cards_fight() {
     }
 }
 
+void Game::generate_all_cards_meeting() {
+    m_card_deck_meeting.resize(DECK_SIZE);
+    std::string path = "data/json/cards/cards_meeting";
+    for (const auto &entry : std::filesystem::directory_iterator(path)) {
+        nlohmann::json json;
+        std::ifstream in(entry.path());
+        in >> json;
+        cards::CardMeeting card;
+        ::runebound::cards::from_json(json, card);
+        m_all_cards_meeting.push_back(card);
+    }
+    for (int i = 0; i < DECK_SIZE; ++i) {
+        m_card_deck_meeting[i] = i;
+    }
+}
+
+
 void Game::relax(std::shared_ptr<character::Character> chr) {
     check_turn(chr);
     check_sufficiency_action_points(1);

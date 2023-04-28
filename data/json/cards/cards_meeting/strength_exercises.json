@@ -1,10 +1,10 @@
 {
-    "m_card_name": "Coven of Necromancers",
+    "m_card_name": "Strength exercises",
     "m_card_type": 0,
     "m_first_option": {
-        "change_characteristic": -2,
+        "change_characteristic": -1,
         "characteristic": 0,
-        "gold": 2,
+        "gold": 1,
         "knowledge_token": 0
     },
     "m_second_option": {

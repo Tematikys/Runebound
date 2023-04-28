@@ -19,26 +19,32 @@ void from_json(const nlohmann::json &json, Meeting &meeting);
 
 struct Meeting {
 private:
-    int gold;
-    Characteristic characteristic;
-    int change_characteristic;
+    int gold = 0;
+    int knowledge_token = 0;
+    Characteristic characteristic = Characteristic::BODY;
+    int change_characteristic = 0;
     friend struct CardMeeting;
 public:
+    Meeting() = default;
 
-    Meeting(int gold, Characteristic characteristic, int change_characteristic) : gold(gold),
+    Meeting(int gold, Characteristic characteristic, int change_characteristic,
+            int knowledge_token) : gold(gold),
+          knowledge_token(knowledge_token),
           characteristic(characteristic), change_characteristic(change_characteristic) {}
 
 
     friend void to_json(nlohmann::json &json, const Meeting &meeting) {
         json["gold"] = meeting.gold;
+        json["knowledge_token"] = meeting.knowledge_token;
         json["characteristic"] = meeting.characteristic;
-        json["change_characteristic"] = meeting.characteristic;
+        json["change_characteristic"] = meeting.change_characteristic;
     }
 
     friend void from_json(const nlohmann::json &json, Meeting &meeting) {
         meeting.change_characteristic = json["change_characteristic"];
         meeting.characteristic = json["characteristic"];
         meeting.gold = json["gold"];
+        meeting.knowledge_token = json["knowledge_token"];
     }
 
 };
@@ -48,11 +54,13 @@ private:
     Meeting m_first_option;
     Meeting m_second_option;
 public:
+    CardMeeting() = default;
+
     CardMeeting(std::string name,
-                Characteristic characteristic1, int gold1, int change1,
-                Characteristic characteristic2, int gold2, int change2) :
+                Characteristic characteristic1, int gold1, int change1, int token1,
+                Characteristic characteristic2, int gold2, int change2, int token2) :
             m_card_name(std::move(name)),
-          m_first_option(Meeting(gold1, characteristic1, change1)), m_second_option(Meeting(gold2, characteristic2, change2)) {}
+          m_first_option(Meeting(gold1, characteristic1, change1, token1)), m_second_option(Meeting(gold2, characteristic2, change2, token2)) {}
 
     ::runebound::AdventureType m_card_type = ::runebound::AdventureType::MEETING;
 

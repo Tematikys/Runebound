@@ -1,16 +1,16 @@
 {
-    "m_card_name": "Coven of Necromancers",
+    "m_card_name": "Ancient burials",
     "m_card_type": 0,
     "m_first_option": {
         "change_characteristic": -2,
         "characteristic": 0,
-        "gold": 2,
+        "gold": 0,
         "knowledge_token": 0
     },
     "m_second_option": {
         "change_characteristic": 0,
-        "characteristic": 2,
-        "gold": 1,
+        "characteristic": 1,
+        "gold": 0,
         "knowledge_token": 0
     },
     "m_trophy": false

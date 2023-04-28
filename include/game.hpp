@@ -8,6 +8,7 @@
 #include <vector>
 #include "card_fight.hpp"
 #include "card_research.hpp"
+#include "card_meeting.hpp"
 #include "character.hpp"
 #include "fight.hpp"
 #include "map.hpp"
@@ -60,7 +61,8 @@ private:
     ::runebound::map::Map m_map;
     std::vector<std::shared_ptr<::runebound::character::Character>>
         m_characters;
-    std::vector<unsigned int> m_card_deck_research, m_card_deck_fight, m_card_deck_skill;
+    std::vector<unsigned int> m_card_deck_research, m_card_deck_fight, m_card_deck_skill,
+        m_card_deck_meeting;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
@@ -68,6 +70,7 @@ private:
     std::vector<dice::HandDice> m_last_dice_result;
     std::vector<cards::CardResearch> m_all_cards_research;
     std::vector<cards::CardFight> m_all_cards_fight;
+    std::vector<cards::CardMeeting> m_all_cards_meeting;
     std::vector<cards::SkillCard> m_all_skill_cards;
 
     std::set<character::StandardCharacter> m_remaining_standard_characters = {
@@ -94,10 +97,12 @@ private:
     void generate_all_skill_cards();
     void generate_all_cards_fight();
     void generate_all_cards_research();
+    void generate_all_cards_meeting();
 
     void generate_all_cards() {
         generate_all_cards_research();
         generate_all_cards_fight();
+        generate_all_cards_meeting();
         generate_all_skill_cards();
     }
 
