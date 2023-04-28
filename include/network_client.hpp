@@ -1,7 +1,7 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
-//#define NETWORK_DEBUG_INFO
+// #define NETWORK_DEBUG_INFO
 
 #include "game_client.hpp"
 #include <boost/asio.hpp>
@@ -14,7 +14,7 @@
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
 
-#define NETWORK_DEBUG_INFO
+//#define NETWORK_DEBUG_INFO
 
 namespace runebound::network {
 class Client {
@@ -48,6 +48,9 @@ public:
     }
     if (answer["change type"] == "exception") {
       std::cout << "Exception: " << answer["exception"] << "\n";
+    }
+    if (answer["chane type"] == "selected character") {
+      m_character=answer["character"];
     }
   }
 
@@ -115,6 +118,12 @@ public:
     do_write(data.dump());
   }
 
+  void throw_move_dice() {
+    json data;
+    data["action type"] = "throw move dice";
+    do_write(data.dump());
+  }
+
   void make_move(int x, int y) {
     json data;
     data["action type"] = "make move";
@@ -129,9 +138,30 @@ public:
     do_write(data.dump());
   }
 
+  void relax() {
+    json data;
+    data["action type"] = "relax";
+    do_write(data.dump());
+  }
+  void pass() {
+    json data;
+    data["action type"] = "pass";
+    do_write(data.dump());
+  }
+
+  [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
+    return m_game_client.m_last_dice_result;
+  };
+
+  [[nodiscard]] character::StandardCharacter get_yourself_character() const {
+    return m_character;
+  }
+
   [[nodiscard]] const std::vector<std::string> &get_game_names() const {
     return game_names;
   }
+
+
 
   [[nodiscard]] int get_game_names_size() const { return game_names.size(); }
 
@@ -143,6 +173,7 @@ public:
 
 public:
   std::string m_user_name;
+  runebound::character::StandardCharacter m_character;
   std::vector<std::string> game_names;
   runebound::game::GameClient m_game_client;
 

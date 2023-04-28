@@ -62,12 +62,22 @@ int main() {
     }
     io_context.poll();
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
+    client.throw_move_dice();
+    io_context.poll();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     client.make_move(1, 0);
     io_context.poll();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     client.take_token();
+    io_context.poll();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    client.relax();
+    io_context.poll();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    client.pass();
+    io_context.poll();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     int counter = 0;
     while (!io_context.stopped()) {

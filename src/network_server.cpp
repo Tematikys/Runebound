@@ -10,7 +10,7 @@
 #include <nlohmann/json.hpp>
 #include <set>
 
-//#define NETWORK_DEBUG_INFO
+// #define NETWORK_DEBUG_INFO
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
@@ -31,7 +31,8 @@ public:
   explicit Connection(tcp::socket socket) : socket_(std::move(socket)) {}
 
   void send_game_names();
-
+  void
+  send_selected_character(runebound::character::StandardCharacter character);
   void send_game();
 
   void start() {
@@ -109,16 +110,36 @@ public:
       if (data["action type"] == "select character") {
         runebound::character::StandardCharacter character = data["character"];
         user_character[m_user_name] = m_game->make_character(character);
-
+        send_selected_character(character);
+        for (const std::string &user_name : game_users[m_game_name]) {
+          user_connection[user_name]->send_game();
+        }
+      }
+      if (data["action type"] == "throw move dice") {
+        m_game->throw_movement_dice(user_character[m_user_name]);
         for (const std::string &user_name : game_users[m_game_name]) {
           user_connection[user_name]->send_game();
         }
       }
       if (data["action type"] == "make move") {
         int x = data["x"], y = data["y"];
-        auto dice_result = runebound::dice::get_combination_of_dice(
-            user_character[m_user_name]->get_speed());
-        m_game->make_move(user_character[m_user_name], {x, y}, dice_result);
+        auto dice = m_game->get_last_dice_result();
+        m_game->make_move(user_character[m_user_name], {x, y}, dice);
+        for (const std::string &user_name : game_users[m_game_name]) {
+          user_connection[user_name]->send_game();
+        }
+      }
+
+      if (data["action type"] == "pass") {
+        m_game->start_next_character_turn();
+        for (const std::string &user_name : game_users[m_game_name]) {
+          user_connection[user_name]->send_game();
+        }
+      }
+
+      if (data["action type"] == "relax") {
+        m_game->throw_relax_dice(user_character[m_user_name]);
+        m_game->relax(user_character[m_user_name]);
         for (const std::string &user_name : game_users[m_game_name]) {
           user_connection[user_name]->send_game();
         }
@@ -167,6 +188,14 @@ void Connection::send_game_names() {
   answer["game names"] = game_names;
   write(answer.dump());
 }
+
+void Connection::send_selected_character(
+    runebound::character::StandardCharacter character) {
+  json answer;
+  answer["change type"] = "selected character";
+  answer["character"] = character;
+  write(answer.dump());
+};
 
 void Connection::send_game() {
   json answer;
