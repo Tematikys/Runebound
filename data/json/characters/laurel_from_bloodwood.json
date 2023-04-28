@@ -1,8 +1,21 @@
 {
     "m_action_points": 3,
-    "m_body": 2,
     "m_cards_fight": [],
     "m_cards_research": [],
+    "m_characteristics": [
+        [
+            0,
+            2
+        ],
+        [
+            1,
+            2
+        ],
+        [
+            2,
+            1
+        ]
+    ],
     "m_current_position": {
         "x": 3,
         "y": 1
@@ -36,12 +49,10 @@
     "m_gold": 2,
     "m_hand_limit": 4,
     "m_health": 8,
-    "m_intelligence": 2,
     "m_max_action_points": 3,
     "m_max_health": 8,
     "m_name": "Laurel from Bloodwood",
     "m_speed": 3,
-    "m_spirit": 1,
     "m_standard_character": 0,
     "m_tokens": [],
     "m_trophies": []

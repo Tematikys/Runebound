@@ -6,7 +6,6 @@
 
 namespace runebound::cards {
 
-enum class Characteristic { BODY, INTELLIGENCE, SPIRIT };
 
 void to_json(nlohmann::json &json, const SkillCard &card);
 void from_json(const nlohmann::json &json, SkillCard &card);
@@ -21,6 +20,10 @@ public:
     SkillCard(bool success, Characteristic characteristic, int trophies)
         : m_success(success), m_characteristic(characteristic),
           m_required_number_trophies(trophies) {
+    }
+
+    [[nodiscard]] bool check_success() const {
+        return m_success;
     }
 
     friend void to_json(nlohmann::json &json, const SkillCard &card) {

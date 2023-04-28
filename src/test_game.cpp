@@ -45,13 +45,13 @@ TEST_CASE("game") {
     game.make_move(first, ::runebound::Point(0, 1), dice_res);
     CHECK(game.get_position_character(first) == runebound::Point(0, 1));
     CHECK(first->get_action_points() == 0);
-    game.start_next_character_turn();
+    game.start_next_character_turn(first);
     CHECK(game.get_turn() == 1);
     CHECK(second->get_action_points() == 3);
     auto third = game.make_character(
         100, 7, runebound::Point(0, 4), 4, 2, "Katya", character_tokens
     );
-    game.start_next_character_turn();
+    game.start_next_character_turn(second);
     CHECK(game.get_turn() == 2);
     game.take_token(third);
     CHECK(third->get_state() == runebound::character::StateCharacter::FIGHT);
@@ -83,7 +83,7 @@ TEST_CASE("generating characters") {
     CHECK(lissa->get_action_points() == 1);
     game.relax(lissa);
     CHECK(lissa->get_action_points() == 0);
-    game.start_next_character_turn();
+    game.start_next_character_turn(lissa);
     CHECK(corbin->get_action_points() == 3);
     game.make_move(corbin, runebound::Point(12, 6), dice_res);
     CHECK(corbin->get_action_points() == 1);
@@ -112,7 +112,7 @@ TEST_CASE("card_fight") {
     CHECK(lord->get_position() == runebound::Point(13, 14));
     game.relax(lord);
     CHECK(lord->get_action_points() == 0);
-    game.start_next_character_turn();
+    game.start_next_character_turn(lord);
     game.take_token(lord);
     CHECK(lord->get_state() == runebound::character::StateCharacter::FIGHT);
     auto fight = lord->get_current_fight();

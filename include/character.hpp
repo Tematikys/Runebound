@@ -36,9 +36,7 @@ enum class StandardCharacter {
 struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
-    int m_body = 0;
-    int m_intelligence = 0;
-    int m_spirit = 0;
+    std::map <Characteristic, int> m_characteristics;
     int m_action_points = 3;
     int m_max_action_points = 3;
     StandardCharacter m_standard_character = StandardCharacter::LISSA;
@@ -93,6 +91,10 @@ public:
 
     [[nodiscard]] unsigned int get_card_fight() const {
         return *(--m_cards_fight.end());
+    }
+
+    [[nodiscard]] int get_characteristic(Characteristic characteristic) {
+        return m_characteristics[characteristic];
     }
 
     void set_position(const Point &new_position) {
@@ -152,10 +154,10 @@ public:
           m_hand_limit(hand_limit),
           m_speed(speed),
           m_name(std::move(name)),
-          m_fight_tokens(std::move(fight_tokens)),
-          m_body(body),
-          m_intelligence(intelligence),
-          m_spirit(spirit) {
+          m_fight_tokens(std::move(fight_tokens)) {
+        m_characteristics[Characteristic::BODY] = body;
+        m_characteristics[Characteristic::INTELLIGENCE] = intelligence;
+        m_characteristics[Characteristic::SPIRIT] = spirit;
     }
 
     [[nodiscard]] std::string get_name() const {
@@ -202,7 +204,7 @@ public:
     friend void to_json(nlohmann::json &json, const Character &character);
     friend void from_json(const nlohmann::json &json, Character &character);
 
-    nlohmann::json to_json() {
+    [[nodiscard]] nlohmann::json to_json() const {
         nlohmann::json json;
         ::runebound::character::to_json(json, *this);
         return json;

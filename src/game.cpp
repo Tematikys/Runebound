@@ -4,6 +4,7 @@
 #include "card_fight.hpp"
 #include "point.hpp"
 #include "runebound_fwd.hpp"
+#include "skill_card.hpp"
 
 namespace runebound {
 namespace game {
@@ -39,6 +40,21 @@ Point Game::get_position_character(
     return chr->get_position();
 }
 
+bool Game::check_characteristic(const std::shared_ptr <character::Character> &chr, Characteristic characteristic) {
+    check_turn(chr);
+    for (int i = 0; i < chr->get_characteristic(characteristic); ++i) {
+        if (m_card_deck_skill.empty()) {
+            generate_all_skill_cards();
+        }
+        auto card = m_card_deck_skill.back();
+        m_card_deck_skill.pop_back();
+        if (m_all_skill_cards[card].check_success()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::shared_ptr<::runebound::character::Character> Game::make_character(
     const ::runebound::character::StandardCharacter &name
 ) {
@@ -55,8 +71,14 @@ std::shared_ptr<::runebound::character::Character> Game::make_character(
     return m_characters.back();
 }
 
+void Game::generate_all_skill_cards() {
+    m_card_deck_skill.resize(100);
+    for (int i = 0; i < 100; ++i) {
+        m_card_deck_skill[i] = m_all_skill_cards.size();
+        m_all_skill_cards.emplace_back(cards::SkillCard(static_cast<bool>(rng() % 2), static_cast<Characteristic>(rng() % 3), static_cast<int>(rng() % 3) + 1));
+    }
+}
 void Game::generate_all_cards_research() {
-    std::vector<cards::CardResearch> cards;
     m_card_deck_research.resize(DECK_SIZE);
     for (int i = 0; i < DECK_SIZE; ++i) {
         m_all_cards_research.emplace_back(cards::CardResearch());
@@ -65,7 +87,6 @@ void Game::generate_all_cards_research() {
 }
 
 void Game::generate_all_cards_fight() {
-    std::vector<cards::CardResearch> cards;
     m_card_deck_fight.resize(DECK_SIZE);
     std::string path = "data/json/cards/cards_fight";
     for (const auto &entry : std::filesystem::directory_iterator(path)) {

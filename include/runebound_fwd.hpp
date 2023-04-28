@@ -15,6 +15,8 @@ static std::mt19937 rng(
     std::chrono::steady_clock::now().time_since_epoch().count()
 );
 
+enum class Characteristic { BODY, INTELLIGENCE, SPIRIT };
+
 struct Point;
 
 namespace token {
@@ -53,6 +55,7 @@ struct CardAdventure;
 struct CardResearch;
 struct CardFight;
 struct SkillCard;
+struct CardMeeting;
 }  // namespace cards
 
 namespace client {

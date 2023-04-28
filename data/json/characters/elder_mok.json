@@ -1,8 +1,21 @@
 {
     "m_action_points": 3,
-    "m_body": 2,
     "m_cards_fight": [],
     "m_cards_research": [],
+    "m_characteristics": [
+        [
+            0,
+            2
+        ],
+        [
+            1,
+            1
+        ],
+        [
+            2,
+            2
+        ]
+    ],
     "m_current_position": {
         "x": 13,
         "y": 6
@@ -36,12 +49,10 @@
     "m_gold": 2,
     "m_hand_limit": 3,
     "m_health": 9,
-    "m_intelligence": 1,
     "m_max_action_points": 3,
     "m_max_health": 9,
     "m_name": "Elder Mok",
     "m_speed": 3,
-    "m_spirit": 2,
     "m_standard_character": 0,
     "m_tokens": [],
     "m_trophies": []

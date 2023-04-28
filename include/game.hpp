@@ -13,6 +13,7 @@
 #include "map.hpp"
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
+#include "skill_card.hpp"
 
 namespace runebound {
 const int DECK_SIZE = 15;
@@ -59,7 +60,7 @@ private:
     ::runebound::map::Map m_map;
     std::vector<std::shared_ptr<::runebound::character::Character>>
         m_characters;
-    std::vector<unsigned int> m_card_deck_research, m_card_deck_fight;
+    std::vector<unsigned int> m_card_deck_research, m_card_deck_fight, m_card_deck_skill;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
@@ -67,6 +68,7 @@ private:
     std::vector<dice::HandDice> m_last_dice_result;
     std::vector<cards::CardResearch> m_all_cards_research;
     std::vector<cards::CardFight> m_all_cards_fight;
+    std::vector<cards::SkillCard> m_all_skill_cards;
 
     std::set<character::StandardCharacter> m_remaining_standard_characters = {
         character::StandardCharacter::LISSA,
@@ -89,12 +91,14 @@ private:
         }
     }
 
+    void generate_all_skill_cards();
     void generate_all_cards_fight();
     void generate_all_cards_research();
 
     void generate_all_cards() {
         generate_all_cards_research();
         generate_all_cards_fight();
+        generate_all_skill_cards();
     }
 
 public:
@@ -117,7 +121,10 @@ public:
         return m_last_dice_result;
     }
 
-    void start_next_character_turn() {
+    bool check_characteristic(const std::shared_ptr <character::Character> &chr, Characteristic characteristic);
+
+    void start_next_character_turn(const std::shared_ptr<character::Character> &chr) {
+        check_turn(chr);
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
     }
