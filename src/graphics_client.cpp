@@ -25,43 +25,43 @@ void Client::init_game() {
     ::runebound::graphics::Texture texture;
 
     // ===== MAIN MENU BUTTON =====
-    texture.load_from_string(
+    texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Main menu", {0x00, 0x00, 0x00, 0xFF}
     );
     m_game_buttons.push_back(::runebound::graphics::Button(
-        638, 0, texture.get_width(), texture.get_height(), 0, 0, texture,
+        638, 0, texture.width(), texture.height(), 0, 0, texture,
         [this]() {
             m_network_client.exit_game();
-            this->m_joined_to_game = false;
-            this->m_character_selected = false;
+            m_joined_to_game = false;
+            m_character_selected = false;
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== MAIN MENU BUTTON =====
 
     // ===== THROW DICE BUTTON =====
-    texture.load_from_string(
+    texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Throw dice",
         {0x00, 0x00, 0x00, 0xFF}
     );
     m_game_buttons.push_back(::runebound::graphics::Button(
-        ::runebound::graphics::WINDOW_WIDTH - texture.get_width() - 5,
-        ::runebound::graphics::WINDOW_HEIGHT - texture.get_height() - 5,
-        texture.get_width(), texture.get_height(), 0, 0, texture,
-        [this]() { this->m_network_client.throw_move_dice(); }, []() {},
+        ::runebound::graphics::WINDOW_WIDTH - texture.width() - 5,
+        ::runebound::graphics::WINDOW_HEIGHT - texture.height() - 5,
+        texture.width(), texture.height(), 0, 0, texture,
+        [this]() { m_network_client.throw_move_dice(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== THROW DICE BUTTON =====
 
     // ===== EXIT BUTTON =====
-    texture.load_from_string(
+    texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Exit", {0x00, 0x00, 0x00, 0xFF}
     );
     m_game_buttons.push_back(::runebound::graphics::Button(
-        728, 30, texture.get_width(), texture.get_height(), 0, 0, texture,
+        728, 30, texture.width(), texture.height(), 0, 0, texture,
         [this]() {
-            this->m_is_running = false;
-            this->m_network_client.exit_game();
+            m_is_running = false;
+            m_network_client.exit_game();
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
@@ -72,13 +72,13 @@ void Client::init_main_menu() {
     ::runebound::graphics::Texture texture;
 
     // ===== TEXT FIELD BUTTON =====
-    texture.load_from_string(
+    texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono50"], "                ",
         {0x00, 0x00, 0x00, 0xFF}
     );
     ::runebound::graphics::Button button(
-        35, 35, texture.get_width(), texture.get_height(), 0, 0, texture,
-        [&]() { m_main_menu_active_text_field = 1; }, []() {},
+        35, 35, texture.width(), texture.height(), 0, 0, texture,
+        [this]() { m_main_menu_active_text_field = 1; }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
     ::runebound::graphics::TextField text_field("new game", button, 16);
@@ -86,12 +86,12 @@ void Client::init_main_menu() {
     // ===== TEXT FIELD =====
 
     // ===== ADD GAME BUTTON =====
-    texture.load_from_string(
+    texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono50"], "Add game", {0x00, 0x00, 0x00, 0xFF}
     );
     m_main_menu_buttons.push_back(::runebound::graphics::Button(
-        525, 35, texture.get_width(), texture.get_height(), 0, 0, texture,
-        [&]() {
+        525, 35, texture.width(), texture.height(), 0, 0, texture,
+        [this]() {
             if (!m_main_menu_text_fields[0].get().empty()) {
                 m_network_client.add_game(m_main_menu_text_fields[0].get());
                 m_main_menu_text_fields[0].clear();
@@ -102,11 +102,11 @@ void Client::init_main_menu() {
     // ===== ADD GAME BUTTON =====
 
     // ===== EXIT BUTTON =====
-    texture.load_from_string(
+    texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono50"], "Exit", {0x00, 0x00, 0x00, 0xFF}
     );
     m_main_menu_buttons.push_back(::runebound::graphics::Button(
-        645, 715, texture.get_width(), texture.get_height(), 0, 0, texture,
+        645, 715, texture.width(), texture.height(), 0, 0, texture,
         [&is_running = m_is_running]() { is_running = false; }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
@@ -121,7 +121,7 @@ void Client::init_board() {
 void Client::load_fonts() {
     for (auto [path, font_name] : ::runebound::graphics::FONTS) {
         for (int i = 1; i < 201; ++i) {
-            ::std::string name = font_name + ::std::to_string(i);
+            const ::std::string name = font_name + ::std::to_string(i);
             m_fonts[name] = nullptr;
             ::runebound::graphics::load_font(m_fonts[name], path, i);
             if (m_fonts[name] == nullptr) {
@@ -169,9 +169,9 @@ void Client::main_menu_handle_events(SDL_Event &event) {
 
         case SDL_TEXTINPUT:
             if (m_main_menu_active_text_field != 0 &&
-                !(SDL_GetModState() & KMOD_CTRL &&
-                  (event.text.text[0] == 'c' || event.text.text[0] == 'C' ||
-                   event.text.text[0] == 'v' || event.text.text[0] == 'V'))) {
+                (!(SDL_GetModState() & KMOD_CTRL) ||
+                 (event.text.text[0] != 'c' && event.text.text[0] != 'C' &&
+                  event.text.text[0] != 'v' && event.text.text[0] != 'V'))) {
                 m_main_menu_text_fields[m_main_menu_active_text_field - 1].push(
                     event.text.text
                 );
@@ -185,13 +185,13 @@ void Client::main_menu_handle_events(SDL_Event &event) {
             if (event.key.keysym.sym == SDLK_BACKSPACE) {
                 m_main_menu_text_fields[m_main_menu_active_text_field - 1].pop(
                 );
-            } else if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
+            } else if (event.key.keysym.sym == SDLK_c && ((SDL_GetModState() & KMOD_CTRL) != 0)) {
                 SDL_SetClipboardText(
                     m_main_menu_text_fields[m_main_menu_active_text_field - 1]
                         .get()
                         .c_str()
                 );
-            } else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
+            } else if (event.key.keysym.sym == SDLK_v && ((SDL_GetModState() & KMOD_CTRL) != 0)) {
                 m_main_menu_text_fields[m_main_menu_active_text_field - 1]
                     .clear();
                 m_main_menu_text_fields[m_main_menu_active_text_field - 1].push(
@@ -219,7 +219,7 @@ void Client::handle_events() {
     ::std::cout << "[info] :: " << m_counter << " HANDLE EVENTS" << ::std::endl;
 #endif
     SDL_Event event;
-    while (SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event) != 0) {
         if (m_joined_to_game) {
             game_handle_events(event);
         } else {
@@ -234,9 +234,9 @@ void Client::game_render() {
 #endif
     if (m_character_selected) {
         m_board.render(m_renderer);
-        for (auto &character :
+        for (const auto &character :
              m_network_client.get_game_client().m_characters) {
-            ::runebound::graphics::Point center =
+            const ::runebound::graphics::Point center =
                 ::runebound::graphics::get_center_of_hexagon(
                     character.get_position().x, character.get_position().y
                 );
@@ -261,8 +261,8 @@ void Client::game_render() {
             }
             auto &texture = m_images[name];
             texture.render(
-                m_renderer, -texture.get_width() / 2 + center.x(),
-                -texture.get_height() / 2 + center.y()
+                m_renderer, -texture.width() / 2 + center.x(),
+                -texture.height() / 2 + center.y()
             );
         }
 
@@ -280,7 +280,7 @@ void Client::main_menu_render() {
 #ifdef DEBUG_INFO
     ::std::cout << "[info] :: MAIN MENU RENDER" << ::std::endl;
 #endif
-    ::runebound::graphics::RectangleShape rect(35, 95, 730, 565);
+    const ::runebound::graphics::RectangleShape rect(35, 95, 730, 565);
     rect.render_border(m_renderer, {0, 0, 0, 255});
     for (const auto &button : m_game_list) {
         button.render(m_renderer);
@@ -345,12 +345,12 @@ void Client::game_update() {
                 {0x00, 0x00, 0x00, 0xFF}
             );
             ::runebound::graphics::Button button(
-                0, i * (texture.get_height() + 5), texture.get_width(),
-                texture.get_height(), 0, 0, texture,
+                0, i * (texture.height() + 5), texture.width(),
+                texture.height(), 0, 0, texture,
                 [character, this]() {
                     ::std::cout << "CLicked" << ::std::endl;
-                    this->m_character_selected = true;
-                    this->m_network_client.select_character(character);
+                    m_character_selected = true;
+                    m_network_client.select_character(character);
                 },
                 []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
             );
@@ -379,12 +379,12 @@ void Client::game_update() {
         }
     }
 
-    ::std::size_t index = m_board.get_selected_hexagon();
+    const ::std::size_t index = m_board.get_selected_hexagon();
     if (index != 0xFFFF && m_mouse_pressed) {
         ::std::cout << index << ::std::endl;
         m_network_client.make_move(
-            index / ::runebound::map::STANDARD_SIZE,
-            index % ::runebound::map::STANDARD_SIZE
+            static_cast<int>(index / ::runebound::map::STANDARD_SIZE),
+            static_cast<int>(index % ::runebound::map::STANDARD_SIZE)
         );
         m_mouse_pressed = false;
     }
@@ -410,15 +410,14 @@ void Client::main_menu_update() {
         ::runebound::graphics::Button button(
             45,
             static_cast<int>(i - m_game_list_start_index) *
-                    (texture.get_height() + 5) +
+                    (texture.height() + 5) +
                 105,
-            texture.get_width(), texture.get_height(), 0, 0, texture,
+            texture.width(), texture.height(), 0, 0, texture,
             [i, this]() {
-                this->m_network_client.join_game(
-                    this->m_network_client.get_game_names()[i]
+                m_network_client.join_game(m_network_client.get_game_names()[i]
                 );
-                this->m_joined_to_game = true;
-                this->init_board();
+                m_joined_to_game = true;
+                init_board();
             },
             []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
         );
@@ -483,7 +482,7 @@ void Client::tick() {
 #ifdef DEBUG_INFO
     ::std::cout << "[info] :: " << m_counter << " TICK" << ::std::endl;
 #endif
-    uint32_t cur_frame_time = SDL_GetTicks();
+    const uint32_t cur_frame_time = SDL_GetTicks();
     if (cur_frame_time < m_frame_time + m_prev_frame_time) {
         SDL_Delay(m_frame_time - cur_frame_time + m_prev_frame_time);
     }

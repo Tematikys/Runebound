@@ -13,7 +13,8 @@ Button::Button()
       m_border_color(),
       m_on_click_function(),
       m_on_cover_function(),
-      m_shape(){};
+      m_shape() {
+}
 
 Button::Button(
     int x,
@@ -92,7 +93,8 @@ void Button::render(SDL_Renderer *renderer) const {
 TextField::TextField(::std::string text, Button &button, int max_len)
     : m_text(::std::move(text)),
       m_button(::std::move(button)),
-      m_max_text_len(max_len){};
+      m_max_text_len(max_len) {
+}
 
 void TextField::push(const ::std::string &suffix) {
     if (m_max_text_len == 0) {

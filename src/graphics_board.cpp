@@ -3,13 +3,12 @@
 
 namespace {
 int sign(int x) {
-    return (x > 0) - (x < 0);
+    return static_cast<int>(x > 0) - static_cast<int>(x < 0);
 }
 }  // namespace
 
 namespace runebound::graphics {
 Board::Board(const ::runebound::map::MapClient &map) {
-    int couter = 0;
     for (int row = 0; row < ::runebound::map::STANDARD_SIZE; ++row) {
         for (int col = 0; col < ::runebound::map::STANDARD_SIZE; ++col) {
             auto center = get_center_of_hexagon(row, col);
@@ -23,10 +22,9 @@ Board::Board(const ::runebound::map::MapClient &map) {
             );
 
             // add special if it is
-            ::runebound::map::SpecialTypeCell special;
-            if ((special = map.m_map[row][col].get_special_type_cell()) !=
-                ::runebound::map::SpecialTypeCell::NOTHING) {
-                ++couter;
+            ::runebound::map::SpecialTypeCell special =
+                map.m_map[row][col].get_special_type_cell();
+            if (special != ::runebound::map::SpecialTypeCell::NOTHING) {
                 auto [special_type_cell_key, special_fill_color] =
                     *SPECIAL_COLOR.find(special);
                 add_special(
@@ -36,9 +34,8 @@ Board::Board(const ::runebound::map::MapClient &map) {
             }
 
             // add token if there is
-            ::runebound::AdventureType token;
-            if ((token = map.m_map[row][col].get_token()) !=
-                ::runebound::AdventureType::NOTHING) {
+            ::runebound::AdventureType token = map.m_map[row][col].get_token();
+            if (token != ::runebound::AdventureType::NOTHING) {
                 add_token(
                     {center, HEXAGON_RADIUS / 2},
                     (*ADVENTURE_COLOR.find(token)).second,

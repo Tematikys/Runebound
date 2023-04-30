@@ -35,7 +35,7 @@ bool Texture::load_image_from_file(
     return m_texture != nullptr;
 }
 
-bool Texture::load_from_string(
+bool Texture::load_text_from_string(
     SDL_Renderer *renderer,
     TTF_Font *font,
     const ::std::string &text,
@@ -43,7 +43,7 @@ bool Texture::load_from_string(
 ) {
     free();
 
-    if(text.length() == 0) {
+    if (text.length() == 0) {
         return true;
     }
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), color);
@@ -116,7 +116,7 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
     }
 
     // enable linear texture filtering
-    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
+    if (SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1") == 0U) {
         ::std::cout << "Warning: Linear texture filtering not enabled!"
                     << ::std::endl;
     }
@@ -148,8 +148,8 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
     // flags for SDL_Image
-    int imgFlags = IMG_INIT_PNG;
-    if (!(IMG_Init(imgFlags) & imgFlags)) {
+    const int imgFlags = IMG_INIT_PNG;
+    if ((IMG_Init(imgFlags) & imgFlags) == 0) {
         ::std::cout << "SDL_image could not initialize! SDL_image Error:\n"
                     << IMG_GetError() << ::std::endl;
         return false;
@@ -167,7 +167,8 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
 }
 
 void update_mouse_pos(Point &pos) {
-    int x, y;
+    int x = 0;
+    int y = 0;
     SDL_GetMouseState(&x, &y);
     pos = Point(x, y);
 }
@@ -179,7 +180,7 @@ bool generate_text(
     TTF_Font *font,
     SDL_Color color
 ) {
-    if (!texture.load_from_string(renderer, font, text, color)) {
+    if (!texture.load_text_from_string(renderer, font, text, color)) {
         ::std::cout << "Failed to render text texture!" << ::std::endl;
         return false;
     }

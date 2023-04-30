@@ -60,6 +60,8 @@ private:
     ::runebound::graphics::Point m_mouse_pos;
 
 public:
+    Client() = default;
+
     void init();
 
     void init_graphics();

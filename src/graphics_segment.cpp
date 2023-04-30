@@ -4,16 +4,20 @@
 namespace runebound::graphics {
 void Segment::render(SDL_Renderer *renderer, SDL_Color color, int size) const {
     thickLineRGBA(
-        renderer, m_start.x(), m_start.y(), m_finish.x(), m_finish.y(),
-        2 * size + 1, color.r, color.g, color.b, color.a
+        renderer, static_cast<int16_t>(m_start.x()),
+        static_cast<int16_t>(m_start.y()), static_cast<int16_t>(m_finish.x()),
+        static_cast<int16_t>(m_finish.y()), 2 * size + 1, color.r, color.g,
+        color.b, color.a
     );
     filledCircleRGBA(
-        renderer, m_start.x(), m_start.y(), size, color.r, color.g, color.b,
-        color.a
+        renderer, static_cast<int16_t>(m_start.x()),
+        static_cast<int16_t>(m_start.y()), static_cast<int16_t>(size), color.r,
+        color.g, color.b, color.a
     );
     filledCircleRGBA(
-        renderer, m_finish.x(), m_finish.y(), size, color.r, color.g, color.b,
-        color.a
+        renderer, static_cast<int16_t>(m_finish.x()),
+        static_cast<int16_t>(m_finish.y()), static_cast<int16_t>(size), color.r,
+        color.g, color.b, color.a
     );
 }
 
@@ -21,13 +25,16 @@ void Segment::render(SDL_Renderer *renderer, SDL_Color color, int size) const {
 void Segment::half_render(SDL_Renderer *renderer, SDL_Color color, int size)
     const {
     thickLineRGBA(
-        renderer, m_start.x(), m_start.y(), ((m_start.x() + m_finish.x()) / 2),
-        ((m_start.y() + m_finish.y()) / 2), 2 * size + 1, color.r, color.g,
-        color.b, color.a
+        renderer, static_cast<int16_t>(m_start.x()),
+        static_cast<int16_t>(m_start.y()),
+        static_cast<int16_t>((m_start.x() + m_finish.x()) / 2),
+        static_cast<int16_t>((m_start.y() + m_finish.y()) / 2), 2 * size + 1,
+        color.r, color.g, color.b, color.a
     );
     filledCircleRGBA(
-        renderer, m_start.x(), m_start.y(), size, color.r, color.g, color.b,
-        color.a
+        renderer, static_cast<int16_t>(m_start.x()),
+        static_cast<int16_t>(m_start.y()), static_cast<int16_t>(size), color.r,
+        color.g, color.b, color.a
     );
 }
 }  // namespace runebound::graphics

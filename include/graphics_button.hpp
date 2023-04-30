@@ -46,9 +46,7 @@ public:
 
     Button &operator=(const Button &other) = delete;
 
-    ~Button() {
-        m_texture.free();
-    }
+    ~Button() = default;
 
     [[nodiscard]] bool in_bounds(const Point &p) const;
 
@@ -62,11 +60,6 @@ public:
 
     void render(SDL_Renderer *renderer) const;
 
-    void update_texture(Texture &texture) {
-        m_texture.free();
-        m_texture = ::std::move(texture);
-    }
-
     [[nodiscard]] Point get_coords() const {
         return {m_x, m_y};
     }
@@ -79,7 +72,7 @@ private:
     Button m_button;
 
 public:
-    TextField() : m_text(), m_button(){};
+    TextField() : m_text(){};
 
     TextField(::std::string text, Button &button, int max_len = 0);
 
