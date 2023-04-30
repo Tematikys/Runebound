@@ -6,7 +6,6 @@
 
 namespace runebound::cards {
 
-
 void to_json(nlohmann::json &json, const SkillCard &card);
 void from_json(const nlohmann::json &json, SkillCard &card);
 
@@ -18,7 +17,8 @@ private:
 
 public:
     SkillCard(bool success, Characteristic characteristic, int trophies)
-        : m_success(success), m_characteristic(characteristic),
+        : m_success(success),
+          m_characteristic(characteristic),
           m_required_number_trophies(trophies) {
     }
 
@@ -37,8 +37,6 @@ public:
         card.m_characteristic = json["m_characteristic"];
         card.m_required_number_trophies = json["m_required_number_trophies"];
     }
-
 };
-} // namespace runebound::cards
+}  // namespace runebound::cards
 #endif  // SKILL_CARD_HPP_
-

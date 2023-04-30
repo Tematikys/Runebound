@@ -38,6 +38,7 @@ namespace generator {
 void generate_characters();
 void generate_cards_fight();
 void generate_cards_meeting();
+void generate_cards_research();
 }  // namespace generator
 
 namespace map {

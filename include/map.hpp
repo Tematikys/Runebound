@@ -22,7 +22,7 @@ private:
     std::vector<std::vector<MapCell>> m_map;  // [row][column]
     std::set<std::pair<Point, Point>> m_rivers;
     const int m_size;
-    const std::map<std::string, std::vector<Point>> m_territory_name;
+    std::map<std::string, std::vector<Point>> m_territory_name;
     const std::vector<Point> directions_odd_column{{-1, 0}, {0, 1},  {1, 1},
                                                    {1, 0},  {1, -1}, {0, -1}};
     const std::vector<Point> directions_even_column{{-1, 0}, {-1, 1}, {0, 1},
@@ -77,6 +77,15 @@ public:
 
     [[nodiscard]] std::vector<std::vector<MapCell>> get_full_map() const {
         return m_map;
+    }
+
+    [[nodiscard]] std::vector<Point> get_territory_cells(
+        const std::string &territory
+    ) {
+        if (m_territory_name.count(territory) == 0) {
+            return {};
+        }
+        return m_territory_name[territory];
     }
 
     [[nodiscard]] MapCell get_cell_map(const Point &point) const {

@@ -40,7 +40,10 @@ Point Game::get_position_character(
     return chr->get_position();
 }
 
-bool Game::check_characteristic(const std::shared_ptr <character::Character> &chr, Characteristic characteristic) {
+bool Game::check_characteristic(
+    const std::shared_ptr<character::Character> &chr,
+    Characteristic characteristic
+) {
     check_turn(chr);
     for (int i = 0; i < chr->get_characteristic(characteristic); ++i) {
         if (m_card_deck_skill.empty()) {
@@ -75,9 +78,14 @@ void Game::generate_all_skill_cards() {
     m_card_deck_skill.resize(100);
     for (int i = 0; i < 100; ++i) {
         m_card_deck_skill[i] = m_all_skill_cards.size();
-        m_all_skill_cards.emplace_back(cards::SkillCard(static_cast<bool>(rng() % 2), static_cast<Characteristic>(rng() % 3), static_cast<int>(rng() % 3) + 1));
+        m_all_skill_cards.emplace_back(cards::SkillCard(
+            static_cast<bool>(rng() % 2),
+            static_cast<Characteristic>(rng() % 3),
+            static_cast<int>(rng() % 3) + 1
+        ));
     }
 }
+
 void Game::generate_all_cards_research() {
     m_card_deck_research.resize(DECK_SIZE);
     for (int i = 0; i < DECK_SIZE; ++i) {
@@ -117,7 +125,6 @@ void Game::generate_all_cards_meeting() {
         m_card_deck_meeting[i] = i;
     }
 }
-
 
 void Game::relax(std::shared_ptr<character::Character> chr) {
     check_turn(chr);

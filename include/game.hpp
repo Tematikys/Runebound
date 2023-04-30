@@ -7,14 +7,14 @@
 #include <utility>
 #include <vector>
 #include "card_fight.hpp"
-#include "card_research.hpp"
 #include "card_meeting.hpp"
+#include "card_research.hpp"
 #include "character.hpp"
 #include "fight.hpp"
 #include "map.hpp"
 #include "runebound_fwd.hpp"
-#include "tokens.hpp"
 #include "skill_card.hpp"
+#include "tokens.hpp"
 
 namespace runebound {
 const int DECK_SIZE = 15;
@@ -61,8 +61,8 @@ private:
     ::runebound::map::Map m_map;
     std::vector<std::shared_ptr<::runebound::character::Character>>
         m_characters;
-    std::vector<unsigned int> m_card_deck_research, m_card_deck_fight, m_card_deck_skill,
-        m_card_deck_meeting;
+    std::vector<unsigned int> m_card_deck_research, m_card_deck_fight,
+        m_card_deck_skill, m_card_deck_meeting;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
@@ -126,9 +126,14 @@ public:
         return m_last_dice_result;
     }
 
-    bool check_characteristic(const std::shared_ptr <character::Character> &chr, Characteristic characteristic);
+    bool check_characteristic(
+        const std::shared_ptr<character::Character> &chr,
+        Characteristic characteristic
+    );
 
-    void start_next_character_turn(const std::shared_ptr<character::Character> &chr) {
+    void start_next_character_turn(
+        const std::shared_ptr<character::Character> &chr
+    ) {
         check_turn(chr);
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();

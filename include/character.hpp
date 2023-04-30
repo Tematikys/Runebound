@@ -36,7 +36,7 @@ enum class StandardCharacter {
 struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
-    std::map <Characteristic, int> m_characteristics;
+    std::map<Characteristic, int> m_characteristics;
     int m_action_points = 3;
     int m_max_action_points = 3;
     StandardCharacter m_standard_character = StandardCharacter::LISSA;
