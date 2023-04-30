@@ -14,10 +14,8 @@ bool CardResearch::check_completion_task(const Point &cell) {
 
 bool CardResearch::check_outcome(
     int index,
-    std::vector<::runebound::dice::HandDice> &result_dice,
-    int &delta_gold,
-    int &delta_health
-) {
+    std::vector<::runebound::dice::HandDice> &result_dice
+) const {
     do {
         bool completed = true;
         for (std::size_t i = 0;
@@ -34,8 +32,6 @@ bool CardResearch::check_outcome(
             }
         }
         if (completed) {
-            delta_health += m_outcomes[index].m_delta_health;
-            delta_gold += m_outcomes[index].m_delta_gold;
             return true;
         }
     } while (std::next_permutation(result_dice.begin(), result_dice.end()));

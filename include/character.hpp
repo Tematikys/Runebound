@@ -39,11 +39,14 @@ private:
     std::map<Characteristic, int> m_characteristics;
     int m_action_points = 3;
     int m_max_action_points = 3;
+    unsigned int m_active_card_meeting;
+    unsigned int m_active_card_research;
     StandardCharacter m_standard_character = StandardCharacter::LISSA;
     StateCharacter m_current_state = StateCharacter::NORMAL_GAME;
     std::string m_name;
     std::set<unsigned int> m_cards_research;
     std::set<unsigned int> m_cards_fight;
+    std::set<unsigned int> m_cards_meeting;
     std::set<std::pair<AdventureType, unsigned int>> m_trophies;
 
     std::map<runebound::token::Token, int> m_tokens;
@@ -110,6 +113,8 @@ public:
         m_current_fight = std::move(fight);
     }
 
+    bool check_card(AdventureType type, unsigned int card) const;
+
     void change_gold(int delta_gold) {
         m_gold += delta_gold;
     }
@@ -118,6 +123,23 @@ public:
 
     void add_trophy(AdventureType type, unsigned int card) {
         m_trophies.insert({type, card});
+    }
+
+    void make_active_card(AdventureType type, unsigned int card) {
+        if (type == AdventureType::MEETING) {
+            m_active_card_meeting = card;
+        }
+        if (type == AdventureType::RESEARCH) {
+            m_active_card_research = card;
+        }
+    }
+
+    [[nodiscard]] unsigned int get_active_card_research() const {
+        return m_active_card_research;
+    }
+
+    [[nodiscard]] unsigned int get_active_card_meeting() const {
+        return m_active_card_meeting;
     }
 
     [[nodiscard]] std::set<std::pair<AdventureType, unsigned int>> get_trophies(

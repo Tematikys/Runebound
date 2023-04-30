@@ -29,6 +29,12 @@ struct WrongCharacterTurnException : std::runtime_error {
     }
 };
 
+struct NoCardException : std::runtime_error {
+    NoCardException()
+        : std::runtime_error("This card does not exist") {
+    }
+};
+
 struct NotEnoughActionPointsException : std::runtime_error {
     NotEnoughActionPointsException()
         : std::runtime_error("Not enough action points") {
@@ -53,6 +59,12 @@ struct NoTokenException : std::runtime_error {
 struct CharacterAlreadySelected : std::runtime_error {
     CharacterAlreadySelected()
         : std::runtime_error("This character is already selected") {
+    }
+};
+
+struct BadOutcomeException : std::runtime_error {
+    BadOutcomeException()
+        : std::runtime_error("You can't get that outcome.") {
     }
 };
 
@@ -222,10 +234,6 @@ public:
         return m_turn;
     }
 
-    void check_and_get_card_adventure_because_of_token(
-        std::shared_ptr<character::Character> chr
-    );
-
     [[nodiscard]] std::vector<::runebound::dice::HandDice> throw_camping_dice(
         const std::shared_ptr<character::Character> &chr
     ) const {
@@ -237,6 +245,39 @@ public:
         const Point &point,
         std::vector<::runebound::dice::HandDice> &dice_roll_results
     );
+
+    void start_card_execution(const std::shared_ptr<character::Character> &chr, unsigned int card, AdventureType type) {
+        check_turn(chr);
+        if (!chr->check_card(type, card)) {
+            throw NoCardException();
+        }
+        chr->make_active_card(type, card);
+    }
+
+    [[nodiscard]] std::vector <std::size_t> get_possible_outcomes(const std::shared_ptr<character::Character> &chr) {
+        std::vector <std::size_t> outcomes;
+        auto card = chr->get_active_card_research();
+        for (std::size_t i = 0; i < m_all_cards_research[card].get_outcomes().size(); ++i) {
+            if (m_all_cards_research[card].check_outcome(i, m_last_dice_result)) {
+                outcomes.push_back(i);
+            }
+        }
+        return outcomes;
+    }
+
+    void complete_card_meeting(const std::shared_ptr<character::Character> &chr,
+                               int desired_outcome = -1) {
+        auto card = chr->get_active_card_research();
+        if (desired_outcome == -1 || desired_outcome >= m_all_cards_research[card].get_outcomes().size()) {
+            chr->pop_card(AdventureType::RESEARCH, card);
+        }
+        if (!m_all_cards_research[card].check_outcome(desired_outcome, m_last_dice_result)) {
+            throw BadOutcomeException();
+        }
+        chr->add_trophy(AdventureType::RESEARCH, card);
+
+        chr->pop_card(AdventureType::RESEARCH, card);
+    }
 
     // friend void to_json(nlohmann::json &json, const Game &game);
     // friend void from_json(const nlohmann::json &json, Game &game);

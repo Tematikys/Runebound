@@ -68,12 +68,22 @@ public:
     CardResearch() : m_completed(false) {
     }
 
+    [[nodiscard]] int get_delta_gold(int index) const {
+        return m_outcomes[index].m_delta_gold;
+    }
+
+    [[nodiscard]] int get_delta_health(int index) const {
+        return m_outcomes[index].m_delta_health;
+    }
+
+    [[nodiscard]] int get_knowledge_token(int index) const {
+        return m_outcomes[index].m_knowledge_token;
+    }
+
     [[nodiscard]] bool check_outcome(
         int index,
-        std::vector<::runebound::dice::HandDice> &result_dice,
-        int &delta_gold,
-        int &delta_health
-    );
+        std::vector<::runebound::dice::HandDice> &result_dice
+    ) const;
 
     [[nodiscard]] std::string get_required_territory() const {
         return m_required_territory;

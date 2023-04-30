@@ -141,25 +141,6 @@ void Game::relax(std::shared_ptr<character::Character> chr) {
     m_characters[m_turn]->update_action_points(-1);
 }
 
-void Game::check_and_get_card_adventure_because_of_token(
-    std::shared_ptr<character::Character> chr
-) {
-    if (m_map.get_cell_map(chr->get_position()).get_token() !=
-            ::runebound::AdventureType::NOTHING &&
-        m_map.get_cell_map(chr->get_position()).get_side_token() ==
-            ::runebound::Side::FRONT) {
-        if (m_map.get_cell_map(chr->get_position()).get_token() ==
-            ::runebound::AdventureType::RESEARCH) {
-            unsigned int card =
-                m_card_deck_research[rng() % m_card_deck_research.size()];
-            chr->add_card(AdventureType::RESEARCH, card);
-            m_card_deck_research.erase(std::find(
-                m_card_deck_research.begin(), m_card_deck_research.end(), card
-            ));
-        }
-        m_map.get_cell_map(chr->get_position()).reverse_token();
-    }
-}
 
 void Game::take_token(const std::shared_ptr<character::Character> &chr) {
     check_turn(chr);
@@ -180,6 +161,20 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         chr->start_fight(std::make_shared<fight::Fight>(
             chr, m_all_cards_fight[card].get_enemy()
         ));
+    }
+    else if (m_map.get_cell_map(position).get_token() == AdventureType::RESEARCH) {
+        unsigned int card = m_card_deck_research[rng() % m_card_deck_research.size()];
+        chr->add_card(AdventureType::RESEARCH, card);
+        m_card_deck_fight.erase(
+            std::find(m_card_deck_research.begin(), m_card_deck_research.end(), card)
+        );
+    }
+    else {
+        unsigned int card = m_card_deck_meeting[rng() % m_card_deck_meeting.size()];
+        chr->add_card(AdventureType::MEETING, card);
+        m_card_deck_meeting.erase(
+            std::find(m_card_deck_meeting.begin(), m_card_deck_meeting.end(), card)
+        );
     }
     m_map.reverse_token(position);
     m_characters[m_turn]->update_action_points(-2);

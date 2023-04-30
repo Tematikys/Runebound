@@ -56,6 +56,21 @@ void Character::add_card(AdventureType type, unsigned int card) {
     if (type == AdventureType::RESEARCH) {
         m_cards_research.insert(card);
     }
+    if (type == AdventureType::MEETING) {
+        m_cards_meeting.insert(card);
+    }
+}
+
+bool Character::check_card(AdventureType type, unsigned int card) const {
+    if (type == AdventureType::MEETING) {
+        return m_cards_meeting.count(card) != 0;
+    }
+    if (type == AdventureType::FIGHT) {
+        return m_cards_fight.count(card) != 0;
+    }
+    if (type == AdventureType::RESEARCH) {
+        return m_cards_fight.count(card) != 0;
+    }
 }
 
 void Character::pop_card(AdventureType type, unsigned int card) {
@@ -64,6 +79,9 @@ void Character::pop_card(AdventureType type, unsigned int card) {
     }
     if (type == AdventureType::FIGHT) {
         m_cards_fight.erase(card);
+    }
+    if (type == AdventureType::MEETING) {
+        m_cards_meeting.erase(card);
     }
 }
 
