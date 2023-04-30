@@ -35,9 +35,9 @@ const ::std::map<::std::pair<int, int>, ::std::pair<int, int>>
                         {{1, -1}, {1, 2}}, {{1, 1}, {5, 0}}};
 
 const ::std::string WINDOW_TITLE = "Runebound-0.2";
-const int WINDOWS_X_OFFSET = 25;
-const int WINDOWS_Y_OFFSET = 25;
-const int WINDOWS_WIDTH = 800;
-const int WINDOWS_HEIGHT = 800;
-const int WINDOWS_FPS = 60;
+const int WINDOW_X_OFFSET = 25;
+const int WINDOW_Y_OFFSET = 25;
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 800;
+const int WINDOW_FPS = 60;
 }  // namespace runebound::graphics

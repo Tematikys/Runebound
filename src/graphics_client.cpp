@@ -15,7 +15,7 @@ void Client::init_graphics() {
         return;
     }
     m_is_running = true;
-    m_frame_time = 1000 / ::runebound::graphics::WINDOWS_FPS;
+    m_frame_time = 1000 / ::runebound::graphics::WINDOW_FPS;
     m_main_menu_active_text_field = 0;
     load_fonts();
     load_images();
@@ -31,6 +31,7 @@ void Client::init_game() {
     m_game_buttons.push_back(::runebound::graphics::Button(
         638, 0, texture.get_width(), texture.get_height(), 0, 0, texture,
         [this]() {
+            m_network_client.exit_game();
             this->m_joined_to_game = false;
             this->m_character_selected = false;
         },
@@ -38,14 +39,31 @@ void Client::init_game() {
     ));
     // ===== MAIN MENU BUTTON =====
 
+    // ===== THROW DICE BUTTON =====
+    texture.load_from_string(
+        m_renderer, m_fonts["FreeMono30"], "Throw dice",
+        {0x00, 0x00, 0x00, 0xFF}
+    );
+    m_game_buttons.push_back(::runebound::graphics::Button(
+        ::runebound::graphics::WINDOW_WIDTH - texture.get_width() - 5,
+        ::runebound::graphics::WINDOW_HEIGHT - texture.get_height() - 5,
+        texture.get_width(), texture.get_height(), 0, 0, texture,
+        [this]() { this->m_network_client.throw_move_dice(); }, []() {},
+        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    ));
+    // ===== THROW DICE BUTTON =====
+
     // ===== EXIT BUTTON =====
     texture.load_from_string(
         m_renderer, m_fonts["FreeMono30"], "Exit", {0x00, 0x00, 0x00, 0xFF}
     );
     m_game_buttons.push_back(::runebound::graphics::Button(
         728, 30, texture.get_width(), texture.get_height(), 0, 0, texture,
-        [&is_running = m_is_running]() { is_running = false; }, []() {},
-        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+        [this]() {
+            this->m_is_running = false;
+            this->m_network_client.exit_game();
+        },
+        []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== EXIT BUTTON =====
 }
@@ -247,6 +265,7 @@ void Client::game_render() {
                 -texture.get_height() / 2 + center.y()
             );
         }
+
     } else {
         for (const auto &button : m_character_list) {
             button.render(m_renderer);
@@ -359,13 +378,22 @@ void Client::game_update() {
             }
         }
     }
+
+    ::std::size_t index = m_board.get_selected_hexagon();
+    if (index != 0xFFFF && m_mouse_pressed) {
+        ::std::cout << index << ::std::endl;
+        m_network_client.make_move(
+            index / ::runebound::map::STANDARD_SIZE,
+            index % ::runebound::map::STANDARD_SIZE
+        );
+        m_mouse_pressed = false;
+    }
 }
 
 void Client::main_menu_update() {
 #ifdef DEBUG_INFO
     ::std::cout << "[info] :: MAIN MENU UPDATE" << ::std::endl;
 #endif
-    init_board();
     m_game_list.clear();
 
     for (::std::size_t i = m_game_list_start_index;

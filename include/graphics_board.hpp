@@ -52,6 +52,10 @@ public:
 
     explicit Board(const ::runebound::map::MapClient &map);
 
+    [[nodiscard]] ::std::size_t get_selected_hexagon() const {
+        return m_selected_cell;
+    }
+
     void add_cell(
         const HexagonShape &hexagon,
         SDL_Color fill_color,

@@ -43,6 +43,9 @@ bool Texture::load_from_string(
 ) {
     free();
 
+    if(text.length() == 0) {
+        return true;
+    }
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), color);
     if (text_surface == nullptr) {
         ::std::cout << "Unable to render text surface! SDL_ttf Error:\n"
@@ -120,8 +123,8 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
 
     // create window
     window = SDL_CreateWindow(
-        WINDOW_TITLE.c_str(), WINDOWS_X_OFFSET, WINDOWS_Y_OFFSET, WINDOWS_WIDTH,
-        WINDOWS_HEIGHT, SDL_WINDOW_SHOWN
+        WINDOW_TITLE.c_str(), WINDOW_X_OFFSET, WINDOW_Y_OFFSET, WINDOW_WIDTH,
+        WINDOW_HEIGHT, SDL_WINDOW_SHOWN
     );
 
     // report error if appeared

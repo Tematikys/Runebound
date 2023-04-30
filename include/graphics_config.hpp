@@ -18,10 +18,10 @@ extern const ::std::map<::runebound::AdventureType, SDL_Color> ADVENTURE_COLOR;
 extern const ::std::map<::std::pair<int, int>, ::std::pair<int, int>>
     RIVER_DIRECTIONS;
 extern const ::std::string WINDOW_TITLE;
-extern const int WINDOWS_X_OFFSET;
-extern const int WINDOWS_Y_OFFSET;
-extern const int WINDOWS_WIDTH;
-extern const int WINDOWS_HEIGHT;
-extern const int WINDOWS_FPS;
+extern const int WINDOW_X_OFFSET;
+extern const int WINDOW_Y_OFFSET;
+extern const int WINDOW_WIDTH;
+extern const int WINDOW_HEIGHT;
+extern const int WINDOW_FPS;
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_CONFIG_HPP_

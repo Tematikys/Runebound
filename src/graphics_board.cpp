@@ -81,7 +81,6 @@ Board::Board(const ::runebound::map::MapClient &map) {
         Segment seg = {hex.get_vertex(v.first), hex.get_vertex(v.second)};
         add_river(seg, river_color);
     }
-    ::std::cout << m_specials.size() << ' ' << couter << ::std::endl;
 }
 
 void Board::add_cell(
