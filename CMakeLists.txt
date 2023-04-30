@@ -115,6 +115,7 @@ add_executable(${PROJECT_NAME}
         src/fight.cpp
         src/generator_characters.cpp
         src/generator_cards_meeting.cpp
+        src/generator_cards_research.cpp
         src/test_game.cpp
         src/card_fight.cpp
         src/card_meeting.cpp

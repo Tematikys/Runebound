@@ -8,6 +8,7 @@
 #include "card_adventure.hpp"
 #include "dice.hpp"
 #include "map_cell.hpp"
+#include "point.hpp"
 
 namespace runebound {
 namespace cards {

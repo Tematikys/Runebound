@@ -29,5 +29,6 @@ void generate_cards_research() {
         ),
         "data/json/cards/cards_research/prowess_of_the_dwarves.json"
     );
+
 }
 }  // namespace runebound::generator
