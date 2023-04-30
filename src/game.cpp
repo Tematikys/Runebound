@@ -88,8 +88,16 @@ void Game::generate_all_skill_cards() {
 
 void Game::generate_all_cards_research() {
     m_card_deck_research.resize(DECK_SIZE);
+    std::string path = "data/json/cards/cards_research";
+    for (const auto &entry : std::filesystem::directory_iterator(path)) {
+        nlohmann::json json;
+        std::ifstream in(entry.path());
+        in >> json;
+        cards::CardResearch card;
+        ::runebound::cards::from_json(json, card, m_map);
+        m_all_cards_research.push_back(card);
+    }
     for (int i = 0; i < DECK_SIZE; ++i) {
-        m_all_cards_research.emplace_back(cards::CardResearch());
         m_card_deck_research[i] = i;
     }
 }

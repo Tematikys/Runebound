@@ -32,12 +32,16 @@ void generate_cards_research() {
     write_to_file(
         cards::CardResearch(
             "Narrow Ledge", "Madness Pass",
-            {cards::CardResearch::Outcome(1, 0, 0, {map::TypeCell::PLAIN, map::TypeCell::MOUNTAINS}),
+            {cards::CardResearch::Outcome(
+                 1, 0, 0, {map::TypeCell::PLAIN, map::TypeCell::MOUNTAINS}
+             ),
              cards::CardResearch::Outcome(
                  2, 0, 0, {map::TypeCell::HILLS, map::TypeCell::MOUNTAINS}
              ),
              cards::CardResearch::Outcome(
-                 4, 0, 0, {map::TypeCell::PLAIN, map::TypeCell::MOUNTAINS, map::TypeCell::MOUNTAINS}
+                 4, 0, 0,
+                 {map::TypeCell::PLAIN, map::TypeCell::MOUNTAINS,
+                  map::TypeCell::MOUNTAINS}
              )}
         ),
         "data/json/cards/cards_research/narrow_ledge.json"
@@ -50,7 +54,9 @@ void generate_cards_research() {
                  0, 0, 1, {map::TypeCell::FOREST, map::TypeCell::WATER}
              ),
              cards::CardResearch::Outcome(
-                 3, 0, 0, {map::TypeCell::WATER, map::TypeCell::WATER, map::TypeCell::FOREST}
+                 3, 0, 0,
+                 {map::TypeCell::WATER, map::TypeCell::WATER,
+                  map::TypeCell::FOREST}
              )}
         ),
         "data/json/cards/cards_research/winding_path.json"
@@ -63,7 +69,9 @@ void generate_cards_research() {
                  0, 2, 0, {map::TypeCell::HILLS, map::TypeCell::MOUNTAINS}
              ),
              cards::CardResearch::Outcome(
-                 3, 0, 0, {map::TypeCell::HILLS, map::TypeCell::HILLS, map::TypeCell::WATER}
+                 3, 0, 0,
+                 {map::TypeCell::HILLS, map::TypeCell::HILLS,
+                  map::TypeCell::WATER}
              )}
         ),
         "data/json/cards/cards_research/goblin_raids.json"
@@ -73,7 +81,9 @@ void generate_cards_research() {
             "Spring Festival", "Bright dol",
             {cards::CardResearch::Outcome(0, 0, 0, {map::TypeCell::PLAIN}),
              cards::CardResearch::Outcome(
-                 0, 0, 1, {map::TypeCell::PLAIN, map::TypeCell::PLAIN, map::TypeCell::WATER}
+                 0, 0, 1,
+                 {map::TypeCell::PLAIN, map::TypeCell::PLAIN,
+                  map::TypeCell::WATER}
              ),
              cards::CardResearch::Outcome(
                  2, 0, 0, {map::TypeCell::PLAIN, map::TypeCell::HILLS}
@@ -102,7 +112,9 @@ void generate_cards_research() {
                  0, 0, 1, {map::TypeCell::HILLS, map::TypeCell::HILLS}
              ),
              cards::CardResearch::Outcome(
-                 0, 0, 2, {map::TypeCell::HILLS, map::TypeCell::HILLS, map::TypeCell::WATER}
+                 0, 0, 2,
+                 {map::TypeCell::HILLS, map::TypeCell::HILLS,
+                  map::TypeCell::WATER}
              )}
         ),
         "data/json/cards/cards_research/dragon_bones.json"
@@ -115,7 +127,9 @@ void generate_cards_research() {
                  3, 0, 0, {map::TypeCell::WATER, map::TypeCell::MOUNTAINS}
              ),
              cards::CardResearch::Outcome(
-                 0, 0, 1, {map::TypeCell::WATER, map::TypeCell::WATER, map::TypeCell::PLAIN}
+                 0, 0, 1,
+                 {map::TypeCell::WATER, map::TypeCell::WATER,
+                  map::TypeCell::PLAIN}
              )}
         ),
         "data/json/cards/cards_research/secrets_of_the_swamps.json"
@@ -141,7 +155,9 @@ void generate_cards_research() {
                  0, 0, 1, {map::TypeCell::FOREST, map::TypeCell::FOREST}
              ),
              cards::CardResearch::Outcome(
-                 0, 0, 2, {map::TypeCell::FOREST, map::TypeCell::FOREST, map::TypeCell::FOREST}
+                 0, 0, 2,
+                 {map::TypeCell::FOREST, map::TypeCell::FOREST,
+                  map::TypeCell::FOREST}
              )}
         ),
         "data/json/cards/cards_research/marvelous_people.json"
@@ -154,7 +170,9 @@ void generate_cards_research() {
                  0, 0, 1, {map::TypeCell::FOREST, map::TypeCell::WATER}
              ),
              cards::CardResearch::Outcome(
-                 4, 0, 0, {map::TypeCell::FOREST, map::TypeCell::MOUNTAINS, map::TypeCell::WATER}
+                 4, 0, 0,
+                 {map::TypeCell::FOREST, map::TypeCell::MOUNTAINS,
+                  map::TypeCell::WATER}
              )}
         ),
         "data/json/cards/cards_research/magical_storm.json"
@@ -167,10 +185,12 @@ void generate_cards_research() {
                  0, 3, 0, {map::TypeCell::FOREST, map::TypeCell::WATER}
              ),
              cards::CardResearch::Outcome(
-                 3, 0, 0, {map::TypeCell::FOREST, map::TypeCell::MOUNTAINS, map::TypeCell::WATER}
+                 3, 0, 0,
+                 {map::TypeCell::FOREST, map::TypeCell::MOUNTAINS,
+                  map::TypeCell::WATER}
              )}
         ),
-            "data/json/cards/cards_research/prince_of_thieves.json"
+        "data/json/cards/cards_research/prince_of_thieves.json"
     );
     write_to_file(
         cards::CardResearch(
@@ -180,7 +200,9 @@ void generate_cards_research() {
                  0, 0, 1, {map::TypeCell::WATER, map::TypeCell::WATER}
              ),
              cards::CardResearch::Outcome(
-                 0, 0, 2, {map::TypeCell::WATER, map::TypeCell::WATER, map::TypeCell::WATER}
+                 0, 0, 2,
+                 {map::TypeCell::WATER, map::TypeCell::WATER,
+                  map::TypeCell::WATER}
              )}
         ),
         "data/json/cards/cards_research/blood_stone.json"
@@ -207,13 +229,12 @@ void generate_cards_research() {
                  0, 3, 0, {map::TypeCell::FOREST, map::TypeCell::MOUNTAINS}
              ),
              cards::CardResearch::Outcome(
-                 3, 0, 0, {map::TypeCell::WATER, map::TypeCell::MOUNTAINS, map::TypeCell::FOREST}
+                 3, 0, 0,
+                 {map::TypeCell::WATER, map::TypeCell::MOUNTAINS,
+                  map::TypeCell::FOREST}
              )}
         ),
         "data/json/cards/cards_research/my_kitty.json"
     );
-
-
-
 }
 }  // namespace runebound::generator
