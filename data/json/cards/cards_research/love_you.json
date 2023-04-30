@@ -1,0 +1,31 @@
+{
+    "m_card_name": "Love you",
+    "m_card_type": 1,
+    "m_completed": false,
+    "m_outcomes": [
+        {
+            "m_delta_gold": 2,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                1
+            ]
+        },
+        {
+            "m_delta_gold": 0,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                1,
+                0
+            ]
+        },
+        {
+            "m_delta_gold": 0,
+            "m_delta_health": 5,
+            "m_necessary_result": [
+                4,
+                1
+            ]
+        }
+    ],
+    "m_required_territory": "Telis Castle"
+}

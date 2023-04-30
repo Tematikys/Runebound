@@ -1,0 +1,33 @@
+{
+    "m_card_name": "Narrow Ledge",
+    "m_card_type": 1,
+    "m_completed": false,
+    "m_outcomes": [
+        {
+            "m_delta_gold": 1,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                4,
+                2
+            ]
+        },
+        {
+            "m_delta_gold": 2,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                3,
+                2
+            ]
+        },
+        {
+            "m_delta_gold": 4,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                4,
+                2,
+                2
+            ]
+        }
+    ],
+    "m_required_territory": "Madness Pass"
+}
