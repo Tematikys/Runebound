@@ -206,6 +206,7 @@ std::vector<Point> Game::make_move(
     }
     m_characters[m_turn]->set_position(end);
     m_characters[m_turn]->update_action_points(-2);
+    m_last_dice_result.clear();
     return result;
 }
 

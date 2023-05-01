@@ -52,6 +52,7 @@ private:
     std::map<runebound::token::Token, int> m_tokens;
     int m_max_health;
     int m_gold, m_health;
+    int m_knowledge_token = 0;
     Point m_current_position;
     std::shared_ptr<::runebound::fight::Fight> m_current_fight = nullptr;
     std::vector<::runebound::fight::FightToken> m_fight_tokens;
@@ -94,6 +95,14 @@ public:
 
     [[nodiscard]] unsigned int get_card_fight() const {
         return *(--m_cards_fight.end());
+    }
+
+    [[nodiscard]] int get_knowledge_token() const {
+        return m_knowledge_token;
+    }
+
+    void change_knowledge_token(int delta) {
+        m_knowledge_token += delta;
     }
 
     [[nodiscard]] int get_characteristic(Characteristic characteristic) {

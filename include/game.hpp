@@ -80,6 +80,9 @@ private:
     unsigned int m_count_players = 0;
 
     std::vector<dice::HandDice> m_last_dice_result;
+    std::vector<cards::SkillCard> m_last_characteristic_check;
+
+
     std::vector<cards::CardResearch> m_all_cards_research;
     std::vector<cards::CardFight> m_all_cards_fight;
     std::vector<cards::CardMeeting> m_all_cards_meeting;
@@ -265,19 +268,56 @@ public:
         return outcomes;
     }
 
-    void complete_card_meeting(const std::shared_ptr<character::Character> &chr,
+    void complete_card_research(const std::shared_ptr<character::Character> &chr,
                                int desired_outcome = -1) {
         auto card = chr->get_active_card_research();
-        if (desired_outcome == -1 || desired_outcome >= m_all_cards_research[card].get_outcomes().size()) {
+        if (desired_outcome < 0 || desired_outcome >= m_all_cards_research[card].get_outcomes().size()) {
             chr->pop_card(AdventureType::RESEARCH, card);
         }
         if (!m_all_cards_research[card].check_outcome(desired_outcome, m_last_dice_result)) {
             throw BadOutcomeException();
         }
         chr->add_trophy(AdventureType::RESEARCH, card);
-
+        chr->update_health(m_all_cards_research[card].get_delta_health(desired_outcome));
+        chr->change_gold(m_all_cards_research[card].get_delta_gold(desired_outcome));
+        chr->change_knowledge_token(m_all_cards_research[card].get_knowledge_token(desired_outcome));
         chr->pop_card(AdventureType::RESEARCH, card);
     }
+
+    bool check_characteristic(const std::shared_ptr<character::Character> &chr, unsigned int card, cards::OptionMeeting option) {
+        check_turn(chr);
+        int number_attempts = chr->get_characteristic(m_all_cards_meeting[card].get_verifiable_characteristic(option)) +
+        m_all_cards_meeting[card].get_change_characteristic(option);
+        for (int attempt = 0; attempt < number_attempts; ++attempt) {
+
+        }
+
+
+    }
+
+    bool check_characteristic_additionally(const std::shared_ptr<character::Character> &chr, unsigned int card) {
+        // TODO, card skill when they will be in the game not only as a characteristic checking card
+    }
+
+
+    void complete_card_meeting(const std::shared_ptr<character::Character> &chr,
+                               int desired_outcome = -1) {
+        auto card = chr->get_active_card_research();
+        if (desired_outcome < 0 || desired_outcome >= m_all_cards_research[card].get_outcomes().size()) {
+            chr->pop_card(AdventureType::RESEARCH, card);
+        }
+        if (!m_all_cards_research[card].check_outcome(desired_outcome, m_last_dice_result)) {
+            throw BadOutcomeException();
+        }
+        m_last_dice_result.clear();
+        chr->add_trophy(AdventureType::RESEARCH, card);
+        chr->update_health(m_all_cards_research[card].get_delta_health(desired_outcome));
+        chr->change_gold(m_all_cards_research[card].get_delta_gold(desired_outcome));
+        chr->change_knowledge_token(m_all_cards_research[card].get_knowledge_token(desired_outcome));
+        chr->pop_card(AdventureType::RESEARCH, card);
+    }
+
+
 
     // friend void to_json(nlohmann::json &json, const Game &game);
     // friend void from_json(const nlohmann::json &json, Game &game);
