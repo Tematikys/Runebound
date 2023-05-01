@@ -10,10 +10,11 @@ Point operator+(const Point &, const Point &);
 // basic point class
 class Point {
 private:
-    int m_x, m_y;
+    int m_x{0};
+    int m_y{0};
 
 public:
-    Point() : m_x(), m_y(){};
+    Point() = default;
 
     Point(int x, int y) : m_x(x), m_y(y){};
 

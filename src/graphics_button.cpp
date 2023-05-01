@@ -1,21 +1,6 @@
 #include <graphics_button.hpp>
 
 namespace runebound::graphics {
-Button::Button()
-    : m_x(0),
-      m_y(0),
-      m_width(0),
-      m_height(0),
-      m_texture_x_offset(0),
-      m_texture_y_offset(0),
-      m_texture(),
-      m_fill_color(),
-      m_border_color(),
-      m_on_click_function(),
-      m_on_cover_function(),
-      m_shape() {
-}
-
 Button::Button(
     int x,
     int y,
@@ -74,20 +59,17 @@ Button &Button::operator=(Button &&other) noexcept {
     return *this;
 }
 
-bool Button::in_bounds(const Point &p) const {
-    if (m_x <= p.x() && p.x() < m_x + m_width && m_y <= p.y() &&
-        p.y() < m_y + m_height) {
-        return true;
-    }
-    return false;
-}
-
 void Button::render(SDL_Renderer *renderer) const {
     m_shape.render(renderer, m_fill_color);
     m_shape.render_border(renderer, m_border_color);
     m_texture.render(
         renderer, m_x + m_texture_x_offset, m_y + m_texture_y_offset
     );
+}
+
+bool Button::in_bounds(const Point &p) const {
+    return m_x <= p.x() && p.x() < m_x + m_width && m_y <= p.y() &&
+           p.y() < m_y + m_height;
 }
 
 TextField::TextField(::std::string text, Button &button, int max_len)

@@ -13,16 +13,21 @@
 namespace runebound::graphics {
 class Button {
 private:
-    int m_x, m_y;
-    int m_width, m_height;
-    int m_texture_x_offset, m_texture_y_offset;
-    Texture m_texture;
-    SDL_Color m_fill_color, m_border_color;
-    ::std::function<void()> m_on_click_function, m_on_cover_function;
-    RectangleShape m_shape;
+    int m_x{0};
+    int m_y{0};
+    int m_width{0};
+    int m_height{0};
+    int m_texture_x_offset{0};
+    int m_texture_y_offset{0};
+    Texture m_texture{};
+    SDL_Color m_fill_color{};
+    SDL_Color m_border_color{};
+    ::std::function<void()> m_on_click_function{};
+    ::std::function<void()> m_on_cover_function{};
+    RectangleShape m_shape{};
 
 public:
-    Button();
+    Button() = default;
 
     Button(
         int x,
@@ -48,8 +53,6 @@ public:
 
     ~Button() = default;
 
-    [[nodiscard]] bool in_bounds(const Point &p) const;
-
     void on_click() const {
         m_on_click_function();
     };
@@ -60,6 +63,8 @@ public:
 
     void render(SDL_Renderer *renderer) const;
 
+    [[nodiscard]] bool in_bounds(const Point &p) const;
+
     [[nodiscard]] Point get_coords() const {
         return {m_x, m_y};
     }
@@ -67,12 +72,12 @@ public:
 
 class TextField {
 private:
-    ::std::string m_text;
-    int m_max_text_len = 0;
-    Button m_button;
+    ::std::string m_text{};
+    int m_max_text_len{0};
+    Button m_button{};
 
 public:
-    TextField() : m_text(){};
+    TextField() = default;
 
     TextField(::std::string text, Button &button, int max_len = 0);
 
@@ -96,10 +101,6 @@ public:
         m_button.on_cover();
     }
 
-    [[nodiscard]] bool in_bounds(const Point &p) const {
-        return m_button.in_bounds(p);
-    }
-
     void render(
         SDL_Renderer *renderer,
         TTF_Font *font,
@@ -109,6 +110,10 @@ public:
         SDL_Point *center = nullptr,
         SDL_RendererFlip flip = SDL_FLIP_NONE
     ) const;
+
+    [[nodiscard]] bool in_bounds(const Point &p) const {
+        return m_button.in_bounds(p);
+    }
 
     [[nodiscard]] const ::std::string &get() const {
         return m_text;

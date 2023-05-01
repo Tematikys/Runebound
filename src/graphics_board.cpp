@@ -22,7 +22,7 @@ Board::Board(const ::runebound::map::MapClient &map) {
             );
 
             // add special if it is
-            ::runebound::map::SpecialTypeCell special =
+            const ::runebound::map::SpecialTypeCell special =
                 map.m_map[row][col].get_special_type_cell();
             if (special != ::runebound::map::SpecialTypeCell::NOTHING) {
                 auto [special_type_cell_key, special_fill_color] =
@@ -34,7 +34,8 @@ Board::Board(const ::runebound::map::MapClient &map) {
             }
 
             // add token if there is
-            ::runebound::AdventureType token = map.m_map[row][col].get_token();
+            const ::runebound::AdventureType token =
+                map.m_map[row][col].get_token();
             if (token != ::runebound::AdventureType::NOTHING) {
                 add_token(
                     {center, HEXAGON_RADIUS / 2},
@@ -43,18 +44,18 @@ Board::Board(const ::runebound::map::MapClient &map) {
                 );
             }
 
-            // adding roads if is it TODO
+            // TODO adding roads if is it
             if (map.m_map[row][col].check_road()) {
                 for (auto [i, j] :
                      map.get_all_neighbours(::runebound::Point(row, col))) {
                     if (map.m_map[i][j].check_road()) {
-                        Segment seg(center, get_center_of_hexagon(i, j));
+                        const Segment seg(center, get_center_of_hexagon(i, j));
                         add_road(seg, {0x80, 0x80, 0x80, 0xFF});
                         m_is_connected_to_town.push_back(false);
                     }
                     if (map.m_map[i][j].get_type_cell() ==
                         ::runebound::map::TypeCell::TOWN) {
-                        Segment seg(center, get_center_of_hexagon(i, j));
+                        const Segment seg(center, get_center_of_hexagon(i, j));
                         add_road(seg, {0x80, 0x80, 0x80, 0xFF});
                         m_is_connected_to_town.push_back(true);
                     }
@@ -65,7 +66,7 @@ Board::Board(const ::runebound::map::MapClient &map) {
 
     // adding rivers
     for (const auto &pair : map.m_rivers) {
-        SDL_Color river_color = {0x37, 0x1A, 0xFA, 0xFF};
+        const SDL_Color river_color = {0x37, 0x1A, 0xFA, 0xFF};
         auto [x1, y1] = pair.first;
         auto [x2, y2] = pair.second;
         auto [i, v] = *RIVER_DIRECTIONS.find(
@@ -74,8 +75,9 @@ Board::Board(const ::runebound::map::MapClient &map) {
              sign(y1 - y2)}
         );
 
-        HexagonShape hex = m_cells[x1 * ::runebound::map::STANDARD_SIZE + y1];
-        Segment seg = {hex.get_vertex(v.first), hex.get_vertex(v.second)};
+        const HexagonShape hex =
+            m_cells[x1 * ::runebound::map::STANDARD_SIZE + y1];
+        const Segment seg = {hex.get_vertex(v.first), hex.get_vertex(v.second)};
         add_river(seg, river_color);
     }
 }

@@ -1,8 +1,29 @@
 // #define DEBUG_INFO
-#include "graphics_client.hpp"
+#include <graphics_client.hpp>
 #include <iostream>
 
 namespace runebound::client {
+void Client::load_fonts() {
+    for (auto [path, font_name] : ::runebound::graphics::FONTS) {
+        for (int i = 1; i < 201; ++i) {
+            const ::std::string name = font_name + ::std::to_string(i);
+            m_fonts[name] = nullptr;
+            ::runebound::graphics::load_font(m_fonts[name], path, i);
+            if (m_fonts[name] == nullptr) {
+                ::std::cout << "Failed to load: " << name << ::std::endl;
+                return;
+            }
+        }
+    }
+}
+
+void Client::load_images() {
+    for (auto [path, name] : ::runebound::graphics::IMAGES) {
+        m_images[name] = ::runebound::graphics::Texture();
+        m_images[name].load_image_from_file(m_renderer, path);
+    }
+}
+
 void Client::init() {
     init_graphics();
     init_main_menu();
@@ -19,6 +40,11 @@ void Client::init_graphics() {
     m_main_menu_active_text_field = 0;
     load_fonts();
     load_images();
+}
+
+void Client::init_board() {
+    m_board =
+        ::runebound::graphics::Board(m_network_client.get_game_client().m_map);
 }
 
 void Client::init_game() {
@@ -52,6 +78,32 @@ void Client::init_game() {
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== THROW DICE BUTTON =====
+
+    // ===== RELAX BUTTON =====
+    texture.load_text_from_string(
+        m_renderer, m_fonts["FreeMono30"], "Relax", {0x00, 0x00, 0x00, 0xFF}
+    );
+    m_game_buttons.push_back(::runebound::graphics::Button(
+        ::runebound::graphics::WINDOW_WIDTH - texture.width() - 5,
+        ::runebound::graphics::WINDOW_HEIGHT - texture.height() - 40,
+        texture.width(), texture.height(), 0, 0, texture,
+        [this]() { m_network_client.relax(); }, []() {},
+        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    ));
+    // ===== RELAX BUTTON =====
+
+    // ===== PASS BUTTON =====
+    texture.load_text_from_string(
+        m_renderer, m_fonts["FreeMono30"], "Pass", {0x00, 0x00, 0x00, 0xFF}
+    );
+    m_game_buttons.push_back(::runebound::graphics::Button(
+        ::runebound::graphics::WINDOW_WIDTH - texture.width() - 5,
+        ::runebound::graphics::WINDOW_HEIGHT - texture.height() - 75,
+        texture.width(), texture.height(), 0, 0, texture,
+        [this]() { m_network_client.pass(); }, []() {},
+        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    ));
+    // ===== PASS BUTTON =====
 
     // ===== EXIT BUTTON =====
     texture.load_text_from_string(
@@ -113,32 +165,6 @@ void Client::init_main_menu() {
     // ===== EXIT BUTTON =====
 }
 
-void Client::init_board() {
-    m_board =
-        ::runebound::graphics::Board(m_network_client.get_game_client().m_map);
-}
-
-void Client::load_fonts() {
-    for (auto [path, font_name] : ::runebound::graphics::FONTS) {
-        for (int i = 1; i < 201; ++i) {
-            const ::std::string name = font_name + ::std::to_string(i);
-            m_fonts[name] = nullptr;
-            ::runebound::graphics::load_font(m_fonts[name], path, i);
-            if (m_fonts[name] == nullptr) {
-                ::std::cout << "Failed to load: " << name << ::std::endl;
-                return;
-            }
-        }
-    }
-}
-
-void Client::load_images() {
-    for (auto [path, name] : ::runebound::graphics::IMAGES) {
-        m_images[name] = ::runebound::graphics::Texture();
-        m_images[name].load_image_from_file(m_renderer, path);
-    }
-}
-
 void Client::game_handle_events(SDL_Event &event) {
 #ifdef DEBUG_INFO
     ::std::cout << "[info] :: GAME HANDLE EVENTS" << ::std::endl;
@@ -169,7 +195,7 @@ void Client::main_menu_handle_events(SDL_Event &event) {
 
         case SDL_TEXTINPUT:
             if (m_main_menu_active_text_field != 0 &&
-                (!(SDL_GetModState() & KMOD_CTRL) ||
+                (((SDL_GetModState() & KMOD_CTRL) == 0) ||
                  (event.text.text[0] != 'c' && event.text.text[0] != 'C' &&
                   event.text.text[0] != 'v' && event.text.text[0] != 'V'))) {
                 m_main_menu_text_fields[m_main_menu_active_text_field - 1].push(
@@ -264,6 +290,37 @@ void Client::game_render() {
                 m_renderer, -texture.width() / 2 + center.x(),
                 -texture.height() / 2 + center.y()
             );
+        }
+
+        int dx = 0;
+        for (const auto &dice : m_network_client.get_last_dice_result()) {
+            ::std::vector<::runebound::graphics::Point> vertexes;
+            ::runebound::graphics::PolygonShape tri;
+            auto [key, col] = *::runebound::graphics::DICE_COLOR.find(dice);
+            const int size = 50;
+            const int delay = 10;
+            vertexes.emplace_back(
+                (size + delay) + (size + delay) * dx,
+                ::runebound::graphics::WINDOW_HEIGHT - (size + delay)
+            );
+            vertexes.emplace_back(
+                delay + (size + delay) * dx,
+                ::runebound::graphics::WINDOW_HEIGHT - delay
+            );
+            vertexes.emplace_back(
+                delay + (size + delay) * dx,
+                ::runebound::graphics::WINDOW_HEIGHT - (size + delay)
+            );
+            tri = ::runebound::graphics::PolygonShape{vertexes};
+            tri.render(m_renderer, col.first);
+            vertexes.pop_back();
+            vertexes.emplace_back(
+                delay + size + (size + delay) * dx,
+                ::runebound::graphics::WINDOW_HEIGHT - delay
+            );
+            tri = ::runebound::graphics::PolygonShape{vertexes};
+            tri.render(m_renderer, col.second);
+            dx += 1;
         }
 
     } else {

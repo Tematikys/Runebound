@@ -11,11 +11,16 @@ namespace runebound::graphics {
 // basic polygon class
 class PolygonShape {
 protected:
-    ::std::vector<Point> m_vertexes;
-    ::std::vector<::std::tuple<int, int, int>> m_side_coefficients;
+    ::std::vector<Point> m_vertexes{};
+    ::std::vector<::std::tuple<int, int, int>> m_side_coefficients{};
 
 public:
     PolygonShape() = default;
+
+    explicit PolygonShape(const ::std::vector<Point> &vertexes)
+        : m_vertexes(vertexes) {
+        init_side_coefficients();
+    }
 
     void init_side_coefficients();
 

@@ -2,6 +2,35 @@
 #include <iostream>
 
 namespace runebound::graphics {
+void Texture::free() {
+    if (m_texture != nullptr) {
+        SDL_DestroyTexture(m_texture);
+        m_texture = nullptr;
+        m_width = 0;
+        m_height = 0;
+    }
+}
+
+void Texture::render(
+    SDL_Renderer *renderer,
+    int x,
+    int y,
+    SDL_Rect *clip,
+    double angle,
+    SDL_Point *center,
+    SDL_RendererFlip flip
+) const {
+    SDL_Rect renderQuad = {x, y, m_width, m_height};
+    if (clip != nullptr) {
+        renderQuad.w = clip->w;
+        renderQuad.h = clip->h;
+    }
+
+    SDL_RenderCopyEx(
+        renderer, m_texture, clip, &renderQuad, angle, center, flip
+    );
+}
+
 bool Texture::load_image_from_file(
     SDL_Renderer *renderer,
     const ::std::string &path
@@ -64,35 +93,6 @@ bool Texture::load_text_from_string(
     }
 
     return m_texture != nullptr;
-}
-
-void Texture::free() {
-    if (m_texture != nullptr) {
-        SDL_DestroyTexture(m_texture);
-        m_texture = nullptr;
-        m_width = 0;
-        m_height = 0;
-    }
-}
-
-void Texture::render(
-    SDL_Renderer *renderer,
-    int x,
-    int y,
-    SDL_Rect *clip,
-    double angle,
-    SDL_Point *center,
-    SDL_RendererFlip flip
-) const {
-    SDL_Rect renderQuad = {x, y, m_width, m_height};
-    if (clip != nullptr) {
-        renderQuad.w = clip->w;
-        renderQuad.h = clip->h;
-    }
-
-    SDL_RenderCopyEx(
-        renderer, m_texture, clip, &renderQuad, angle, center, flip
-    );
 }
 
 Point get_center_of_hexagon(int i, int j) {

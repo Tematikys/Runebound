@@ -7,7 +7,8 @@
 namespace runebound::graphics {
 class Segment {
 private:
-    Point m_start, m_finish;
+    Point m_start{};
+    Point m_finish{};
 
 public:
     Segment() = default;

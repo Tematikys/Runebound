@@ -3,7 +3,6 @@
 #include <graphics_shapes.hpp>
 
 namespace runebound::graphics {
-// initialize polygon's sides coefficients
 void PolygonShape::init_side_coefficients() {
     for (::std::size_t i = 0; i < m_vertexes.size(); ++i) {
         const int x1 = m_vertexes[(i + 1) % 6].x();
@@ -45,8 +44,8 @@ void PolygonShape::render(SDL_Renderer *renderer, SDL_Color fill_color) const {
     }
 
     // left, right-side x
-    int left_x;
-    int right_x;
+    int left_x{};
+    int right_x{};
     left_x = right_x = (m_vertexes[top_index].x()) << 16;
 
     // left dx slope
@@ -178,6 +177,14 @@ SquareShape::SquareShape(const Point &center, int radius) {
     init_side_coefficients();
 }
 
+RectangleShape::RectangleShape(int x, int y, int width, int height) {
+    m_vertexes.emplace_back(x, y);
+    m_vertexes.emplace_back(x + width, y);
+    m_vertexes.emplace_back(x + width, y + height);
+    m_vertexes.emplace_back(x, y + height);
+    init_side_coefficients();
+}
+
 void CircleShape::render(SDL_Renderer *renderer, SDL_Color fill_color) const {
     filledCircleRGBA(
         renderer, static_cast<int16_t>(m_center.x()),
@@ -199,13 +206,5 @@ bool CircleShape::in_bounds(const Point &dot) const {
     const int dx = (m_center.x() - dot.x());
     const int dy = (m_center.y() - dot.y());
     return dx * dx + dy * dy < m_radius * m_radius;
-}
-
-RectangleShape::RectangleShape(int x, int y, int width, int height) {
-    m_vertexes.emplace_back(x, y);
-    m_vertexes.emplace_back(x + width, y);
-    m_vertexes.emplace_back(x + width, y + height);
-    m_vertexes.emplace_back(x, y + height);
-    init_side_coefficients();
 }
 }  // namespace runebound::graphics

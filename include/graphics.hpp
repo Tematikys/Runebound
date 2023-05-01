@@ -12,8 +12,13 @@ namespace runebound::graphics {
 class Texture {
 private:
     SDL_Texture *m_texture{nullptr};
-    int m_x = 0, m_y = 0;
-    int m_width{0}, m_height{0};
+
+    // TODO remove
+    int m_x = 0;
+    int m_y = 0;
+
+    int m_width{0};
+    int m_height{0};
 
 public:
     Texture() = default;
@@ -45,16 +50,7 @@ public:
         free();
     };
 
-    bool
-    load_image_from_file(SDL_Renderer *renderer, const ::std::string &path);
-
-    bool load_text_from_string(
-        SDL_Renderer *renderer,
-        TTF_Font *font,
-        const ::std::string &text,
-        SDL_Color color
-    );
-
+    // free function, texture becomes nullptr
     void free();
 
     void render(
@@ -67,6 +63,16 @@ public:
         SDL_RendererFlip flip = SDL_FLIP_NONE
     ) const;
 
+    bool
+    load_image_from_file(SDL_Renderer *renderer, const ::std::string &path);
+
+    bool load_text_from_string(
+        SDL_Renderer *renderer,
+        TTF_Font *font,
+        const ::std::string &text,
+        SDL_Color color
+    );
+
     [[nodiscard]] int width() const {
         return m_width;
     };
@@ -76,6 +82,7 @@ public:
     };
 };
 
+// returns center of hexagon with i, j coordinates in pixels
 Point get_center_of_hexagon(int i, int j);
 
 // SDL init function
