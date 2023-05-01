@@ -96,7 +96,7 @@ add_executable(network_client
 target_link_libraries(network_client ${Boost_LIBRARIES} ws2_32 wsock32)
 # ===== NETWORK CLIENT ===== #
 
-# ===== LOGICS? ===== #
+# ===== LOGICS ===== #
 add_executable(${PROJECT_NAME}
         src/card_adventure.cpp
         src/card_research.cpp
@@ -111,18 +111,18 @@ add_executable(${PROJECT_NAME}
         src/game_client.cpp
         src/character_client.cpp
         src/map_client.cpp
-        #src/test_fight.cpp
         src/fight.cpp
-        src/test_game.cpp
         src/card_fight.cpp
         src/card_meeting.cpp
+        #tests/test_fight.cpp
+        tests/test_game.cpp
         generators/generator_cards_fight.cpp
         generators/generator_characters.cpp
         generators/generator_cards_meeting.cpp
         generators/generator_cards_research.cpp
         )
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
-# ===== LOGICS? ===== #
+# ===== LOGICS ===== #
 
 
 
