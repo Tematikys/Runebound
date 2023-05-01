@@ -228,9 +228,9 @@ void Game::complete_card_research(
     int desired_outcome
 ) {
     auto card = chr->get_active_card_research();
-    if (desired_outcome < 0 ||
-        desired_outcome >= m_all_cards_research[card].get_outcomes().size()) {
+    if (desired_outcome < 0) {
         chr->pop_card(AdventureType::RESEARCH, card);
+        return;
     }
     if (!m_all_cards_research[card].check_outcome(
             desired_outcome, m_last_dice_result
@@ -276,31 +276,5 @@ bool Game::check_characteristic(
     return false;
 }
 
-void Game::complete_card_meeting(
-    const std::shared_ptr<character::Character> &chr,
-    int desired_outcome
-) {
-    auto card = chr->get_active_card_research();
-    if (desired_outcome < 0 ||
-        desired_outcome >= m_all_cards_research[card].get_outcomes().size()) {
-        chr->pop_card(AdventureType::RESEARCH, card);
-    }
-    if (!m_all_cards_research[card].check_outcome(
-            desired_outcome, m_last_dice_result
-        )) {
-        throw BadOutcomeException();
-    }
-    m_last_dice_result.clear();
-    chr->add_trophy(AdventureType::RESEARCH, card);
-    chr->update_health(
-        m_all_cards_research[card].get_delta_health(desired_outcome)
-    );
-    chr->change_gold(m_all_cards_research[card].get_delta_gold(desired_outcome)
-    );
-    chr->change_knowledge_token(
-        m_all_cards_research[card].get_knowledge_token(desired_outcome)
-    );
-    chr->pop_card(AdventureType::RESEARCH, card);
-}
 }  // namespace game
 }  // namespace runebound

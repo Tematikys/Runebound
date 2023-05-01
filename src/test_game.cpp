@@ -144,12 +144,32 @@ TEST_CASE("cards") {
     CHECK(card == lord->get_active_card_research());
     game.throw_movement_dice(lord);
     auto outcomes = game.get_possible_outcomes(lord);
-    game.complete_card_research(lord,static_cast<int>(outcomes.size()) - 1);
+    CHECK(lord->get_cards(runebound::AdventureType::RESEARCH).size() == 1);
+    game.complete_card_research(lord, static_cast<int>(outcomes.size()) - 1);
+    int trophies = 0;
     if (outcomes.size() > 0) {
         CHECK(lord->get_trophies().size() == 1);
-    }
-    else {
+        trophies = 1;
+    } else {
         CHECK(lord->get_trophies().size() == 0);
     }
-
+    CHECK(lord->get_cards(runebound::AdventureType::RESEARCH).size() == 0);
+    CHECK(lord->get_action_points() == 1);
+    game.start_next_character_turn(lord);
+    CHECK(lord->get_action_points() == 3);
+    lord->set_position(runebound::Point(0, 0));
+    game.take_token(lord);
+    CHECK(lord->get_action_points() == 1);
+    auto card_meeting =
+        *(lord->get_cards(runebound::AdventureType::MEETING).begin());
+    game.start_card_execution(
+        lord, card_meeting, runebound::AdventureType::MEETING
+    );
+    if (game.check_characteristic(
+            lord, card, runebound::cards::OptionMeeting::FIRST
+        )) {
+        CHECK(lord->get_trophies().size() == trophies + 1);
+    } else {
+        CHECK(lord->get_trophies().size() == trophies);
+    }
 }

@@ -105,11 +105,10 @@ public:
         m_knowledge_token += delta;
     }
 
-    [[nodiscard]] std::set <unsigned int> get_cards(AdventureType type) const {
+    [[nodiscard]] std::set<unsigned int> get_cards(AdventureType type) const {
         if (type == AdventureType::RESEARCH) {
             return m_cards_research;
-        }
-        else if (type == AdventureType::FIGHT) {
+        } else if (type == AdventureType::FIGHT) {
             return m_cards_fight;
         }
         return m_cards_meeting;

@@ -67,7 +67,8 @@ struct BadOutcomeException : std::runtime_error {
 };
 
 struct WrongCellException : std::runtime_error {
-    WrongCellException() : std::runtime_error("You are not in the correct territory space.") {
+    WrongCellException()
+        : std::runtime_error("You are not in the correct territory space.") {
     }
 };
 
@@ -133,7 +134,8 @@ public:
         generate_all_cards();
     };
 
-    [[nodiscard]] cards::CardResearch get_card_research(unsigned int card) const {
+    [[nodiscard]] cards::CardResearch get_card_research(unsigned int card
+    ) const {
         return m_all_cards_research[card];
     }
 
@@ -145,7 +147,9 @@ public:
         return m_all_cards_fight[card];
     }
 
-    [[nodiscard]] std::vector <Point> get_territory_cells(const std::string territory) {
+    [[nodiscard]] std::vector<Point> get_territory_cells(
+        const std::string territory
+    ) {
         return m_map.get_territory_cells(territory);
     }
 
@@ -263,9 +267,13 @@ public:
         }
 
         if (type == AdventureType::RESEARCH) {
-
-            auto required_cells = m_map.get_territory_cells(m_all_cards_research[card].get_required_territory());
-            if (std::find(required_cells.begin(), required_cells.end(), chr->get_position()) == required_cells.end()) {
+            auto required_cells = m_map.get_territory_cells(
+                m_all_cards_research[card].get_required_territory()
+            );
+            if (std::find(
+                    required_cells.begin(), required_cells.end(),
+                    chr->get_position()
+                ) == required_cells.end()) {
                 throw WrongCellException();
             }
         }
@@ -299,11 +307,6 @@ public:
         // TODO, card skill when they will be in the game not only as a
         // characteristic checking card
     }
-
-    void complete_card_meeting(
-        const std::shared_ptr<character::Character> &chr,
-        int desired_outcome = -1
-    );
 
     // friend void to_json(nlohmann::json &json, const Game &game);
     // friend void from_json(const nlohmann::json &json, Game &game);
