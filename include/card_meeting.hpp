@@ -89,6 +89,13 @@ public:
         return m_second_option.gold;
     }
 
+    [[nodiscard]] int get_knowledge_token(OptionMeeting option) const {
+        if (option == OptionMeeting::FIRST) {
+            return m_first_option.knowledge_token;
+        }
+        return m_second_option.knowledge_token;
+    }
+
     [[nodiscard]] std::string get_name() const {
         return m_card_name;
     }

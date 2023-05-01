@@ -40,17 +40,17 @@ Point Game::get_position_character(
     return chr->get_position();
 }
 
-bool Game::check_characteristic(
-    const std::shared_ptr<character::Character> &chr,
+bool Game::check_characteristic_private(
+    int number_attempts,
     Characteristic characteristic
 ) {
-    check_turn(chr);
-    for (int i = 0; i < chr->get_characteristic(characteristic); ++i) {
+    for (int i = 0; i < number_attempts; ++i) {
         if (m_card_deck_skill.empty()) {
             generate_all_skill_cards();
         }
         auto card = m_card_deck_skill.back();
         m_card_deck_skill.pop_back();
+        m_last_characteristic_check.push_back(card);
         if (m_all_skill_cards[card].check_success()) {
             return true;
         }
@@ -141,7 +141,6 @@ void Game::relax(std::shared_ptr<character::Character> chr) {
     m_characters[m_turn]->update_action_points(-1);
 }
 
-
 void Game::take_token(const std::shared_ptr<character::Character> &chr) {
     check_turn(chr);
     check_sufficiency_action_points(2);
@@ -161,20 +160,20 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         chr->start_fight(std::make_shared<fight::Fight>(
             chr, m_all_cards_fight[card].get_enemy()
         ));
-    }
-    else if (m_map.get_cell_map(position).get_token() == AdventureType::RESEARCH) {
-        unsigned int card = m_card_deck_research[rng() % m_card_deck_research.size()];
+    } else if (m_map.get_cell_map(position).get_token() == AdventureType::RESEARCH) {
+        unsigned int card =
+            m_card_deck_research[rng() % m_card_deck_research.size()];
         chr->add_card(AdventureType::RESEARCH, card);
-        m_card_deck_fight.erase(
-            std::find(m_card_deck_research.begin(), m_card_deck_research.end(), card)
-        );
-    }
-    else {
-        unsigned int card = m_card_deck_meeting[rng() % m_card_deck_meeting.size()];
+        m_card_deck_fight.erase(std::find(
+            m_card_deck_research.begin(), m_card_deck_research.end(), card
+        ));
+    } else {
+        unsigned int card =
+            m_card_deck_meeting[rng() % m_card_deck_meeting.size()];
         chr->add_card(AdventureType::MEETING, card);
-        m_card_deck_meeting.erase(
-            std::find(m_card_deck_meeting.begin(), m_card_deck_meeting.end(), card)
-        );
+        m_card_deck_meeting.erase(std::find(
+            m_card_deck_meeting.begin(), m_card_deck_meeting.end(), card
+        ));
     }
     m_map.reverse_token(position);
     m_characters[m_turn]->update_action_points(-2);
@@ -210,5 +209,98 @@ std::vector<Point> Game::make_move(
     return result;
 }
 
+std::vector<std::size_t> Game::get_possible_outcomes(
+    const std::shared_ptr<character::Character> &chr
+) {
+    std::vector<std::size_t> outcomes;
+    auto card = chr->get_active_card_research();
+    for (std::size_t i = 0;
+         i < m_all_cards_research[card].get_outcomes().size(); ++i) {
+        if (m_all_cards_research[card].check_outcome(i, m_last_dice_result)) {
+            outcomes.push_back(i);
+        }
+    }
+    return outcomes;
+}
+
+void Game::complete_card_research(
+    const std::shared_ptr<character::Character> &chr,
+    int desired_outcome
+) {
+    auto card = chr->get_active_card_research();
+    if (desired_outcome < 0 ||
+        desired_outcome >= m_all_cards_research[card].get_outcomes().size()) {
+        chr->pop_card(AdventureType::RESEARCH, card);
+    }
+    if (!m_all_cards_research[card].check_outcome(
+            desired_outcome, m_last_dice_result
+        )) {
+        throw BadOutcomeException();
+    }
+    chr->add_trophy(AdventureType::RESEARCH, card);
+    chr->update_health(
+        m_all_cards_research[card].get_delta_health(desired_outcome)
+    );
+    chr->change_gold(m_all_cards_research[card].get_delta_gold(desired_outcome)
+    );
+    chr->change_knowledge_token(
+        m_all_cards_research[card].get_knowledge_token(desired_outcome)
+    );
+    chr->pop_card(AdventureType::RESEARCH, card);
+}
+
+bool Game::check_characteristic(
+    const std::shared_ptr<character::Character> &chr,
+    unsigned int card,
+    cards::OptionMeeting option
+) {
+    check_turn(chr);
+    m_last_characteristic_check.clear();
+    int number_attempts =
+        chr->get_characteristic(
+            m_all_cards_meeting[card].get_verifiable_characteristic(option)
+        ) +
+        m_all_cards_meeting[card].get_change_characteristic(option);
+    chr->pop_card(AdventureType::MEETING, card);
+    if (check_characteristic_private(
+            number_attempts,
+            m_all_cards_meeting[card].get_verifiable_characteristic(option)
+        )) {
+        chr->change_gold(m_all_cards_meeting[card].get_gold_award(option));
+        chr->change_knowledge_token(
+            m_all_cards_meeting[card].get_knowledge_token(option)
+        );
+        chr->add_trophy(AdventureType::MEETING, card);
+        return true;
+    }
+    return false;
+}
+
+void Game::complete_card_meeting(
+    const std::shared_ptr<character::Character> &chr,
+    int desired_outcome
+) {
+    auto card = chr->get_active_card_research();
+    if (desired_outcome < 0 ||
+        desired_outcome >= m_all_cards_research[card].get_outcomes().size()) {
+        chr->pop_card(AdventureType::RESEARCH, card);
+    }
+    if (!m_all_cards_research[card].check_outcome(
+            desired_outcome, m_last_dice_result
+        )) {
+        throw BadOutcomeException();
+    }
+    m_last_dice_result.clear();
+    chr->add_trophy(AdventureType::RESEARCH, card);
+    chr->update_health(
+        m_all_cards_research[card].get_delta_health(desired_outcome)
+    );
+    chr->change_gold(m_all_cards_research[card].get_delta_gold(desired_outcome)
+    );
+    chr->change_knowledge_token(
+        m_all_cards_research[card].get_knowledge_token(desired_outcome)
+    );
+    chr->pop_card(AdventureType::RESEARCH, card);
+}
 }  // namespace game
 }  // namespace runebound
