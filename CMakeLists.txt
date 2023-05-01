@@ -27,8 +27,8 @@ add_executable(graphics_client
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
-        src/generator_cards_fight.cpp
-        src/generator_characters.cpp
+        generators/generator_cards_fight.cpp
+        generators/generator_characters.cpp
         src/graphics.cpp
         src/graphics_board.cpp
         src/graphics_button.cpp
@@ -64,8 +64,8 @@ add_executable(network_server
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
-        src/generator_cards_fight.cpp
-        src/generator_characters.cpp
+        generators/generator_cards_fight.cpp
+        generators/generator_characters.cpp
         src/map.cpp
         src/map_cell.cpp
         src/map_client.cpp
@@ -86,8 +86,8 @@ add_executable(network_client
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
-        src/generator_cards_fight.cpp
-        src/generator_characters.cpp
+        generators/generator_cards_fight.cpp
+        generators/generator_characters.cpp
         src/map.cpp
         src/map_cell.cpp
         src/map_client.cpp
@@ -113,13 +113,14 @@ add_executable(${PROJECT_NAME}
         src/map_client.cpp
         #src/test_fight.cpp
         src/fight.cpp
-        src/generator_characters.cpp
-        src/generator_cards_meeting.cpp
-        src/generator_cards_research.cpp
         src/test_game.cpp
         src/card_fight.cpp
         src/card_meeting.cpp
-        src/generator_cards_fight.cpp)
+        generators/generator_cards_fight.cpp
+        generators/generator_characters.cpp
+        generators/generator_cards_meeting.cpp
+        generators/generator_cards_research.cpp
+        )
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
 # ===== LOGICS? ===== #
 
