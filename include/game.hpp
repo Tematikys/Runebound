@@ -66,6 +66,11 @@ struct BadOutcomeException : std::runtime_error {
     }
 };
 
+struct WrongCellException : std::runtime_error {
+    WrongCellException() : std::runtime_error("You are not in the correct territory space.") {
+    }
+};
+
 struct Game {
 private:
     ::runebound::map::Map m_map;
@@ -128,13 +133,20 @@ public:
         generate_all_cards();
     };
 
-    Game &operator=(const Game &other) {
-        m_map = other.m_map;
-        m_characters = other.m_characters;
-        m_card_deck_research = other.m_card_deck_research;
-        m_tokens = other.m_tokens;
-        m_turn = other.m_turn;
-        return *this;
+    [[nodiscard]] cards::CardResearch get_card_research(unsigned int card) const {
+        return m_all_cards_research[card];
+    }
+
+    [[nodiscard]] cards::CardMeeting get_card_meeting(unsigned int card) const {
+        return m_all_cards_meeting[card];
+    }
+
+    [[nodiscard]] cards::CardFight get_card_fight(unsigned int card) const {
+        return m_all_cards_fight[card];
+    }
+
+    [[nodiscard]] std::vector <Point> get_territory_cells(const std::string territory) {
+        return m_map.get_territory_cells(territory);
     }
 
     void take_token(const std::shared_ptr<character::Character> &chr);
@@ -200,7 +212,7 @@ public:
         unsigned int hand_limit,
         unsigned int speed,
         std::string name,
-        const std::vector<::runebound::fight::FightToken> tokens
+        const std::vector<::runebound::fight::FightToken> &tokens
     ) {
         m_characters.emplace_back(
             std::make_shared<::runebound::character::Character>(
@@ -234,12 +246,6 @@ public:
         return m_turn;
     }
 
-    [[nodiscard]] std::vector<::runebound::dice::HandDice> throw_camping_dice(
-        const std::shared_ptr<character::Character> &chr
-    ) const {
-        return ::runebound::dice::get_combination_of_dice(chr->get_speed());
-    }
-
     std::vector<Point> make_move(
         const std::shared_ptr<character::Character> &chr,
         const Point &point,
@@ -254,6 +260,14 @@ public:
         check_turn(chr);
         if (!chr->check_card(type, card)) {
             throw NoCardException();
+        }
+
+        if (type == AdventureType::RESEARCH) {
+
+            auto required_cells = m_map.get_territory_cells(m_all_cards_research[card].get_required_territory());
+            if (std::find(required_cells.begin(), required_cells.end(), chr->get_position()) == required_cells.end()) {
+                throw WrongCellException();
+            }
         }
         chr->make_active_card(type, card);
     }

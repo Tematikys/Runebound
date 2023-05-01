@@ -126,3 +126,30 @@ TEST_CASE("card_fight") {
     CHECK(lord->get_cards_fight().size() == 0);
     CHECK(lord->get_trophies().size() == 1);
 }
+
+TEST_CASE("cards") {
+    ::runebound::game::Game game;
+    auto lord = game.make_character(
+        runebound::character::StandardCharacter::LORD_HAWTHORNE
+    );
+    lord->set_position(runebound::Point(13, 0));
+    game.take_token(lord);
+    CHECK(lord->get_action_points() == 1);
+    auto card = *(lord->get_cards(runebound::AdventureType::RESEARCH).begin());
+    auto copy_card = game.get_card_research(card);
+    auto territory = copy_card.get_required_territory();
+    auto cells = game.get_territory_cells(territory);
+    lord->set_position(cells[0]);
+    game.start_card_execution(lord, card, runebound::AdventureType::RESEARCH);
+    CHECK(card == lord->get_active_card_research());
+    game.throw_movement_dice(lord);
+    auto outcomes = game.get_possible_outcomes(lord);
+    game.complete_card_research(lord,static_cast<int>(outcomes.size()) - 1);
+    if (outcomes.size() > 0) {
+        CHECK(lord->get_trophies().size() == 1);
+    }
+    else {
+        CHECK(lord->get_trophies().size() == 0);
+    }
+
+}

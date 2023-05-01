@@ -105,6 +105,16 @@ public:
         m_knowledge_token += delta;
     }
 
+    [[nodiscard]] std::set <unsigned int> get_cards(AdventureType type) const {
+        if (type == AdventureType::RESEARCH) {
+            return m_cards_research;
+        }
+        else if (type == AdventureType::FIGHT) {
+            return m_cards_fight;
+        }
+        return m_cards_meeting;
+    }
+
     [[nodiscard]] int get_characteristic(Characteristic characteristic) {
         return m_characteristics[characteristic];
     }
@@ -122,7 +132,7 @@ public:
         m_current_fight = std::move(fight);
     }
 
-    bool check_card(AdventureType type, unsigned int card) const;
+    [[nodiscard]] bool check_card(AdventureType type, unsigned int card) const;
 
     void change_gold(int delta_gold) {
         m_gold += delta_gold;

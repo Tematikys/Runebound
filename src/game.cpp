@@ -164,7 +164,7 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         unsigned int card =
             m_card_deck_research[rng() % m_card_deck_research.size()];
         chr->add_card(AdventureType::RESEARCH, card);
-        m_card_deck_fight.erase(std::find(
+        m_card_deck_research.erase(std::find(
             m_card_deck_research.begin(), m_card_deck_research.end(), card
         ));
     } else {

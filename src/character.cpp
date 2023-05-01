@@ -68,9 +68,7 @@ bool Character::check_card(AdventureType type, unsigned int card) const {
     if (type == AdventureType::FIGHT) {
         return m_cards_fight.count(card) != 0;
     }
-    if (type == AdventureType::RESEARCH) {
-        return m_cards_fight.count(card) != 0;
-    }
+    return m_cards_research.count(card) != 0;
 }
 
 void Character::pop_card(AdventureType type, unsigned int card) {
