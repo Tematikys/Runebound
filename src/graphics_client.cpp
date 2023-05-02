@@ -49,7 +49,6 @@ void Client::init_board() {
 
 void Client::init_game() {
     ::runebound::graphics::Texture texture;
-
     // ===== MAIN MENU BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Main menu", {0x00, 0x00, 0x00, 0xFF}
@@ -66,7 +65,6 @@ void Client::init_game() {
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== MAIN MENU BUTTON =====
-
     // ===== EXIT BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Exit", {0x00, 0x00, 0x00, 0xFF}
@@ -82,7 +80,6 @@ void Client::init_game() {
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== EXIT BUTTON =====
-
     // ===== THROW DICE BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Throw dice",
@@ -96,7 +93,6 @@ void Client::init_game() {
         [this]() { m_network_client.throw_move_dice(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
-
     // ===== RELAX BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Relax", {0x00, 0x00, 0x00, 0xFF}
@@ -109,7 +105,6 @@ void Client::init_game() {
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== RELAX BUTTON =====
-
     // ===== PASS BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Pass", {0x00, 0x00, 0x00, 0xFF}
@@ -126,7 +121,6 @@ void Client::init_game() {
 
 void Client::init_main_menu() {
     ::runebound::graphics::Texture texture;
-
     // ===== TEXT FIELD BUTTON =====
     ::runebound::graphics::Button button(
         35, 35, 30 * 16, 50,
@@ -138,7 +132,6 @@ void Client::init_main_menu() {
     ::runebound::graphics::TextField text_field("new game", button, 16);
     m_main_menu_text_fields.push_back(::std::move(text_field));
     // ===== TEXT FIELD BUTTON =====
-
     // ===== ADD GAME BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono50"], "Add game", {0x00, 0x00, 0x00, 0xFF}
@@ -156,7 +149,6 @@ void Client::init_main_menu() {
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== ADD GAME BUTTON =====
-
     // ===== EXIT BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono50"], "Exit", {0x00, 0x00, 0x00, 0xFF}
@@ -179,7 +171,6 @@ void Client::game_handle_events(SDL_Event &event) {
         case SDL_QUIT:
             m_is_running = false;
             break;
-
         case SDL_MOUSEBUTTONDOWN:
             m_mouse_pressed = true;
             break;
@@ -194,11 +185,9 @@ void Client::main_menu_handle_events(SDL_Event &event) {
         case SDL_QUIT:
             m_is_running = false;
             break;
-
         case SDL_MOUSEBUTTONDOWN:
             m_mouse_pressed = true;
             break;
-
         case SDL_TEXTINPUT:
             if (m_main_menu_active_text_field != 0 &&
                 (((SDL_GetModState() & KMOD_CTRL) == 0) ||
@@ -209,7 +198,6 @@ void Client::main_menu_handle_events(SDL_Event &event) {
                 );
             }
             break;
-
         case SDL_KEYDOWN:
             if (m_main_menu_active_text_field == 0) {
                 break;
@@ -231,7 +219,6 @@ void Client::main_menu_handle_events(SDL_Event &event) {
                 );
             }
             break;
-
         case SDL_MOUSEWHEEL:
             if (event.wheel.y < 0) {
                 if (m_game_list_start_index + m_game_list_show_amount <
@@ -297,7 +284,6 @@ void Client::game_render() {
                 -texture.height() / 2 + center.y()
             );
         }
-
         int dx = 0;
         for (const auto &dice : m_network_client.get_last_dice_result()) {
             ::std::vector<::runebound::graphics::Point> vertexes;
@@ -328,7 +314,6 @@ void Client::game_render() {
             tri.render(m_renderer, col.second);
             dx += 1;
         }
-
     } else {
         for (const auto &button : m_character_list) {
             button.render(m_renderer);
@@ -362,13 +347,11 @@ void Client::render() {
 #endif
     SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
-
     if (m_joined_to_game) {
         game_render();
     } else {
         main_menu_render();
     }
-
     SDL_RenderPresent(m_renderer);
 }
 
@@ -424,7 +407,6 @@ void Client::game_update() {
             ++i;
         }
     }
-
     for (const auto &button : m_character_list) {
         if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
             button.on_cover();
@@ -434,7 +416,6 @@ void Client::game_update() {
             }
         }
     }
-
     for (const auto &button : m_game_buttons) {
         if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
             button.on_cover();
@@ -444,7 +425,6 @@ void Client::game_update() {
             }
         }
     }
-
     const ::std::size_t index = m_board.get_selected_hexagon();
     if (index != 0xFFFF && m_mouse_pressed) {
         ::std::cout << index << ::std::endl;
@@ -461,7 +441,6 @@ void Client::main_menu_update() {
     ::std::cout << "[info] :: MAIN MENU UPDATE" << ::std::endl;
 #endif
     m_game_list.clear();
-
     for (::std::size_t i = m_game_list_start_index;
          i < ::std::min(
                  m_game_list_start_index + m_game_list_show_amount,
@@ -492,7 +471,6 @@ void Client::main_menu_update() {
         );
         m_game_list.push_back(::std::move(button));
     }
-
     for (const auto &button : m_game_list) {
         if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
             button.on_cover();
@@ -502,7 +480,6 @@ void Client::main_menu_update() {
             }
         }
     }
-
     for (const auto &field : m_main_menu_text_fields) {
         if (field.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
             field.on_cover();
@@ -512,11 +489,9 @@ void Client::main_menu_update() {
             }
         }
     }
-
     if (m_mouse_pressed) {
         m_main_menu_active_text_field = 0;
     }
-
     for (const auto &button : m_main_menu_buttons) {
         if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
             button.on_cover();
@@ -533,16 +508,13 @@ void Client::update() {
     ::std::cout << "[info] :: " << m_counter << " UPDATE" << ::std::endl;
 #endif
     m_io_context.poll();
-
     ::runebound::graphics::update_mouse_pos(m_mouse_pos);
     m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
-
     if (m_joined_to_game) {
         game_update();
     } else {
         main_menu_update();
     }
-
     m_mouse_pressed = false;
     ++m_counter;
 }
@@ -563,7 +535,6 @@ void Client::exit() {
     ::std::cout << "[info] :: " << m_counter << " EXIT" << ::std::endl;
 #endif
     m_network_client.exit();
-
     m_game_list.clear();
     m_main_menu_text_fields.clear();
     m_main_menu_buttons.clear();
@@ -579,16 +550,13 @@ void Client::exit() {
     for (auto &texture : m_game_textures) {
         texture.free();
     }
-
     for (auto &[name, image] : m_images) {
         image.free();
     }
-
     SDL_DestroyRenderer(m_renderer);
     m_renderer = nullptr;
     SDL_DestroyWindow(m_window);
     m_window = nullptr;
-
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();

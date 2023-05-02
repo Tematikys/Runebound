@@ -69,7 +69,7 @@ public:
     void add_road(const Segment &segment, SDL_Color color);
 
     void render(SDL_Renderer *renderer) const;
-
+    
     void update_selection(const Point &dot);
 
     [[nodiscard]] ::std::size_t get_selected_hexagon() const {

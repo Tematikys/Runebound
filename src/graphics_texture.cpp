@@ -25,7 +25,6 @@ void Texture::render(
         renderQuad.w = clip->w;
         renderQuad.h = clip->h;
     }
-
     SDL_RenderCopyEx(
         renderer, m_texture, clip, &renderQuad, angle, center, flip
     );
@@ -36,9 +35,7 @@ bool Texture::load_image_from_file(
     const ::std::string &path
 ) {
     free();
-
     SDL_Texture *new_texture = nullptr;
-
     SDL_Surface *loaded_surface = IMG_Load(path.c_str());
     if (loaded_surface == nullptr) {
         ::std::cout << "Unable to load image! SDL_image Error:\n"
@@ -48,7 +45,6 @@ bool Texture::load_image_from_file(
             loaded_surface, SDL_TRUE,
             SDL_MapRGB(loaded_surface->format, 0xFF, 0xFF, 0xFF)
         );
-
         new_texture = SDL_CreateTextureFromSurface(renderer, loaded_surface);
         if (new_texture == nullptr) {
             ::std::cout << "Unable to create texture from! SDL Error:\n"
@@ -59,7 +55,6 @@ bool Texture::load_image_from_file(
         }
         SDL_FreeSurface(loaded_surface);
     }
-
     m_texture = new_texture;
     return m_texture != nullptr;
 }
@@ -71,7 +66,6 @@ bool Texture::load_text_from_string(
     SDL_Color color
 ) {
     free();
-
     if (text.length() == 0) {
         return true;
     }
@@ -91,7 +85,6 @@ bool Texture::load_text_from_string(
         }
         SDL_FreeSurface(text_surface);
     }
-
     return m_texture != nullptr;
 }
 }  // namespace runebound::graphics

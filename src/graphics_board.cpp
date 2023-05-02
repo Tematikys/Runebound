@@ -12,14 +12,12 @@ Board::Board(const ::runebound::map::MapClient &map) {
     for (int row = 0; row < ::runebound::map::STANDARD_SIZE; ++row) {
         for (int col = 0; col < ::runebound::map::STANDARD_SIZE; ++col) {
             auto center = get_center_of_hexagon(row, col);
-
             auto [type_cell_key, cell_fill_color] =
                 *CELL_FILL_COLOR.find(map.m_map[row][col].get_type_cell());
             add_cell(
                 {center, HEXAGON_RADIUS}, cell_fill_color,
                 SDL_Color{0x00, 0x00, 0x00, 0xFF}
             );
-
             const ::runebound::map::SpecialTypeCell special =
                 map.m_map[row][col].get_special_type_cell();
             if (special != ::runebound::map::SpecialTypeCell::NOTHING) {
@@ -30,7 +28,6 @@ Board::Board(const ::runebound::map::MapClient &map) {
                     special_fill_color, {0x00, 0x00, 0x00, 0xFF}
                 );
             }
-
             const ::runebound::AdventureType token =
                 map.m_map[row][col].get_token();
             if (token != ::runebound::AdventureType::NOTHING) {
@@ -40,7 +37,6 @@ Board::Board(const ::runebound::map::MapClient &map) {
                     {0x00, 0x00, 0x00, 0xFF}
                 );
             }
-
             // TODO refactor
             if (map.m_map[row][col].check_road()) {
                 for (auto [i, j] :
@@ -60,7 +56,6 @@ Board::Board(const ::runebound::map::MapClient &map) {
             }
         }
     }
-
     for (const auto &pair : map.m_rivers) {
         const SDL_Color river_color = {0x37, 0x1A, 0xFA, 0xFF};
         auto [x1, y1] = pair.first;
@@ -70,7 +65,6 @@ Board::Board(const ::runebound::map::MapClient &map) {
                  (1 - ::std::abs(sign(x1 - x2))) * (2 * (y1 % 2) - 1),
              sign(y1 - y2)}
         );
-
         const HexagonShape hex =
             m_cells[x1 * ::runebound::map::STANDARD_SIZE + y1];
         const Segment seg = {hex.get_vertex(v.first), hex.get_vertex(v.second)};
@@ -134,7 +128,6 @@ void Board::render(SDL_Renderer *renderer) const {
             renderer, m_cell_border_color[m_selected_cell]
         );
     }
-
     // TODO
     for (::std::size_t i = 0; i < m_river_amount; ++i) {
         m_rivers[i].render(renderer, m_river_color[i], 5);
@@ -146,12 +139,10 @@ void Board::render(SDL_Renderer *renderer) const {
             m_roads[i].render(renderer, m_road_color[i], 7);
         }
     }
-
     for (::std::size_t i = 0; i < m_special_amount; ++i) {
         m_specials[i].render(renderer, m_special_fill_color[i]);
         m_specials[i].render_border(renderer, m_special_border_color[i]);
     }
-
     for (::std::size_t i = 0; i < m_token_amount; ++i) {
         m_tokens[i].render(renderer, m_token_fill_color[i]);
         m_tokens[i].render_border(renderer, m_token_border_color[i]);

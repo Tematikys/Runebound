@@ -1,6 +1,5 @@
 #ifndef RUNEBOUND_GRAPHICS_POINT_HPP_
 #define RUNEBOUND_GRAPHICS_POINT_HPP_
-
 #include <utility>
 
 namespace runebound::graphics {
