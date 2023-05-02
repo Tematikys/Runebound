@@ -33,8 +33,10 @@ void from_json(const nlohmann::json &json, TokenHandCount &token_hand_count);
 struct TokenHandCount {
 public:
     FightToken token;
-    HandFightTokens hand;
-    int count;
+    HandFightTokens hand = HandFightTokens::NOTHING;
+    int count = 0;
+
+    TokenHandCount() = default;
 
     TokenHandCount(FightToken token_, HandFightTokens hand_, int count_)
         : token(token_), hand(hand_), count(count_) {
