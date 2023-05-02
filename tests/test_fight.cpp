@@ -54,9 +54,9 @@ void read_command(
             HandFightTokens::DOUBLING) {
             std::cout << "doubling\n";
             std::cin >> d;
-            fight.make_progress(
-                Participant::CHARACTER, {character_remaining_tokens[k - 1]},
-                std::nullopt, std::nullopt, character_remaining_tokens[d - 1]
+            fight.make_doubling(
+                Participant::CHARACTER, character_remaining_tokens[k - 1],
+                character_remaining_tokens[d - 1]
             );
         } else if (character_remaining_tokens[k - 1].hand == HandFightTokens::DEXTERITY) {
             int p;
@@ -64,57 +64,51 @@ void read_command(
 
             std::cin >> d >> p;
             if (p == 0) {
-                fight.make_progress(
+                fight.make_dexterity(
                     Participant::CHARACTER, {character_remaining_tokens[k - 1]},
-                    character_remaining_tokens[d - 1], Participant::CHARACTER,
-                    std::nullopt
+                    character_remaining_tokens[d - 1], Participant::CHARACTER
                 );
             } else {
-                fight.make_progress(
-                    Participant::CHARACTER, {character_remaining_tokens[k - 1]},
-                    enemy_remaining_tokens[d - 1], Participant::ENEMY,
-                    std::nullopt
+                fight.make_dexterity(
+                    Participant::CHARACTER, character_remaining_tokens[k - 1],
+                    enemy_remaining_tokens[d - 1], Participant::ENEMY
                 );
             }
 
         } else {
             std::cout << "damage\n";
-            fight.make_progress(
-                Participant::CHARACTER, {character_remaining_tokens[k - 1]},
-                std::nullopt, std::nullopt, std::nullopt
+            fight.make_damage(
+                Participant::CHARACTER, {character_remaining_tokens[k - 1]}
             );
         }
     } else {
         if (enemy_remaining_tokens[k - 1].hand == HandFightTokens::DOUBLING) {
             std::cout << "doubling\n";
             std::cin >> d;
-            fight.make_progress(
-                Participant::ENEMY, {enemy_remaining_tokens[k - 1]},
-                std::nullopt, std::nullopt, enemy_remaining_tokens[d - 1]
+            fight.make_doubling(
+                Participant::ENEMY, enemy_remaining_tokens[k - 1],
+                enemy_remaining_tokens[d - 1]
             );
         } else if (enemy_remaining_tokens[k - 1].hand == HandFightTokens::DEXTERITY) {
             int p;
             std::cout << "dexterity\n";
             std::cin >> d >> p;
             if (p == 0) {
-                fight.make_progress(
-                    Participant::ENEMY, {enemy_remaining_tokens[k - 1]},
-                    character_remaining_tokens[d - 1], Participant::CHARACTER,
-                    std::nullopt
+                fight.make_dexterity(
+                    Participant::ENEMY, enemy_remaining_tokens[k - 1],
+                    character_remaining_tokens[d - 1], Participant::CHARACTER
                 );
             } else {
-                fight.make_progress(
-                    Participant::ENEMY, {enemy_remaining_tokens[k - 1]},
-                    enemy_remaining_tokens[d - 1], Participant::ENEMY,
-                    std::nullopt
+                fight.make_dexterity(
+                    Participant::ENEMY, enemy_remaining_tokens[k - 1],
+                    enemy_remaining_tokens[d - 1], Participant::ENEMY
                 );
             }
 
         } else {
             std::cout << "damage\n";
-            fight.make_progress(
-                Participant::ENEMY, {enemy_remaining_tokens[k - 1]},
-                std::nullopt, std::nullopt, std::nullopt
+            fight.make_damage(
+                Participant::ENEMY, {enemy_remaining_tokens[k - 1]}
             );
         }
     }

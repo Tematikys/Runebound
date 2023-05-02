@@ -31,6 +31,7 @@ struct CharacterClient;
 namespace fight {
 struct FightToken;
 struct Fight;
+struct TokenHandCount;
 struct Enemy;
 }  // namespace fight
 

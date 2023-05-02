@@ -27,6 +27,9 @@ struct FightIsStillOnException : std::runtime_error {
     }
 };
 
+void to_json(nlohmann::json &json, const TokenHandCount &token_hand_count);
+void from_json(const nlohmann::json &json, TokenHandCount &token_hand_count);
+
 struct TokenHandCount {
 public:
     FightToken token;
@@ -40,6 +43,20 @@ public:
     bool operator==(const TokenHandCount &token_hand_count) const {
         return token == token_hand_count.token &&
                hand == token_hand_count.hand && count == token_hand_count.count;
+    }
+
+    friend void
+    to_json(nlohmann::json &json, const TokenHandCount &token_hand_count) {
+        json["token"] = token_hand_count.token;
+        json["hand"] = token_hand_count.hand;
+        json["count"] = token_hand_count.count;
+    }
+
+    friend void
+    from_json(const nlohmann::json &json, TokenHandCount &token_hand_count) {
+        token_hand_count.count = json["count"];
+        token_hand_count.hand = json["hand"];
+        token_hand_count.token = json["token"];
     }
 };
 
@@ -159,8 +176,10 @@ private:
 
     void shuffle_all_tokens();
 
-    void
-    make_doubling(Participant participant, const TokenHandCount &fight_token);
+    void make_doubling_private(
+        Participant participant,
+        const TokenHandCount &fight_token
+    );
 
     static unsigned int count_initiative(
         const std::vector<TokenHandCount> &tokens
@@ -204,12 +223,22 @@ public:
         return m_enemy.get_health();
     }
 
-    void make_progress(
+    void make_dexterity(
         Participant participant,
-        const std::vector<TokenHandCount> &tokens,
-        std::optional<TokenHandCount> dexterity_token,
-        std::optional<Participant> dexterity_participant,
-        std::optional<TokenHandCount> doubling_token
+        const TokenHandCount &token,
+        TokenHandCount dexterity_token,
+        Participant dexterity_participant
+    );
+
+    void make_doubling(
+        Participant participant,
+        const TokenHandCount &token,
+        TokenHandCount doubling_token
+    );
+
+    void make_damage(
+        Participant participant,
+        const std::vector<TokenHandCount> &tokens
     );
 
     bool check_end_fight() const {

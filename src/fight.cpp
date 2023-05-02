@@ -112,7 +112,7 @@ void Fight::shuffle_all_tokens() {
     }
 }
 
-void Fight::make_doubling(
+void Fight::make_doubling_private(
     Participant participant,
     const TokenHandCount &fight_token
 ) {
@@ -201,12 +201,35 @@ void Fight::change_turn() {
     }
 }
 
-void Fight::make_progress(
+void Fight::make_dexterity(
+    runebound::fight::Participant participant,
+    const TokenHandCount &token,
+    runebound::fight::TokenHandCount dexterity_token,
+    runebound::fight::Participant dexterity_participant
+) {
+    if (m_turn != participant) {
+        throw WrongCharacterTurnException();
+    }
+    change_turn();
+    if (participant == Participant::CHARACTER) {
+        if (dexterity_participant == Participant::CHARACTER) {
+            reverse_token(Participant::CHARACTER, dexterity_token);
+        } else {
+            toss_token(Participant::ENEMY, dexterity_token);
+        }
+    } else {
+        if (dexterity_participant == Participant::CHARACTER) {
+            toss_token(Participant::CHARACTER, dexterity_token);
+        } else {
+            reverse_token(Participant::ENEMY, dexterity_token);
+        }
+    }
+    erase_token(participant, token);
+}
+
+void Fight::make_damage(
     Participant participant,
-    const std::vector<TokenHandCount> &tokens,
-    std::optional<TokenHandCount> dexterity_token,
-    std::optional<Participant> dexterity_participant,
-    std::optional<TokenHandCount> doubling_token
+    const std::vector<TokenHandCount> &tokens
 ) {
     if (m_turn != participant) {
         throw WrongCharacterTurnException();
@@ -216,70 +239,26 @@ void Fight::make_progress(
     }
     change_turn();
     if (participant == Participant::CHARACTER) {
-        switch (tokens[0].hand) {
-            case (HandFightTokens::PHYSICAL_DAMAGE): {
-                make_damage(Participant::ENEMY, count_damage(tokens));
-                break;
-            }
-            case (HandFightTokens::MAGICAL_DAMAGE): {
-                make_damage(Participant::ENEMY, count_damage(tokens));
-                break;
-            }
-            case (HandFightTokens::DEXTERITY): {
-                if (dexterity_participant == Participant::CHARACTER) {
-                    reverse_token(
-                        Participant::CHARACTER, dexterity_token.value()
-                    );
-                } else {
-                    toss_token(Participant::ENEMY, dexterity_token.value());
-                }
-                break;
-            }
-            case (HandFightTokens::DOUBLING): {
-                make_doubling(Participant::CHARACTER, doubling_token.value());
-                break;
-            }
-            case (HandFightTokens::NOTHING): {
-                break;
-            }
-            default: {
-                change_turn();
-                throw BadCombinationException();
-            }
-        }
-        for (auto token : tokens) {
-            erase_token(Participant::CHARACTER, token);
-        }
+        make_damage(Participant::ENEMY, count_damage(tokens));
     } else {
-        switch (tokens[0].hand) {
-            case (HandFightTokens::ENEMY_DAMAGE): {
-                make_damage(Participant::CHARACTER, count_damage(tokens));
-                break;
-            }
-            case (HandFightTokens::DEXTERITY): {
-                if (dexterity_participant == Participant::CHARACTER) {
-                    toss_token(Participant::CHARACTER, dexterity_token.value());
-                } else {
-                    reverse_token(Participant::ENEMY, dexterity_token.value());
-                }
-                break;
-            }
-            case (HandFightTokens::DOUBLING): {
-                make_doubling(Participant::ENEMY, doubling_token.value());
-                break;
-            }
-            case (HandFightTokens::NOTHING): {
-                break;
-            }
-            default: {
-                change_turn();
-                throw BadCombinationException();
-            }
-        }
-        for (auto token : tokens) {
-            erase_token(Participant::ENEMY, token);
-        }
+        make_damage(Participant::CHARACTER, count_damage(tokens));
     }
+    for (auto token : tokens) {
+        erase_token(participant, token);
+    }
+}
+
+void Fight::make_doubling(
+    Participant participant,
+    const TokenHandCount &token,
+    TokenHandCount doubling_token
+) {
+    if (m_turn != participant) {
+        throw WrongCharacterTurnException();
+    }
+    change_turn();
+    make_doubling_private(participant, doubling_token);
+    erase_token(participant, token);
 }
 
 HandFightTokens
