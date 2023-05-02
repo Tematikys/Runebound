@@ -3,9 +3,9 @@
 #include <nlohmann/json.hpp>
 #include "card_fight.hpp"
 #include "point.hpp"
+#include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
-#include "product.hpp"
 
 namespace runebound {
 namespace game {

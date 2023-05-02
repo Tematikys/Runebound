@@ -1,6 +1,6 @@
 #include "product.hpp"
-#include "nlohmann/json.hpp"
 #include <optional>
+#include "nlohmann/json.hpp"
 
 namespace runebound::trade {
 void to_json(nlohmann::json &json, const Product &product) {
@@ -12,11 +12,11 @@ void to_json(nlohmann::json &json, const Product &product) {
     json["m_market_price"] = product.m_market_price;
     if (product.m_fight_token != std::nullopt) {
         json["m_fight_token"] = product.m_fight_token.value();
-    }
-    else {
+    } else {
         json["m_fight_token"] = 0;
     }
 }
+
 void from_json(const nlohmann::json &json, Product &product) {
     product.m_delta_characteristic = json["m_delta_characteristic"];
     product.m_delta_max_health = json["m_delta_max_health"];
@@ -26,10 +26,9 @@ void from_json(const nlohmann::json &json, Product &product) {
     product.m_market_price = json["m_market_price"];
     if (json["m_fight_token"] != 0) {
         product.m_fight_token = json["m_fight_token"];
-    }
-    else {
+    } else {
         product.m_fight_token = std::nullopt;
     }
 }
 
-} // namespace runebound::trade
+}  // namespace runebound::trade

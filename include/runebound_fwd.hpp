@@ -30,7 +30,7 @@ struct CharacterClient;
 
 namespace trade {
 struct Product;
-} // namespace trade
+}  // namespace trade
 
 namespace fight {
 struct FightToken;
