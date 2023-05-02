@@ -1,6 +1,5 @@
 #include "doctest/doctest.h"
 #include "game.hpp"
-#include "nlohmann/json"
 
 TEST_CASE("game") {
     ::runebound::generator::generate_characters();
