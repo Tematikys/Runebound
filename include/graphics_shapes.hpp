@@ -8,7 +8,6 @@
 #include <vector>
 
 namespace runebound::graphics {
-// basic polygon class
 class PolygonShape {
 protected:
     ::std::vector<Point> m_vertexes{};
@@ -39,7 +38,6 @@ public:
     };
 };
 
-// basic hexagon class, derived to polygon
 class HexagonShape : public PolygonShape {
 public:
     HexagonShape() = default;
@@ -61,7 +59,6 @@ public:
     RectangleShape(int x, int y, int width, int height);
 };
 
-// basic circle class
 class CircleShape {
 private:
     Point m_center;

@@ -13,7 +13,6 @@ Board::Board(const ::runebound::map::MapClient &map) {
         for (int col = 0; col < ::runebound::map::STANDARD_SIZE; ++col) {
             auto center = get_center_of_hexagon(row, col);
 
-            // add cell
             auto [type_cell_key, cell_fill_color] =
                 *CELL_FILL_COLOR.find(map.m_map[row][col].get_type_cell());
             add_cell(
@@ -21,7 +20,6 @@ Board::Board(const ::runebound::map::MapClient &map) {
                 SDL_Color{0x00, 0x00, 0x00, 0xFF}
             );
 
-            // add special if it is
             const ::runebound::map::SpecialTypeCell special =
                 map.m_map[row][col].get_special_type_cell();
             if (special != ::runebound::map::SpecialTypeCell::NOTHING) {
@@ -33,7 +31,6 @@ Board::Board(const ::runebound::map::MapClient &map) {
                 );
             }
 
-            // add token if there is
             const ::runebound::AdventureType token =
                 map.m_map[row][col].get_token();
             if (token != ::runebound::AdventureType::NOTHING) {
@@ -44,7 +41,7 @@ Board::Board(const ::runebound::map::MapClient &map) {
                 );
             }
 
-            // TODO adding roads if is it
+            // TODO refactor
             if (map.m_map[row][col].check_road()) {
                 for (auto [i, j] :
                      map.get_all_neighbours(::runebound::Point(row, col))) {
@@ -64,7 +61,6 @@ Board::Board(const ::runebound::map::MapClient &map) {
         }
     }
 
-    // adding rivers
     for (const auto &pair : map.m_rivers) {
         const SDL_Color river_color = {0x37, 0x1A, 0xFA, 0xFF};
         auto [x1, y1] = pair.first;
@@ -128,7 +124,6 @@ void Board::add_special(
 }
 
 void Board::render(SDL_Renderer *renderer) const {
-    // cells
     for (::std::size_t i = 0; i < m_cell_amount; ++i) {
         m_cells[i].render(renderer, m_cell_fill_color[i]);
         m_cells[i].render_border(renderer, m_cell_border_color[i]);
@@ -140,7 +135,7 @@ void Board::render(SDL_Renderer *renderer) const {
         );
     }
 
-    // rivers TODO
+    // TODO
     for (::std::size_t i = 0; i < m_river_amount; ++i) {
         m_rivers[i].render(renderer, m_river_color[i], 5);
     }
@@ -152,13 +147,11 @@ void Board::render(SDL_Renderer *renderer) const {
         }
     }
 
-    // specials
     for (::std::size_t i = 0; i < m_special_amount; ++i) {
         m_specials[i].render(renderer, m_special_fill_color[i]);
         m_specials[i].render_border(renderer, m_special_border_color[i]);
     }
 
-    // tokens
     for (::std::size_t i = 0; i < m_token_amount; ++i) {
         m_tokens[i].render(renderer, m_token_fill_color[i]);
         m_tokens[i].render_border(renderer, m_token_border_color[i]);

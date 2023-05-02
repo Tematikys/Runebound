@@ -6,6 +6,8 @@ Button::Button(
     int y,
     int width,
     int height,
+    HorizontalButtonTextAlign hor_text_align,
+    VerticalButtonTextAlign ver_text_align,
     int texture_x_offset,
     int texture_y_offset,
     Texture &texture,
@@ -18,6 +20,8 @@ Button::Button(
       m_y(y),
       m_width(width),
       m_height(height),
+      m_hor_text_align(hor_text_align),
+      m_ver_text_align(ver_text_align),
       m_texture_x_offset(texture_x_offset),
       m_texture_y_offset(texture_y_offset),
       m_texture(::std::move(texture)),
@@ -26,6 +30,32 @@ Button::Button(
       m_fill_color(fill_color),
       m_border_color(border_color),
       m_shape({x, y, m_width, m_height}) {
+    switch (m_hor_text_align) {
+        case HorizontalButtonTextAlign::LEFT:
+            m_texture_x_offset = 0;
+            break;
+        case HorizontalButtonTextAlign::CENTER:
+            m_texture_x_offset = (m_width - m_texture.width()) / 2;
+            break;
+        case HorizontalButtonTextAlign::RIGHT:
+            m_texture_x_offset = m_width - m_texture.width();
+            break;
+        case HorizontalButtonTextAlign::NONE:
+            break;
+    }
+    switch (m_ver_text_align) {
+        case VerticalButtonTextAlign::TOP:
+            m_texture_y_offset = 0;
+            break;
+        case VerticalButtonTextAlign::CENTER:
+            m_texture_y_offset = (m_height - m_texture.height()) / 2;
+            break;
+        case VerticalButtonTextAlign::BOTTOM:
+            m_texture_x_offset = m_height - m_texture.height();
+            break;
+        case VerticalButtonTextAlign::NONE:
+            break;
+    }
 }
 
 Button::Button(Button &&other) noexcept
@@ -33,6 +63,8 @@ Button::Button(Button &&other) noexcept
       m_y(other.m_y),
       m_width(other.m_width),
       m_height(other.m_height),
+      m_hor_text_align(other.m_hor_text_align),
+      m_ver_text_align(other.m_ver_text_align),
       m_texture_x_offset(other.m_texture_x_offset),
       m_texture_y_offset(other.m_texture_y_offset),
       m_texture(::std::move(other.m_texture)),
@@ -48,6 +80,8 @@ Button &Button::operator=(Button &&other) noexcept {
     m_y = other.m_y;
     m_width = other.m_width;
     m_height = other.m_height;
+    m_hor_text_align = other.m_hor_text_align;
+    m_ver_text_align = other.m_ver_text_align;
     m_texture_x_offset = other.m_texture_x_offset;
     m_texture_y_offset = other.m_texture_y_offset;
     m_texture = ::std::move(other.m_texture);
@@ -65,11 +99,6 @@ void Button::render(SDL_Renderer *renderer) const {
     m_texture.render(
         renderer, m_x + m_texture_x_offset, m_y + m_texture_y_offset
     );
-}
-
-bool Button::in_bounds(const Point &p) const {
-    return m_x <= p.x() && p.x() < m_x + m_width && m_y <= p.y() &&
-           p.y() < m_y + m_height;
 }
 
 TextField::TextField(::std::string text, Button &button, int max_len)
@@ -99,7 +128,7 @@ void TextField::render(
 ) const {
     m_button.render(renderer);
     Texture texture;
-    generate_text(renderer, texture, m_text, font, color);
+    texture.load_text_from_string(renderer, font, m_text, color);
     texture.render(
         renderer, m_button.get_coords().x(), m_button.get_coords().y(), clip,
         angle, center, flip

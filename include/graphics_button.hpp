@@ -4,9 +4,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <functional>
-#include <graphics.hpp>
+#include <graphics_config.hpp>
 #include <graphics_point.hpp>
 #include <graphics_shapes.hpp>
+#include <graphics_texture.hpp>
 #include <memory>
 #include <string>
 
@@ -17,6 +18,8 @@ private:
     int m_y{0};
     int m_width{0};
     int m_height{0};
+    HorizontalButtonTextAlign m_hor_text_align{HorizontalButtonTextAlign::LEFT};
+    VerticalButtonTextAlign m_ver_text_align{VerticalButtonTextAlign::TOP};
     int m_texture_x_offset{0};
     int m_texture_y_offset{0};
     Texture m_texture{};
@@ -34,6 +37,8 @@ public:
         int y,
         int width,
         int height,
+        HorizontalButtonTextAlign hor_text_align,
+        VerticalButtonTextAlign ver_text_align,
         int texture_x_offset,
         int texture_y_offset,
         Texture &texture,
@@ -63,7 +68,10 @@ public:
 
     void render(SDL_Renderer *renderer) const;
 
-    [[nodiscard]] bool in_bounds(const Point &p) const;
+    [[nodiscard]] bool in_bounds(const Point &p) const {
+        return m_x <= p.x() && p.x() < m_x + m_width && m_y <= p.y() &&
+               p.y() < m_y + m_height;
+    }
 
     [[nodiscard]] Point get_coords() const {
         return {m_x, m_y};

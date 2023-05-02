@@ -40,6 +40,7 @@ add_executable(graphics_client
         src/graphics_point.cpp
         src/graphics_segment.cpp
         src/graphics_shapes.cpp
+        src/graphics_texture.cpp
         src/map.cpp
         src/map_cell.cpp
         src/map_client.cpp

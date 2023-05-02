@@ -14,10 +14,8 @@
 #include <vector>
 
 namespace runebound::client {
-// client class, is called in main function, contains everything that is in use
 class Client {
 private:
-    // network
     bool m_joined_to_game{false};
     ::boost::asio::io_context m_io_context;
     ::boost::asio::executor_work_guard<::boost::asio::io_context::executor_type>
@@ -25,37 +23,31 @@ private:
     ::runebound::network::Client m_network_client =
         ::runebound::network::Client(m_io_context, "127.0.0.1", 4444, "client");
 
-    // game and board
     ::runebound::graphics::Board m_board{};
     ::std::size_t m_game_list_start_index{0};
     ::std::size_t m_game_list_show_amount{10};
     ::std::vector<::runebound::graphics::Button> m_game_list{};
 
-    // graphics
     SDL_Window *m_window{nullptr};
     SDL_Renderer *m_renderer{nullptr};
     ::std::map<::std::string, TTF_Font *> m_fonts{};
     ::std::map<::std::string, ::runebound::graphics::Texture> m_images{};
 
-    // main menu window
     ::std::vector<::runebound::graphics::Texture> m_main_menu_textures{};
     ::std::vector<::runebound::graphics::Button> m_main_menu_buttons{};
     ::std::vector<::runebound::graphics::TextField> m_main_menu_text_fields{};
     ::std::size_t m_main_menu_active_text_field{0};
 
-    // game window
     ::std::vector<::runebound::graphics::Texture> m_game_textures{};
     ::std::vector<::runebound::graphics::Button> m_game_buttons{};
     ::std::vector<::runebound::graphics::Button> m_character_list{};
     bool m_character_selected{false};
 
-    // time
     bool m_is_running{false};
     uint32_t m_frame_time{0};
     uint64_t m_counter{0};
     uint32_t m_prev_frame_time{0};
 
-    // mouse
     bool m_mouse_pressed{false};
     ::runebound::graphics::Point m_mouse_pos{};
 

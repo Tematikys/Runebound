@@ -55,7 +55,9 @@ void Client::init_game() {
         m_renderer, m_fonts["FreeMono30"], "Main menu", {0x00, 0x00, 0x00, 0xFF}
     );
     m_game_buttons.push_back(::runebound::graphics::Button(
-        638, 0, texture.width(), texture.height(), 0, 0, texture,
+        615, 5, 180, 30,
+        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
         [this]() {
             m_network_client.exit_game();
             m_joined_to_game = false;
@@ -65,28 +67,44 @@ void Client::init_game() {
     ));
     // ===== MAIN MENU BUTTON =====
 
+    // ===== EXIT BUTTON =====
+    texture.load_text_from_string(
+        m_renderer, m_fonts["FreeMono30"], "Exit", {0x00, 0x00, 0x00, 0xFF}
+    );
+    m_game_buttons.push_back(::runebound::graphics::Button(
+        615, 40, 180, 30,
+        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
+        [this]() {
+            m_is_running = false;
+            m_network_client.exit_game();
+        },
+        []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    ));
+    // ===== EXIT BUTTON =====
+
     // ===== THROW DICE BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Throw dice",
         {0x00, 0x00, 0x00, 0xFF}
     );
+    // ===== THROW DICE BUTTON =====
     m_game_buttons.push_back(::runebound::graphics::Button(
-        ::runebound::graphics::WINDOW_WIDTH - texture.width() - 5,
-        ::runebound::graphics::WINDOW_HEIGHT - texture.height() - 5,
-        texture.width(), texture.height(), 0, 0, texture,
+        615, 765, 180, 30,
+        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
         [this]() { m_network_client.throw_move_dice(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
-    // ===== THROW DICE BUTTON =====
 
     // ===== RELAX BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Relax", {0x00, 0x00, 0x00, 0xFF}
     );
     m_game_buttons.push_back(::runebound::graphics::Button(
-        ::runebound::graphics::WINDOW_WIDTH - texture.width() - 5,
-        ::runebound::graphics::WINDOW_HEIGHT - texture.height() - 40,
-        texture.width(), texture.height(), 0, 0, texture,
+        615, 730, 180, 30,
+        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
         [this]() { m_network_client.relax(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
@@ -97,52 +115,38 @@ void Client::init_game() {
         m_renderer, m_fonts["FreeMono30"], "Pass", {0x00, 0x00, 0x00, 0xFF}
     );
     m_game_buttons.push_back(::runebound::graphics::Button(
-        ::runebound::graphics::WINDOW_WIDTH - texture.width() - 5,
-        ::runebound::graphics::WINDOW_HEIGHT - texture.height() - 75,
-        texture.width(), texture.height(), 0, 0, texture,
+        615, 695, 180, 30,
+        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
         [this]() { m_network_client.pass(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== PASS BUTTON =====
-
-    // ===== EXIT BUTTON =====
-    texture.load_text_from_string(
-        m_renderer, m_fonts["FreeMono30"], "Exit", {0x00, 0x00, 0x00, 0xFF}
-    );
-    m_game_buttons.push_back(::runebound::graphics::Button(
-        728, 30, texture.width(), texture.height(), 0, 0, texture,
-        [this]() {
-            m_is_running = false;
-            m_network_client.exit_game();
-        },
-        []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    ));
-    // ===== EXIT BUTTON =====
 }
 
 void Client::init_main_menu() {
     ::runebound::graphics::Texture texture;
 
     // ===== TEXT FIELD BUTTON =====
-    texture.load_text_from_string(
-        m_renderer, m_fonts["FreeMono50"], "                ",
-        {0x00, 0x00, 0x00, 0xFF}
-    );
     ::runebound::graphics::Button button(
-        35, 35, texture.width(), texture.height(), 0, 0, texture,
+        35, 35, 30 * 16, 50,
+        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
         [this]() { m_main_menu_active_text_field = 1; }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
     ::runebound::graphics::TextField text_field("new game", button, 16);
     m_main_menu_text_fields.push_back(::std::move(text_field));
-    // ===== TEXT FIELD =====
+    // ===== TEXT FIELD BUTTON =====
 
     // ===== ADD GAME BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono50"], "Add game", {0x00, 0x00, 0x00, 0xFF}
     );
     m_main_menu_buttons.push_back(::runebound::graphics::Button(
-        525, 35, texture.width(), texture.height(), 0, 0, texture,
+        525, 35, texture.width(), texture.height(),
+        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
         [this]() {
             if (!m_main_menu_text_fields[0].get().empty()) {
                 m_network_client.add_game(m_main_menu_text_fields[0].get());
@@ -158,7 +162,9 @@ void Client::init_main_menu() {
         m_renderer, m_fonts["FreeMono50"], "Exit", {0x00, 0x00, 0x00, 0xFF}
     );
     m_main_menu_buttons.push_back(::runebound::graphics::Button(
-        645, 715, texture.width(), texture.height(), 0, 0, texture,
+        645, 715, texture.width(), texture.height(),
+        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
         [&is_running = m_is_running]() { is_running = false; }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
@@ -397,13 +403,16 @@ void Client::game_update() {
                     break;
             }
             ::runebound::graphics::Texture texture;
-            ::runebound::graphics::generate_text(
-                m_renderer, texture, name, m_fonts["FreeMono30"],
+            texture.load_text_from_string(
+                m_renderer, m_fonts["FreeMono30"], name,
                 {0x00, 0x00, 0x00, 0xFF}
             );
             ::runebound::graphics::Button button(
                 0, i * (texture.height() + 5), texture.width(),
-                texture.height(), 0, 0, texture,
+                texture.height(),
+                ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
+                ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0,
+                texture,
                 [character, this]() {
                     ::std::cout << "CLicked" << ::std::endl;
                     m_character_selected = true;
@@ -460,16 +469,19 @@ void Client::main_menu_update() {
              );
          ++i) {
         ::runebound::graphics::Texture texture;
-        ::runebound::graphics::generate_text(
-            m_renderer, texture, m_network_client.get_game_names()[i],
-            m_fonts["FreeMono50"], {0x00, 0x00, 0x00, 0xFF}
+        texture.load_text_from_string(
+            m_renderer, m_fonts["FreeMono50"],
+            m_network_client.get_game_names()[i], {0x00, 0x00, 0x00, 0xFF}
         );
         ::runebound::graphics::Button button(
             45,
             static_cast<int>(i - m_game_list_start_index) *
                     (texture.height() + 5) +
                 105,
-            texture.width(), texture.height(), 0, 0, texture,
+            texture.width(), texture.height(),
+            ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
+            ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0,
+            texture,
             [i, this]() {
                 m_network_client.join_game(m_network_client.get_game_names()[i]
                 );

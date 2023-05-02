@@ -37,6 +37,12 @@ extern const int WINDOW_HEIGHT;
 
 extern const int WINDOW_FPS;
 
-extern const ::std::map<::runebound::dice::HandDice, ::std::pair<SDL_Color, SDL_Color>> DICE_COLOR;
+extern const ::std::
+    map<::runebound::dice::HandDice, ::std::pair<SDL_Color, SDL_Color>>
+        DICE_COLOR;
+
+enum class HorizontalButtonTextAlign { NONE, LEFT, CENTER, RIGHT };
+
+enum class VerticalButtonTextAlign { NONE, TOP, CENTER, BOTTOM };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_CONFIG_HPP_

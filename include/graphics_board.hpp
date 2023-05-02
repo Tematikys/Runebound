@@ -12,37 +12,31 @@
 #include <vector>
 
 namespace runebound::graphics {
-// Board class, contains pre-made map
 class Board {
 private:
-    // cells
     ::std::vector<HexagonShape> m_cells{};
     ::std::vector<SDL_Color> m_cell_fill_color{};
     ::std::vector<SDL_Color> m_cell_border_color{};
     ::std::size_t m_cell_amount{0};
     ::std::size_t m_selected_cell{0xFFFF};
 
-    // tokens
     ::std::vector<CircleShape> m_tokens{};
     ::std::vector<SDL_Color> m_token_fill_color{};
     ::std::vector<SDL_Color> m_token_border_color{};
     ::std::size_t m_token_amount{0};
     ::std::size_t m_selected_token{0xFFFF};
 
-    // specials
     ::std::vector<SquareShape> m_specials{};
     ::std::vector<SDL_Color> m_special_fill_color{};
     ::std::vector<SDL_Color> m_special_border_color{};
     ::std::size_t m_special_amount{0};
 
-    // rivers
     ::std::vector<Segment> m_rivers{};
     ::std::vector<SDL_Color> m_river_color{};
     ::std::size_t m_river_amount{0};
     // TODO refactor
     ::std::vector<bool> m_is_connected_to_town = {};
 
-    // roads
     ::std::vector<Segment> m_roads{};
     ::std::vector<SDL_Color> m_road_color{};
     ::std::size_t m_road_amount{0};
