@@ -5,6 +5,7 @@
 #include "point.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
+#include "product.hpp"
 
 namespace runebound {
 namespace game {

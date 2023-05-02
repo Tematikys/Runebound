@@ -28,6 +28,10 @@ struct Character;
 struct CharacterClient;
 }  // namespace character
 
+namespace trade {
+struct Product;
+} // namespace trade
+
 namespace fight {
 struct FightToken;
 struct Fight;
