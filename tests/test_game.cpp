@@ -146,8 +146,7 @@ TEST_CASE("cards") {
     CHECK(lord->get_cards(runebound::AdventureType::RESEARCH).size() == 1);
     if (outcomes.empty()) {
         game.complete_card_research(lord, -1);
-    }
-    else {
+    } else {
         game.complete_card_research(lord, outcomes.back());
     }
     int trophies = 0;

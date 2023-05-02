@@ -49,6 +49,8 @@ void to_json(nlohmann::json &json, const CardResearch &card) {
             card.m_outcomes[outcome].m_delta_gold;
         json_outcome[outcome]["m_delta_health"] =
             card.m_outcomes[outcome].m_delta_health;
+        json_outcome[outcome]["m_knowledge_token"] =
+            card.m_outcomes[outcome].m_knowledge_token;
         json_outcome[outcome]["m_necessary_result"] =
             card.m_outcomes[outcome].m_necessary_result;
     }
@@ -71,6 +73,8 @@ void from_json(const nlohmann::json &json, CardResearch &card, map::Map &map) {
             json_outcome[outcome]["m_delta_gold"];
         card.m_outcomes[outcome].m_delta_health =
             json_outcome[outcome]["m_delta_health"];
+        card.m_outcomes[outcome].m_knowledge_token =
+            json_outcome[outcome]["m_knowledge_token"];
         card.m_outcomes[outcome].m_necessary_result.resize(
             json_outcome[outcome]["m_necessary_result"].size()
         );

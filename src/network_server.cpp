@@ -136,7 +136,7 @@ public:
             }
 
             if (data["action type"] == "pass") {
-                m_game->start_next_character_turn();
+                m_game->start_next_character_turn(user_character[m_user_name]);
                 for (const std::string &user_name : game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
                 }
