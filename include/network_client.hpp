@@ -156,7 +156,7 @@ public:
     }
 
     [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
-        return m_game_client.m_last_dice_result;
+        return m_game_client.m_last_dice_movement_result;
     };
 
     [[nodiscard]] character::StandardCharacter get_yourself_character() const {
