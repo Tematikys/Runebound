@@ -126,7 +126,7 @@ public:
             }
             if (data["action type"] == "make move") {
                 int x = data["x"], y = data["y"];
-                auto dice = m_game->get_last_dice_result();
+                auto dice = m_game->get_last_dice_movement_result();
                 auto path = m_game->make_move(
                     user_character[m_user_name], {x, y}, dice
                 );

@@ -27,8 +27,8 @@ add_executable(graphics_client
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
-        src/generator_cards_fight.cpp
-        src/generator_characters.cpp
+        generators/generator_cards_fight.cpp
+        generators/generator_characters.cpp
         src/graphics.cpp
         src/graphics_board.cpp
         src/graphics_button.cpp
@@ -64,8 +64,9 @@ add_executable(network_server
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
-        src/generator_cards_fight.cpp
-        src/generator_characters.cpp
+        src/card_meeting.cpp
+        generators/generator_cards_fight.cpp
+        generators/generator_characters.cpp
         src/map.cpp
         src/map_cell.cpp
         src/map_client.cpp
@@ -86,8 +87,8 @@ add_executable(network_client
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
-        src/generator_cards_fight.cpp
-        src/generator_characters.cpp
+        generators/generator_cards_fight.cpp
+        generators/generator_characters.cpp
         src/map.cpp
         src/map_cell.cpp
         src/map_client.cpp
@@ -96,7 +97,7 @@ add_executable(network_client
 target_link_libraries(network_client ${Boost_LIBRARIES} ws2_32 wsock32)
 # ===== NETWORK CLIENT ===== #
 
-# ===== LOGICS? ===== #
+# ===== LOGICS ===== #
 add_executable(${PROJECT_NAME}
         src/card_adventure.cpp
         src/card_research.cpp
@@ -111,14 +112,18 @@ add_executable(${PROJECT_NAME}
         src/game_client.cpp
         src/character_client.cpp
         src/map_client.cpp
-        #src/test_fight.cpp
         src/fight.cpp
-        src/generator_characters.cpp
-        src/test_game.cpp
         src/card_fight.cpp
-        src/generator_cards_fight.cpp)
+        src/card_meeting.cpp
+        #tests/test_fight.cpp
+        tests/test_game.cpp
+        generators/generator_cards_fight.cpp
+        generators/generator_characters.cpp
+        generators/generator_cards_meeting.cpp
+        generators/generator_cards_research.cpp
+        )
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
-# ===== LOGICS? ===== #
+# ===== LOGICS ===== #
 
 
 

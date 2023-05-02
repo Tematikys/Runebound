@@ -56,6 +56,19 @@ void Character::add_card(AdventureType type, unsigned int card) {
     if (type == AdventureType::RESEARCH) {
         m_cards_research.insert(card);
     }
+    if (type == AdventureType::MEETING) {
+        m_cards_meeting.insert(card);
+    }
+}
+
+bool Character::check_card(AdventureType type, unsigned int card) const {
+    if (type == AdventureType::MEETING) {
+        return m_cards_meeting.count(card) != 0;
+    }
+    if (type == AdventureType::FIGHT) {
+        return m_cards_fight.count(card) != 0;
+    }
+    return m_cards_research.count(card) != 0;
 }
 
 void Character::pop_card(AdventureType type, unsigned int card) {
@@ -64,6 +77,9 @@ void Character::pop_card(AdventureType type, unsigned int card) {
     }
     if (type == AdventureType::FIGHT) {
         m_cards_fight.erase(card);
+    }
+    if (type == AdventureType::MEETING) {
+        m_cards_meeting.erase(card);
     }
 }
 
@@ -89,6 +105,7 @@ void to_json(nlohmann::json &json, const Character &character) {
     json["m_fight_tokens"] = character.m_fight_tokens;
     json["m_trophies"] = character.m_trophies;
     json["m_standard_character"] = character.m_standard_character;
+    json["m_characteristics"] = character.m_characteristics;
 }
 
 void from_json(const nlohmann::json &json, Character &character) {
@@ -103,6 +120,7 @@ void from_json(const nlohmann::json &json, Character &character) {
     character.m_current_position = json["m_current_position"];
     character.m_tokens = json["m_tokens"];
     character.m_standard_character = json["m_standard_character"];
+    character.m_characteristics = json["m_characteristics"];
     character.m_fight_tokens.clear();
     for (const auto &fight_token : json["m_fight_tokens"]) {
         character.m_fight_tokens.push_back(fight_token);

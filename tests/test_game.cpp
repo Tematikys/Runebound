@@ -2,6 +2,10 @@
 #include "game.hpp"
 
 TEST_CASE("game") {
+    ::runebound::generator::generate_characters();
+    ::runebound::generator::generate_cards_fight();
+    ::runebound::generator::generate_cards_meeting();
+    ::runebound::generator::generate_cards_research();
     ::runebound::game::Game game;
     using namespace runebound::fight;
     std::vector<FightToken> character_tokens = {
@@ -42,14 +46,14 @@ TEST_CASE("game") {
         runebound::dice::HandDice::JOKER};
     game.make_move(first, ::runebound::Point(0, 1), dice_res);
     CHECK(game.get_position_character(first) == runebound::Point(0, 1));
-    CHECK(first->get_action_points() == 0);
-    game.start_next_character_turn();
+    CHECK(first->get_action_points() == 1);
+    game.start_next_character_turn(first);
     CHECK(game.get_turn() == 1);
     CHECK(second->get_action_points() == 3);
     auto third = game.make_character(
         100, 7, runebound::Point(0, 4), 4, 2, "Katya", character_tokens
     );
-    game.start_next_character_turn();
+    game.start_next_character_turn(second);
     CHECK(game.get_turn() == 2);
     game.take_token(third);
     CHECK(third->get_state() == runebound::character::StateCharacter::FIGHT);
@@ -78,13 +82,16 @@ TEST_CASE("generating characters") {
         runebound::dice::HandDice::JOKER};
     CHECK(lissa->get_action_points() == 3);
     game.make_move(lissa, runebound::Point(9, 13), dice_res);
-    CHECK(lissa->get_action_points() == 1);
+    CHECK(lissa->get_action_points() == 2);
     game.relax(lissa);
-    CHECK(lissa->get_action_points() == 0);
-    game.start_next_character_turn();
+    CHECK(lissa->get_action_points() == 1);
+    game.start_next_character_turn(lissa);
     CHECK(corbin->get_action_points() == 3);
-    game.make_move(corbin, runebound::Point(12, 6), dice_res);
-    CHECK(corbin->get_action_points() == 1);
+    auto res = game.throw_movement_dice(corbin);
+    CHECK(res == game.get_last_dice_movement_result());
+    CHECK(static_cast<unsigned int>(res.size()) == corbin->get_speed());
+    game.make_move(corbin, runebound::Point(12, 6), res);
+    CHECK(corbin->get_action_points() == 2);
     CHECK(
         corbin->get_standard_character() ==
         runebound::character::StandardCharacter::CORBIN
@@ -93,9 +100,7 @@ TEST_CASE("generating characters") {
         lissa->get_standard_character() ==
         runebound::character::StandardCharacter::LISSA
     );
-    auto res = game.throw_movement_dice(corbin);
-    CHECK(res == game.get_last_dice_result());
-    CHECK(static_cast<unsigned int>(res.size()) == corbin->get_speed());
+    CHECK(0 == game.get_last_dice_movement_result().size());
 }
 
 TEST_CASE("card_fight") {
@@ -103,14 +108,10 @@ TEST_CASE("card_fight") {
     auto lord = game.make_character(
         runebound::character::StandardCharacter::LORD_HAWTHORNE
     );
-    std::vector<runebound::dice::HandDice> dice_res{
-        runebound::dice::HandDice::PLAIN,
-        runebound::dice::HandDice::PLAIN_FOREST};
-    game.make_move(lord, runebound::Point(13, 14), dice_res);
-    CHECK(lord->get_position() == runebound::Point(13, 14));
     game.relax(lord);
-    CHECK(lord->get_action_points() == 0);
-    game.start_next_character_turn();
+    lord->set_position(runebound::Point(13, 14));
+    CHECK(lord->get_action_points() == 2);
+    game.start_next_character_turn(lord);
     game.take_token(lord);
     CHECK(lord->get_state() == runebound::character::StateCharacter::FIGHT);
     auto fight = lord->get_current_fight();
@@ -121,4 +122,60 @@ TEST_CASE("card_fight") {
     game.end_fight(lord);
     CHECK(lord->get_cards_fight().size() == 0);
     CHECK(lord->get_trophies().size() == 1);
+}
+
+TEST_CASE("cards") {
+    ::runebound::game::Game game;
+    auto lord = game.make_character(
+        runebound::character::StandardCharacter::LORD_HAWTHORNE
+    );
+    lord->set_position(runebound::Point(13, 0));
+    game.take_token(lord);
+    CHECK(lord->get_action_points() == 1);
+    auto card = *(lord->get_cards(runebound::AdventureType::RESEARCH).begin());
+    auto copy_card = game.get_card_research(card);
+    auto territory = copy_card.get_required_territory();
+    auto cells = game.get_territory_cells(territory);
+    lord->set_position(cells[0]);
+    game.start_card_execution(lord, card, runebound::AdventureType::RESEARCH);
+    CHECK(card == lord->get_active_card_research());
+    game.throw_research_dice(lord);
+    CHECK(game.get_last_dice_movement_result().size() == 0);
+    CHECK(game.get_last_dice_research_result().size() == 3);
+    auto outcomes = game.get_possible_outcomes(lord);
+    CHECK(lord->get_cards(runebound::AdventureType::RESEARCH).size() == 1);
+    if (outcomes.empty()) {
+        game.complete_card_research(lord, -1);
+    }
+    else {
+        game.complete_card_research(lord, outcomes.back());
+    }
+    int trophies = 0;
+    if (outcomes.size() > 0) {
+        CHECK(lord->get_trophies().size() == 1);
+        trophies = 1;
+    } else {
+        CHECK(lord->get_trophies().size() == 0);
+    }
+    CHECK(lord->get_cards(runebound::AdventureType::RESEARCH).size() == 0);
+    CHECK(lord->get_action_points() == 1);
+    CHECK(game.get_last_dice_movement_result().size() == 0);
+    CHECK(game.get_last_dice_research_result().size() == 0);
+    game.start_next_character_turn(lord);
+    CHECK(lord->get_action_points() == 3);
+    lord->set_position(runebound::Point(0, 0));
+    game.take_token(lord);
+    CHECK(lord->get_action_points() == 1);
+    auto card_meeting =
+        *(lord->get_cards(runebound::AdventureType::MEETING).begin());
+    game.start_card_execution(
+        lord, card_meeting, runebound::AdventureType::MEETING
+    );
+    if (game.check_characteristic(
+            lord, card, runebound::cards::OptionMeeting::FIRST
+        )) {
+        CHECK(lord->get_trophies().size() == trophies + 1);
+    } else {
+        CHECK(lord->get_trophies().size() == trophies);
+    }
 }

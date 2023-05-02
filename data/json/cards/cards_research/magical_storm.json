@@ -1,0 +1,32 @@
+{
+    "m_card_name": "Magical Storm",
+    "m_card_type": 1,
+    "m_completed": false,
+    "m_outcomes": [
+        {
+            "m_delta_gold": 0,
+            "m_delta_health": -2,
+            "m_necessary_result": [
+                1
+            ]
+        },
+        {
+            "m_delta_gold": 0,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                1,
+                0
+            ]
+        },
+        {
+            "m_delta_gold": 4,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                1,
+                2,
+                0
+            ]
+        }
+    ],
+    "m_required_territory": "The Fangs of the Mennara"
+}

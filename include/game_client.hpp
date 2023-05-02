@@ -17,14 +17,14 @@ public:
     std::vector<::runebound::character::Character> m_characters;
     std::vector<::runebound::character::StandardCharacter>
         m_remaining_standard_characters;
-    std::vector<dice::HandDice> m_last_dice_result;
+    std::vector<dice::HandDice> m_last_dice_movement_result;
 
     GameClient() = default;
 
     explicit GameClient(const Game &game)
         : m_map(game.get_map()),
           m_characters(game.get_character_without_shared_ptr()),
-          m_last_dice_result(game.get_last_dice_result()) {
+          m_last_dice_movement_result(game.get_last_dice_movement_result()) {
         auto set_remaining =
             std::move(game.get_remaining_standard_characters());
         std::vector<::runebound::character::StandardCharacter> vec_remaining(

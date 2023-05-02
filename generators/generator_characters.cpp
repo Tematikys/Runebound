@@ -29,7 +29,8 @@ void generate_characters() {
          ::runebound::fight::FightToken(
              fight::HandFightTokens::DEXTERITY, 1, 1,
              fight::HandFightTokens::MAGICAL_DAMAGE, 0, 1
-         )}
+         )},
+        0, 3, 2
     );
     write_to_file(master_thorn, "data/json/characters/master_thorn.json");
 
@@ -46,7 +47,8 @@ void generate_characters() {
          ::runebound::fight::FightToken(
              fight::HandFightTokens::MAGICAL_DAMAGE, 1, 1,
              fight::HandFightTokens::PHYSICAL_DAMAGE, 0, 1
-         )}
+         )},
+        2, 1, 2
     );
     write_to_file(elder_mok, "data/json/characters/elder_mok.json");
 
@@ -63,7 +65,8 @@ void generate_characters() {
          ::runebound::fight::FightToken(
              fight::HandFightTokens::DEXTERITY, 1, 1,
              fight::HandFightTokens::PHYSICAL_DAMAGE, 1, 1
-         )}
+         )},
+        2, 2, 2
     );
     write_to_file(lissa, "data/json/characters/lissa.json");
 
@@ -80,7 +83,8 @@ void generate_characters() {
          ::runebound::fight::FightToken(
              fight::HandFightTokens::PHYSICAL_DAMAGE, 1, 1,
              fight::HandFightTokens::DEXTERITY, 0, 1
-         )}
+         )},
+        2, 2, 1
     );
     write_to_file(
         laurel_from_bloodwood, "data/json/characters/laurel_from_bloodwood.json"
@@ -99,7 +103,8 @@ void generate_characters() {
          ::runebound::fight::FightToken(
              fight::HandFightTokens::PHYSICAL_DAMAGE, 1, 1,
              fight::HandFightTokens::NOTHING, 0, 1
-         )}
+         )},
+        3, 1, 1
     );
     write_to_file(lord_hawthorne, "data/json/characters/lord_hawthorne.json");
 
@@ -116,7 +121,8 @@ void generate_characters() {
          ::runebound::fight::FightToken(
              fight::HandFightTokens::DEXTERITY, 0, 1,
              fight::HandFightTokens::PHYSICAL_DAMAGE, 0, 1
-         )}
+         )},
+        3, 2, 0
     );
     write_to_file(corbin, "data/json/characters/corbin.json");
 }

@@ -36,18 +36,23 @@ enum class StandardCharacter {
 struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
+    std::map<Characteristic, int> m_characteristics;
     int m_action_points = 3;
     int m_max_action_points = 3;
+    unsigned int m_active_card_meeting;
+    unsigned int m_active_card_research;
     StandardCharacter m_standard_character = StandardCharacter::LISSA;
     StateCharacter m_current_state = StateCharacter::NORMAL_GAME;
     std::string m_name;
     std::set<unsigned int> m_cards_research;
     std::set<unsigned int> m_cards_fight;
+    std::set<unsigned int> m_cards_meeting;
     std::set<std::pair<AdventureType, unsigned int>> m_trophies;
 
     std::map<runebound::token::Token, int> m_tokens;
     int m_max_health;
     int m_gold, m_health;
+    int m_knowledge_token = 0;
     Point m_current_position;
     std::shared_ptr<::runebound::fight::Fight> m_current_fight = nullptr;
     std::vector<::runebound::fight::FightToken> m_fight_tokens;
@@ -92,6 +97,27 @@ public:
         return *(--m_cards_fight.end());
     }
 
+    [[nodiscard]] int get_knowledge_token() const {
+        return m_knowledge_token;
+    }
+
+    void change_knowledge_token(int delta) {
+        m_knowledge_token += delta;
+    }
+
+    [[nodiscard]] std::set<unsigned int> get_cards(AdventureType type) const {
+        if (type == AdventureType::RESEARCH) {
+            return m_cards_research;
+        } else if (type == AdventureType::FIGHT) {
+            return m_cards_fight;
+        }
+        return m_cards_meeting;
+    }
+
+    [[nodiscard]] int get_characteristic(Characteristic characteristic) {
+        return m_characteristics[characteristic];
+    }
+
     void set_position(const Point &new_position) {
         m_current_position = new_position;
     }
@@ -105,6 +131,8 @@ public:
         m_current_fight = std::move(fight);
     }
 
+    [[nodiscard]] bool check_card(AdventureType type, unsigned int card) const;
+
     void change_gold(int delta_gold) {
         m_gold += delta_gold;
     }
@@ -113,6 +141,23 @@ public:
 
     void add_trophy(AdventureType type, unsigned int card) {
         m_trophies.insert({type, card});
+    }
+
+    void make_active_card(AdventureType type, unsigned int card) {
+        if (type == AdventureType::MEETING) {
+            m_active_card_meeting = card;
+        }
+        if (type == AdventureType::RESEARCH) {
+            m_active_card_research = card;
+        }
+    }
+
+    [[nodiscard]] unsigned int get_active_card_research() const {
+        return m_active_card_research;
+    }
+
+    [[nodiscard]] unsigned int get_active_card_meeting() const {
+        return m_active_card_meeting;
     }
 
     [[nodiscard]] std::set<std::pair<AdventureType, unsigned int>> get_trophies(
@@ -136,7 +181,11 @@ public:
         unsigned int hand_limit,
         unsigned int speed,
         std::string name,
-        const std::vector<fight::FightToken> fight_tokens
+        std::vector<fight::FightToken> fight_tokens,
+        int body,
+        int intelligence,
+        int spirit
+
     )
         : m_gold(gold),
           m_health(health),
@@ -145,7 +194,10 @@ public:
           m_hand_limit(hand_limit),
           m_speed(speed),
           m_name(std::move(name)),
-          m_fight_tokens(fight_tokens) {
+          m_fight_tokens(std::move(fight_tokens)) {
+        m_characteristics[Characteristic::BODY] = body;
+        m_characteristics[Characteristic::INTELLIGENCE] = intelligence;
+        m_characteristics[Characteristic::SPIRIT] = spirit;
     }
 
     [[nodiscard]] std::string get_name() const {
@@ -192,7 +244,7 @@ public:
     friend void to_json(nlohmann::json &json, const Character &character);
     friend void from_json(const nlohmann::json &json, Character &character);
 
-    nlohmann::json to_json() {
+    [[nodiscard]] nlohmann::json to_json() const {
         nlohmann::json json;
         ::runebound::character::to_json(json, *this);
         return json;

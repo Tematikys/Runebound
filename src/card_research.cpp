@@ -1,11 +1,12 @@
 #include "card_research.hpp"
 #include <nlohmann/json.hpp>
+#include "map.hpp"
 
 namespace runebound {
 namespace cards {
 
-bool CardResearch::check_completion_task(int x, int y) {
-    if (m_task_position_x == x && m_task_position_y == y) {
+bool CardResearch::check_completion_task(const Point &cell) {
+    if (m_required_cells.count(cell) > 0) {
         m_completed = true;
     }
     return m_completed;
@@ -13,10 +14,8 @@ bool CardResearch::check_completion_task(int x, int y) {
 
 bool CardResearch::check_outcome(
     int index,
-    std::vector<::runebound::dice::HandDice> &result_dice,
-    int &delta_gold,
-    int &delta_health
-) {
+    std::vector<::runebound::dice::HandDice> &result_dice
+) const {
     do {
         bool completed = true;
         for (std::size_t i = 0;
@@ -33,8 +32,6 @@ bool CardResearch::check_outcome(
             }
         }
         if (completed) {
-            delta_health += m_outcomes[index].m_delta_health;
-            delta_gold += m_outcomes[index].m_delta_gold;
             return true;
         }
     } while (std::next_permutation(result_dice.begin(), result_dice.end()));
@@ -42,9 +39,9 @@ bool CardResearch::check_outcome(
 }
 
 void to_json(nlohmann::json &json, const CardResearch &card) {
-    json["m_task_position_x"] = card.m_task_position_x;
-    json["m_task_position_y"] = card.m_task_position_y;
+    json["m_required_territory"] = card.m_required_territory;
     json["m_completed"] = card.m_completed;
+    json["m_card_name"] = card.m_card_name;
     json["m_card_type"] = card.m_card_type;
     std::vector<nlohmann::json> json_outcome(card.m_outcomes.size());
     for (std::size_t outcome = 0; outcome < card.m_outcomes.size(); ++outcome) {
@@ -58,10 +55,14 @@ void to_json(nlohmann::json &json, const CardResearch &card) {
     json["m_outcomes"] = json_outcome;
 }
 
-void from_json(const nlohmann::json &json, CardResearch &card) {
-    card.m_task_position_x = json["m_task_position_x"];
-    card.m_task_position_y = json["m_task_position_y"];
+void from_json(const nlohmann::json &json, CardResearch &card, map::Map &map) {
+    card.m_required_territory = json["m_required_territory"];
+    for (const auto &cell :
+         map.get_territory_cells(card.m_required_territory)) {
+        card.m_required_cells.insert(cell);
+    }
     card.m_completed = json["m_completed"];
+    card.m_card_name = json["m_card_name"];
     card.m_card_type = json["m_card_type"];
     std::vector<nlohmann::json> json_outcome = json["m_outcomes"];
     card.m_outcomes.resize(json_outcome.size());

@@ -1,0 +1,17 @@
+{
+    "m_card_name": "Desperate Peasant",
+    "m_card_type": 0,
+    "m_first_option": {
+        "change_characteristic": 0,
+        "characteristic": 0,
+        "gold": 0,
+        "knowledge_token": 0
+    },
+    "m_second_option": {
+        "change_characteristic": -1,
+        "characteristic": 0,
+        "gold": 1,
+        "knowledge_token": 0
+    },
+    "m_trophy": false
+}

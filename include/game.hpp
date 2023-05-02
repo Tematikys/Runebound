@@ -7,11 +7,13 @@
 #include <utility>
 #include <vector>
 #include "card_fight.hpp"
+#include "card_meeting.hpp"
 #include "card_research.hpp"
 #include "character.hpp"
 #include "fight.hpp"
 #include "map.hpp"
 #include "runebound_fwd.hpp"
+#include "skill_card.hpp"
 #include "tokens.hpp"
 
 namespace runebound {
@@ -24,6 +26,11 @@ namespace game {
 struct WrongCharacterTurnException : std::runtime_error {
     WrongCharacterTurnException()
         : std::runtime_error("Wrong character's turn") {
+    }
+};
+
+struct NoCardException : std::runtime_error {
+    NoCardException() : std::runtime_error("This card does not exist") {
     }
 };
 
@@ -54,19 +61,37 @@ struct CharacterAlreadySelected : std::runtime_error {
     }
 };
 
+struct BadOutcomeException : std::runtime_error {
+    BadOutcomeException() : std::runtime_error("You can't get that outcome.") {
+    }
+};
+
+struct WrongCellException : std::runtime_error {
+    WrongCellException()
+        : std::runtime_error("You are not in the correct territory space.") {
+    }
+};
+
 struct Game {
 private:
     ::runebound::map::Map m_map;
     std::vector<std::shared_ptr<::runebound::character::Character>>
         m_characters;
-    std::vector<unsigned int> m_card_deck_research, m_card_deck_fight;
+    std::vector<unsigned int> m_card_deck_research, m_card_deck_fight,
+        m_card_deck_skill, m_card_deck_meeting;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
 
-    std::vector<dice::HandDice> m_last_dice_result;
+    std::vector<dice::HandDice> m_last_dice_movement_result;
+    std::vector<dice::HandDice> m_last_dice_relax_result;
+    std::vector<dice::HandDice> m_last_dice_research_result;
+    std::vector<unsigned int> m_last_characteristic_check;
+
     std::vector<cards::CardResearch> m_all_cards_research;
     std::vector<cards::CardFight> m_all_cards_fight;
+    std::vector<cards::CardMeeting> m_all_cards_meeting;
+    std::vector<cards::SkillCard> m_all_skill_cards;
 
     std::set<character::StandardCharacter> m_remaining_standard_characters = {
         character::StandardCharacter::LISSA,
@@ -89,35 +114,72 @@ private:
         }
     }
 
+    void generate_all_skill_cards();
     void generate_all_cards_fight();
     void generate_all_cards_research();
+    void generate_all_cards_meeting();
 
     void generate_all_cards() {
         generate_all_cards_research();
         generate_all_cards_fight();
+        generate_all_cards_meeting();
+        generate_all_skill_cards();
     }
+
+    bool check_characteristic_private(
+        int number_attempts,
+        Characteristic characteristic
+    );
 
 public:
     Game() {
         generate_all_cards();
     };
 
-    Game &operator=(const Game &other) {
-        m_map = other.m_map;
-        m_characters = other.m_characters;
-        m_card_deck_research = other.m_card_deck_research;
-        m_tokens = other.m_tokens;
-        m_turn = other.m_turn;
-        return *this;
+    [[nodiscard]] cards::CardResearch get_card_research(unsigned int card
+    ) const {
+        return m_all_cards_research[card];
+    }
+
+    [[nodiscard]] cards::CardMeeting get_card_meeting(unsigned int card) const {
+        return m_all_cards_meeting[card];
+    }
+
+    [[nodiscard]] cards::CardFight get_card_fight(unsigned int card) const {
+        return m_all_cards_fight[card];
+    }
+
+    [[nodiscard]] std::vector<Point> get_territory_cells(
+        const std::string territory
+    ) {
+        return m_map.get_territory_cells(territory);
     }
 
     void take_token(const std::shared_ptr<character::Character> &chr);
 
-    [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
-        return m_last_dice_result;
+    [[nodiscard]] std::vector<dice::HandDice> get_last_dice_movement_result(
+    ) const {
+        return m_last_dice_movement_result;
     }
 
-    void start_next_character_turn() {
+    [[nodiscard]] std::vector<dice::HandDice> get_last_dice_research_result(
+    ) const {
+        return m_last_dice_research_result;
+    }
+
+    [[nodiscard]] std::vector<dice::HandDice> get_last_dice_relax_result(
+    ) const {
+        return m_last_dice_relax_result;
+    }
+
+    void start_next_character_turn(
+        const std::shared_ptr<character::Character> &chr
+    ) {
+        check_turn(chr);
+        m_last_dice_movement_result.clear();
+        m_last_dice_research_result.clear();
+        m_last_dice_relax_result.clear();
+        m_last_characteristic_check.clear();
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
     }
@@ -126,17 +188,38 @@ public:
         const std::shared_ptr<character::Character> &chr
     ) {
         check_turn(chr);
-        m_last_dice_result =
+        check_sufficiency_action_points(1);
+        m_last_dice_movement_result =
             ::runebound::dice::get_combination_of_dice(chr->get_speed());
-        return m_last_dice_result;
+        chr->update_action_points(-1);
+        return m_last_dice_movement_result;
+    }
+
+    std::vector<dice::HandDice> throw_research_dice(
+        const std::shared_ptr<character::Character> &chr
+    ) {
+        check_turn(chr);
+        m_last_dice_research_result =
+            ::runebound::dice::get_combination_of_dice(chr->get_speed());
+        return m_last_dice_research_result;
     }
 
     std::vector<dice::HandDice> throw_relax_dice(
         const std::shared_ptr<character::Character> &chr
     ) {
         check_turn(chr);
-        m_last_dice_result = ::runebound::dice::get_combination_of_dice(5);
-        return m_last_dice_result;
+        m_last_dice_relax_result =
+            ::runebound::dice::get_combination_of_dice(5);
+        return m_last_dice_relax_result;
+    }
+
+    std::vector<dice::HandDice> throw_dice(
+        const std::shared_ptr<character::Character> &chr
+    ) {
+        check_turn(chr);
+        m_last_dice_movement_result =
+            ::runebound::dice::get_combination_of_dice(chr->get_speed());
+        return m_last_dice_movement_result;
     }
 
     void end_fight(const std::shared_ptr<character::Character> &chr);
@@ -164,13 +247,13 @@ public:
         unsigned int hand_limit,
         unsigned int speed,
         std::string name,
-        const std::vector<::runebound::fight::FightToken> tokens
+        const std::vector<::runebound::fight::FightToken> &tokens
     ) {
         m_characters.emplace_back(
             std::make_shared<::runebound::character::Character>(
                 ::runebound::character::Character(
                     gold, health, current, hand_limit, speed, std::move(name),
-                    tokens
+                    tokens, 0, 0, 0
                 )
             )
         );
@@ -198,21 +281,63 @@ public:
         return m_turn;
     }
 
-    void check_and_get_card_adventure_because_of_token(
-        std::shared_ptr<character::Character> chr
-    );
-
-    [[nodiscard]] std::vector<::runebound::dice::HandDice> throw_camping_dice(
-        const std::shared_ptr<character::Character> &chr
-    ) const {
-        return ::runebound::dice::get_combination_of_dice(chr->get_speed());
-    }
-
     std::vector<Point> make_move(
         const std::shared_ptr<character::Character> &chr,
         const Point &point,
         std::vector<::runebound::dice::HandDice> &dice_roll_results
     );
+
+    void start_card_execution(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int card,
+        AdventureType type
+    ) {
+        check_turn(chr);
+        if (!chr->check_card(type, card)) {
+            throw NoCardException();
+        }
+
+        if (type == AdventureType::RESEARCH) {
+            auto required_cells = m_map.get_territory_cells(
+                m_all_cards_research[card].get_required_territory()
+            );
+            if (std::find(
+                    required_cells.begin(), required_cells.end(),
+                    chr->get_position()
+                ) == required_cells.end()) {
+                throw WrongCellException();
+            }
+        }
+        chr->make_active_card(type, card);
+    }
+
+    [[nodiscard]] std::vector<std::size_t> get_possible_outcomes(
+        const std::shared_ptr<character::Character> &chr
+    );
+
+    void complete_card_research(
+        const std::shared_ptr<character::Character> &chr,
+        int desired_outcome = -1
+    );
+
+    bool check_characteristic(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int card,
+        cards::OptionMeeting option
+    );
+
+    [[nodiscard]] std::vector<unsigned int> get_last_characteristic_check(
+    ) const {
+        return m_last_characteristic_check;
+    }
+
+    void check_characteristic_additionally(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int card
+    ) {
+        // TODO, card skill when they will be in the game not only as a
+        // characteristic checking card
+    }
 
     // friend void to_json(nlohmann::json &json, const Game &game);
     // friend void from_json(const nlohmann::json &json, Game &game);

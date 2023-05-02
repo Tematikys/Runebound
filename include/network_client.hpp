@@ -14,7 +14,6 @@
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
 
-
 namespace runebound::network {
 class Client {
 public:

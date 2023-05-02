@@ -1,0 +1,32 @@
+{
+    "m_card_name": "My Kitty",
+    "m_card_type": 1,
+    "m_completed": false,
+    "m_outcomes": [
+        {
+            "m_delta_gold": 1,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                4
+            ]
+        },
+        {
+            "m_delta_gold": 0,
+            "m_delta_health": 3,
+            "m_necessary_result": [
+                1,
+                2
+            ]
+        },
+        {
+            "m_delta_gold": 3,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                0,
+                2,
+                1
+            ]
+        }
+    ],
+    "m_required_territory": "Itraitova Forge"
+}

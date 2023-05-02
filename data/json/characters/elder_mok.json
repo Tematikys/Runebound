@@ -2,6 +2,20 @@
     "m_action_points": 3,
     "m_cards_fight": [],
     "m_cards_research": [],
+    "m_characteristics": [
+        [
+            0,
+            2
+        ],
+        [
+            1,
+            1
+        ],
+        [
+            2,
+            2
+        ]
+    ],
     "m_current_position": {
         "x": 13,
         "y": 6

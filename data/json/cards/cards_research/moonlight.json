@@ -1,0 +1,31 @@
+{
+    "m_card_name": "Moonlight",
+    "m_card_type": 1,
+    "m_completed": false,
+    "m_outcomes": [
+        {
+            "m_delta_gold": 1,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                0
+            ]
+        },
+        {
+            "m_delta_gold": 0,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                0,
+                4
+            ]
+        },
+        {
+            "m_delta_gold": 0,
+            "m_delta_health": 0,
+            "m_necessary_result": [
+                0,
+                0
+            ]
+        }
+    ],
+    "m_required_territory": "Moonlight Swamp"
+}

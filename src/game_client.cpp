@@ -12,7 +12,7 @@ void to_json(nlohmann::json &json, const GameClient &game) {
     json["m_map"] = game.m_map;
     json["m_remaining_standard_characters"] =
         game.m_remaining_standard_characters;
-    json["m_last_dice_result"] = game.m_last_dice_result;
+    json["m_last_dice_movement_result"] = game.m_last_dice_movement_result;
 }
 
 void from_json(const nlohmann::json &json, GameClient &game) {
@@ -23,8 +23,9 @@ void from_json(const nlohmann::json &json, GameClient &game) {
             json["m_remaining_standard_characters"].begin(),
             json["m_remaining_standard_characters"].end()
         );
-    game.m_last_dice_result = std::vector<::runebound::dice::HandDice>(
-        json["m_last_dice_result"].begin(), json["m_last_dice_result"].end()
+    game.m_last_dice_movement_result = std::vector<::runebound::dice::HandDice>(
+        json["m_last_dice_movement_result"].begin(),
+        json["m_last_dice_movement_result"].end()
     );
 }
 
