@@ -64,6 +64,7 @@ add_executable(network_server
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
+        src/card_meeting.cpp
         generators/generator_cards_fight.cpp
         generators/generator_characters.cpp
         src/map.cpp

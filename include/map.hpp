@@ -35,8 +35,6 @@ private:
         int count_dice
     ) const;
 
-    bool check_neighbour(const Point &lhs, const Point &rhs) const;
-
 public:
     Map()
         : m_size(STANDARD_SIZE),
@@ -74,6 +72,9 @@ public:
     }
 
     ~Map() = default;
+
+    [[nodiscard]] bool check_neighbour(const Point &lhs, const Point &rhs)
+        const;
 
     [[nodiscard]] std::vector<std::vector<MapCell>> get_full_map() const {
         return m_map;

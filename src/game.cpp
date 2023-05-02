@@ -196,7 +196,13 @@ std::vector<Point> Game::make_move(
     std::vector<::runebound::dice::HandDice> &dice_roll_results
 ) {
     check_turn(chr);
-    check_sufficiency_action_points(2);
+    if (m_last_dice_movement_result.empty() &&
+        m_map.check_neighbour(m_characters[m_turn]->get_position(), end)) {
+        check_sufficiency_action_points(1);
+        m_characters[m_turn]->set_position(end);
+        chr->update_action_points(-1);
+        return {m_characters[m_turn]->get_position(), end};
+    }
     std::vector<Point> result = m_map.check_move(
         m_characters[m_turn]->get_position(), end, dice_roll_results
     );
@@ -204,8 +210,7 @@ std::vector<Point> Game::make_move(
         throw InaccessibleMoveException();
     }
     m_characters[m_turn]->set_position(end);
-    m_characters[m_turn]->update_action_points(-2);
-    m_last_dice_result.clear();
+    m_last_dice_movement_result.clear();
     return result;
 }
 
@@ -216,7 +221,9 @@ std::vector<std::size_t> Game::get_possible_outcomes(
     auto card = chr->get_active_card_research();
     for (std::size_t i = 0;
          i < m_all_cards_research[card].get_outcomes().size(); ++i) {
-        if (m_all_cards_research[card].check_outcome(i, m_last_dice_result)) {
+        if (m_all_cards_research[card].check_outcome(
+                i, m_last_dice_research_result
+            )) {
             outcomes.push_back(i);
         }
     }
@@ -230,10 +237,11 @@ void Game::complete_card_research(
     auto card = chr->get_active_card_research();
     if (desired_outcome < 0) {
         chr->pop_card(AdventureType::RESEARCH, card);
+        m_last_dice_research_result.clear();
         return;
     }
     if (!m_all_cards_research[card].check_outcome(
-            desired_outcome, m_last_dice_result
+            desired_outcome, m_last_dice_research_result
         )) {
         throw BadOutcomeException();
     }
@@ -247,6 +255,7 @@ void Game::complete_card_research(
         m_all_cards_research[card].get_knowledge_token(desired_outcome)
     );
     chr->pop_card(AdventureType::RESEARCH, card);
+    m_last_dice_research_result.clear();
 }
 
 bool Game::check_characteristic(

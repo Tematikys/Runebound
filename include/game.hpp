@@ -83,7 +83,9 @@ private:
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
 
-    std::vector<dice::HandDice> m_last_dice_result;
+    std::vector<dice::HandDice> m_last_dice_movement_result;
+    std::vector<dice::HandDice> m_last_dice_relax_result;
+    std::vector<dice::HandDice> m_last_dice_research_result;
     std::vector<unsigned int> m_last_characteristic_check;
 
     std::vector<cards::CardResearch> m_all_cards_research;
@@ -155,14 +157,29 @@ public:
 
     void take_token(const std::shared_ptr<character::Character> &chr);
 
-    [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
-        return m_last_dice_result;
+    [[nodiscard]] std::vector<dice::HandDice> get_last_dice_movement_result(
+    ) const {
+        return m_last_dice_movement_result;
+    }
+
+    [[nodiscard]] std::vector<dice::HandDice> get_last_dice_research_result(
+    ) const {
+        return m_last_dice_research_result;
+    }
+
+    [[nodiscard]] std::vector<dice::HandDice> get_last_dice_relax_result(
+    ) const {
+        return m_last_dice_relax_result;
     }
 
     void start_next_character_turn(
         const std::shared_ptr<character::Character> &chr
     ) {
         check_turn(chr);
+        m_last_dice_movement_result.clear();
+        m_last_dice_research_result.clear();
+        m_last_dice_relax_result.clear();
+        m_last_characteristic_check.clear();
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
     }
@@ -171,26 +188,38 @@ public:
         const std::shared_ptr<character::Character> &chr
     ) {
         check_turn(chr);
-        m_last_dice_result =
+        check_sufficiency_action_points(1);
+        m_last_dice_movement_result =
             ::runebound::dice::get_combination_of_dice(chr->get_speed());
-        return m_last_dice_result;
+        chr->update_action_points(-1);
+        return m_last_dice_movement_result;
+    }
+
+    std::vector<dice::HandDice> throw_research_dice(
+        const std::shared_ptr<character::Character> &chr
+    ) {
+        check_turn(chr);
+        m_last_dice_research_result =
+            ::runebound::dice::get_combination_of_dice(chr->get_speed());
+        return m_last_dice_research_result;
     }
 
     std::vector<dice::HandDice> throw_relax_dice(
         const std::shared_ptr<character::Character> &chr
     ) {
         check_turn(chr);
-        m_last_dice_result = ::runebound::dice::get_combination_of_dice(5);
-        return m_last_dice_result;
+        m_last_dice_relax_result =
+            ::runebound::dice::get_combination_of_dice(5);
+        return m_last_dice_relax_result;
     }
 
     std::vector<dice::HandDice> throw_dice(
         const std::shared_ptr<character::Character> &chr
     ) {
         check_turn(chr);
-        m_last_dice_result =
+        m_last_dice_movement_result =
             ::runebound::dice::get_combination_of_dice(chr->get_speed());
-        return m_last_dice_result;
+        return m_last_dice_movement_result;
     }
 
     void end_fight(const std::shared_ptr<character::Character> &chr);
