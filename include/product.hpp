@@ -72,6 +72,10 @@ public:
           m_delta_hand_limit(delta_hand_limit) {
     }
 
+    bool operator<(const Product &other) const {
+        return m_product_name < other.m_product_name;
+    }
+
     friend void to_json(nlohmann::json &json, const Product &product);
     friend void from_json(const nlohmann::json &json, Product &product);
 };
