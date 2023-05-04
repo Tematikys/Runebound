@@ -13,6 +13,6 @@ void write_to_file(const T &element, const std::string &file) {
     to_json(json, element);
     out << json.dump(4);
 }
-} // namespace runebound::generator
+}  // namespace runebound::generator
 
-#endif // GENERATORS_HPP_
+#endif  // GENERATORS_HPP_

@@ -1,7 +1,7 @@
 #include <fstream>
 #include "character.hpp"
-#include "nlohmann/json.hpp"
 #include "generators.hpp"
+#include "nlohmann/json.hpp"
 
 namespace runebound::generator {
 

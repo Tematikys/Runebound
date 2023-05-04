@@ -1,7 +1,7 @@
 #include <fstream>
 #include "card_research.hpp"
-#include "nlohmann/json.hpp"
 #include "generators.hpp"
+#include "nlohmann/json.hpp"
 
 namespace runebound::generator {
 
