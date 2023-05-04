@@ -4,6 +4,8 @@
 
 namespace runebound::trade {
 void to_json(nlohmann::json &json, const Product &product) {
+    json["m_product_name"] = product.m_product_name;
+    json["m_place_of_cell"] = product.m_place_of_cell;
     json["m_delta_characteristic"] = product.m_delta_characteristic;
     json["m_delta_max_health"] = product.m_delta_max_health;
     json["m_delta_speed"] = product.m_delta_speed;
@@ -18,6 +20,8 @@ void to_json(nlohmann::json &json, const Product &product) {
 }
 
 void from_json(const nlohmann::json &json, Product &product) {
+    product.m_product_name = json["m_product_name"];
+    product.m_place_of_cell = json["m_place_of_cell"];
     product.m_delta_characteristic = json["m_delta_characteristic"];
     product.m_delta_max_health = json["m_delta_max_health"];
     product.m_delta_speed = json["m_delta_speed"];

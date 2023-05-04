@@ -44,6 +44,7 @@ void generate_characters();
 void generate_cards_fight();
 void generate_cards_meeting();
 void generate_cards_research();
+void generate_products();
 }  // namespace generator
 
 namespace map {

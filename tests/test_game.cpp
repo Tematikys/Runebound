@@ -6,6 +6,7 @@ TEST_CASE("game") {
     ::runebound::generator::generate_cards_fight();
     ::runebound::generator::generate_cards_meeting();
     ::runebound::generator::generate_cards_research();
+    ::runebound::generator::generate_products();
     ::runebound::game::Game game;
     using namespace runebound::fight;
     std::vector<FightToken> character_tokens = {

@@ -13,6 +13,7 @@ void from_json(const nlohmann::json &json, Product &product);
 
 struct Product {
 private:
+    std::string m_product_name;
     std::map<Characteristic, int> m_delta_characteristic;
     int m_delta_max_health = 0;
     int m_delta_speed = 0;
@@ -23,19 +24,21 @@ private:
     std::optional<fight::FightToken> m_fight_token = std::nullopt;
 
 public:
-    Product(int price, int market_price, map::SpecialTypeCell place)
-        : m_price(price), m_market_price(market_price), m_place_of_cell(place) {
+    Product(std::string product_name, int price, int market_price, map::SpecialTypeCell place)
+        : m_product_name(std::move(product_name)), m_price(price), m_market_price(market_price), m_place_of_cell(place) {
     }
 
     Product(
+        std::string product_name,
         int price,
         fight::FightToken token,
-        std::map<Characteristic, int> delta_characteristic,
+        const std::map<Characteristic, int> &delta_characteristic,
         int delta_max_health,
         int delta_speed,
         int delta_hand_limit
     )
-        : m_price(price),
+        : m_product_name(std::move(product_name)),
+          m_price(price),
           m_market_price(price),
           m_fight_token(token),
           m_delta_max_health(delta_max_health),
@@ -44,13 +47,15 @@ public:
     }
 
     Product(
+        std::string product_name,
         int price,
         std::map<Characteristic, int> delta_characteristic,
         int delta_max_health,
         int delta_speed,
         int delta_hand_limit
     )
-        : m_price(price),
+        : m_product_name(std::move(product_name)),
+          m_price(price),
           m_market_price(price),
           m_delta_max_health(delta_max_health),
           m_delta_speed(delta_speed),

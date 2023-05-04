@@ -122,6 +122,7 @@ add_executable(${PROJECT_NAME}
         generators/generator_characters.cpp
         generators/generator_cards_meeting.cpp
         generators/generator_cards_research.cpp
+        generators/generator_products.cpp
         )
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
 # ===== LOGICS ===== #
