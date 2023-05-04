@@ -1,19 +1,9 @@
 #include <fstream>
 #include "character.hpp"
 #include "nlohmann/json.hpp"
+#include "generators.hpp"
 
 namespace runebound::generator {
-namespace {
-void write_to_file(
-    const ::runebound::character::Character &character,
-    const std::string &file
-) {
-    nlohmann::json json;
-    std::ofstream out(file);
-    to_json(json, character);
-    out << json.dump(4);
-}
-}  // namespace
 
 void generate_characters() {
     ::runebound::character::Character master_thorn(
