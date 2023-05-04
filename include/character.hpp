@@ -15,8 +15,6 @@
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
 
-// #include "fight.hpp"
-
 namespace runebound {
 namespace character {
 
@@ -58,6 +56,7 @@ private:
     Point m_current_position;
     std::shared_ptr<::runebound::fight::Fight> m_current_fight = nullptr;
     std::vector<::runebound::fight::FightToken> m_fight_tokens;
+    std::set <unsigned int> m_products;
 
     void load_character_from_file(const std::string &file);
 
@@ -118,6 +117,19 @@ public:
     void change_knowledge_token(int delta) {
         m_knowledge_token += delta;
     }
+
+    [[nodiscard]] bool check_product(unsigned int product) const {
+        return m_products.count(product) != 0;
+    }
+
+    void add_product(unsigned int product) {
+        m_products.insert(product);
+    }
+
+    void erase_product(unsigned int product) {
+        m_products.erase(product);
+    }
+
 
     [[nodiscard]] std::set<unsigned int> get_cards(AdventureType type) const {
         if (type == AdventureType::RESEARCH) {
@@ -216,6 +228,10 @@ public:
 
     [[nodiscard]] std::string get_name() const {
         return m_name;
+    }
+
+    [[nodiscard]] int get_gold() const {
+        return m_gold;
     }
 
     void relax() {

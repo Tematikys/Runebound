@@ -16,7 +16,6 @@
 #include "skill_card.hpp"
 #include "tokens.hpp"
 #include "product.hpp"
-#include "shop.hpp"
 
 namespace runebound {
 const int DECK_SIZE = 15;
@@ -76,10 +75,22 @@ struct WrongCellException : std::runtime_error {
 
 struct NoProductException : std::runtime_error {
     NoProductException()
-        : std::runtime_error("This product is not in the store.") {
+        : std::runtime_error("This product is not there.") {
     }
 };
 
+
+struct NoProductSaleException : std::runtime_error {
+    NoProductSaleException()
+        : std::runtime_error("This product is not for sale here.") {
+    }
+};
+
+struct NotEnoughGoldException : std::runtime_error {
+    NotEnoughGoldException()
+        : std::runtime_error("Not enough gold.") {
+    }
+};
 
 struct TradeOutsideTownException : std::runtime_error {
     TradeOutsideTownException()
@@ -172,6 +183,7 @@ private:
         m_shops[town].erase(product);
     }
 
+    void end_trade(const std::shared_ptr <character::Character> &chr);
 public:
     Game() {
         generate_all();
@@ -377,6 +389,11 @@ public:
     }
 
     void start_trade(const std::shared_ptr <character::Character> &chr);
+
+    void sell_product_in_town(const std::shared_ptr <character::Character> &chr, unsigned int product);
+    void buy_product(const std::shared_ptr <character::Character> &chr, unsigned int product);
+    void sell_product_in_special_cell(const std::shared_ptr <character::Character> &chr, unsigned int product);
+    void discard_product(const std::shared_ptr <character::Character> &chr, unsigned int product);
 
     void check_characteristic_additionally(
         const std::shared_ptr<character::Character> &chr,

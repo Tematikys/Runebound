@@ -75,6 +75,10 @@ public:
           m_delta_hand_limit(delta_hand_limit) {
     }
 
+    [[nodiscard]] map::SpecialTypeCell get_place_of_cell() const {
+        return m_place_of_cell;
+    }
+
     [[nodiscard]] unsigned int get_price() const {
         return m_price;
     }

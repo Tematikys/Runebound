@@ -2,6 +2,7 @@
 #include "game.hpp"
 
 TEST_CASE("game") {
+
     ::runebound::generator::generate_characters();
     ::runebound::generator::generate_cards_fight();
     ::runebound::generator::generate_cards_meeting();

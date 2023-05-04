@@ -72,7 +72,7 @@ private:
     int m_health;
     std::string m_name;
 
-    const std::vector<FightToken> m_fight_tokens = {
+    std::vector<FightToken> m_fight_tokens = {
         FightToken(
             HandFightTokens::ENEMY_DAMAGE,
             0,
@@ -195,6 +195,13 @@ private:
         const std::vector<TokenHandCount> &tokens
     ) const;
 
+    HandFightTokens
+    toss_token(Participant participant, const TokenHandCount &token);
+
+    HandFightTokens
+    reverse_token(Participant participant, const TokenHandCount &token);
+
+
 public:
     Fight(std::shared_ptr<character::Character> character, Enemy enemy)
         : m_character(std::move(character)), m_enemy(std::move(enemy)) {
@@ -246,12 +253,6 @@ public:
     bool check_end_fight() const {
         return m_character->get_health() == 0 || m_enemy.get_health() == 0;
     }
-
-    HandFightTokens
-    toss_token(Participant participant, const TokenHandCount &token);
-
-    HandFightTokens
-    reverse_token(Participant participant, const TokenHandCount &token);
 
     [[nodiscard]] Participant get_turn() const {
         return m_turn;
