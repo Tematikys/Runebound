@@ -45,6 +45,7 @@ private:
             }
         }
     }
+
 public:
     Map()
         : m_size(STANDARD_SIZE),
@@ -56,7 +57,7 @@ public:
         find_towns();
     }
 
-    [[nodiscard]] std::set <Point> get_towns() const {
+    [[nodiscard]] std::set<Point> get_towns() const {
         return m_towns;
     }
 

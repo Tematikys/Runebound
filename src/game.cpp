@@ -156,12 +156,17 @@ void Game::generate_all_shops() {
     for (const auto &town : towns) {
         m_shops[town] = {};
         for (int i = 0; i < 3; ++i) {
-            auto product = m_remaining_products[rng() % m_remaining_products.size()];
+            auto product =
+                m_remaining_products[rng() % m_remaining_products.size()];
             m_shops[town].insert(product);
-            m_remaining_products.erase(std::find(m_remaining_products.begin(), m_remaining_products.end(), product));
+            m_remaining_products.erase(std::find(
+                m_remaining_products.begin(), m_remaining_products.end(),
+                product
+            ));
         }
     }
 }
+
 void Game::relax(std::shared_ptr<character::Character> chr) {
     check_turn(chr);
     check_sufficiency_action_points(1);
@@ -207,7 +212,7 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
     m_characters[m_turn]->update_action_points(-2);
 }
 
-    void Game::end_fight(const std::shared_ptr<character::Character> &chr) {
+void Game::end_fight(const std::shared_ptr<character::Character> &chr) {
     if (chr->get_current_fight()->get_winner() ==
         fight::Participant::CHARACTER) {
         chr->change_gold(
@@ -313,7 +318,7 @@ bool Game::check_characteristic(
     return false;
 }
 
-void Game::start_trade(const std::shared_ptr <character::Character> &chr) {
+void Game::start_trade(const std::shared_ptr<character::Character> &chr) {
     check_turn(chr);
     check_town_location(chr);
     check_sufficiency_action_points(1);
@@ -322,27 +327,35 @@ void Game::start_trade(const std::shared_ptr <character::Character> &chr) {
     chr->start_trade();
 }
 
-void Game::end_trade(const std::shared_ptr <character::Character> &chr) {
+void Game::end_trade(const std::shared_ptr<character::Character> &chr) {
     check_turn(chr);
     chr->end_trade();
 }
 
-void Game::sell_product_in_town(const std::shared_ptr <character::Character> &chr, unsigned int product) {
+void Game::sell_product_in_town(
+    const std::shared_ptr<character::Character> &chr,
+    unsigned int product
+) {
     check_turn(chr);
     if (!chr->check_product(product)) {
         throw NoProductException();
     }
-    if (m_all_products[product].get_place_of_cell() != map::SpecialTypeCell::NOTHING) {
+    if (m_all_products[product].get_place_of_cell() !=
+        map::SpecialTypeCell::NOTHING) {
         throw NoProductSaleException();
     }
     check_town_location(chr);
     m_all_products[product].cancel_product(chr);
     chr->erase_product(product);
     m_remaining_products.push_back(product);
-    chr->change_gold(static_cast<int>(m_all_products[product].get_market_price()));
+    chr->change_gold(static_cast<int>(m_all_products[product].get_market_price()
+    ));
 }
 
-void Game::buy_product(const std::shared_ptr <character::Character> &chr, unsigned int product) {
+void Game::buy_product(
+    const std::shared_ptr<character::Character> &chr,
+    unsigned int product
+) {
     check_turn(chr);
     check_town_location(chr);
     if (m_shops[chr->get_position()].count(product) == 0) {
@@ -358,7 +371,10 @@ void Game::buy_product(const std::shared_ptr <character::Character> &chr, unsign
     end_trade(chr);
 }
 
-void Game::discard_product(const std::shared_ptr <character::Character> &chr, unsigned int product) {
+void Game::discard_product(
+    const std::shared_ptr<character::Character> &chr,
+    unsigned int product
+) {
     check_turn(chr);
     check_town_location(chr);
     if (m_shops[chr->get_position()].count(product) == 0) {
@@ -369,20 +385,24 @@ void Game::discard_product(const std::shared_ptr <character::Character> &chr, un
     end_trade(chr);
 }
 
-void Game::sell_product_in_special_cell(const std::shared_ptr <character::Character> &chr, unsigned int product) {
+void Game::sell_product_in_special_cell(
+    const std::shared_ptr<character::Character> &chr,
+    unsigned int product
+) {
     check_turn(chr);
     if (!chr->check_product(product)) {
         throw NoProductException();
     }
-    if (m_all_products[product].get_place_of_cell() != m_map.get_cell_map(chr->get_position()).get_special_type_cell()) {
+    if (m_all_products[product].get_place_of_cell() !=
+        m_map.get_cell_map(chr->get_position()).get_special_type_cell()) {
         throw NoProductSaleException();
     }
     m_all_products[product].cancel_product(chr);
     chr->erase_product(product);
     m_remaining_products.push_back(product);
-    chr->change_gold(static_cast<int>(m_all_products[product].get_market_price()));
+    chr->change_gold(static_cast<int>(m_all_products[product].get_market_price()
+    ));
 }
-
 
 }  // namespace game
 }  // namespace runebound

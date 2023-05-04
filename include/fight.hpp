@@ -201,7 +201,6 @@ private:
     HandFightTokens
     reverse_token(Participant participant, const TokenHandCount &token);
 
-
 public:
     Fight(std::shared_ptr<character::Character> character, Enemy enemy)
         : m_character(std::move(character)), m_enemy(std::move(enemy)) {

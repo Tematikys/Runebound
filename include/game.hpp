@@ -12,10 +12,10 @@
 #include "character.hpp"
 #include "fight.hpp"
 #include "map.hpp"
+#include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
 #include "tokens.hpp"
-#include "product.hpp"
 
 namespace runebound {
 const int DECK_SIZE = 15;
@@ -74,11 +74,9 @@ struct WrongCellException : std::runtime_error {
 };
 
 struct NoProductException : std::runtime_error {
-    NoProductException()
-        : std::runtime_error("This product is not there.") {
+    NoProductException() : std::runtime_error("This product is not there.") {
     }
 };
-
 
 struct NoProductSaleException : std::runtime_error {
     NoProductSaleException()
@@ -87,8 +85,7 @@ struct NoProductSaleException : std::runtime_error {
 };
 
 struct NotEnoughGoldException : std::runtime_error {
-    NotEnoughGoldException()
-        : std::runtime_error("Not enough gold.") {
+    NotEnoughGoldException() : std::runtime_error("Not enough gold.") {
     }
 };
 
@@ -128,7 +125,7 @@ private:
         character::StandardCharacter::LORD_HAWTHORNE,
         character::StandardCharacter::MASTER_THORN};
 
-    std::map <Point, std::set<unsigned int>> m_shops;
+    std::map<Point, std::set<unsigned int>> m_shops;
 
     void check_turn(const std::shared_ptr<character::Character> &chr) {
         if (chr->get_name() != m_characters[m_turn]->get_name()) {
@@ -164,16 +161,20 @@ private:
         Characteristic characteristic
     );
 
-    void check_town_location(const std::shared_ptr <character::Character> &chr) {
-        if (m_map.get_cell_map(chr->get_position()).get_type_cell() != map::TypeCell::TOWN) {
+    void check_town_location(const std::shared_ptr<character::Character> &chr) {
+        if (m_map.get_cell_map(chr->get_position()).get_type_cell() !=
+            map::TypeCell::TOWN) {
             throw TradeOutsideTownException();
         }
     }
 
     void add_product_to_shop(Point town) {
-        auto product = m_remaining_products[rng() % m_remaining_products.size()];
+        auto product =
+            m_remaining_products[rng() % m_remaining_products.size()];
         m_shops[town].insert(product);
-        m_remaining_products.erase(std::find(m_remaining_products.begin(), m_remaining_products.end(), product));
+        m_remaining_products.erase(std::find(
+            m_remaining_products.begin(), m_remaining_products.end(), product
+        ));
     }
 
     void remove_product_from_shop(Point town, unsigned int product) {
@@ -183,14 +184,23 @@ private:
         m_shops[town].erase(product);
     }
 
-    void end_trade(const std::shared_ptr <character::Character> &chr);
+    void end_trade(const std::shared_ptr<character::Character> &chr);
+
 public:
     Game() {
         generate_all();
     };
 
-    [[nodiscard]] std::set <unsigned int> get_products(Point town) {
+    [[nodiscard]] std::set<Point> get_towns() const {
+        return m_map.get_towns();
+    }
+
+    [[nodiscard]] std::set<unsigned int> get_products(Point town) {
         return m_shops[town];
+    }
+
+    [[nodiscard]] trade::Product get_product(unsigned int product) {
+        return m_all_products[product];
     }
 
     [[nodiscard]] cards::CardResearch get_card_research(unsigned int card
@@ -388,12 +398,24 @@ public:
         return m_last_characteristic_check;
     }
 
-    void start_trade(const std::shared_ptr <character::Character> &chr);
+    void start_trade(const std::shared_ptr<character::Character> &chr);
 
-    void sell_product_in_town(const std::shared_ptr <character::Character> &chr, unsigned int product);
-    void buy_product(const std::shared_ptr <character::Character> &chr, unsigned int product);
-    void sell_product_in_special_cell(const std::shared_ptr <character::Character> &chr, unsigned int product);
-    void discard_product(const std::shared_ptr <character::Character> &chr, unsigned int product);
+    void sell_product_in_town(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int product
+    );
+    void buy_product(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int product
+    );
+    void sell_product_in_special_cell(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int product
+    );
+    void discard_product(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int product
+    );
 
     void check_characteristic_additionally(
         const std::shared_ptr<character::Character> &chr,

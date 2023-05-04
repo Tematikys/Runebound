@@ -1,11 +1,11 @@
 #ifndef PRODUCT_HPP_
 #define PRODUCT_HPP_
+#include "character.hpp"
 #include "fight_token.hpp"
 #include "map_cell.hpp"
 #include "nlohmann/json_fwd.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
-#include "character.hpp"
 
 namespace runebound::trade {
 
@@ -91,7 +91,8 @@ public:
         return m_product_name;
     }
 
-    [[nodiscard]] std::map<Characteristic, int> get_delta_characteristic() const {
+    [[nodiscard]] std::map<Characteristic, int> get_delta_characteristic(
+    ) const {
         return m_delta_characteristic;
     }
 
@@ -111,9 +112,8 @@ public:
         return m_fight_token;
     }
 
-    void apply_product(const std::shared_ptr <character::Character> &chr) const;
-    void cancel_product(const std::shared_ptr <character::Character> &chr) const;
-
+    void apply_product(const std::shared_ptr<character::Character> &chr) const;
+    void cancel_product(const std::shared_ptr<character::Character> &chr) const;
 
     bool operator<(const Product &other) const {
         return m_product_name < other.m_product_name;

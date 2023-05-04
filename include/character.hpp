@@ -56,7 +56,7 @@ private:
     Point m_current_position;
     std::shared_ptr<::runebound::fight::Fight> m_current_fight = nullptr;
     std::vector<::runebound::fight::FightToken> m_fight_tokens;
-    std::set <unsigned int> m_products;
+    std::set<unsigned int> m_products;
 
     void load_character_from_file(const std::string &file);
 
@@ -94,6 +94,10 @@ public:
         return m_current_position;
     }
 
+    [[nodiscard]] std::set<unsigned int> get_products() const {
+        return m_products;
+    }
+
     [[nodiscard]] bool check_in_trade() const {
         return m_is_in_trade;
     }
@@ -129,7 +133,6 @@ public:
     void erase_product(unsigned int product) {
         m_products.erase(product);
     }
-
 
     [[nodiscard]] std::set<unsigned int> get_cards(AdventureType type) const {
         if (type == AdventureType::RESEARCH) {
@@ -255,7 +258,9 @@ public:
     }
 
     void erase_fight_token(const fight::FightToken &token) {
-        m_fight_tokens.erase(std::find(m_fight_tokens.begin(), m_fight_tokens.end(), token));
+        m_fight_tokens.erase(
+            std::find(m_fight_tokens.begin(), m_fight_tokens.end(), token)
+        );
     }
 
     void update_characteristic(Characteristic characteristic, int delta) {
