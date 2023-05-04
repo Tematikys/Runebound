@@ -97,6 +97,7 @@ struct TradeOutsideTownException : std::runtime_error {
 
 struct Game {
 private:
+    friend struct GameClient;
     ::runebound::map::Map m_map;
     std::vector<std::shared_ptr<::runebound::character::Character>>
         m_characters;

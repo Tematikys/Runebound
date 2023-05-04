@@ -152,6 +152,7 @@ public:
 
 struct Fight {
 private:
+    friend struct FightClient;
     friend struct Character;
     friend struct Enemy;
     Participant m_turn = Participant::CHARACTER;

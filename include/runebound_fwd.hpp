@@ -38,6 +38,7 @@ struct FightToken;
 struct Fight;
 struct TokenHandCount;
 struct Enemy;
+struct FightClient;
 }  // namespace fight
 
 namespace generator {
