@@ -74,6 +74,19 @@ struct WrongCellException : std::runtime_error {
     }
 };
 
+struct NoProductException : std::runtime_error {
+    NoProductException()
+        : std::runtime_error("This product is not in the store.") {
+    }
+};
+
+
+struct TradeOutsideTownException : std::runtime_error {
+    TradeOutsideTownException()
+        : std::runtime_error("There is no trade outside the town.") {
+    }
+};
+
 struct Game {
 private:
     ::runebound::map::Map m_map;
@@ -140,10 +153,33 @@ private:
         Characteristic characteristic
     );
 
+    void check_town_location(const std::shared_ptr <character::Character> &chr) {
+        if (m_map.get_cell_map(chr->get_position()).get_type_cell() != map::TypeCell::TOWN) {
+            throw TradeOutsideTownException();
+        }
+    }
+
+    void add_product_to_shop(Point town) {
+        auto product = m_remaining_products[rng() % m_remaining_products.size()];
+        m_shops[town].insert(product);
+        m_remaining_products.erase(std::find(m_remaining_products.begin(), m_remaining_products.end(), product));
+    }
+
+    void remove_product_from_shop(Point town, unsigned int product) {
+        if (m_shops[town].count(product) == 0) {
+            throw NoProductException();
+        }
+        m_shops[town].erase(product);
+    }
+
 public:
     Game() {
         generate_all();
     };
+
+    [[nodiscard]] std::set <unsigned int> get_products(Point town) {
+        return m_shops[town];
+    }
 
     [[nodiscard]] cards::CardResearch get_card_research(unsigned int card
     ) const {
@@ -339,6 +375,8 @@ public:
     ) const {
         return m_last_characteristic_check;
     }
+
+    void start_trade(const std::shared_ptr <character::Character> &chr);
 
     void check_characteristic_additionally(
         const std::shared_ptr<character::Character> &chr,

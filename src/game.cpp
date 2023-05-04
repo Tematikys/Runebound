@@ -6,7 +6,6 @@
 #include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
-#include "shop.hpp"
 
 namespace runebound {
 namespace game {
@@ -156,7 +155,7 @@ void Game::generate_all_shops() {
     auto towns = m_map.get_towns();
     for (const auto &town : towns) {
         m_shops[town] = {};
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 3; ++i) {
             auto product = m_remaining_products[rng() % m_remaining_products.size()];
             m_shops[town].insert(product);
             m_remaining_products.erase(std::find(m_remaining_products.begin(), m_remaining_products.end(), product));
@@ -312,6 +311,15 @@ bool Game::check_characteristic(
         return true;
     }
     return false;
+}
+
+void Game::start_trade(const std::shared_ptr <character::Character> &chr) {
+    check_turn(chr);
+    check_town_location(chr);
+    check_sufficiency_action_points(1);
+    chr->update_action_points(-1);
+    add_product_to_shop(chr->get_position());
+    chr->start_trade();
 }
 
 }  // namespace game

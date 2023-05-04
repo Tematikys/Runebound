@@ -37,6 +37,7 @@ struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
     std::map<Characteristic, int> m_characteristics;
+
     int m_action_points = 3;
     int m_max_action_points = 3;
     unsigned int m_active_card_meeting;
@@ -50,6 +51,7 @@ private:
     std::set<std::pair<AdventureType, unsigned int>> m_trophies;
 
     std::map<runebound::token::Token, int> m_tokens;
+    bool m_is_in_trade = false;
     int m_max_health;
     int m_gold, m_health;
     int m_knowledge_token = 0;
@@ -91,6 +93,18 @@ public:
 
     [[nodiscard]] Point get_position() const {
         return m_current_position;
+    }
+
+    [[nodiscard]] bool check_in_trade() const {
+        return m_is_in_trade;
+    }
+
+    void start_trade() {
+        m_is_in_trade = true;
+    }
+
+    void end_trade() {
+        m_is_in_trade = false;
     }
 
     [[nodiscard]] unsigned int get_card_fight() const {
@@ -206,6 +220,30 @@ public:
 
     void relax() {
         m_health = m_max_health;
+    }
+
+    void update_max_health(int delta) {
+        m_max_health += delta;
+    }
+
+    void update_speed(int delta) {
+        m_speed += delta;
+    }
+
+    void update_hand_limit(int delta) {
+        m_hand_limit += delta;
+    }
+
+    void add_fight_token(const fight::FightToken &token) {
+        m_fight_tokens.push_back(token);
+    }
+
+    void erase_fight_token(const fight::FightToken &token) {
+        m_fight_tokens.erase(std::find(m_fight_tokens.begin(), m_fight_tokens.end(), token));
+    }
+
+    void update_characteristic(Characteristic characteristic, int delta) {
+        m_characteristics[characteristic] += delta;
     }
 
     void update_action_points(int delta) {
