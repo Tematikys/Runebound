@@ -159,6 +159,7 @@ public:
         return m_game_client.m_last_dice_movement_result;
     };
 
+
     [[nodiscard]] character::StandardCharacter get_yourself_character() const {
         return m_character;
     }
