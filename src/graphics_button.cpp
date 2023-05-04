@@ -2,12 +2,10 @@
 
 namespace runebound::graphics {
 Button::Button(
-    int x,
-    int y,
     int width,
     int height,
-    HorizontalButtonTextAlign hor_text_align,
-    VerticalButtonTextAlign ver_text_align,
+    HorizontalButtonTextureAlign hor_text_align,
+    VerticalButtonTextureAlign ver_text_align,
     int texture_x_offset,
     int texture_y_offset,
     Texture &texture,
@@ -16,9 +14,7 @@ Button::Button(
     SDL_Color fill_color,
     SDL_Color border_color
 )
-    : m_x(x),
-      m_y(y),
-      m_width(width),
+    : m_width(width),
       m_height(height),
       m_hor_text_align(hor_text_align),
       m_ver_text_align(ver_text_align),
@@ -29,39 +25,37 @@ Button::Button(
       m_on_cover_function(::std::move(on_cover_function)),
       m_fill_color(fill_color),
       m_border_color(border_color),
-      m_shape({x, y, m_width, m_height}) {
+      m_shape({0, 0, m_width, m_height}) {
     switch (m_hor_text_align) {
-        case HorizontalButtonTextAlign::LEFT:
+        case HorizontalButtonTextureAlign::LEFT:
             m_texture_x_offset = 0;
             break;
-        case HorizontalButtonTextAlign::CENTER:
+        case HorizontalButtonTextureAlign::CENTER:
             m_texture_x_offset = (m_width - m_texture.width()) / 2;
             break;
-        case HorizontalButtonTextAlign::RIGHT:
+        case HorizontalButtonTextureAlign::RIGHT:
             m_texture_x_offset = m_width - m_texture.width();
             break;
-        case HorizontalButtonTextAlign::NONE:
+        case HorizontalButtonTextureAlign::NONE:
             break;
     }
     switch (m_ver_text_align) {
-        case VerticalButtonTextAlign::TOP:
+        case VerticalButtonTextureAlign::TOP:
             m_texture_y_offset = 0;
             break;
-        case VerticalButtonTextAlign::CENTER:
+        case VerticalButtonTextureAlign::CENTER:
             m_texture_y_offset = (m_height - m_texture.height()) / 2;
             break;
-        case VerticalButtonTextAlign::BOTTOM:
+        case VerticalButtonTextureAlign::BOTTOM:
             m_texture_x_offset = m_height - m_texture.height();
             break;
-        case VerticalButtonTextAlign::NONE:
+        case VerticalButtonTextureAlign::NONE:
             break;
     }
 }
 
 Button::Button(Button &&other) noexcept
-    : m_x(other.m_x),
-      m_y(other.m_y),
-      m_width(other.m_width),
+    : m_width(other.m_width),
       m_height(other.m_height),
       m_hor_text_align(other.m_hor_text_align),
       m_ver_text_align(other.m_ver_text_align),
@@ -76,8 +70,6 @@ Button::Button(Button &&other) noexcept
 }
 
 Button &Button::operator=(Button &&other) noexcept {
-    m_x = other.m_x;
-    m_y = other.m_y;
     m_width = other.m_width;
     m_height = other.m_height;
     m_hor_text_align = other.m_hor_text_align;
@@ -93,11 +85,11 @@ Button &Button::operator=(Button &&other) noexcept {
     return *this;
 }
 
-void Button::render(SDL_Renderer *renderer) const {
-    m_shape.render(renderer, m_fill_color);
-    m_shape.render_border(renderer, m_border_color);
+void Button::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
+    m_shape.render(renderer, x_offset, y_offset, m_fill_color);
+    m_shape.render_border(renderer, x_offset, y_offset, m_border_color);
     m_texture.render(
-        renderer, m_x + m_texture_x_offset, m_y + m_texture_y_offset
+        renderer, x_offset + m_texture_x_offset, y_offset + m_texture_y_offset
     );
 }
 
@@ -121,18 +113,13 @@ void TextField::render(
     SDL_Renderer *renderer,
     TTF_Font *font,
     SDL_Color color,
-    SDL_Rect *clip,
-    double angle,
-    SDL_Point *center,
-    SDL_RendererFlip flip
+    int x_offset,
+    int y_offset
 ) const {
-    m_button.render(renderer);
+    m_button.render(renderer, x_offset, y_offset);
     Texture texture;
     texture.load_text_from_string(renderer, font, m_text, color);
-    texture.render(
-        renderer, m_button.get_coords().x(), m_button.get_coords().y(), clip,
-        angle, center, flip
-    );
+    texture.render(renderer, x_offset, y_offset);
     texture.free();
 }
 }  // namespace runebound::graphics

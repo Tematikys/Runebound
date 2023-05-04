@@ -14,12 +14,12 @@
 namespace runebound::graphics {
 class Button {
 private:
-    int m_x{0};
-    int m_y{0};
     int m_width{0};
     int m_height{0};
-    HorizontalButtonTextAlign m_hor_text_align{HorizontalButtonTextAlign::LEFT};
-    VerticalButtonTextAlign m_ver_text_align{VerticalButtonTextAlign::TOP};
+    HorizontalButtonTextureAlign m_hor_text_align{
+        HorizontalButtonTextureAlign::LEFT};
+    VerticalButtonTextureAlign m_ver_text_align{
+        VerticalButtonTextureAlign::TOP};
     int m_texture_x_offset{0};
     int m_texture_y_offset{0};
     Texture m_texture{};
@@ -33,12 +33,10 @@ public:
     Button() = default;
 
     Button(
-        int x,
-        int y,
         int width,
         int height,
-        HorizontalButtonTextAlign hor_text_align,
-        VerticalButtonTextAlign ver_text_align,
+        HorizontalButtonTextureAlign hor_text_align,
+        VerticalButtonTextureAlign ver_text_align,
         int texture_x_offset,
         int texture_y_offset,
         Texture &texture,
@@ -66,15 +64,10 @@ public:
         m_on_cover_function();
     }
 
-    void render(SDL_Renderer *renderer) const;
+    void render(SDL_Renderer *renderer, int x_offset, int y_offset) const;
 
     [[nodiscard]] bool in_bounds(const Point &p) const {
-        return m_x <= p.x() && p.x() < m_x + m_width && m_y <= p.y() &&
-               p.y() < m_y + m_height;
-    }
-
-    [[nodiscard]] Point get_coords() const {
-        return {m_x, m_y};
+        return 0 <= p.x() && p.x() < m_width && 0 <= p.y() && p.y() < m_height;
     }
 };
 
@@ -113,10 +106,8 @@ public:
         SDL_Renderer *renderer,
         TTF_Font *font,
         SDL_Color color,
-        SDL_Rect *clip = nullptr,
-        double angle = 0.0,
-        SDL_Point *center = nullptr,
-        SDL_RendererFlip flip = SDL_FLIP_NONE
+        int x_offset,
+        int y_offset
     ) const;
 
     [[nodiscard]] bool in_bounds(const Point &p) const {

@@ -81,6 +81,8 @@ void Board::add_cell(
     m_cell_fill_color.push_back(fill_color);
     m_cell_border_color.push_back(border_color);
     ++m_cell_amount;
+    m_width = ::std::max(m_width, m_cells.back().get_vertex(2).x());
+    m_height = ::std::max(m_height, m_cells.back().get_vertex(3).y());
 }
 
 void Board::add_river(const Segment &segment, SDL_Color color) {
@@ -117,40 +119,76 @@ void Board::add_special(
     ++m_special_amount;
 }
 
-void Board::render(SDL_Renderer *renderer) const {
+void Board::generate_texture(
+    SDL_Renderer *renderer,
+    SDL_Texture *main_texture
+) {
+    SDL_SetRenderTarget(renderer, m_texture);
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderClear(renderer);
+
+    render(renderer, 0, 0);
+
+    SDL_SetRenderTarget(renderer, main_texture);
+
+    //    SDL_Surface **surface;
+    //    SDL_LockTextureToSurface(m_texture, nullptr, surface);
+    //    SDL_SetColorKey(
+    //        *surface, SDL_TRUE, SDL_MapRGB((*surface)->format, 0xFF, 0xFF,
+    //        0xFF)
+    //    );
+    //    SDL_UnlockTexture(m_texture);
+}
+
+void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
     for (::std::size_t i = 0; i < m_cell_amount; ++i) {
-        m_cells[i].render(renderer, m_cell_fill_color[i]);
-        m_cells[i].render_border(renderer, m_cell_border_color[i]);
+        m_cells[i].render(renderer, x_offset, y_offset, m_cell_fill_color[i]);
+        m_cells[i].render_border(
+            renderer, x_offset, y_offset, m_cell_border_color[i]
+        );
     }
     if (m_selected_cell != 0xFFFF && m_selected_token == 0xFFFF) {
-        m_cells[m_selected_cell].render(renderer, SELECTED_COLOR);
+        m_cells[m_selected_cell].render(
+            renderer, x_offset, y_offset, SELECTED_COLOR
+        );
         m_cells[m_selected_cell].render_border(
-            renderer, m_cell_border_color[m_selected_cell]
+            renderer, x_offset, y_offset, m_cell_border_color[m_selected_cell]
         );
     }
     // TODO
     for (::std::size_t i = 0; i < m_river_amount; ++i) {
-        m_rivers[i].render(renderer, m_river_color[i], 5);
+        m_rivers[i].render(renderer, m_river_color[i], 5, x_offset, y_offset);
     }
     for (::std::size_t i = 0; i < m_road_amount; ++i) {
         if (m_is_connected_to_town[i]) {
-            m_roads[i].half_render(renderer, m_road_color[i], 7);
+            m_roads[i].half_render(
+                renderer, m_road_color[i], 7, x_offset, y_offset
+            );
         } else {
-            m_roads[i].render(renderer, m_road_color[i], 7);
+            m_roads[i].render(renderer, m_road_color[i], 7, x_offset, y_offset);
         }
     }
     for (::std::size_t i = 0; i < m_special_amount; ++i) {
-        m_specials[i].render(renderer, m_special_fill_color[i]);
-        m_specials[i].render_border(renderer, m_special_border_color[i]);
+        m_specials[i].render(
+            renderer, x_offset, y_offset, m_special_fill_color[i]
+        );
+        m_specials[i].render_border(
+            renderer, x_offset, y_offset, m_special_border_color[i]
+        );
     }
     for (::std::size_t i = 0; i < m_token_amount; ++i) {
-        m_tokens[i].render(renderer, m_token_fill_color[i]);
-        m_tokens[i].render_border(renderer, m_token_border_color[i]);
+        m_tokens[i].render(renderer, m_token_fill_color[i], x_offset, y_offset);
+        m_tokens[i].render_border(
+            renderer, m_token_border_color[i], x_offset, y_offset
+        );
     }
     if (m_selected_token != 0xFFFF) {
-        m_tokens[m_selected_token].render(renderer, SELECTED_COLOR);
+        m_tokens[m_selected_token].render(
+            renderer, SELECTED_COLOR, x_offset, y_offset
+        );
         m_tokens[m_selected_token].render_border(
-            renderer, m_token_border_color[m_selected_token]
+            renderer, m_token_border_color[m_selected_token], x_offset, y_offset
         );
     }
 }

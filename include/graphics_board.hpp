@@ -41,10 +41,10 @@ private:
     ::std::vector<SDL_Color> m_road_color{};
     ::std::size_t m_road_amount{0};
 
-public:
-    Board() = default;
+    int m_width{0};
+    int m_height{0};
 
-    explicit Board(const ::runebound::map::MapClient &map);
+    SDL_Texture *m_texture{nullptr};
 
     void add_cell(
         const HexagonShape &hexagon,
@@ -68,9 +68,33 @@ public:
 
     void add_road(const Segment &segment, SDL_Color color);
 
-    void render(SDL_Renderer *renderer) const;
-    
+    void generate_texture(
+        SDL_Renderer *renderer,
+        SDL_Texture *main_texture = nullptr
+    );
+
+public:
+    Board() = default;
+
+    explicit Board(const ::runebound::map::MapClient &map);
+
+    void render(SDL_Renderer *renderer, int x_offset, int y_offset) const;
+
     void update_selection(const Point &dot);
+
+    [[nodiscard]] SDL_Texture *
+    get_texture(SDL_Renderer *renderer, SDL_Texture *main_texture = nullptr) {
+        generate_texture(renderer, main_texture);
+        return m_texture;
+    }
+
+    [[nodiscard]] int width() const {
+        return m_width;
+    }
+
+    [[nodiscard]] int height() const {
+        return m_height;
+    }
 
     [[nodiscard]] ::std::size_t get_selected_hexagon() const {
         return m_selected_cell;

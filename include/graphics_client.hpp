@@ -8,6 +8,7 @@
 #include <graphics_board.hpp>
 #include <graphics_button.hpp>
 #include <graphics_config.hpp>
+#include <graphics_window.hpp>
 #include <map.hpp>
 #include <network_client.hpp>
 #include <string>
@@ -27,6 +28,7 @@ private:
     ::std::size_t m_game_list_start_index{0};
     ::std::size_t m_game_list_show_amount{10};
     ::std::vector<::runebound::graphics::Button> m_game_list{};
+    ::std::vector<::runebound::graphics::Point> m_game_list_pos{};
 
     SDL_Window *m_window{nullptr};
     SDL_Renderer *m_renderer{nullptr};
@@ -35,12 +37,16 @@ private:
 
     ::std::vector<::runebound::graphics::Texture> m_main_menu_textures{};
     ::std::vector<::runebound::graphics::Button> m_main_menu_buttons{};
+    ::std::vector<::runebound::graphics::Point> m_main_menu_button_pos{};
     ::std::vector<::runebound::graphics::TextField> m_main_menu_text_fields{};
+    ::std::vector<::runebound::graphics::Point> m_main_menu_text_field_pos{};
     ::std::size_t m_main_menu_active_text_field{0};
 
     ::std::vector<::runebound::graphics::Texture> m_game_textures{};
     ::std::vector<::runebound::graphics::Button> m_game_buttons{};
+    ::std::vector<::runebound::graphics::Point> m_game_button_pos{};
     ::std::vector<::runebound::graphics::Button> m_character_list{};
+    ::std::vector<::runebound::graphics::Point> m_character_list_pos{};
     bool m_character_selected{false};
 
     bool m_is_running{false};

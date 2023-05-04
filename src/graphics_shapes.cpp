@@ -13,7 +13,12 @@ void PolygonShape::init_side_coefficients() {
     }
 }
 
-void PolygonShape::render(SDL_Renderer *renderer, SDL_Color fill_color) const {
+void PolygonShape::render(
+    SDL_Renderer *renderer,
+    int x_offset,
+    int y_offset,
+    SDL_Color fill_color
+) const {
     SDL_SetRenderDrawColor(
         renderer, fill_color.r, fill_color.g, fill_color.b, fill_color.a
     );
@@ -54,7 +59,10 @@ void PolygonShape::render(SDL_Renderer *renderer, SDL_Color fill_color) const {
     while (num_vertexes_processed < num_vertexes) {
         while (y < m_vertexes[left_index].y() && y < m_vertexes[right_index].y()
         ) {
-            SDL_RenderDrawLine(renderer, (left_x >> 16), y, (right_x >> 16), y);
+            SDL_RenderDrawLine(
+                renderer, (left_x >> 16) + x_offset, y + y_offset,
+                (right_x >> 16) + x_offset, y + y_offset
+            );
             ++y;
             left_x += left_slope;
             right_x += right_slope;
@@ -89,20 +97,28 @@ void PolygonShape::render(SDL_Renderer *renderer, SDL_Color fill_color) const {
             right_x = (m_vertexes[top_index].x()) << 16;
             ++num_vertexes_processed;
         }
-        SDL_RenderDrawLine(renderer, (left_x >> 16), y, (right_x >> 16), y);
+        SDL_RenderDrawLine(
+            renderer, (left_x >> 16) + x_offset, y + y_offset,
+            (right_x >> 16) + x_offset, y + y_offset
+        );
     }
 }
 
-void PolygonShape::render_border(SDL_Renderer *renderer, SDL_Color border_color)
-    const {
+void PolygonShape::render_border(
+    SDL_Renderer *renderer,
+    int x_offset,
+    int y_offset,
+    SDL_Color border_color
+) const {
     SDL_SetRenderDrawColor(
         renderer, border_color.r, border_color.g, border_color.b, border_color.a
     );
     for (::std::size_t i = 0; i < get_number_of_vertexes(); ++i) {
         SDL_RenderDrawLine(
-            renderer, get_vertex(i).x(), get_vertex(i).y(),
-            get_vertex((i + 1) % get_number_of_vertexes()).x(),
-            get_vertex((i + 1) % get_number_of_vertexes()).y()
+            renderer, get_vertex(i).x() + x_offset,
+            get_vertex(i).y() + y_offset,
+            get_vertex((i + 1) % get_number_of_vertexes()).x() + x_offset,
+            get_vertex((i + 1) % get_number_of_vertexes()).y() + y_offset
         );
     }
 }
@@ -144,20 +160,31 @@ RectangleShape::RectangleShape(int x, int y, int width, int height) {
     init_side_coefficients();
 }
 
-void CircleShape::render(SDL_Renderer *renderer, SDL_Color fill_color) const {
+void CircleShape::render(
+    SDL_Renderer *renderer,
+    SDL_Color fill_color,
+    int x_offset,
+    int y_offset
+) const {
     filledCircleRGBA(
-        renderer, static_cast<int16_t>(m_center.x()),
-        static_cast<int16_t>(m_center.y()), static_cast<int16_t>(m_radius),
-        fill_color.r, fill_color.g, fill_color.b, fill_color.a
+        renderer, static_cast<int16_t>(m_center.x() + x_offset),
+        static_cast<int16_t>(m_center.y() + y_offset),
+        static_cast<int16_t>(m_radius), fill_color.r, fill_color.g,
+        fill_color.b, fill_color.a
     );
 }
 
-void CircleShape::render_border(SDL_Renderer *renderer, SDL_Color border_color)
-    const {
+void CircleShape::render_border(
+    SDL_Renderer *renderer,
+    SDL_Color border_color,
+    int x_offset,
+    int y_offset
+) const {
     circleRGBA(
-        renderer, static_cast<int16_t>(m_center.x()),
-        static_cast<int16_t>(m_center.y()), static_cast<int16_t>(m_radius),
-        border_color.r, border_color.g, border_color.b, border_color.a
+        renderer, static_cast<int16_t>(m_center.x() + x_offset),
+        static_cast<int16_t>(m_center.y() + y_offset),
+        static_cast<int16_t>(m_radius), border_color.r, border_color.g,
+        border_color.b, border_color.a
     );
 }
 

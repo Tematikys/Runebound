@@ -53,10 +53,11 @@ void Client::init_game() {
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Main menu", {0x00, 0x00, 0x00, 0xFF}
     );
+    m_game_button_pos.emplace_back(615, 5);
     m_game_buttons.push_back(::runebound::graphics::Button(
-        615, 5, 180, 30,
-        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
-        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
+        180, 30, ::runebound::graphics::HorizontalButtonTextureAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextureAlign::CENTER, 0, 0,
+        texture,
         [this]() {
             m_network_client.exit_game();
             m_joined_to_game = false;
@@ -69,10 +70,11 @@ void Client::init_game() {
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Exit", {0x00, 0x00, 0x00, 0xFF}
     );
+    m_game_button_pos.emplace_back(615, 40);
     m_game_buttons.push_back(::runebound::graphics::Button(
-        615, 40, 180, 30,
-        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
-        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
+        180, 30, ::runebound::graphics::HorizontalButtonTextureAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextureAlign::CENTER, 0, 0,
+        texture,
         [this]() {
             m_is_running = false;
             m_network_client.exit_game();
@@ -85,23 +87,23 @@ void Client::init_game() {
         m_renderer, m_fonts["FreeMono30"], "Throw dice",
         {0x00, 0x00, 0x00, 0xFF}
     );
-    // ===== THROW DICE BUTTON =====
+    m_game_button_pos.emplace_back(615, 765);
     m_game_buttons.push_back(::runebound::graphics::Button(
-        615, 765, 180, 30,
-        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
-        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
-        [this]() { m_network_client.throw_move_dice(); }, []() {},
+        180, 30, ::runebound::graphics::HorizontalButtonTextureAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextureAlign::CENTER, 0, 0,
+        texture, [this]() { m_network_client.throw_move_dice(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
+    // ===== THROW DICE BUTTON =====
     // ===== RELAX BUTTON =====
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Relax", {0x00, 0x00, 0x00, 0xFF}
     );
+    m_game_button_pos.emplace_back(615, 730);
     m_game_buttons.push_back(::runebound::graphics::Button(
-        615, 730, 180, 30,
-        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
-        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
-        [this]() { m_network_client.relax(); }, []() {},
+        180, 30, ::runebound::graphics::HorizontalButtonTextureAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextureAlign::CENTER, 0, 0,
+        texture, [this]() { m_network_client.relax(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== RELAX BUTTON =====
@@ -109,11 +111,11 @@ void Client::init_game() {
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono30"], "Pass", {0x00, 0x00, 0x00, 0xFF}
     );
+    m_game_button_pos.emplace_back(615, 695);
     m_game_buttons.push_back(::runebound::graphics::Button(
-        615, 695, 180, 30,
-        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
-        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
-        [this]() { m_network_client.pass(); }, []() {},
+        180, 30, ::runebound::graphics::HorizontalButtonTextureAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextureAlign::CENTER, 0, 0,
+        texture, [this]() { m_network_client.pass(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== PASS BUTTON =====
@@ -122,11 +124,12 @@ void Client::init_game() {
 void Client::init_main_menu() {
     ::runebound::graphics::Texture texture;
     // ===== TEXT FIELD BUTTON =====
+    m_main_menu_text_field_pos.emplace_back(35, 35);
     ::runebound::graphics::Button button(
-        35, 35, 30 * 16, 50,
-        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
-        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
-        [this]() { m_main_menu_active_text_field = 1; }, []() {},
+        30 * 16, 50,
+        ::runebound::graphics::HorizontalButtonTextureAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextureAlign::CENTER, 0, 0,
+        texture, [this]() { m_main_menu_active_text_field = 1; }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
     ::runebound::graphics::TextField text_field("new game", button, 16);
@@ -136,10 +139,11 @@ void Client::init_main_menu() {
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono50"], "Add game", {0x00, 0x00, 0x00, 0xFF}
     );
+    m_main_menu_button_pos.emplace_back(525, 35);
     m_main_menu_buttons.push_back(::runebound::graphics::Button(
-        525, 35, texture.width(), texture.height(),
-        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
-        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
+        8 * 30, 50, ::runebound::graphics::HorizontalButtonTextureAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextureAlign::CENTER, 0, 0,
+        texture,
         [this]() {
             if (!m_main_menu_text_fields[0].get().empty()) {
                 m_network_client.add_game(m_main_menu_text_fields[0].get());
@@ -153,12 +157,12 @@ void Client::init_main_menu() {
     texture.load_text_from_string(
         m_renderer, m_fonts["FreeMono50"], "Exit", {0x00, 0x00, 0x00, 0xFF}
     );
+    m_main_menu_button_pos.emplace_back(645, 715);
     m_main_menu_buttons.push_back(::runebound::graphics::Button(
-        645, 715, texture.width(), texture.height(),
-        ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
-        ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0, texture,
-        [&is_running = m_is_running]() { is_running = false; }, []() {},
-        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+        4 * 30, 50, ::runebound::graphics::HorizontalButtonTextureAlign::CENTER,
+        ::runebound::graphics::VerticalButtonTextureAlign::CENTER, 0, 0,
+        texture, [&is_running = m_is_running]() { is_running = false; },
+        []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     ));
     // ===== EXIT BUTTON =====
 }
@@ -252,7 +256,7 @@ void Client::game_render() {
     ::std::cout << "[info] :: GAME RENDER" << ::std::endl;
 #endif
     if (m_character_selected) {
-        m_board.render(m_renderer);
+        m_board.render(m_renderer, 0, 0);
         for (const auto &character :
              m_network_client.get_game_client().m_characters) {
             const ::runebound::graphics::Point center =
@@ -304,23 +308,28 @@ void Client::game_render() {
                 ::runebound::graphics::WINDOW_HEIGHT - (size + delay)
             );
             tri = ::runebound::graphics::PolygonShape{vertexes};
-            tri.render(m_renderer, col.first);
+            tri.render(m_renderer, 0, 0, col.first);
             vertexes.pop_back();
             vertexes.emplace_back(
                 delay + size + (size + delay) * dx,
                 ::runebound::graphics::WINDOW_HEIGHT - delay
             );
             tri = ::runebound::graphics::PolygonShape{vertexes};
-            tri.render(m_renderer, col.second);
+            tri.render(m_renderer, 0, 0, col.second);
             dx += 1;
         }
     } else {
-        for (const auto &button : m_character_list) {
-            button.render(m_renderer);
+        for (::std::size_t i = 0; i < m_character_list.size(); ++i) {
+            m_character_list[i].render(
+                m_renderer, m_character_list_pos[i].x(),
+                m_character_list_pos[i].y()
+            );
         }
     }
-    for (const auto &button : m_game_buttons) {
-        button.render(m_renderer);
+    for (::std::size_t i = 0; i < m_game_buttons.size(); ++i) {
+        m_game_buttons[i].render(
+            m_renderer, m_game_button_pos[i].x(), m_game_button_pos[i].y()
+        );
     }
 }
 
@@ -329,15 +338,23 @@ void Client::main_menu_render() {
     ::std::cout << "[info] :: MAIN MENU RENDER" << ::std::endl;
 #endif
     const ::runebound::graphics::RectangleShape rect(35, 95, 730, 565);
-    rect.render_border(m_renderer, {0, 0, 0, 255});
-    for (const auto &button : m_game_list) {
-        button.render(m_renderer);
+    rect.render_border(m_renderer, 0, 0, {0, 0, 0, 255});
+    for (::std::size_t i = 0; i < m_game_list.size(); ++i) {
+        m_game_list[i].render(
+            m_renderer, m_game_list_pos[i].x(), m_game_list_pos[i].y()
+        );
     }
-    for (const auto &field : m_main_menu_text_fields) {
-        field.render(m_renderer, m_fonts["FreeMono50"], {0, 0, 0, 255});
+    for (::std::size_t i = 0; i < m_main_menu_text_fields.size(); ++i) {
+        m_main_menu_text_fields[i].render(
+            m_renderer, m_fonts["FreeMono50"], {0, 0, 0, 255},
+            m_main_menu_text_field_pos[i].x(), m_main_menu_text_field_pos[i].y()
+        );
     }
-    for (const auto &button : m_main_menu_buttons) {
-        button.render(m_renderer);
+    for (::std::size_t i = 0; i < m_main_menu_buttons.size(); ++i) {
+        m_main_menu_buttons[i].render(
+            m_renderer, m_main_menu_button_pos[i].x(),
+            m_main_menu_button_pos[i].y()
+        );
     }
 }
 
@@ -360,6 +377,7 @@ void Client::game_update() {
     ::std::cout << "[info] :: GAME UPDATE" << ::std::endl;
 #endif
     m_character_list.clear();
+    m_character_list_pos.clear();
     if (!m_character_selected) {
         int i = 0;
         for (const auto &character : m_network_client.get_game_client()
@@ -390,11 +408,11 @@ void Client::game_update() {
                 m_renderer, m_fonts["FreeMono30"], name,
                 {0x00, 0x00, 0x00, 0xFF}
             );
+            m_character_list_pos.emplace_back(0, i * (texture.height() + 5));
             ::runebound::graphics::Button button(
-                0, i * (texture.height() + 5), texture.width(),
-                texture.height(),
-                ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
-                ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0,
+                texture.width(), texture.height(),
+                ::runebound::graphics::HorizontalButtonTextureAlign::CENTER,
+                ::runebound::graphics::VerticalButtonTextureAlign::CENTER, 0, 0,
                 texture,
                 [character, this]() {
                     ::std::cout << "CLicked" << ::std::endl;
@@ -407,23 +425,36 @@ void Client::game_update() {
             ++i;
         }
     }
-    for (const auto &button : m_character_list) {
-        if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
-            button.on_cover();
+    for (::std::size_t i = 0; i < m_character_list.size(); ++i) {
+        if (m_character_list[i].in_bounds(
+                ::runebound::graphics::Point(m_mouse_pos) -
+                ::runebound::graphics::Point(
+                    m_character_list_pos[i].x(), m_character_list_pos[i].y()
+                )
+            )) {
+            m_character_list[i].on_cover();
             if (m_mouse_pressed) {
                 m_mouse_pressed = false;
-                button.on_click();
+                m_character_list[i].on_click();
             }
         }
     }
-    for (const auto &button : m_game_buttons) {
-        if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
-            button.on_cover();
+    for (::std::size_t i = 0; i < m_game_buttons.size(); ++i) {
+        if (m_game_buttons[i].in_bounds(
+                ::runebound::graphics::Point(m_mouse_pos) -
+                ::runebound::graphics::Point(
+                    m_game_button_pos[i].x(), m_game_button_pos[i].y()
+                )
+            )) {
+            m_game_buttons[i].on_cover();
             if (m_mouse_pressed) {
                 m_mouse_pressed = false;
-                button.on_click();
+                m_game_buttons[i].on_click();
             }
         }
+    }
+    if (m_character_selected) {
+        m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
     }
     const ::std::size_t index = m_board.get_selected_hexagon();
     if (index != 0xFFFF && m_mouse_pressed) {
@@ -441,6 +472,7 @@ void Client::main_menu_update() {
     ::std::cout << "[info] :: MAIN MENU UPDATE" << ::std::endl;
 #endif
     m_game_list.clear();
+    m_game_list_pos.clear();
     for (::std::size_t i = m_game_list_start_index;
          i < ::std::min(
                  m_game_list_start_index + m_game_list_show_amount,
@@ -452,14 +484,13 @@ void Client::main_menu_update() {
             m_renderer, m_fonts["FreeMono50"],
             m_network_client.get_game_names()[i], {0x00, 0x00, 0x00, 0xFF}
         );
+        m_game_list_pos.emplace_back(
+            45, static_cast<int>(i - m_game_list_start_index) * 55 + 105
+        );
         ::runebound::graphics::Button button(
-            45,
-            static_cast<int>(i - m_game_list_start_index) *
-                    (texture.height() + 5) +
-                105,
             texture.width(), texture.height(),
-            ::runebound::graphics::HorizontalButtonTextAlign::CENTER,
-            ::runebound::graphics::VerticalButtonTextAlign::CENTER, 0, 0,
+            ::runebound::graphics::HorizontalButtonTextureAlign::CENTER,
+            ::runebound::graphics::VerticalButtonTextureAlign::CENTER, 0, 0,
             texture,
             [i, this]() {
                 m_network_client.join_game(m_network_client.get_game_names()[i]
@@ -471,33 +502,49 @@ void Client::main_menu_update() {
         );
         m_game_list.push_back(::std::move(button));
     }
-    for (const auto &button : m_game_list) {
-        if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
-            button.on_cover();
+    for (::std::size_t i = 0; i < m_game_list.size(); ++i) {
+        if (m_game_list[i].in_bounds(
+                ::runebound::graphics::Point(m_mouse_pos) -
+                ::runebound::graphics::Point(
+                    m_game_list_pos[i].x(), m_game_list_pos[i].y()
+                )
+            )) {
+            m_game_list[i].on_cover();
             if (m_mouse_pressed) {
                 m_mouse_pressed = false;
-                button.on_click();
+                m_game_list[i].on_click();
             }
         }
     }
-    for (const auto &field : m_main_menu_text_fields) {
-        if (field.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
-            field.on_cover();
+    for (::std::size_t i = 0; i < m_main_menu_text_fields.size(); ++i) {
+        if (m_main_menu_text_fields[i].in_bounds(
+                ::runebound::graphics::Point(m_mouse_pos) -
+                ::runebound::graphics::Point(
+                    m_main_menu_text_field_pos[i].x(),
+                    m_main_menu_text_field_pos[i].y()
+                )
+            )) {
+            m_main_menu_text_fields[i].on_cover();
             if (m_mouse_pressed) {
                 m_mouse_pressed = false;
-                field.on_click();
+                m_main_menu_text_fields[i].on_click();
             }
         }
     }
     if (m_mouse_pressed) {
         m_main_menu_active_text_field = 0;
     }
-    for (const auto &button : m_main_menu_buttons) {
-        if (button.in_bounds(::runebound::graphics::Point(m_mouse_pos))) {
-            button.on_cover();
+    for (::std::size_t i = 0; i < m_main_menu_buttons.size(); ++i) {
+        if (m_main_menu_buttons[i].in_bounds(
+                ::runebound::graphics::Point(m_mouse_pos) -
+                ::runebound::graphics::Point(
+                    m_main_menu_button_pos[i].x(), m_main_menu_button_pos[i].y()
+                )
+            )) {
+            m_main_menu_buttons[i].on_cover();
             if (m_mouse_pressed) {
                 m_mouse_pressed = false;
-                button.on_click();
+                m_main_menu_buttons[i].on_click();
             }
         }
     }
@@ -509,7 +556,6 @@ void Client::update() {
 #endif
     m_io_context.poll();
     ::runebound::graphics::update_mouse_pos(m_mouse_pos);
-    m_board.update_selection(::runebound::graphics::Point(m_mouse_pos));
     if (m_joined_to_game) {
         game_update();
     } else {
