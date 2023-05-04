@@ -24,6 +24,8 @@ private:
     std::optional<fight::FightToken> m_fight_token = std::nullopt;
 
 public:
+    Product() = default;
+
     Product(
         std::string product_name,
         int price,
@@ -40,7 +42,7 @@ public:
         std::string product_name,
         int price,
         fight::FightToken token,
-        const std::map<Characteristic, int> &delta_characteristic,
+        std::map<Characteristic, int> delta_characteristic,
         int delta_max_health,
         int delta_speed,
         int delta_hand_limit
@@ -49,7 +51,7 @@ public:
           m_price(price),
           m_market_price(price),
           m_fight_token(token),
-          m_delta_characteristic(delta_characteristic),
+          m_delta_characteristic(std::move(delta_characteristic)),
           m_delta_max_health(delta_max_health),
           m_delta_speed(delta_speed),
           m_delta_hand_limit(delta_hand_limit) {
@@ -58,7 +60,7 @@ public:
     Product(
         std::string product_name,
         int price,
-        const std::map<Characteristic, int> &delta_characteristic,
+        std::map<Characteristic, int> delta_characteristic,
         int delta_max_health,
         int delta_speed,
         int delta_hand_limit
@@ -66,7 +68,7 @@ public:
         : m_product_name(std::move(product_name)),
           m_price(price),
           m_market_price(price),
-          m_delta_characteristic(delta_characteristic),
+          m_delta_characteristic(std::move(delta_characteristic)),
           m_delta_max_health(delta_max_health),
           m_delta_speed(delta_speed),
           m_delta_hand_limit(delta_hand_limit) {

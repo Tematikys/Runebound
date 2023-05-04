@@ -6,6 +6,7 @@
 #include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
+#include "shop.hpp"
 
 namespace runebound {
 namespace game {
@@ -119,6 +120,22 @@ void Game::generate_all_cards_fight() {
     }
 }
 
+void Game::generate_all_products() {
+    std::string path = "data/json/products";
+    for (const auto &entry : std::filesystem::directory_iterator(path)) {
+        nlohmann::json json;
+        std::ifstream in(entry.path());
+        in >> json;
+        trade::Product product;
+        ::runebound::trade::from_json(json, product);
+        m_all_products.push_back(product);
+    }
+    m_remaining_products.resize(m_all_products.size());
+    for (std::size_t i = 0; i < m_all_products.size(); ++i) {
+        m_remaining_products[i] = i;
+    }
+}
+
 void Game::generate_all_cards_meeting() {
     m_card_deck_meeting.resize(DECK_SIZE);
     std::string path = "data/json/cards/cards_meeting";
@@ -135,6 +152,17 @@ void Game::generate_all_cards_meeting() {
     }
 }
 
+void Game::generate_all_shops() {
+    auto towns = m_map.get_towns();
+    for (const auto &town : towns) {
+        m_shops[town] = {};
+        for (int i = 0; i < 4; ++i) {
+            auto product = m_remaining_products[rng() % m_remaining_products.size()];
+            m_shops[town].insert(product);
+            m_remaining_products.erase(std::find(m_remaining_products.begin(), m_remaining_products.end(), product));
+        }
+    }
+}
 void Game::relax(std::shared_ptr<character::Character> chr) {
     check_turn(chr);
     check_sufficiency_action_points(1);

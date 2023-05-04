@@ -21,6 +21,7 @@ struct Map {
 private:
     std::vector<std::vector<MapCell>> m_map;  // [row][column]
     std::set<std::pair<Point, Point>> m_rivers;
+    std::set<Point> m_towns;
     const int m_size;
     std::map<std::string, std::vector<Point>> m_territory_name;
     const std::vector<Point> directions_odd_column{{-1, 0}, {0, 1},  {1, 1},
@@ -35,6 +36,15 @@ private:
         int count_dice
     ) const;
 
+    void find_towns() {
+        for (int row = 0; row < STANDARD_SIZE; ++row) {
+            for (int column = 0; column < STANDARD_SIZE; ++column) {
+                if (m_map[row][column].get_type_cell() == TypeCell::TOWN) {
+                    m_towns.insert(Point(row, column));
+                }
+            }
+        }
+    }
 public:
     Map()
         : m_size(STANDARD_SIZE),
@@ -43,35 +53,12 @@ public:
         make_connections_between_territory_names_and_cells(
             m_map, m_territory_name
         );
+        find_towns();
     }
 
-    Map(const Map &other)
-        : m_rivers(other.m_rivers),
-          m_size(other.m_size),
-          directions_odd_column(other.directions_odd_column),
-          directions_even_column(other.directions_even_column) {
-        m_map = other.m_map;
+    [[nodiscard]] std::set <Point> get_towns() const {
+        return m_towns;
     }
-
-    Map(Map &&other) noexcept
-        : m_map(std::move(other.m_map)),
-          m_rivers(std::move(other.m_rivers)),
-          m_size(other.m_size),
-          directions_odd_column(other.directions_odd_column),
-          directions_even_column(other.directions_even_column) {
-    }
-
-    Map &operator=(const Map &other) {
-        m_map = other.m_map;
-        return *this;
-    }
-
-    Map &operator=(Map &&other) noexcept {
-        m_map = other.m_map;
-        return *this;
-    }
-
-    ~Map() = default;
 
     [[nodiscard]] bool check_neighbour(const Point &lhs, const Point &rhs)
         const;
