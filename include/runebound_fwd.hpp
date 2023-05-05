@@ -28,11 +28,17 @@ struct Character;
 struct CharacterClient;
 }  // namespace character
 
+namespace trade {
+struct Product;
+struct Shop;
+}  // namespace trade
+
 namespace fight {
 struct FightToken;
 struct Fight;
 struct TokenHandCount;
 struct Enemy;
+struct FightClient;
 }  // namespace fight
 
 namespace generator {
@@ -40,6 +46,7 @@ void generate_characters();
 void generate_cards_fight();
 void generate_cards_meeting();
 void generate_cards_research();
+void generate_products();
 }  // namespace generator
 
 namespace map {

@@ -3,6 +3,7 @@
 #include <nlohmann/json.hpp>
 #include "card_fight.hpp"
 #include "point.hpp"
+#include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
 
@@ -118,6 +119,22 @@ void Game::generate_all_cards_fight() {
     }
 }
 
+void Game::generate_all_products() {
+    std::string path = "data/json/products";
+    for (const auto &entry : std::filesystem::directory_iterator(path)) {
+        nlohmann::json json;
+        std::ifstream in(entry.path());
+        in >> json;
+        trade::Product product;
+        ::runebound::trade::from_json(json, product);
+        m_all_products.push_back(product);
+    }
+    m_remaining_products.resize(m_all_products.size());
+    for (std::size_t i = 0; i < m_all_products.size(); ++i) {
+        m_remaining_products[i] = i;
+    }
+}
+
 void Game::generate_all_cards_meeting() {
     m_card_deck_meeting.resize(DECK_SIZE);
     std::string path = "data/json/cards/cards_meeting";
@@ -131,6 +148,22 @@ void Game::generate_all_cards_meeting() {
     }
     for (int i = 0; i < DECK_SIZE; ++i) {
         m_card_deck_meeting[i] = i;
+    }
+}
+
+void Game::generate_all_shops() {
+    auto towns = m_map.get_towns();
+    for (const auto &town : towns) {
+        m_shops[town] = {};
+        for (int i = 0; i < 3; ++i) {
+            auto product =
+                m_remaining_products[rng() % m_remaining_products.size()];
+            m_shops[town].insert(product);
+            m_remaining_products.erase(std::find(
+                m_remaining_products.begin(), m_remaining_products.end(),
+                product
+            ));
+        }
     }
 }
 
@@ -283,6 +316,92 @@ bool Game::check_characteristic(
         return true;
     }
     return false;
+}
+
+void Game::start_trade(const std::shared_ptr<character::Character> &chr) {
+    check_turn(chr);
+    check_town_location(chr);
+    check_sufficiency_action_points(1);
+    chr->update_action_points(-1);
+    add_product_to_shop(chr->get_position());
+    chr->start_trade();
+}
+
+void Game::end_trade(const std::shared_ptr<character::Character> &chr) {
+    check_turn(chr);
+    chr->end_trade();
+}
+
+void Game::sell_product_in_town(
+    const std::shared_ptr<character::Character> &chr,
+    unsigned int product
+) {
+    check_turn(chr);
+    if (!chr->check_product(product)) {
+        throw NoProductException();
+    }
+    if (m_all_products[product].get_place_of_cell() !=
+        map::SpecialTypeCell::NOTHING) {
+        throw NoProductSaleException();
+    }
+    check_town_location(chr);
+    m_all_products[product].undo_product(chr);
+    chr->erase_product(product);
+    m_remaining_products.push_back(product);
+    chr->change_gold(static_cast<int>(m_all_products[product].get_market_price()
+    ));
+}
+
+void Game::buy_product(
+    const std::shared_ptr<character::Character> &chr,
+    unsigned int product
+) {
+    check_turn(chr);
+    check_town_location(chr);
+    if (m_shops[chr->get_position()].count(product) == 0) {
+        throw NoProductException();
+    }
+    if (chr->get_gold() < m_all_products[product].get_price()) {
+        throw NotEnoughGoldException();
+    }
+    remove_product_from_shop(chr->get_position(), product);
+    m_all_products[product].apply_product(chr);
+    chr->add_product(product);
+    chr->change_gold(-static_cast<int>(m_all_products[product].get_price()));
+    end_trade(chr);
+}
+
+void Game::discard_product(
+    const std::shared_ptr<character::Character> &chr,
+    unsigned int product
+) {
+    check_turn(chr);
+    check_town_location(chr);
+    if (m_shops[chr->get_position()].count(product) == 0) {
+        throw NoProductException();
+    }
+    remove_product_from_shop(chr->get_position(), product);
+    m_remaining_products.push_back(product);
+    end_trade(chr);
+}
+
+void Game::sell_product_in_special_cell(
+    const std::shared_ptr<character::Character> &chr,
+    unsigned int product
+) {
+    check_turn(chr);
+    if (!chr->check_product(product)) {
+        throw NoProductException();
+    }
+    if (m_all_products[product].get_place_of_cell() !=
+        m_map.get_cell_map(chr->get_position()).get_special_type_cell()) {
+        throw NoProductSaleException();
+    }
+    m_all_products[product].undo_product(chr);
+    chr->erase_product(product);
+    m_remaining_products.push_back(product);
+    chr->change_gold(static_cast<int>(m_all_products[product].get_market_price()
+    ));
 }
 
 }  // namespace game

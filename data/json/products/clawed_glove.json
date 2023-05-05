@@ -1,0 +1,23 @@
+{
+    "m_delta_characteristic": [
+        [
+            0,
+            1
+        ]
+    ],
+    "m_delta_hand_limit": 0,
+    "m_delta_max_health": 0,
+    "m_delta_speed": 0,
+    "m_fight_token": {
+        "first": 0,
+        "first_count": 1,
+        "first_lead": false,
+        "second": 2,
+        "second_count": 1,
+        "second_lead": false
+    },
+    "m_market_price": 6,
+    "m_place_of_cell": 3,
+    "m_price": 6,
+    "m_product_name": "Clawed Glove"
+}

@@ -1,19 +1,9 @@
 #include <fstream>
 #include "card_meeting.hpp"
+#include "generators.hpp"
 #include "nlohmann/json.hpp"
 
 namespace runebound::generator {
-namespace {
-void write_to_file(
-    const ::runebound::cards::CardMeeting &card,
-    const std::string &file
-) {
-    nlohmann::json json;
-    std::ofstream out(file);
-    to_json(json, card);
-    out << json.dump(4);
-}
-}  // namespace
 
 void generate_cards_meeting() {
     write_to_file(

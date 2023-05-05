@@ -6,6 +6,7 @@ TEST_CASE("game") {
     ::runebound::generator::generate_cards_fight();
     ::runebound::generator::generate_cards_meeting();
     ::runebound::generator::generate_cards_research();
+    ::runebound::generator::generate_products();
     ::runebound::game::Game game;
     using namespace runebound::fight;
     std::vector<FightToken> character_tokens = {
@@ -177,4 +178,43 @@ TEST_CASE("cards") {
     } else {
         CHECK(lord->get_trophies().size() == trophies);
     }
+}
+
+TEST_CASE("trade") {
+    runebound::game::Game game;
+    auto mok =
+        game.make_character(runebound::character::StandardCharacter::ELDER_MOK);
+    mok->set_position(runebound::Point(10, 2));
+    CHECK(mok->get_action_points() == 3);
+    CHECK(mok->get_gold() == 2);
+    auto products = game.get_town_products(mok->get_position());
+    CHECK(products.size() == 3);
+    game.start_trade(mok);
+    CHECK(mok->get_action_points() == 2);
+    mok->change_gold(100);
+    CHECK(mok->get_gold() == 102);
+    auto new_products = game.get_town_products(mok->get_position());
+    CHECK(new_products.size() == 4);
+    CHECK(mok->check_in_trade() == true);
+    game.buy_product(mok, *(++new_products.begin()));
+    CHECK(
+        mok->get_gold() ==
+        102 - game.get_product(*(++new_products.begin())).get_price()
+    );
+    CHECK(mok->check_in_trade() == false);
+    CHECK(game.get_town_products(mok->get_position()).size() == 3);
+    mok->set_position(runebound::Point(11, 13));
+    game.start_trade(mok);
+    CHECK(mok->get_action_points() == 1);
+    CHECK(mok->check_in_trade() == true);
+    auto mok_products = mok->get_products();
+    CHECK(mok_products.size() == 1);
+    auto pr = *mok_products.begin();
+    if (game.get_product(pr).get_place_of_cell() ==
+        runebound::map::SpecialTypeCell::NOTHING) {
+        game.sell_product_in_town(mok, *mok_products.begin());
+        CHECK(mok->get_gold() == 102);
+    }
+    game.discard_product(mok, *game.get_town_products(mok->get_position()).begin());
+    CHECK(mok->check_in_trade() == false);
 }

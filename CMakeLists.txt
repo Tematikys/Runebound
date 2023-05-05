@@ -115,12 +115,14 @@ add_executable(${PROJECT_NAME}
         src/fight.cpp
         src/card_fight.cpp
         src/card_meeting.cpp
+        src/product.cpp
         #tests/test_fight.cpp
         tests/test_game.cpp
         generators/generator_cards_fight.cpp
         generators/generator_characters.cpp
         generators/generator_cards_meeting.cpp
         generators/generator_cards_research.cpp
+        generators/generator_products.cpp
         )
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
 # ===== LOGICS ===== #

@@ -2,6 +2,7 @@
 #define FIGHT_TOKEN_HPP_
 
 #include "nlohmann/json.hpp"
+#include "runebound_fwd.hpp"
 
 namespace runebound::fight {
 

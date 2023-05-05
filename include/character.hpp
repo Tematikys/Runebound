@@ -15,8 +15,6 @@
 #include "runebound_fwd.hpp"
 #include "tokens.hpp"
 
-// #include "fight.hpp"
-
 namespace runebound {
 namespace character {
 
@@ -37,6 +35,7 @@ struct Character {
 private:
     unsigned int m_hand_limit, m_speed;
     std::map<Characteristic, int> m_characteristics;
+
     int m_action_points = 3;
     int m_max_action_points = 3;
     unsigned int m_active_card_meeting;
@@ -50,12 +49,14 @@ private:
     std::set<std::pair<AdventureType, unsigned int>> m_trophies;
 
     std::map<runebound::token::Token, int> m_tokens;
+    bool m_is_in_trade = false;
     int m_max_health;
     int m_gold, m_health;
     int m_knowledge_token = 0;
     Point m_current_position;
     std::shared_ptr<::runebound::fight::Fight> m_current_fight = nullptr;
     std::vector<::runebound::fight::FightToken> m_fight_tokens;
+    std::set<unsigned int> m_products;
 
     void load_character_from_file(const std::string &file);
 
@@ -93,6 +94,22 @@ public:
         return m_current_position;
     }
 
+    [[nodiscard]] std::set<unsigned int> get_products() const {
+        return m_products;
+    }
+
+    [[nodiscard]] bool check_in_trade() const {
+        return m_is_in_trade;
+    }
+
+    void start_trade() {
+        m_is_in_trade = true;
+    }
+
+    void end_trade() {
+        m_is_in_trade = false;
+    }
+
     [[nodiscard]] unsigned int get_card_fight() const {
         return *(--m_cards_fight.end());
     }
@@ -103,6 +120,18 @@ public:
 
     void change_knowledge_token(int delta) {
         m_knowledge_token += delta;
+    }
+
+    [[nodiscard]] bool check_product(unsigned int product) const {
+        return m_products.count(product) != 0;
+    }
+
+    void add_product(unsigned int product) {
+        m_products.insert(product);
+    }
+
+    void erase_product(unsigned int product) {
+        m_products.erase(product);
     }
 
     [[nodiscard]] std::set<unsigned int> get_cards(AdventureType type) const {
@@ -204,8 +233,38 @@ public:
         return m_name;
     }
 
+    [[nodiscard]] int get_gold() const {
+        return m_gold;
+    }
+
     void relax() {
         m_health = m_max_health;
+    }
+
+    void update_max_health(int delta) {
+        m_max_health += delta;
+    }
+
+    void update_speed(int delta) {
+        m_speed += delta;
+    }
+
+    void update_hand_limit(int delta) {
+        m_hand_limit += delta;
+    }
+
+    void add_fight_token(const fight::FightToken &token) {
+        m_fight_tokens.push_back(token);
+    }
+
+    void erase_fight_token(const fight::FightToken &token) {
+        m_fight_tokens.erase(
+            std::find(m_fight_tokens.begin(), m_fight_tokens.end(), token)
+        );
+    }
+
+    void update_characteristic(Characteristic characteristic, int delta) {
+        m_characteristics[characteristic] += delta;
     }
 
     void update_action_points(int delta) {

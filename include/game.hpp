@@ -12,6 +12,7 @@
 #include "character.hpp"
 #include "fight.hpp"
 #include "map.hpp"
+#include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
 #include "tokens.hpp"
@@ -72,13 +73,36 @@ struct WrongCellException : std::runtime_error {
     }
 };
 
+struct NoProductException : std::runtime_error {
+    NoProductException() : std::runtime_error("This product is not there.") {
+    }
+};
+
+struct NoProductSaleException : std::runtime_error {
+    NoProductSaleException()
+        : std::runtime_error("This product is not for sale here.") {
+    }
+};
+
+struct NotEnoughGoldException : std::runtime_error {
+    NotEnoughGoldException() : std::runtime_error("Not enough gold.") {
+    }
+};
+
+struct TradeOutsideTownException : std::runtime_error {
+    TradeOutsideTownException()
+        : std::runtime_error("There is no trade outside the town.") {
+    }
+};
+
 struct Game {
 private:
+    friend struct GameClient;
     ::runebound::map::Map m_map;
     std::vector<std::shared_ptr<::runebound::character::Character>>
         m_characters;
     std::vector<unsigned int> m_card_deck_research, m_card_deck_fight,
-        m_card_deck_skill, m_card_deck_meeting;
+        m_card_deck_skill, m_card_deck_meeting, m_remaining_products;
     std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
@@ -92,6 +116,7 @@ private:
     std::vector<cards::CardFight> m_all_cards_fight;
     std::vector<cards::CardMeeting> m_all_cards_meeting;
     std::vector<cards::SkillCard> m_all_skill_cards;
+    std::vector<trade::Product> m_all_products;
 
     std::set<character::StandardCharacter> m_remaining_standard_characters = {
         character::StandardCharacter::LISSA,
@@ -100,6 +125,8 @@ private:
         character::StandardCharacter::LAUREL_FROM_BLOODWOOD,
         character::StandardCharacter::LORD_HAWTHORNE,
         character::StandardCharacter::MASTER_THORN};
+
+    std::map<Point, std::set<unsigned int>> m_shops;
 
     void check_turn(const std::shared_ptr<character::Character> &chr) {
         if (chr->get_name() != m_characters[m_turn]->get_name()) {
@@ -118,12 +145,16 @@ private:
     void generate_all_cards_fight();
     void generate_all_cards_research();
     void generate_all_cards_meeting();
+    void generate_all_products();
+    void generate_all_shops();
 
-    void generate_all_cards() {
+    void generate_all() {
         generate_all_cards_research();
         generate_all_cards_fight();
         generate_all_cards_meeting();
         generate_all_skill_cards();
+        generate_all_products();
+        generate_all_shops();
     }
 
     bool check_characteristic_private(
@@ -131,10 +162,47 @@ private:
         Characteristic characteristic
     );
 
+    void check_town_location(const std::shared_ptr<character::Character> &chr) {
+        if (m_map.get_cell_map(chr->get_position()).get_type_cell() !=
+            map::TypeCell::TOWN) {
+            throw TradeOutsideTownException();
+        }
+    }
+
+    void add_product_to_shop(Point town) {
+        auto product =
+            m_remaining_products[rng() % m_remaining_products.size()];
+        m_shops[town].insert(product);
+        m_remaining_products.erase(std::find(
+            m_remaining_products.begin(), m_remaining_products.end(), product
+        ));
+    }
+
+    void remove_product_from_shop(Point town, unsigned int product) {
+        if (m_shops[town].count(product) == 0) {
+            throw NoProductException();
+        }
+        m_shops[town].erase(product);
+    }
+
+    void end_trade(const std::shared_ptr<character::Character> &chr);
+
 public:
     Game() {
-        generate_all_cards();
+        generate_all();
     };
+
+    [[nodiscard]] std::set<Point> get_towns() const {
+        return m_map.get_towns();
+    }
+
+    [[nodiscard]] std::set<unsigned int> get_town_products(Point town) {
+        return m_shops[town];
+    }
+
+    [[nodiscard]] trade::Product get_product(unsigned int product) {
+        return m_all_products[product];
+    }
 
     [[nodiscard]] cards::CardResearch get_card_research(unsigned int card
     ) const {
@@ -330,6 +398,25 @@ public:
     ) const {
         return m_last_characteristic_check;
     }
+
+    void start_trade(const std::shared_ptr<character::Character> &chr);
+
+    void sell_product_in_town(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int product
+    );
+    void buy_product(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int product
+    );
+    void sell_product_in_special_cell(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int product
+    );
+    void discard_product(
+        const std::shared_ptr<character::Character> &chr,
+        unsigned int product
+    );
 
     void check_characteristic_additionally(
         const std::shared_ptr<character::Character> &chr,
