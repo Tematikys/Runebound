@@ -22,6 +22,7 @@ link_directories(${SDL2_LIB_DIR})
 add_executable(graphics_client
         src/card_adventure.cpp
         src/card_fight.cpp
+        src/card_meeting.cpp
         src/card_research.cpp
         src/character.cpp
         src/character_client.cpp

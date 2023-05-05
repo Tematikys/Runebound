@@ -5,6 +5,21 @@
 #include <utility>
 
 namespace runebound::graphics {
+void Client::init_board() {
+    m_board = Board(m_network_client.get_game_client().m_map);
+}
+
+void Client::init_graphics() {
+    if (!SDL_init(m_graphic_window, m_graphic_renderer)) {
+        ::std::cout << "Failed to inti SDL!" << ::std::endl;
+        return;
+    }
+    m_is_running = true;
+    m_frame_time = 1000 / WINDOW_FPS;
+    load_fonts();
+    load_images();
+}
+
 void Client::load_fonts() {
     for (auto [path, font_name] : FONTS) {
         for (int i = 1; i < 201; ++i) {
@@ -29,25 +44,9 @@ void Client::load_images() {
 void Client::init() {
     init_graphics();
     init_main_menu();
-    //    init_game();
+    init_game_list();
     m_window.set_active_window("main_menu");
     m_window.activate();
-}
-
-void Client::init_graphics() {
-    if (!SDL_init(m_graphic_window, m_graphic_renderer)) {
-        ::std::cout << "Failed to inti SDL!" << ::std::endl;
-        return;
-    }
-    m_is_running = true;
-    m_frame_time = 1000 / WINDOW_FPS;
-    m_main_menu_active_text_field = 0;
-    load_fonts();
-    load_images();
-}
-
-void Client::init_board() {
-    m_board = Board(m_network_client.get_game_client().m_map);
 }
 
 void Client::init_game() {
@@ -126,9 +125,63 @@ void Client::init_game() {
     // ===== PASS BUTTON =====
 }
 
+void Client::init_game_list() {
+    auto window = ::std::make_unique<Window>(Window(
+        m_graphic_renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
+        {0xFF, 0xFF, 0xFF, 0xFF}
+    ));
+    Texture texture;
+    Button button;
+
+    // ===== MAIN MENU BUTTON =====
+    texture.load_text_from_string(
+        m_graphic_renderer, m_fonts["FreeMono30"], "Main menu",
+        {0x00, 0x00, 0x00, 0xFF}
+    );
+    button = Button(
+        180, 30, HorizontalButtonTextureAlign::CENTER,
+        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+        [this]() {
+            m_network_client.exit_game();
+            m_window.set_updatability_window("char_list", false);
+            m_window.set_visibility_window("char_list", false);
+            m_window.set_active_window("main_menu");
+            m_window.set_updatability_window("main_menu", true);
+            m_window.set_visibility_window("main_menu", true);
+        },
+        []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    );
+    window->add_button(
+        "main_menu", button, {WINDOW_WIDTH - 180 - 5, 5}, true, true
+    );
+    // ===== MAIN MENU BUTTON =====
+
+    // ===== EXIT BUTTON =====
+    texture.load_text_from_string(
+        m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
+        {0x00, 0x00, 0x00, 0xFF}
+    );
+    button = Button(
+        180, 30, HorizontalButtonTextureAlign::CENTER,
+        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+        [this]() {
+            m_is_running = false;
+            m_network_client.exit_game();
+        },
+        []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    );
+    window->add_button(
+        "exit", button, {WINDOW_WIDTH - 180 - 5, 40}, true, true
+    );
+    // ===== EXIT BUTTON =====
+
+    m_window.add_window("char_list", ::std::move(window), {0, 0}, false, false);
+}
+
 void Client::init_main_menu() {
     auto window = ::std::make_unique<Window>(Window(
-        m_graphic_renderer, WINDOW_WIDTH, WINDOW_HEIGHT, {255, 255, 255, 255}
+        m_graphic_renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
+        {0xFF, 0xFF, 0xFF, 0xFF}
     ));
     Texture texture;
     Button button;
@@ -140,12 +193,14 @@ void Client::init_main_menu() {
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
             m_window.get_window("main_menu")->set_active_text_field("new_game");
+            ::std::cout << "text field" << ::std::endl;
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
     text_field = TextField("new game", button, 16);
     window->add_text_field(
-        "new_game", text_field, m_fonts["FreeMono50"], {0, 0, 0, 255}, {35, 35}
+        "new_game", text_field, m_fonts["FreeMono50"], {0x00, 0x00, 0x00, 0xFF},
+        {35, 35}, true, true
     );
     // ===== TEXT FIELD BUTTON =====
 
@@ -172,7 +227,7 @@ void Client::init_main_menu() {
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
-    window->add_button("add_game", button, {525, 35});
+    window->add_button("add_game", button, {525, 35}, true, true);
     // ===== ADD GAME BUTTON =====
 
     // ===== EXIT BUTTON =====
@@ -186,93 +241,20 @@ void Client::init_main_menu() {
         [this]() { m_is_running = false; }, []() {}, {0xFF, 0xFF, 0xFF, 0xFF},
         {0x00, 0x00, 0x00, 0xFF}
     );
-    window->add_button("exit", button, {645, 715});
+    window->add_button("exit", button, {645, 715}, true, true);
     // ===== EXIT BUTTON =====
     window->activate();
 
-    m_window.add_window("main_menu", ::std::move(window), {0, 0});
+    m_window.add_window("main_menu", ::std::move(window), {0, 0}, true, true);
 
     window = ::std::make_unique<Window>(
         Window(m_graphic_renderer, 730, 555, {255, 255, 255, 255})
     );
     m_window.get_window("main_menu")
-        ->add_window("game_list", ::std::move(window), {35, 95});
-}
-
-void Client::game_handle_events(SDL_Event &event) {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: GAME HANDLE EVENTS" << ::std::endl;
-#endif
-    switch (event.type) {
-        case SDL_QUIT:
-            m_is_running = false;
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            m_mouse_pressed = true;
-            break;
-    }
-}
-
-void Client::main_menu_handle_events(SDL_Event &event) {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: MAIN MENU HANDLE EVENTS" << ::std::endl;
-#endif
-    switch (event.type) {
-        case SDL_QUIT:
-            m_is_running = false;
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            m_mouse_pressed = true;
-            break;
-        case SDL_TEXTINPUT:
-            if (m_main_menu_active_text_field != 0 &&
-                (((SDL_GetModState() & KMOD_CTRL) == 0) ||
-                 (event.text.text[0] != 'c' && event.text.text[0] != 'C' &&
-                  event.text.text[0] != 'v' && event.text.text[0] != 'V'))) {
-                m_main_menu_text_fields[m_main_menu_active_text_field - 1].push(
-                    event.text.text
-                );
-            }
-            break;
-        case SDL_KEYDOWN:
-            if (m_main_menu_active_text_field == 0) {
-                break;
-            }
-            if (event.key.keysym.sym == SDLK_BACKSPACE) {
-                m_main_menu_text_fields[m_main_menu_active_text_field - 1].pop(
-                );
-            } else if (event.key.keysym.sym == SDLK_c && ((SDL_GetModState() & KMOD_CTRL) != 0)) {
-                SDL_SetClipboardText(
-                    m_main_menu_text_fields[m_main_menu_active_text_field - 1]
-                        .get()
-                        .c_str()
-                );
-            } else if (event.key.keysym.sym == SDLK_v && ((SDL_GetModState() & KMOD_CTRL) != 0)) {
-                m_main_menu_text_fields[m_main_menu_active_text_field - 1]
-                    .clear();
-                m_main_menu_text_fields[m_main_menu_active_text_field - 1].push(
-                    SDL_GetClipboardText()
-                );
-            }
-            break;
-        case SDL_MOUSEWHEEL:
-            if (event.wheel.y < 0) {
-                if (m_game_list_start_index + m_game_list_show_amount <
-                    m_network_client.get_game_names().size()) {
-                    ++m_game_list_start_index;
-                }
-            } else if (event.wheel.y > 0) {
-                if (m_game_list_start_index > 0) {
-                    --m_game_list_start_index;
-                }
-            }
-    }
+        ->add_window("game_list", ::std::move(window), {35, 95}, true, true);
 }
 
 void Client::handle_events() {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: " << m_counter << " HANDLE EVENTS" << ::std::endl;
-#endif
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0) {
         switch (event.type) {
@@ -299,9 +281,6 @@ void Client::handle_events() {
 }
 
 void Client::game_render() {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: GAME RENDER" << ::std::endl;
-#endif
     if (m_character_selected) {
         m_board.render(m_graphic_renderer, 0, 0);
         for (const auto &character :
@@ -377,35 +356,7 @@ void Client::game_render() {
     }
 }
 
-void Client::main_menu_render() {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: MAIN MENU RENDER" << ::std::endl;
-#endif
-    const RectangleShape rect(35, 95, 730, 565);
-    rect.render_border(m_graphic_renderer, 0, 0, {0, 0, 0, 255});
-    for (::std::size_t i = 0; i < m_game_list.size(); ++i) {
-        m_game_list[i].render(
-            m_graphic_renderer, m_game_list_pos[i].x(), m_game_list_pos[i].y()
-        );
-    }
-    for (::std::size_t i = 0; i < m_main_menu_text_fields.size(); ++i) {
-        m_main_menu_text_fields[i].render(
-            m_graphic_renderer, m_fonts["FreeMono50"], {0, 0, 0, 255},
-            m_main_menu_text_field_pos[i].x(), m_main_menu_text_field_pos[i].y()
-        );
-    }
-    for (::std::size_t i = 0; i < m_main_menu_buttons.size(); ++i) {
-        m_main_menu_buttons[i].render(
-            m_graphic_renderer, m_main_menu_button_pos[i].x(),
-            m_main_menu_button_pos[i].y()
-        );
-    }
-}
-
 void Client::render() {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: " << m_counter << " RENDER" << ::std::endl;
-#endif
     SDL_SetRenderDrawColor(m_graphic_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_graphic_renderer);
     m_window.render(m_graphic_renderer, 0, 0);
@@ -506,124 +457,143 @@ void Client::game_update() {
 }
 
 void Client::main_menu_update() {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: MAIN MENU UPDATE" << ::std::endl;
-#endif
-    //    m_game_list.clear();
-    //    m_game_list_pos.clear();
-    //    for (::std::size_t i = m_game_list_start_index;
-    //         i < ::std::min(
-    //                 m_game_list_start_index + m_game_list_show_amount,
-    //                 m_network_client.get_game_names().size()
-    //             );
-    //         ++i) {
-    //        Texture texture;
-    //        texture.load_text_from_string(
-    //            m_graphic_renderer, m_fonts["FreeMono50"],
-    //            m_network_client.get_game_names()[i], {0x00, 0x00, 0x00, 0xFF}
-    //        );
-    //        m_game_list_pos.emplace_back(
-    //            45, static_cast<int>(i - m_game_list_start_index) * 55 + 105
-    //        );
-    //        Button button(
-    //            texture.width(), texture.height(),
-    //            HorizontalButtonTextureAlign::CENTER,
-    //            VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-    //            [i, this]() {
-    //                m_network_client.join_game(m_network_client.get_game_names()[i]
-    //                );
-    //                m_joined_to_game = true;
-    //                init_board();
-    //            },
-    //            []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    //        );
-    //        m_game_list.push_back(::std::move(button));
-    //    }
-    //    for (::std::size_t i = 0; i < m_game_list.size(); ++i) {
-    //        if (m_game_list[i].in_bounds(
-    //                m_mouse_pos -
-    //                Point(m_game_list_pos[i].x(), m_game_list_pos[i].y())
-    //            )) {
-    //            m_game_list[i].on_cover();
-    //            if (m_mouse_pressed) {
-    //                m_mouse_pressed = false;
-    //                m_game_list[i].on_click();
-    //            }
-    //        }
-    //    }
-    //    for (::std::size_t i = 0; i < m_main_menu_text_fields.size(); ++i) {
-    //        if (m_main_menu_text_fields[i].in_bounds(
-    //                m_mouse_pos - Point(
-    //                                  m_main_menu_text_field_pos[i].x(),
-    //                                  m_main_menu_text_field_pos[i].y()
-    //                              )
-    //            )) {
-    //            m_main_menu_text_fields[i].on_cover();
-    //            if (m_mouse_pressed) {
-    //                m_mouse_pressed = false;
-    //                m_main_menu_text_fields[i].on_click();
-    //            }
-    //        }
-    //    }
-    //    if (m_mouse_pressed) {
-    //        m_main_menu_active_text_field = 0;
-    //    }
-    //    for (::std::size_t i = 0; i < m_main_menu_buttons.size(); ++i) {
-    //        if (m_main_menu_buttons[i].in_bounds(
-    //                m_mouse_pos -
-    //                Point(
-    //                    m_main_menu_button_pos[i].x(),
-    //                    m_main_menu_button_pos[i].y()
-    //                )
-    //            )) {
-    //            m_main_menu_buttons[i].on_cover();
-    //            if (m_mouse_pressed) {
-    //                m_mouse_pressed = false;
-    //                m_main_menu_buttons[i].on_click();
-    //            }
-    //        }
-    //    }
+    auto *game_list_win =
+        m_window.get_window("main_menu")->get_window("game_list");
+    game_list_win->remove_all_buttons();
+    for (::std::size_t i = m_game_list_start_index;
+         i < ::std::min(
+                 m_game_list_start_index + m_game_list_show_amount,
+                 m_network_client.get_game_names().size()
+             );
+         ++i) {
+        Texture texture;
+        texture.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono50"],
+            m_network_client.get_game_names()[i], {0x00, 0x00, 0x00, 0xFF}
+        );
+        Button button(
+            texture.width(), texture.height(),
+            HorizontalButtonTextureAlign::CENTER,
+            VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+            [i, this]() {
+                m_network_client.join_game(m_network_client.get_game_names()[i]
+                );
+                m_window.set_updatability_window("main_menu", false);
+                m_window.set_visibility_window("main_menu", false);
+                m_window.set_active_window("char_list");
+                m_window.set_updatability_window("char_list", true);
+                m_window.set_visibility_window("char_list", true);
+            },
+            []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+        );
+        game_list_win->add_button(
+            m_network_client.get_game_names()[i], button,
+            {5, static_cast<int>(i - m_game_list_start_index) * 55 + 5}, true,
+            true
+        );
+    }
+}
+
+void Client::char_list_update() {
+    auto win = m_window.get_window("char_list");
+    win->remove_all_buttons();
+
+    Texture texture;
+    Button button;
+
+    // ===== MAIN MENU BUTTON =====
+    texture.load_text_from_string(
+        m_graphic_renderer, m_fonts["FreeMono30"], "Main menu",
+        {0x00, 0x00, 0x00, 0xFF}
+    );
+    button = Button(
+        180, 30, HorizontalButtonTextureAlign::CENTER,
+        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+        [this]() {
+            m_network_client.exit_game();
+            m_window.set_updatability_window("char_list", false);
+            m_window.set_visibility_window("char_list", false);
+            m_window.set_active_window("main_menu");
+            m_window.set_updatability_window("main_menu", true);
+            m_window.set_visibility_window("main_menu", true);
+        },
+        []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    );
+    win->add_button(
+        "main_menu", button, {WINDOW_WIDTH - 180 - 5, 5}, true, true
+    );
+    // ===== MAIN MENU BUTTON =====
+
+    // ===== EXIT BUTTON =====
+    texture.load_text_from_string(
+        m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
+        {0x00, 0x00, 0x00, 0xFF}
+    );
+    button = Button(
+        180, 30, HorizontalButtonTextureAlign::CENTER,
+        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+        [this]() {
+            m_is_running = false;
+            m_network_client.exit_game();
+        },
+        []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    );
+    win->add_button("exit", button, {WINDOW_WIDTH - 180 - 5, 40}, true, true);
+    // ===== EXIT BUTTON =====
+
+    int i = 0;
+    for (const auto &character :
+         m_network_client.get_game_client().m_remaining_standard_characters) {
+        ::std::string name;
+        switch (character) {
+            case ::runebound::character::StandardCharacter::LISSA:
+                name = "LISSA";
+                break;
+            case character::StandardCharacter::CORBIN:
+                name = "CORBIN";
+                break;
+            case character::StandardCharacter::ELDER_MOK:
+                name = "ELDER MOK";
+                break;
+            case character::StandardCharacter::LAUREL_FROM_BLOODWOOD:
+                name = "LAUREL FROM BLOODWOOD";
+                break;
+            case character::StandardCharacter::LORD_HAWTHORNE:
+                name = "LORD HAWTHORNE";
+                break;
+            case character::StandardCharacter::MASTER_THORN:
+                name = "MASTER THORN";
+                break;
+        }
+        texture.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono30"], name,
+            {0x00, 0x00, 0x00, 0xFF}
+        );
+        button = Button(
+            texture.width(), texture.height(),
+            HorizontalButtonTextureAlign::CENTER,
+            VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+            [character, this]() {
+                ::std::cout << "character selected" << ::std::endl;
+                m_network_client.select_character(character);
+            },
+            []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+        );
+        win->add_button(
+            name, button, {5, i * (texture.height() + 5)}, true, true
+        );
+        ++i;
+    }
 }
 
 void Client::update() {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: " << m_counter << " UPDATE" << ::std::endl;
-#endif
     m_io_context.poll();
     update_mouse_pos(m_mouse_pos);
     auto active_window = m_window.get_active_window_name();
     if (active_window == "main_menu") {
-        auto game_list_win =
-            m_window.get_window("main_menu")->get_window("game_list");
-        game_list_win->remove_all_buttons();
-        for (::std::size_t i = m_game_list_start_index;
-             i < ::std::min(
-                     m_game_list_start_index + m_game_list_show_amount,
-                     m_network_client.get_game_names().size()
-                 );
-             ++i) {
-            Texture texture;
-            texture.load_text_from_string(
-                m_graphic_renderer, m_fonts["FreeMono50"],
-                m_network_client.get_game_names()[i], {0x00, 0x00, 0x00, 0xFF}
-            );
-            Button button(
-                texture.width(), texture.height(),
-                HorizontalButtonTextureAlign::CENTER,
-                VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-                [i, this]() {
-                    m_network_client.join_game(m_network_client.get_game_names(
-                    )[i]);
-                    m_joined_to_game = true;
-                    init_board();
-                },
-                []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-            );
-            game_list_win->add_button(
-                m_network_client.get_game_names()[i], button,
-                {5, static_cast<int>(i - m_game_list_start_index) * 55 + 5}
-            );
-        }
+        main_menu_update();
+    } else if (active_window == "char_list") {
+        char_list_update();
     }
     m_window.update(m_mouse_pos, m_mouse_pressed);
     m_mouse_pressed = false;
@@ -631,9 +601,6 @@ void Client::update() {
 }
 
 void Client::tick() {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: " << m_counter << " TICK" << ::std::endl;
-#endif
     const uint32_t cur_frame_time = SDL_GetTicks();
     if (cur_frame_time < m_frame_time + m_prev_frame_time) {
         SDL_Delay(m_frame_time - cur_frame_time + m_prev_frame_time);
@@ -642,9 +609,6 @@ void Client::tick() {
 }
 
 void Client::exit() {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: " << m_counter << " EXIT" << ::std::endl;
-#endif
     m_network_client.exit();
     for (auto &[name, font] : m_fonts) {
         TTF_CloseFont(font);

@@ -38,13 +38,6 @@ private:
     ::std::map<::std::string, TTF_Font *> m_fonts{};
     ::std::map<::std::string, Texture> m_images{};
 
-    ::std::vector<Texture> m_main_menu_textures{};
-    ::std::vector<Button> m_main_menu_buttons{};
-    ::std::vector<Point> m_main_menu_button_pos{};
-    ::std::vector<TextField> m_main_menu_text_fields{};
-    ::std::vector<Point> m_main_menu_text_field_pos{};
-    ::std::size_t m_main_menu_active_text_field{0};
-
     ::std::vector<Texture> m_game_textures{};
     ::std::vector<Button> m_game_buttons{};
     ::std::vector<Point> m_game_button_pos{};
@@ -75,23 +68,21 @@ public:
 
     void init_game();
 
+    void init_game_list();
+
     void init_main_menu();
-
-    void game_handle_events(SDL_Event &event);
-
-    void main_menu_handle_events(SDL_Event &event);
 
     void handle_events();
 
     void game_render();
-
-    void main_menu_render();
 
     void render();
 
     void game_update();
 
     void main_menu_update();
+
+    void char_list_update();
 
     void update();
 

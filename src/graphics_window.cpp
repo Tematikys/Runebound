@@ -59,29 +59,38 @@ void Window::render(
     rect.render_border(renderer, 0, 0, {255, 0, 0, 255});
 
     for (const auto &[name, button] : m_buttons) {
-        button.render(
-            renderer, m_button_pos.at(name).x(), m_button_pos.at(name).y()
-        );
+        if (m_button_visible.at(name)) {
+            button.render(
+                renderer, m_button_pos.at(name).x(), m_button_pos.at(name).y()
+            );
+        }
     }
 
     for (const auto &[name, text_field] : m_text_fields) {
-        text_field.render(
-            renderer, m_text_field_fonts.at(name), m_text_field_colors.at(name),
-            m_text_field_pos.at(name).x(), m_text_field_pos.at(name).y()
-        );
+        if (m_text_field_visible.at(name)) {
+            text_field.render(
+                renderer, m_text_field_fonts.at(name),
+                m_text_field_colors.at(name), m_text_field_pos.at(name).x(),
+                m_text_field_pos.at(name).y()
+            );
+        }
     }
 
     for (const auto &[name, texture] : m_textures) {
-        texture.render(
-            renderer, m_texture_pos.at(name).x(), m_texture_pos.at(name).y()
-        );
+        if (m_texture_visible.at(name)) {
+            texture.render(
+                renderer, m_texture_pos.at(name).x(), m_texture_pos.at(name).y()
+            );
+        }
     }
 
     for (const auto &[name, window] : m_windows) {
-        window->render(
-            renderer, m_window_pos.at(name).x(), m_window_pos.at(name).y(),
-            m_texture
-        );
+        if (m_window_visible.at(name)) {
+            window->render(
+                renderer, m_window_pos.at(name).x(), m_window_pos.at(name).y(),
+                m_texture
+            );
+        }
     }
     SDL_SetRenderTarget(renderer, main_texture);
     const SDL_Rect renderQuad = {x_offset, y_offset, m_width, m_height};
@@ -129,7 +138,8 @@ void Window::update(Point mouse_pos, bool mouse_pressed) {
         return;
     }
     for (const auto &[name, window] : m_windows) {
-        if (window->in_bounds(
+        if (m_window_updatable[name] &&
+            window->in_bounds(
                 mouse_pos -
                 Point(m_window_pos[name].x(), m_window_pos[name].y())
             ) &&
@@ -145,7 +155,8 @@ void Window::update(Point mouse_pos, bool mouse_pressed) {
         }
     }
     for (const auto &[name, text_field] : m_text_fields) {
-        if (text_field.in_bounds(
+        if (m_text_field_updatable[name] &&
+            text_field.in_bounds(
                 mouse_pos -
                 Point(m_text_field_pos[name].x(), m_text_field_pos[name].y())
             )) {
@@ -161,7 +172,8 @@ void Window::update(Point mouse_pos, bool mouse_pressed) {
         reset_active_text_field();
     }
     for (const auto &[name, button] : m_buttons) {
-        if (button.in_bounds(
+        if (m_button_updatable[name] &&
+            button.in_bounds(
                 mouse_pos -
                 Point(m_button_pos[name].x(), m_button_pos[name].y())
             )) {
