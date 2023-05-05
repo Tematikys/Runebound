@@ -36,6 +36,24 @@ public:
         SDL_Color border_color
     ) const;
 
+    void render_to_texture(
+        SDL_Renderer *renderer,
+        SDL_Texture *previous_texture,
+        SDL_Texture *texture_to_render_on,
+        int x_offset,
+        int y_offset,
+        SDL_Color fill_color
+    ) const;
+
+    void render_border_to_texture(
+        SDL_Renderer *renderer,
+        SDL_Texture *previous_texture,
+        SDL_Texture *texture_to_render_on,
+        int x_offset,
+        int y_offset,
+        SDL_Color border_color
+    ) const;
+
     [[nodiscard]] bool in_bounds(const Point &dot) const;
 
     [[nodiscard]] Point get_vertex(::std::size_t index) const {

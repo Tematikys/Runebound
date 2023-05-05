@@ -6,7 +6,9 @@
 #include <graphics_button.hpp>
 #include <graphics_config.hpp>
 #include <graphics_point.hpp>
-#include <vector>
+#include <map>
+#include <memory>
+#include <string>
 
 namespace runebound::graphics {
 class Window {
@@ -14,36 +16,43 @@ private:
     int m_width{0};
     int m_height{0};
 
+    bool m_is_active{false};
+
     SDL_Rect m_rect{};
     SDL_Texture *m_texture{nullptr};
     SDL_Color m_color{255, 255, 255, 255};
 
-    ::std::vector<Button> m_buttons{};
-    ::std::vector<Point> m_button_pos{};
+    ::std::map<::std::string, Button> m_buttons{};
+    ::std::map<::std::string, Point> m_button_pos{};
 
-    ::std::vector<TextField> m_text_fields{};
-    ::std::vector<Point> m_text_field_pos{};
-    ::std::vector<TTF_Font *> m_text_field_fonts{};
-    ::std::vector<SDL_Color> m_text_field_colors{};
-    ::std::size_t m_active_text_filed{0};
+    ::std::map<::std::string, TextField> m_text_fields{};
+    ::std::map<::std::string, Point> m_text_field_pos{};
+    ::std::map<::std::string, TTF_Font *> m_text_field_fonts{};
+    ::std::map<::std::string, SDL_Color> m_text_field_colors{};
+    ::std::string m_active_text_field{};
 
-    ::std::vector<Texture> m_textures{};
-    ::std::vector<Point> m_texture_pos{};
+    ::std::map<::std::string, Texture> m_textures{};
+    ::std::map<::std::string, Point> m_texture_pos{};
 
-    ::std::vector<Window *> m_windows{};
-    ::std::vector<Point> m_window_pos{};
-    ::std::size_t m_active_window{0};
+    ::std::map<::std::string, ::std::unique_ptr<Window>> m_windows{};
+    ::std::map<::std::string, Point> m_window_pos{};
+    ::std::string m_active_window{};
 
 public:
     Window() = default;
 
     Window(SDL_Renderer *renderer, int width, int height, SDL_Color color)
-        : m_width(width), m_height(height), m_color(color) {
+        : m_width(width),
+          m_height(height),
+          m_color(color),
+          m_texture(SDL_CreateTexture(
+              renderer,
+              SDL_PIXELFORMAT_RGBA8888,
+              SDL_TEXTUREACCESS_TARGET,
+              m_width,
+              m_height
+          )) {
         m_rect = {0, 0, width, height};
-        m_texture = SDL_CreateTexture(
-            renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
-            m_width, m_height
-        );
     }
 
     Window(const Window &other) = delete;
@@ -66,38 +75,172 @@ public:
         SDL_RendererFlip flip = SDL_FLIP_NONE
     ) const;
 
-    void click(Point mouse_pos);
+    void render_texture(
+        SDL_Renderer *renderer,
+        int x_offset,
+        int y_offset,
+        int width,
+        int height,
+        SDL_Texture *texture,
+        SDL_Texture *main_texture = nullptr,
+        SDL_Rect *clip = nullptr,
+        double angle = 0.0,
+        SDL_Point *center = nullptr,
+        SDL_RendererFlip flip = SDL_FLIP_NONE
+    ) const;
 
-    void add_button(Button &button, Point pos) {
-        m_buttons.push_back(::std::move(button));
-        m_button_pos.push_back(pos);
+    void add_button(const ::std::string &name, Button &button, Point pos) {
+        m_buttons[name] = ::std::move(button);
+        m_button_pos[name] = pos;
     }
 
-    void add_text_files(
+    void remove_button(const ::std::string &name) {
+        if (m_buttons.find(name) == m_buttons.end()) {
+            return;
+        }
+        m_buttons.erase(name);
+        m_button_pos.erase(name);
+    }
+
+    void remove_all_buttons() {
+        m_buttons.clear();
+        m_button_pos.clear();
+    }
+
+    void add_text_field(
+        const ::std::string &name,
         TextField &text_field,
         TTF_Font *font,
         SDL_Color col,
         Point pos
     ) {
-        m_text_fields.push_back(::std::move(text_field));
-        m_text_field_pos.push_back(pos);
-        m_text_field_fonts.push_back(font);
-        m_text_field_colors.push_back(col);
+        m_text_fields[name] = ::std::move(text_field);
+        m_text_field_fonts[name] = font;
+        m_text_field_colors[name] = col;
+        m_text_field_pos[name] = pos;
     }
 
-    void add_texture(Texture &texture, Point pos) {
-        m_textures.push_back(::std::move(texture));
-        m_texture_pos.push_back(pos);
+    void remove_text_field(const ::std::string &name) {
+        if (m_text_fields.find(name) == m_text_fields.end()) {
+            return;
+        }
+        m_text_fields.erase(name);
+        m_texture_pos.erase(name);
     }
 
-    void add_window(Window *&window, Point pos) {
-        m_windows.push_back(::std::move(window));
-        m_window_pos.push_back(pos);
+    void remove_all_text_fields() {
+        m_text_fields.clear();
+        m_text_field_pos.clear();
+    }
+
+    void add_texture(const ::std::string &name, Texture &texture, Point pos) {
+        m_textures[name] = ::std::move(texture);
+        m_texture_pos[name] = pos;
+    }
+
+    void remove_texture(const ::std::string &name) {
+        if (m_textures.find(name) == m_textures.end()) {
+            return;
+        }
+        m_textures.erase(name);
+        m_texture_pos.erase(name);
+    }
+
+    void remove_all_textures() {
+        m_textures.clear();
+        m_texture_pos.clear();
+    }
+
+    void add_window(
+        const ::std::string &name,
+        ::std::unique_ptr<Window> window,
+        Point pos
+    ) {
+        m_windows[name] = ::std::move(window);
+        m_window_pos[name] = pos;
+    }
+
+    void remove_window(const ::std::string &name) {
+        if (m_windows.find(name) == m_windows.end()) {
+            return;
+        }
+        m_windows.erase(name);
+        m_window_pos.erase(name);
+    }
+
+    void remove_all_windows() {
+        m_windows.clear();
+        m_window_pos.clear();
+    }
+
+    void handle_events(SDL_Event event);
+
+    void update(Point mouse_pos, bool mouse_pressed);
+
+    void activate() {
+        m_is_active = true;
+    }
+
+    void deactivate() {
+        m_is_active = false;
+    }
+
+    void reset_active_window() {
+        if (!m_active_window.empty()) {
+            m_windows[m_active_window]->deactivate();
+        }
+    }
+
+    void set_active_window(const ::std::string &name) {
+        if (m_windows.find(name) == m_windows.end()) {
+            return;
+        }
+        reset_active_window();
+        m_active_window = name;
+        m_windows[name]->activate();
+    }
+
+    void reset_active_text_field() {
+        m_active_text_field = "";
+    }
+
+    void set_active_text_field(const ::std::string &name) {
+        if (m_text_fields.find(name) == m_text_fields.end()) {
+            return;
+        }
+        reset_active_text_field();
+        m_active_text_field = name;
+    }
+
+    [[nodiscard]] SDL_Texture *get_texture() {
+        return m_texture;
+    }
+
+    [[nodiscard]] Window *get_window(const ::std::string &name) {
+        if (m_windows.find(name) != m_windows.end()) {
+            return m_windows[name].get();
+        }
+        return nullptr;
+    }
+
+    [[nodiscard]] const ::std::string &get_active_window_name() const {
+        return m_active_window;
+    }
+
+    [[nodiscard]] TextField *get_text_field(const ::std::string &name) {
+        if (m_text_fields.find(name) == m_text_fields.end()) {
+            return nullptr;
+        }
+        return &m_text_fields.at(name);
     }
 
     [[nodiscard]] bool in_bounds(const Point &p) const {
         return (0 <= p.x() && p.x() < m_width) &&
                (0 <= p.y() && p.y() < m_height);
+    }
+
+    [[nodiscard]] bool is_active() const {
+        return m_is_active;
     }
 };
 }  // namespace runebound::graphics

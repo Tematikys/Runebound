@@ -1,7 +1,7 @@
 #include <graphics_client.hpp>
 
 int main(int, char *[]) {
-    ::runebound::client::Client client;
+    ::runebound::graphics::Client client;
     client.init();
 
     while (client.running()) {

@@ -133,6 +133,32 @@ bool PolygonShape::in_bounds(const Point &dot) const {
     );
 }
 
+void PolygonShape::render_to_texture(
+    SDL_Renderer *renderer,
+    SDL_Texture *previous_texture,
+    SDL_Texture *texture_to_render_on,
+    int x_offset,
+    int y_offset,
+    SDL_Color fill_color
+) const {
+    SDL_SetRenderTarget(renderer, texture_to_render_on);
+    render(renderer, x_offset, y_offset, fill_color);
+    SDL_SetRenderTarget(renderer, previous_texture);
+}
+
+void PolygonShape::render_border_to_texture(
+    SDL_Renderer *renderer,
+    SDL_Texture *previous_texture,
+    SDL_Texture *texture_to_render_on,
+    int x_offset,
+    int y_offset,
+    SDL_Color border_color
+) const {
+    SDL_SetRenderTarget(renderer, texture_to_render_on);
+    render_border(renderer, x_offset, y_offset, border_color);
+    SDL_SetRenderTarget(renderer, previous_texture);
+}
+
 HexagonShape::HexagonShape(const Point &center, int radius) {
     const int dy = (radius * 56756) >> 16;
     m_vertexes.emplace_back(center.x() - radius / 2, center.y() - dy);

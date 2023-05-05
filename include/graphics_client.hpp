@@ -10,13 +10,16 @@
 #include <graphics_config.hpp>
 #include <graphics_window.hpp>
 #include <map.hpp>
+#include <map>
 #include <network_client.hpp>
 #include <string>
 #include <vector>
 
-namespace runebound::client {
+namespace runebound::graphics {
 class Client {
 private:
+    Window m_window;
+
     bool m_joined_to_game{false};
     ::boost::asio::io_context m_io_context;
     ::boost::asio::executor_work_guard<::boost::asio::io_context::executor_type>
@@ -24,29 +27,29 @@ private:
     ::runebound::network::Client m_network_client =
         ::runebound::network::Client(m_io_context, "127.0.0.1", 4444, "client");
 
-    ::runebound::graphics::Board m_board{};
+    Board m_board{};
     ::std::size_t m_game_list_start_index{0};
     ::std::size_t m_game_list_show_amount{10};
-    ::std::vector<::runebound::graphics::Button> m_game_list{};
-    ::std::vector<::runebound::graphics::Point> m_game_list_pos{};
+    ::std::vector<Button> m_game_list{};
+    ::std::vector<Point> m_game_list_pos{};
 
-    SDL_Window *m_window{nullptr};
-    SDL_Renderer *m_renderer{nullptr};
+    SDL_Window *m_graphic_window{nullptr};
+    SDL_Renderer *m_graphic_renderer{nullptr};
     ::std::map<::std::string, TTF_Font *> m_fonts{};
-    ::std::map<::std::string, ::runebound::graphics::Texture> m_images{};
+    ::std::map<::std::string, Texture> m_images{};
 
-    ::std::vector<::runebound::graphics::Texture> m_main_menu_textures{};
-    ::std::vector<::runebound::graphics::Button> m_main_menu_buttons{};
-    ::std::vector<::runebound::graphics::Point> m_main_menu_button_pos{};
-    ::std::vector<::runebound::graphics::TextField> m_main_menu_text_fields{};
-    ::std::vector<::runebound::graphics::Point> m_main_menu_text_field_pos{};
+    ::std::vector<Texture> m_main_menu_textures{};
+    ::std::vector<Button> m_main_menu_buttons{};
+    ::std::vector<Point> m_main_menu_button_pos{};
+    ::std::vector<TextField> m_main_menu_text_fields{};
+    ::std::vector<Point> m_main_menu_text_field_pos{};
     ::std::size_t m_main_menu_active_text_field{0};
 
-    ::std::vector<::runebound::graphics::Texture> m_game_textures{};
-    ::std::vector<::runebound::graphics::Button> m_game_buttons{};
-    ::std::vector<::runebound::graphics::Point> m_game_button_pos{};
-    ::std::vector<::runebound::graphics::Button> m_character_list{};
-    ::std::vector<::runebound::graphics::Point> m_character_list_pos{};
+    ::std::vector<Texture> m_game_textures{};
+    ::std::vector<Button> m_game_buttons{};
+    ::std::vector<Point> m_game_button_pos{};
+    ::std::vector<Button> m_character_list{};
+    ::std::vector<Point> m_character_list_pos{};
     bool m_character_selected{false};
 
     bool m_is_running{false};
@@ -55,7 +58,7 @@ private:
     uint32_t m_prev_frame_time{0};
 
     bool m_mouse_pressed{false};
-    ::runebound::graphics::Point m_mouse_pos{};
+    Point m_mouse_pos{};
 
 public:
     Client() = default;
@@ -100,5 +103,5 @@ public:
         return m_is_running;
     };
 };
-}  // namespace runebound::client
+}  // namespace runebound::graphics
 #endif  // RUNEBOUND_CLIENT_HPP_

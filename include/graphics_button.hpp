@@ -82,6 +82,25 @@ public:
 
     TextField(::std::string text, Button &button, int max_len = 0);
 
+    TextField(TextField &&other) noexcept
+        : m_text(::std::move(other.m_text)),
+          m_max_text_len(other.m_max_text_len),
+          m_button(::std::move(other.m_button)) {
+    }
+
+    TextField(const TextField &other) = delete;
+
+    TextField &operator=(TextField &&other)  noexcept {
+        m_text = ::std::move(other.m_text);
+        m_max_text_len = other.m_max_text_len;
+        m_button = ::std::move(other.m_button);
+        return *this;
+    }
+
+    TextField &operator=(const TextField &other) = delete;
+
+    ~TextField() = default;
+
     void push(const ::std::string &suffix);
 
     void pop() {
