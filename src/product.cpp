@@ -17,7 +17,7 @@ void Product::apply_product(const std::shared_ptr<character::Character> &chr
     }
 }
 
-void Product::cancel_product(const std::shared_ptr<character::Character> &chr
+void Product::undo_product(const std::shared_ptr<character::Character> &chr
 ) const {
     chr->update_max_health(-m_delta_max_health);
     chr->update_hand_limit(-m_delta_hand_limit);

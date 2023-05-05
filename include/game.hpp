@@ -196,7 +196,7 @@ public:
         return m_map.get_towns();
     }
 
-    [[nodiscard]] std::set<unsigned int> get_products(Point town) {
+    [[nodiscard]] std::set<unsigned int> get_town_products(Point town) {
         return m_shops[town];
     }
 

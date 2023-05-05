@@ -345,7 +345,7 @@ void Game::sell_product_in_town(
         throw NoProductSaleException();
     }
     check_town_location(chr);
-    m_all_products[product].cancel_product(chr);
+    m_all_products[product].undo_product(chr);
     chr->erase_product(product);
     m_remaining_products.push_back(product);
     chr->change_gold(static_cast<int>(m_all_products[product].get_market_price()
@@ -397,7 +397,7 @@ void Game::sell_product_in_special_cell(
         m_map.get_cell_map(chr->get_position()).get_special_type_cell()) {
         throw NoProductSaleException();
     }
-    m_all_products[product].cancel_product(chr);
+    m_all_products[product].undo_product(chr);
     chr->erase_product(product);
     m_remaining_products.push_back(product);
     chr->change_gold(static_cast<int>(m_all_products[product].get_market_price()

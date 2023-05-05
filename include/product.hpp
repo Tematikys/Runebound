@@ -113,7 +113,7 @@ public:
     }
 
     void apply_product(const std::shared_ptr<character::Character> &chr) const;
-    void cancel_product(const std::shared_ptr<character::Character> &chr) const;
+    void undo_product(const std::shared_ptr<character::Character> &chr) const;
 
     bool operator<(const Product &other) const {
         return m_product_name < other.m_product_name;

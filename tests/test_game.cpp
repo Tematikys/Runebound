@@ -187,13 +187,13 @@ TEST_CASE("trade") {
     mok->set_position(runebound::Point(10, 2));
     CHECK(mok->get_action_points() == 3);
     CHECK(mok->get_gold() == 2);
-    auto products = game.get_products(mok->get_position());
+    auto products = game.get_town_products(mok->get_position());
     CHECK(products.size() == 3);
     game.start_trade(mok);
     CHECK(mok->get_action_points() == 2);
     mok->change_gold(100);
     CHECK(mok->get_gold() == 102);
-    auto new_products = game.get_products(mok->get_position());
+    auto new_products = game.get_town_products(mok->get_position());
     CHECK(new_products.size() == 4);
     CHECK(mok->check_in_trade() == true);
     game.buy_product(mok, *(++new_products.begin()));
@@ -202,7 +202,7 @@ TEST_CASE("trade") {
         102 - game.get_product(*(++new_products.begin())).get_price()
     );
     CHECK(mok->check_in_trade() == false);
-    CHECK(game.get_products(mok->get_position()).size() == 3);
+    CHECK(game.get_town_products(mok->get_position()).size() == 3);
     mok->set_position(runebound::Point(11, 13));
     game.start_trade(mok);
     CHECK(mok->get_action_points() == 1);
@@ -215,6 +215,6 @@ TEST_CASE("trade") {
         game.sell_product_in_town(mok, *mok_products.begin());
         CHECK(mok->get_gold() == 102);
     }
-    game.discard_product(mok, *game.get_products(mok->get_position()).begin());
+    game.discard_product(mok, *game.get_town_products(mok->get_position()).begin());
     CHECK(mok->check_in_trade() == false);
 }
