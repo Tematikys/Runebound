@@ -28,6 +28,7 @@ private:
         ::runebound::network::Client(m_io_context, "127.0.0.1", 4444, "client");
 
     Board m_board{};
+    Point m_board_pos{0, 0};
     ::std::size_t m_game_list_start_index{0};
     ::std::size_t m_game_list_show_amount{10};
     ::std::vector<Button> m_game_list{};
@@ -64,7 +65,7 @@ public:
 
     void init_graphics();
 
-    void init_board();
+    void update_board();
 
     void init_game();
 

@@ -119,28 +119,6 @@ void Board::add_special(
     ++m_special_amount;
 }
 
-void Board::generate_texture(
-    SDL_Renderer *renderer,
-    SDL_Texture *main_texture
-) {
-    SDL_SetRenderTarget(renderer, m_texture);
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderClear(renderer);
-
-    render(renderer, 0, 0);
-
-    SDL_SetRenderTarget(renderer, main_texture);
-
-    //    SDL_Surface **surface;
-    //    SDL_LockTextureToSurface(m_texture, nullptr, surface);
-    //    SDL_SetColorKey(
-    //        *surface, SDL_TRUE, SDL_MapRGB((*surface)->format, 0xFF, 0xFF,
-    //        0xFF)
-    //    );
-    //    SDL_UnlockTexture(m_texture);
-}
-
 void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
     for (::std::size_t i = 0; i < m_cell_amount; ++i) {
         m_cells[i].render(renderer, x_offset, y_offset, m_cell_fill_color[i]);

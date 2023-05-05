@@ -76,10 +76,7 @@ public:
         SDL_Renderer *renderer,
         int x_offset,
         int y_offset,
-        SDL_Texture *main_texture = nullptr,
-        double angle = 0.0,
-        SDL_Point *center = nullptr,
-        SDL_RendererFlip flip = SDL_FLIP_NONE
+        SDL_Texture *main_texture = nullptr
     ) const;
 
     void render_texture(
@@ -89,11 +86,7 @@ public:
         int width,
         int height,
         SDL_Texture *texture,
-        SDL_Texture *main_texture = nullptr,
-        SDL_Rect *clip = nullptr,
-        double angle = 0.0,
-        SDL_Point *center = nullptr,
-        SDL_RendererFlip flip = SDL_FLIP_NONE
+        SDL_Texture *main_texture = nullptr
     ) const;
 
     void add_button(
@@ -194,6 +187,9 @@ public:
         Point pos,
         bool visible
     ) {
+        if (m_textures.find(name) != m_textures.end()) {
+            m_textures[name].free();
+        }
         m_textures[name] = ::std::move(texture);
         m_texture_pos[name] = pos;
         m_texture_visible[name] = visible;
@@ -324,6 +320,14 @@ public:
             return nullptr;
         }
         return &m_text_fields.at(name);
+    }
+
+    [[nodiscard]] int width() const {
+        return m_width;
+    }
+
+    [[nodiscard]] int height() const {
+        return m_height;
     }
 
     [[nodiscard]] bool in_bounds(const Point &p) const {

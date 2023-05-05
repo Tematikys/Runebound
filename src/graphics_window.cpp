@@ -43,10 +43,7 @@ void Window::render(
     SDL_Renderer *renderer,
     int x_offset,
     int y_offset,
-    SDL_Texture *main_texture,
-    double angle,
-    SDL_Point *center,
-    SDL_RendererFlip flip
+    SDL_Texture *main_texture
 ) const {
     SDL_SetRenderTarget(renderer, m_texture);
 
@@ -94,9 +91,7 @@ void Window::render(
     }
     SDL_SetRenderTarget(renderer, main_texture);
     const SDL_Rect renderQuad = {x_offset, y_offset, m_width, m_height};
-    SDL_RenderCopyEx(
-        renderer, m_texture, &m_rect, &renderQuad, angle, center, flip
-    );
+    SDL_RenderCopy(renderer, m_texture, &m_rect, &renderQuad);
 }
 
 void Window::handle_events(SDL_Event event) {
@@ -193,15 +188,11 @@ void Window::render_texture(
     int width,
     int height,
     SDL_Texture *texture,
-    SDL_Texture *main_texture,
-    SDL_Rect *clip,
-    double angle,
-    SDL_Point *center,
-    SDL_RendererFlip flip
+    SDL_Texture *main_texture
 ) const {
     SDL_SetRenderTarget(renderer, m_texture);
     const SDL_Rect renderQuad = {x_offset, y_offset, width, height};
-    SDL_RenderCopyEx(renderer, texture, clip, &renderQuad, angle, center, flip);
+    SDL_RenderCopy(renderer, texture, nullptr, &renderQuad);
     SDL_SetRenderTarget(renderer, main_texture);
 }
 

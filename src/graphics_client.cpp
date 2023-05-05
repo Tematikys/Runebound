@@ -5,7 +5,7 @@
 #include <utility>
 
 namespace runebound::graphics {
-void Client::init_board() {
+void Client::update_board() {
     m_board = Board(m_network_client.get_game_client().m_map);
 }
 
@@ -45,84 +45,101 @@ void Client::init() {
     init_graphics();
     init_main_menu();
     init_game_list();
+    init_game();
     m_window.set_active_window("main_menu");
     m_window.activate();
 }
 
 void Client::init_game() {
+    auto window = ::std::make_unique<Window>(Window(
+        m_graphic_renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
+        {0xFF, 0xFF, 0xFF, 0xFF}
+    ));
     Texture texture;
+    Button button;
+
     // ===== MAIN MENU BUTTON =====
     texture.load_text_from_string(
         m_graphic_renderer, m_fonts["FreeMono30"], "Main menu",
         {0x00, 0x00, 0x00, 0xFF}
     );
-    m_game_button_pos.emplace_back(615, 5);
-    m_game_buttons.push_back(Button(
+    button = Button(
         180, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
             m_network_client.exit_game();
-            m_joined_to_game = false;
-            m_character_selected = false;
+            m_window.set_updatability_window("game", false);
+            m_window.set_visibility_window("game", false);
+            m_window.set_active_window("main_menu");
+            m_window.set_updatability_window("main_menu", true);
+            m_window.set_visibility_window("main_menu", true);
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    ));
+    );
+    window->add_button("main_menu", button, {615, 5}, true, true);
     // ===== MAIN MENU BUTTON =====
+
     // ===== EXIT BUTTON =====
     texture.load_text_from_string(
         m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
         {0x00, 0x00, 0x00, 0xFF}
     );
-    m_game_button_pos.emplace_back(615, 40);
-    m_game_buttons.push_back(Button(
+    button = Button(
         180, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
-            m_is_running = false;
             m_network_client.exit_game();
+            m_is_running = false;
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    ));
+    );
+    window->add_button("exit", button, {615, 40}, true, true);
     // ===== EXIT BUTTON =====
+
     // ===== THROW DICE BUTTON =====
     texture.load_text_from_string(
         m_graphic_renderer, m_fonts["FreeMono30"], "Throw dice",
         {0x00, 0x00, 0x00, 0xFF}
     );
     m_game_button_pos.emplace_back(615, 765);
-    m_game_buttons.push_back(Button(
+    button = Button(
         180, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() { m_network_client.throw_move_dice(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    ));
+    );
+    window->add_button("throw_dice", button, {615, 765}, true, true);
     // ===== THROW DICE BUTTON =====
+
     // ===== RELAX BUTTON =====
     texture.load_text_from_string(
         m_graphic_renderer, m_fonts["FreeMono30"], "Relax",
         {0x00, 0x00, 0x00, 0xFF}
     );
-    m_game_button_pos.emplace_back(615, 730);
-    m_game_buttons.push_back(Button(
+    button = Button(
         180, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() { m_network_client.relax(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    ));
+    );
+    window->add_button("relax", button, {615, 730}, true, true);
     // ===== RELAX BUTTON =====
+
     // ===== PASS BUTTON =====
     texture.load_text_from_string(
         m_graphic_renderer, m_fonts["FreeMono30"], "Pass",
         {0x00, 0x00, 0x00, 0xFF}
     );
-    m_game_button_pos.emplace_back(615, 695);
-    m_game_buttons.push_back(Button(
+    button = Button(
         180, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() { m_network_client.pass(); }, []() {},
         {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    ));
+    );
+    window->add_button("pass", button, {615, 695}, true, true);
     // ===== PASS BUTTON =====
+
+    m_window.add_window("game", ::std::move(window), {0, 0}, false, false);
 }
 
 void Client::init_game_list() {
@@ -165,8 +182,8 @@ void Client::init_game_list() {
         180, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
-            m_is_running = false;
             m_network_client.exit_game();
+            m_is_running = false;
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
@@ -364,87 +381,21 @@ void Client::render() {
 }
 
 void Client::game_update() {
-#ifdef DEBUG_INFO
-    ::std::cout << "[info] :: GAME UPDATE" << ::std::endl;
-#endif
-    //    m_character_list.clear();
-    //    m_character_list_pos.clear();
-    //    if (!m_character_selected) {
-    //        int i = 0;
-    //        for (const auto &character : m_network_client.get_game_client()
-    //                                         .m_remaining_standard_characters)
-    //                                         {
-    //            ::std::string name;
-    //            switch (character) {
-    //                case ::runebound::character::StandardCharacter::LISSA:
-    //                    name = "LISSA";
-    //                    break;
-    //                case character::StandardCharacter::CORBIN:
-    //                    name = "CORBIN";
-    //                    break;
-    //                case character::StandardCharacter::ELDER_MOK:
-    //                    name = "ELDER MOK";
-    //                    break;
-    //                case character::StandardCharacter::LAUREL_FROM_BLOODWOOD:
-    //                    name = "LAUREL FROM BLOODWOOD";
-    //                    break;
-    //                case character::StandardCharacter::LORD_HAWTHORNE:
-    //                    name = "LORD HAWTHORNE";
-    //                    break;
-    //                case character::StandardCharacter::MASTER_THORN:
-    //                    name = "MASTER THORN";
-    //                    break;
-    //            }
-    //            Texture texture;
-    //            texture.load_text_from_string(
-    //                m_graphic_renderer, m_fonts["FreeMono30"], name,
-    //                {0x00, 0x00, 0x00, 0xFF}
-    //            );
-    //            m_character_list_pos.emplace_back(0, i * (texture.height() +
-    //            5)); Button button(
-    //                texture.width(), texture.height(),
-    //                HorizontalButtonTextureAlign::CENTER,
-    //                VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-    //                [character, this]() {
-    //                    ::std::cout << "CLicked" << ::std::endl;
-    //                    m_character_selected = true;
-    //                    m_network_client.select_character(character);
-    //                },
-    //                []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00,
-    //                0xFF}
-    //            );
-    //            m_character_list.push_back(::std::move(button));
-    //            ++i;
-    //        }
-    //    }
-    //    for (::std::size_t i = 0; i < m_character_list.size(); ++i) {
-    //        if (m_character_list[i].in_bounds(
-    //                m_mouse_pos -
-    //                Point(m_character_list_pos[i].x(),
-    //                m_character_list_pos[i].y())
-    //            )) {
-    //            m_character_list[i].on_cover();
-    //            if (m_mouse_pressed) {
-    //                m_mouse_pressed = false;
-    //                m_character_list[i].on_click();
-    //            }
-    //        }
-    //    }
-    //    for (::std::size_t i = 0; i < m_game_buttons.size(); ++i) {
-    //        if (m_game_buttons[i].in_bounds(
-    //                m_mouse_pos -
-    //                Point(m_game_button_pos[i].x(), m_game_button_pos[i].y())
-    //            )) {
-    //            m_game_buttons[i].on_cover();
-    //            if (m_mouse_pressed) {
-    //                m_mouse_pressed = false;
-    //                m_game_buttons[i].on_click();
-    //            }
-    //        }
-    //    }
-    //    if (m_character_selected) {
-    //        m_board.update_selection(m_mouse_pos);
-    //    }
+    update_board();
+    m_board.update_selection(m_mouse_pos - m_board_pos);
+
+    auto *win = m_window.get_window("game");
+
+    SDL_Texture *tex = nullptr;
+    m_board.render_to_texture(m_graphic_renderer, tex);
+
+    Texture texture(tex);
+    win->remove_texture("board");
+    win->add_texture("board", texture, {0, 0}, true);
+
+//    SDL_DestroyTexture(tex);
+    texture.free();
+
     //    const ::std::size_t index = m_board.get_selected_hexagon();
     //    if (index != 0xFFFF && m_mouse_pressed) {
     //        ::std::cout << index << ::std::endl;
@@ -457,9 +408,8 @@ void Client::game_update() {
 }
 
 void Client::main_menu_update() {
-    auto *game_list_win =
-        m_window.get_window("main_menu")->get_window("game_list");
-    game_list_win->remove_all_buttons();
+    auto *win = m_window.get_window("main_menu")->get_window("game_list");
+    win->remove_all_buttons();
     for (::std::size_t i = m_game_list_start_index;
          i < ::std::min(
                  m_game_list_start_index + m_game_list_show_amount,
@@ -486,7 +436,7 @@ void Client::main_menu_update() {
             },
             []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
         );
-        game_list_win->add_button(
+        win->add_button(
             m_network_client.get_game_names()[i], button,
             {5, static_cast<int>(i - m_game_list_start_index) * 55 + 5}, true,
             true
@@ -495,7 +445,7 @@ void Client::main_menu_update() {
 }
 
 void Client::char_list_update() {
-    auto win = m_window.get_window("char_list");
+    auto *win = m_window.get_window("char_list");
     win->remove_all_buttons();
 
     Texture texture;
@@ -574,13 +524,17 @@ void Client::char_list_update() {
             HorizontalButtonTextureAlign::CENTER,
             VerticalButtonTextureAlign::CENTER, 0, 0, texture,
             [character, this]() {
-                ::std::cout << "character selected" << ::std::endl;
                 m_network_client.select_character(character);
+                m_window.set_updatability_window("char_list", false);
+                m_window.set_visibility_window("char_list", false);
+                m_window.set_active_window("game");
+                m_window.set_updatability_window("game", true);
+                m_window.set_visibility_window("game", true);
             },
             []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
         );
         win->add_button(
-            name, button, {5, i * (texture.height() + 5)}, true, true
+            name, button, {5, i * texture.height() + 5}, true, true
         );
         ++i;
     }
@@ -594,6 +548,8 @@ void Client::update() {
         main_menu_update();
     } else if (active_window == "char_list") {
         char_list_update();
+    } else if (active_window == "game") {
+        game_update();
     }
     m_window.update(m_mouse_pos, m_mouse_pressed);
     m_mouse_pressed = false;

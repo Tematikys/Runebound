@@ -44,8 +44,6 @@ private:
     int m_width{0};
     int m_height{0};
 
-    SDL_Texture *m_texture{nullptr};
-
     void add_cell(
         const HexagonShape &hexagon,
         SDL_Color fill_color,
@@ -68,11 +66,6 @@ private:
 
     void add_road(const Segment &segment, SDL_Color color);
 
-    void generate_texture(
-        SDL_Renderer *renderer,
-        SDL_Texture *main_texture = nullptr
-    );
-
 public:
     Board() = default;
 
@@ -82,10 +75,17 @@ public:
 
     void update_selection(const Point &dot);
 
-    [[nodiscard]] SDL_Texture *
-    get_texture(SDL_Renderer *renderer, SDL_Texture *main_texture = nullptr) {
-        generate_texture(renderer, main_texture);
-        return m_texture;
+    void render_to_texture(SDL_Renderer *renderer, SDL_Texture *&texture) {
+        SDL_DestroyTexture(texture);
+        texture = SDL_CreateTexture(
+            renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+            m_width, m_height
+        );
+        SDL_SetRenderTarget(renderer, texture);
+        SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0xFF, 0xFF);
+        SDL_RenderClear(renderer);
+        render(renderer, 0, 0);
+        SDL_SetRenderTarget(renderer, nullptr);
     }
 
     [[nodiscard]] int width() const {

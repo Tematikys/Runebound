@@ -17,6 +17,15 @@ private:
 public:
     Texture() = default;
 
+    explicit Texture(SDL_Texture *&texture) : m_texture(texture) {
+        int width{};
+        int height{};
+        SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+        texture = nullptr;
+        m_width = width;
+        m_height = height;
+    }
+
     Texture(Texture &&other) noexcept
         : m_width(other.m_width),
           m_height(other.m_height),
