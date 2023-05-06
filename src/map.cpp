@@ -104,12 +104,16 @@ void to_json(nlohmann::json &json, const Map &map) {
     json["m_map"] = map.m_map;
     json["m_size"] = map.m_size;
     json["m_rivers"] = map.m_rivers;
-    json["directions_odd_row"] = map.directions_odd_column;
-    json["directions_even_row"] = map.directions_odd_column;
+    json["m_towns"] = map.m_towns;
+    json["m_territory_name"] = map.m_territory_name;
 }
 
 void from_json(const nlohmann::json &json, Map &map) {
     map.m_map = json["m_map"];
+    map.m_rivers = json["m_rivers"];
+    map.m_towns = json["m_towns"];
+    map.m_size = json["m_size"];
+    map.m_territory_name = json["m_territory_name"];
 }
 
 }  // namespace map

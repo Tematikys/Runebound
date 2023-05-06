@@ -9,15 +9,17 @@ set(NLOHMANN_INCLUDE_DIR "tpl/")
 set(SDL2_INCLUDE_DIR "tpl/SDL2/include/")
 set(SDL2_LIB_DIR "tpl/SDL2/lib/")
 
+set(SQLITE_INCLUDE_DIR "tpl/sqlite/")
+
 include_directories("include/")
 include_directories(${NLOHMANN_INCLUDE_DIR})
 include_directories(${SDL2_INCLUDE_DIR})
+include_directories(${SQLITE_INCLUDE_DIR})
 
 link_directories(${SDL2_LIB_DIR})
 
 # ===== GRAPHICS CLIENT ===== #
 add_executable(graphics_client
-        src/builder_map.cpp
         src/card_adventure.cpp
         src/card_fight.cpp
         src/card_research.cpp
@@ -54,7 +56,6 @@ target_link_libraries(graphics_client ${Boost_LIBRARIES} ws2_32 wsock32)
 
 # ===== NETWORK SERVER ===== #
 add_executable(network_server
-        src/builder_map.cpp
         src/card_adventure.cpp
         src/card_fight.cpp
         src/card_research.cpp
@@ -77,7 +78,6 @@ target_link_libraries(network_server ${Boost_LIBRARIES} ws2_32 wsock32)
 
 # ===== NETWORK CLIENT ===== #
 add_executable(network_client
-        src/builder_map.cpp
         src/card_adventure.cpp
         src/card_fight.cpp
         src/card_research.cpp
@@ -108,7 +108,6 @@ add_executable(${PROJECT_NAME}
         src/map.cpp
         src/map_cell.cpp
         src/tokens.cpp
-        src/builder_map.cpp
         src/game_client.cpp
         src/character_client.cpp
         src/map_client.cpp
@@ -123,7 +122,10 @@ add_executable(${PROJECT_NAME}
         generators/generator_cards_meeting.cpp
         generators/generator_cards_research.cpp
         generators/generator_products.cpp
+        generators/generator_map.cpp
+        #tpl/sqlite/sqlite3.c
         )
+#target_link_libraries(Runebound -lmingw32 -mwindows -mconsole sqlite3)
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
 # ===== LOGICS ===== #
 

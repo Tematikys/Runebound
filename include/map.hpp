@@ -1,16 +1,16 @@
 #ifndef MAP_HPP_
 #define MAP_HPP_
 
+#include <fstream>
 #include <iostream>
-#include <nlohmann/json_fwd.hpp>
+#include <nlohmann/json.hpp>
 #include <set>
 #include <vector>
 #include "dice.hpp"
 #include "map_cell.hpp"
 #include "point.hpp"
 
-namespace runebound {
-namespace map {
+namespace runebound::map {
 
 const int STANDARD_SIZE = 15;
 
@@ -22,7 +22,7 @@ private:
     std::vector<std::vector<MapCell>> m_map;  // [row][column]
     std::set<std::pair<Point, Point>> m_rivers;
     std::set<Point> m_towns;
-    const int m_size;
+    int m_size;
     std::map<std::string, std::vector<Point>> m_territory_name;
     const std::vector<Point> directions_odd_column{{-1, 0}, {0, 1},  {1, 1},
                                                    {1, 0},  {1, -1}, {0, -1}};
@@ -47,13 +47,21 @@ private:
     }
 
 public:
-    Map()
-        : m_size(STANDARD_SIZE),
-          m_map(make_map()),
-          m_territory_name(make_territory_name()) {
-        make_connections_between_territory_names_and_cells(
-            m_map, m_territory_name
-        );
+    Map() {
+        nlohmann::json json;
+        std::ifstream in("data/json/map/map.json");
+        in >> json;
+        ::runebound::map::from_json(json, *this);
+    }
+
+    Map(int size,
+        std::vector<std::vector<MapCell>> map,
+        std::set<std::pair<Point, Point>> rivers,
+        std::map<std::string, std::vector<Point>> territory_name)
+        : m_size(size),
+          m_map(std::move(map)),
+          m_rivers(std::move(rivers)),
+          m_territory_name(std::move(territory_name)) {
         find_towns();
     }
 
@@ -137,6 +145,6 @@ public:
         return map;
     }
 };
-}  // namespace map
-}  // namespace runebound
+}  // namespace runebound::map
+
 #endif  // MAP_HPP_

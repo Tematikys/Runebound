@@ -1,6 +1,7 @@
 #ifndef MAP_CLIENT_HPP_
 #define MAP_CLIENT_HPP_
 
+#include <fstream>
 #include <map>
 #include <nlohmann/json.hpp>
 #include <set>
@@ -22,9 +23,9 @@ private:
                                                    {1, 0},  {1, -1}, {0, -1}};
     const std::vector<Point> directions_even_column{{-1, 0}, {-1, 1}, {0, 1},
                                                     {1, 0},  {0, -1}, {-1, -1}};
-    const std::map<std::string, std::vector<Point>> m_territory_name;
-    const int m_size = STANDARD_SIZE;
-    const std::set<std::pair<Point, Point>> m_rivers = make_rivers();
+    std::map<std::string, std::vector<Point>> m_territory_name;
+    int m_size = STANDARD_SIZE;
+    std::set<std::pair<Point, Point>> m_rivers;
     std::vector<std::vector<MapCell>> m_map;
 
     [[nodiscard]] bool check_neighbour_in_direction(
@@ -36,13 +37,11 @@ private:
     ) const;
 
 public:
-    MapClient()
-        : m_rivers(make_rivers()),
-          m_map(make_map()),
-          m_territory_name(make_territory_name()) {
-        make_connections_between_territory_names_and_cells(
-            m_map, m_territory_name
-        );
+    MapClient() {
+        nlohmann::json json;
+        std::ifstream in("data/json/map/map.json");
+        in >> json;
+        ::runebound::map::from_json(json, *this);
     }
 
     explicit MapClient(const Map &map) {
@@ -68,9 +67,7 @@ public:
 
     friend void to_json(nlohmann::json &json, const MapClient &map);
 
-    friend void from_json(const nlohmann::json &json, MapClient &map) {
-        map.m_map = json["m_map"];
-    }
+    friend void from_json(const nlohmann::json &json, MapClient &map);
 };
 
 }  // namespace runebound::map

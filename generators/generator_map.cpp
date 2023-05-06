@@ -1,11 +1,9 @@
-#include <set>
-#include <vector>
+#include "generators.hpp"
 #include "map.hpp"
-#include "map_cell.hpp"
-#include "point.hpp"
-#include "runebound_fwd.hpp"
 
-namespace runebound::map {
+namespace runebound::generator {
+
+namespace {
 std::set<std::pair<Point, Point>> make_rivers() {
     std::set<std::pair<Point, Point>> rivers;
     rivers.insert({Point(2, 11), Point(3, 11)});
@@ -89,132 +87,176 @@ std::set<std::pair<Point, Point>> make_rivers() {
 
 namespace {
 void make_row(
-    std::vector<std::vector<MapCell>> &map,
+    std::vector<std::vector<map::MapCell>> &map,
     int row,
-    const std::vector<std::pair<TypeCell, int>> &elements
+    const std::vector<std::pair<map::TypeCell, int>> &elements
 ) {
     int column = 0;
     for (const auto &one_type : elements) {
         for (int i = 0; i < one_type.second; ++i) {
-            map[row][column] = MapCell(one_type.first);
+            map[row][column] = map::MapCell(one_type.first);
             column += 1;
         }
     }
 }
 
-void make_cells(std::vector<std::vector<MapCell>> &map) {
+void make_cells(std::vector<std::vector<map::MapCell>> &map) {
     make_row(
         map, 0,
         std::vector{
-            std::pair(TypeCell::PLAIN, 7), std::pair(TypeCell::FOREST, 4),
-            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::MOUNTAINS, 1)}
+            std::pair(map::TypeCell::PLAIN, 7),
+            std::pair(map::TypeCell::FOREST, 4),
+            std::pair(map::TypeCell::PLAIN, 2),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::MOUNTAINS, 1)}
     );
     make_row(
         map, 1,
         std::vector{
-            std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::PLAIN, 5),
-            std::pair(TypeCell::FOREST, 4), std::pair(TypeCell::TOWN, 1),
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::MOUNTAINS, 2)}
+            std::pair(map::TypeCell::FOREST, 2),
+            std::pair(map::TypeCell::PLAIN, 5),
+            std::pair(map::TypeCell::FOREST, 4),
+            std::pair(map::TypeCell::TOWN, 1),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::MOUNTAINS, 2)}
     );
     make_row(
         map, 2,
         std::vector{
-            std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::MOUNTAINS, 1),
-            std::pair(TypeCell::PLAIN, 5), std::pair(TypeCell::FOREST, 1),
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::MOUNTAINS, 3)}
+            std::pair(map::TypeCell::FOREST, 2),
+            std::pair(map::TypeCell::MOUNTAINS, 1),
+            std::pair(map::TypeCell::PLAIN, 5),
+            std::pair(map::TypeCell::FOREST, 1),
+            std::pair(map::TypeCell::PLAIN, 3),
+            std::pair(map::TypeCell::MOUNTAINS, 3)}
     );
     make_row(
         map, 3,
         std::vector{
-            std::pair(TypeCell::FOREST, 1), std::pair(TypeCell::PLAIN, 2),
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 8),
-            std::pair(TypeCell::MOUNTAINS, 3)}
+            std::pair(map::TypeCell::FOREST, 1),
+            std::pair(map::TypeCell::PLAIN, 2),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::PLAIN, 8),
+            std::pair(map::TypeCell::MOUNTAINS, 3)}
     );
     make_row(
         map, 4,
         std::vector{
-            std::pair(TypeCell::PLAIN, 5), std::pair(TypeCell::WATER, 1),
-            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::FOREST, 1),
-            std::pair(TypeCell::PLAIN, 1), std::pair(TypeCell::WATER, 1),
-            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::HILLS, 2)}
+            std::pair(map::TypeCell::PLAIN, 5),
+            std::pair(map::TypeCell::WATER, 1),
+            std::pair(map::TypeCell::PLAIN, 2),
+            std::pair(map::TypeCell::FOREST, 1),
+            std::pair(map::TypeCell::PLAIN, 1),
+            std::pair(map::TypeCell::WATER, 1),
+            std::pair(map::TypeCell::PLAIN, 2),
+            std::pair(map::TypeCell::HILLS, 2)}
     );
     make_row(
         map, 5,
         std::vector{
-            std::pair(TypeCell::PLAIN, 1), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::PLAIN, 2), std::pair(TypeCell::WATER, 2),
-            std::pair(TypeCell::TOWN, 1), std::pair(TypeCell::PLAIN, 4),
-            std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::HILLS, 2)}
+            std::pair(map::TypeCell::PLAIN, 1),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::PLAIN, 2),
+            std::pair(map::TypeCell::WATER, 2),
+            std::pair(map::TypeCell::TOWN, 1),
+            std::pair(map::TypeCell::PLAIN, 4),
+            std::pair(map::TypeCell::FOREST, 2),
+            std::pair(map::TypeCell::HILLS, 2)}
     );
     make_row(
         map, 6,
         std::vector{
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 1),
-            std::pair(TypeCell::FOREST, 2), std::pair(TypeCell::PLAIN, 6),
-            std::pair(TypeCell::FOREST, 3), std::pair(TypeCell::HILLS, 2)}
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::PLAIN, 1),
+            std::pair(map::TypeCell::FOREST, 2),
+            std::pair(map::TypeCell::PLAIN, 6),
+            std::pair(map::TypeCell::FOREST, 3),
+            std::pair(map::TypeCell::HILLS, 2)}
     );
     make_row(
         map, 7,
         std::vector{
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 4),
-            std::pair(TypeCell::WATER, 1), std::pair(TypeCell::PLAIN, 3),
-            std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 2),
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::PLAIN, 2)}
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::PLAIN, 4),
+            std::pair(map::TypeCell::WATER, 1),
+            std::pair(map::TypeCell::PLAIN, 3),
+            std::pair(map::TypeCell::MOUNTAINS, 1),
+            std::pair(map::TypeCell::PLAIN, 2),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::PLAIN, 2)}
     );
     make_row(
         map, 8,
         std::vector{
-            std::pair(TypeCell::PLAIN, 10), std::pair(TypeCell::MOUNTAINS, 1),
-            std::pair(TypeCell::PLAIN, 4)}
+            std::pair(map::TypeCell::PLAIN, 10),
+            std::pair(map::TypeCell::MOUNTAINS, 1),
+            std::pair(map::TypeCell::PLAIN, 4)}
     );
     make_row(
         map, 9,
         std::vector{
-            std::pair(TypeCell::FOREST, 1), std::pair(TypeCell::PLAIN, 10),
-            std::pair(TypeCell::WATER, 1), std::pair(TypeCell::PLAIN, 3)}
+            std::pair(map::TypeCell::FOREST, 1),
+            std::pair(map::TypeCell::PLAIN, 10),
+            std::pair(map::TypeCell::WATER, 1),
+            std::pair(map::TypeCell::PLAIN, 3)}
     );
     make_row(
         map, 10,
         std::vector{
-            std::pair(TypeCell::FOREST, 1), std::pair(TypeCell::PLAIN, 1),
-            std::pair(TypeCell::TOWN, 1), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::PLAIN, 6), std::pair(TypeCell::FOREST, 1)}
+            std::pair(map::TypeCell::FOREST, 1),
+            std::pair(map::TypeCell::PLAIN, 1),
+            std::pair(map::TypeCell::TOWN, 1),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::PLAIN, 3),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::PLAIN, 6),
+            std::pair(map::TypeCell::FOREST, 1)}
     );
     make_row(
         map, 11,
         std::vector{
-            std::pair(TypeCell::PLAIN, 4), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 1),
-            std::pair(TypeCell::HILLS, 1), std::pair(TypeCell::WATER, 2),
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::TOWN, 1),
-            std::pair(TypeCell::FOREST, 1)}
+            std::pair(map::TypeCell::PLAIN, 4),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::MOUNTAINS, 1),
+            std::pair(map::TypeCell::PLAIN, 1),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::WATER, 2),
+            std::pair(map::TypeCell::PLAIN, 3),
+            std::pair(map::TypeCell::TOWN, 1),
+            std::pair(map::TypeCell::FOREST, 1)}
     );
     make_row(
         map, 12,
         std::vector{
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 2),
-            std::pair(TypeCell::MOUNTAINS, 2), std::pair(TypeCell::HILLS, 3),
-            std::pair(TypeCell::PLAIN, 5)}
+            std::pair(map::TypeCell::PLAIN, 3),
+            std::pair(map::TypeCell::HILLS, 2),
+            std::pair(map::TypeCell::MOUNTAINS, 2),
+            std::pair(map::TypeCell::HILLS, 3),
+            std::pair(map::TypeCell::PLAIN, 5)}
     );
     make_row(
         map, 13,
         std::vector{
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 2),
-            std::pair(TypeCell::MOUNTAINS, 3), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 5)}
+            std::pair(map::TypeCell::PLAIN, 3),
+            std::pair(map::TypeCell::HILLS, 2),
+            std::pair(map::TypeCell::MOUNTAINS, 3),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::MOUNTAINS, 1),
+            std::pair(map::TypeCell::PLAIN, 5)}
     );
     make_row(
         map, 14,
         std::vector{
-            std::pair(TypeCell::PLAIN, 3), std::pair(TypeCell::HILLS, 2),
-            std::pair(TypeCell::MOUNTAINS, 3), std::pair(TypeCell::HILLS, 1),
-            std::pair(TypeCell::MOUNTAINS, 1), std::pair(TypeCell::PLAIN, 5)}
+            std::pair(map::TypeCell::PLAIN, 3),
+            std::pair(map::TypeCell::HILLS, 2),
+            std::pair(map::TypeCell::MOUNTAINS, 3),
+            std::pair(map::TypeCell::HILLS, 1),
+            std::pair(map::TypeCell::MOUNTAINS, 1),
+            std::pair(map::TypeCell::PLAIN, 5)}
     );
 }
 
-void make_tokens(std::vector<std::vector<MapCell>> &map) {
+void make_tokens(std::vector<std::vector<map::MapCell>> &map) {
     map[0][0].make_token(AdventureType::MEETING);
     map[0][4].make_token(AdventureType::FIGHT);
     map[0][9].make_token(AdventureType::FIGHT);
@@ -245,7 +287,7 @@ void make_tokens(std::vector<std::vector<MapCell>> &map) {
 }
 
 void make_all_roads_in_row(
-    std::vector<std::vector<MapCell>> &map,
+    std::vector<std::vector<map::MapCell>> &map,
     int row,
     const std::vector<int> columns
 ) {
@@ -254,7 +296,7 @@ void make_all_roads_in_row(
     }
 }
 
-void make_road(std::vector<std::vector<MapCell>> &map) {
+void make_road(std::vector<std::vector<map::MapCell>> &map) {
     make_all_roads_in_row(map, 0, {5});
     make_all_roads_in_row(map, 1, {5});
     make_all_roads_in_row(map, 2, {6, 7, 9, 10});
@@ -269,30 +311,30 @@ void make_road(std::vector<std::vector<MapCell>> &map) {
     make_all_roads_in_row(map, 12, {10});
 }
 
-void make_special_type_cells(std::vector<std::vector<MapCell>> &map) {
-    map[0][1].make_special_type_cell(SpecialTypeCell::FORTRESS);
-    map[1][5].make_special_type_cell(SpecialTypeCell::SANCTUARY);
-    map[3][1].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
-    map[0][14].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
-    map[2][12].make_special_type_cell(SpecialTypeCell::SANCTUARY);
-    map[5][1].make_special_type_cell(SpecialTypeCell::FORTRESS);
-    map[5][8].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
-    map[6][8].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
-    map[6][13].make_special_type_cell(SpecialTypeCell::FORTRESS);
-    map[7][4].make_special_type_cell(SpecialTypeCell::SANCTUARY);
-    map[8][13].make_special_type_cell(SpecialTypeCell::SANCTUARY);
-    map[12][0].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
-    map[13][6].make_special_type_cell(SpecialTypeCell::SANCTUARY);
-    map[11][6].make_special_type_cell(SpecialTypeCell::FORTRESS);
-    map[8][7].make_special_type_cell(SpecialTypeCell::SETTLEMENT);
-    map[13][12].make_special_type_cell(SpecialTypeCell::FORTRESS);
+void make_special_type_cells(std::vector<std::vector<map::MapCell>> &map) {
+    map[0][1].make_special_type_cell(map::SpecialTypeCell::FORTRESS);
+    map[1][5].make_special_type_cell(map::SpecialTypeCell::SANCTUARY);
+    map[3][1].make_special_type_cell(map::SpecialTypeCell::SETTLEMENT);
+    map[0][14].make_special_type_cell(map::SpecialTypeCell::SETTLEMENT);
+    map[2][12].make_special_type_cell(map::SpecialTypeCell::SANCTUARY);
+    map[5][1].make_special_type_cell(map::SpecialTypeCell::FORTRESS);
+    map[5][8].make_special_type_cell(map::SpecialTypeCell::SETTLEMENT);
+    map[6][8].make_special_type_cell(map::SpecialTypeCell::SETTLEMENT);
+    map[6][13].make_special_type_cell(map::SpecialTypeCell::FORTRESS);
+    map[7][4].make_special_type_cell(map::SpecialTypeCell::SANCTUARY);
+    map[8][13].make_special_type_cell(map::SpecialTypeCell::SANCTUARY);
+    map[12][0].make_special_type_cell(map::SpecialTypeCell::SETTLEMENT);
+    map[13][6].make_special_type_cell(map::SpecialTypeCell::SANCTUARY);
+    map[11][6].make_special_type_cell(map::SpecialTypeCell::FORTRESS);
+    map[8][7].make_special_type_cell(map::SpecialTypeCell::SETTLEMENT);
+    map[13][12].make_special_type_cell(map::SpecialTypeCell::FORTRESS);
 }
 
 }  // namespace
 
-std::vector<std::vector<MapCell>> make_map() {
-    std::vector<std::vector<MapCell>> map(
-        STANDARD_SIZE, std::vector<MapCell>(STANDARD_SIZE)
+std::vector<std::vector<map::MapCell>> make_map() {
+    std::vector<std::vector<map::MapCell>> map(
+        15, std::vector<map::MapCell>(15)
     );
     make_cells(map);
     make_tokens(map);
@@ -360,7 +402,7 @@ std::map<std::string, std::vector<Point>> make_territory_name() {
 }
 
 void make_connections_between_territory_names_and_cells(
-    std::vector<std::vector<MapCell>> &map,
+    std::vector<std::vector<map::MapCell>> &map,
     const std::map<std::string, std::vector<Point>> &territory_name
 ) {
     for (const auto &territory : territory_name) {
@@ -369,4 +411,14 @@ void make_connections_between_territory_names_and_cells(
         }
     }
 }
-}  // namespace runebound::map
+
+}  // namespace
+
+void generate_map() {
+    auto map = make_map();
+    auto territory_name = make_territory_name();
+    make_connections_between_territory_names_and_cells(map, territory_name);
+    map::Map map_c = map::Map(15, map, make_rivers(), territory_name);
+    write_to_file(map_c, "data/json/map/map.json");
+}
+}  // namespace runebound::generator

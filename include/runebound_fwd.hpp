@@ -47,6 +47,7 @@ void generate_cards_fight();
 void generate_cards_meeting();
 void generate_cards_research();
 void generate_products();
+void generate_map();
 }  // namespace generator
 
 namespace map {
@@ -77,15 +78,6 @@ namespace graphics {
 struct Board;
 }
 
-namespace map {
-std::set<std::pair<Point, Point>> make_rivers();
-std::vector<std::vector<MapCell>> make_map();
-std::map<std::string, std::vector<Point>> make_territory_name();
-void make_connections_between_territory_names_and_cells(
-    std::vector<std::vector<MapCell>> &map,
-    const std::map<std::string, std::vector<Point>> &territory_name
-);
-}  // namespace map
 }  // namespace runebound
 
 #endif  // RUNEBOUND_FWD_HPP_
