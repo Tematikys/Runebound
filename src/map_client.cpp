@@ -43,4 +43,21 @@ void from_json(const nlohmann::json &json, MapClient &map) {
     map.m_territory_name = json["m_territory_name"];
 }
 
+const std::map<std::string, std::vector<Point>> &MapClient::get_territory_name(
+) const {
+    return m_territory_name;
+}
+
+int MapClient::get_size() const {
+    return m_size;
+}
+
+const std::set<std::pair<Point, Point>> &MapClient::get_rivers() const {
+    return m_rivers;
+}
+
+const std::vector<std::vector<MapCell>> &MapClient::get_map() const {
+    return m_map;
+}
+
 }  // namespace runebound::map
