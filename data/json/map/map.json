@@ -1,0 +1,3021 @@
+{
+    "m_map": [
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 0,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 1,
+                "m_territory_name": "Caer Loek",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 2,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "The Thicket of Despondency",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "The Thicket of Despondency",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "The Thicket of Despondency",
+                "m_token": 2,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 0,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Valley of Souls",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 2,
+                "m_territory_name": "Underground City",
+                "m_token": 3,
+                "m_type_cell": 2
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Starfall Forest",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Telsvanian Plains",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 0,
+                "m_territory_name": "Suvar's Haven",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 1,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Robber freemen",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Smithy",
+                "m_token": 3,
+                "m_type_cell": 5
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Valley of Souls",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Starfall Forest",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Rogue Peak",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 0,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Telsvanian Plains",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Telsvanian Plains",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 0,
+                "m_territory_name": "Itraitova Forge",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 1,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 2,
+                "m_territory_name": "Everton",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Cursed ruins",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Sharp cliffs",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Sharp cliffs",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Sharp cliffs",
+                "m_token": 2,
+                "m_type_cell": 2
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "The Quagmire of the Black Wing",
+                "m_token": 3,
+                "m_type_cell": 0
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Snake Forest",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 1,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Echo Lake",
+                "m_token": 3,
+                "m_type_cell": 0
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Ash Hills",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 1,
+                "m_territory_name": "Telis Castle",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "The Quagmire of the Black Wing",
+                "m_token": 2,
+                "m_type_cell": 0
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "The Quagmire of the Black Wing",
+                "m_token": 3,
+                "m_type_cell": 0
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Talamir",
+                "m_token": 3,
+                "m_type_cell": 5
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 2,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 0,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Ash Hills",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Ash Hills",
+                "m_token": 3,
+                "m_type_cell": 3
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Howling Dol",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Hedge",
+                "m_token": 1,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Hedge",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "River lands",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 2,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 1,
+                "m_territory_name": "Fort Rodrik",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Ash Hills",
+                "m_token": 1,
+                "m_type_cell": 3
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Howling Dol",
+                "m_token": 0,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Kellos' Breath",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 0,
+                "m_territory_name": "Hunting Circle",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Lake Kernan",
+                "m_token": 3,
+                "m_type_cell": 0
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "River lands",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "The Fangs of the Mennara",
+                "m_token": 2,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Kellos' Breath",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Kellos' Breath",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 2,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "River lands",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 2,
+                "m_territory_name": "Trading Hail",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "The Fangs of the Mennara",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 0,
+                "m_territory_name": "Aris Sanctuary",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Stub",
+                "m_token": 3,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 0,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Lake of Tears",
+                "m_token": 3,
+                "m_type_cell": 0
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 1,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Stub",
+                "m_token": 2,
+                "m_type_cell": 1
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Downsmoor",
+                "m_token": 3,
+                "m_type_cell": 5
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Green Forest",
+                "m_token": 0,
+                "m_type_cell": 1
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Misty Plains",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Misty Plains",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Misty Plains",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 1,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Mountains of Despair",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 1,
+                "m_territory_name": "The firmament",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Blue Haze Hills",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Moonlight Swamp",
+                "m_token": 3,
+                "m_type_cell": 0
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Moonlight Swamp",
+                "m_token": 1,
+                "m_type_cell": 0
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Zedrik Crossing",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "River Patrol",
+                "m_token": 3,
+                "m_type_cell": 5
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Green Forest",
+                "m_token": 3,
+                "m_type_cell": 1
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 2,
+                "m_territory_name": "Bright dol",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Misty Plains",
+                "m_token": 0,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Lowlands of Bitterness",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Lowlands of Bitterness",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 2,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Mountains of Despair",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Blue Haze Hills",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Blue Haze Hills",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": true,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Southern Plains",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Southern Plains",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 1,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 0,
+                "m_territory_name": "Madness Pass",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 0,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "Southern Plains",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 1,
+                "m_territory_name": "Sandergard",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 2,
+                "m_type_cell": 4
+            }
+        ],
+        [
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 3
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 4
+            }
+        ]
+    ],
+    "m_rivers": [
+        [
+            {
+                "x": 2,
+                "y": 11
+            },
+            {
+                "x": 3,
+                "y": 11
+            }
+        ],
+        [
+            {
+                "x": 3,
+                "y": 10
+            },
+            {
+                "x": 3,
+                "y": 11
+            }
+        ],
+        [
+            {
+                "x": 3,
+                "y": 11
+            },
+            {
+                "x": 2,
+                "y": 11
+            }
+        ],
+        [
+            {
+                "x": 3,
+                "y": 11
+            },
+            {
+                "x": 3,
+                "y": 10
+            }
+        ],
+        [
+            {
+                "x": 4,
+                "y": 7
+            },
+            {
+                "x": 5,
+                "y": 7
+            }
+        ],
+        [
+            {
+                "x": 4,
+                "y": 9
+            },
+            {
+                "x": 5,
+                "y": 9
+            }
+        ],
+        [
+            {
+                "x": 4,
+                "y": 9
+            },
+            {
+                "x": 5,
+                "y": 10
+            }
+        ],
+        [
+            {
+                "x": 5,
+                "y": 3
+            },
+            {
+                "x": 6,
+                "y": 4
+            }
+        ],
+        [
+            {
+                "x": 5,
+                "y": 7
+            },
+            {
+                "x": 4,
+                "y": 7
+            }
+        ],
+        [
+            {
+                "x": 5,
+                "y": 7
+            },
+            {
+                "x": 5,
+                "y": 8
+            }
+        ],
+        [
+            {
+                "x": 5,
+                "y": 8
+            },
+            {
+                "x": 5,
+                "y": 7
+            }
+        ],
+        [
+            {
+                "x": 5,
+                "y": 8
+            },
+            {
+                "x": 5,
+                "y": 9
+            }
+        ],
+        [
+            {
+                "x": 5,
+                "y": 8
+            },
+            {
+                "x": 6,
+                "y": 8
+            }
+        ],
+        [
+            {
+                "x": 5,
+                "y": 9
+            },
+            {
+                "x": 4,
+                "y": 9
+            }
+        ],
+        [
+            {
+                "x": 5,
+                "y": 9
+            },
+            {
+                "x": 5,
+                "y": 8
+            }
+        ],
+        [
+            {
+                "x": 5,
+                "y": 10
+            },
+            {
+                "x": 4,
+                "y": 9
+            }
+        ],
+        [
+            {
+                "x": 6,
+                "y": 3
+            },
+            {
+                "x": 6,
+                "y": 4
+            }
+        ],
+        [
+            {
+                "x": 6,
+                "y": 3
+            },
+            {
+                "x": 7,
+                "y": 4
+            }
+        ],
+        [
+            {
+                "x": 6,
+                "y": 4
+            },
+            {
+                "x": 5,
+                "y": 3
+            }
+        ],
+        [
+            {
+                "x": 6,
+                "y": 4
+            },
+            {
+                "x": 6,
+                "y": 3
+            }
+        ],
+        [
+            {
+                "x": 6,
+                "y": 4
+            },
+            {
+                "x": 7,
+                "y": 4
+            }
+        ],
+        [
+            {
+                "x": 6,
+                "y": 5
+            },
+            {
+                "x": 7,
+                "y": 4
+            }
+        ],
+        [
+            {
+                "x": 6,
+                "y": 8
+            },
+            {
+                "x": 5,
+                "y": 8
+            }
+        ],
+        [
+            {
+                "x": 7,
+                "y": 3
+            },
+            {
+                "x": 7,
+                "y": 4
+            }
+        ],
+        [
+            {
+                "x": 7,
+                "y": 3
+            },
+            {
+                "x": 8,
+                "y": 3
+            }
+        ],
+        [
+            {
+                "x": 7,
+                "y": 3
+            },
+            {
+                "x": 8,
+                "y": 4
+            }
+        ],
+        [
+            {
+                "x": 7,
+                "y": 4
+            },
+            {
+                "x": 6,
+                "y": 3
+            }
+        ],
+        [
+            {
+                "x": 7,
+                "y": 4
+            },
+            {
+                "x": 6,
+                "y": 4
+            }
+        ],
+        [
+            {
+                "x": 7,
+                "y": 4
+            },
+            {
+                "x": 6,
+                "y": 5
+            }
+        ],
+        [
+            {
+                "x": 7,
+                "y": 4
+            },
+            {
+                "x": 7,
+                "y": 3
+            }
+        ],
+        [
+            {
+                "x": 8,
+                "y": 0
+            },
+            {
+                "x": 9,
+                "y": 0
+            }
+        ],
+        [
+            {
+                "x": 8,
+                "y": 1
+            },
+            {
+                "x": 9,
+                "y": 0
+            }
+        ],
+        [
+            {
+                "x": 8,
+                "y": 2
+            },
+            {
+                "x": 8,
+                "y": 3
+            }
+        ],
+        [
+            {
+                "x": 8,
+                "y": 3
+            },
+            {
+                "x": 7,
+                "y": 3
+            }
+        ],
+        [
+            {
+                "x": 8,
+                "y": 3
+            },
+            {
+                "x": 8,
+                "y": 2
+            }
+        ],
+        [
+            {
+                "x": 8,
+                "y": 3
+            },
+            {
+                "x": 9,
+                "y": 2
+            }
+        ],
+        [
+            {
+                "x": 8,
+                "y": 4
+            },
+            {
+                "x": 7,
+                "y": 3
+            }
+        ],
+        [
+            {
+                "x": 8,
+                "y": 13
+            },
+            {
+                "x": 9,
+                "y": 13
+            }
+        ],
+        [
+            {
+                "x": 8,
+                "y": 13
+            },
+            {
+                "x": 9,
+                "y": 14
+            }
+        ],
+        [
+            {
+                "x": 8,
+                "y": 14
+            },
+            {
+                "x": 9,
+                "y": 14
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 0
+            },
+            {
+                "x": 8,
+                "y": 0
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 0
+            },
+            {
+                "x": 8,
+                "y": 1
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 0
+            },
+            {
+                "x": 9,
+                "y": 1
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 1
+            },
+            {
+                "x": 9,
+                "y": 0
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 1
+            },
+            {
+                "x": 10,
+                "y": 0
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 1
+            },
+            {
+                "x": 10,
+                "y": 1
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 2
+            },
+            {
+                "x": 8,
+                "y": 3
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 2
+            },
+            {
+                "x": 9,
+                "y": 3
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 3
+            },
+            {
+                "x": 9,
+                "y": 2
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 12
+            },
+            {
+                "x": 9,
+                "y": 13
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 13
+            },
+            {
+                "x": 8,
+                "y": 13
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 13
+            },
+            {
+                "x": 9,
+                "y": 12
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 13
+            },
+            {
+                "x": 10,
+                "y": 12
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 14
+            },
+            {
+                "x": 8,
+                "y": 13
+            }
+        ],
+        [
+            {
+                "x": 9,
+                "y": 14
+            },
+            {
+                "x": 8,
+                "y": 14
+            }
+        ],
+        [
+            {
+                "x": 10,
+                "y": 0
+            },
+            {
+                "x": 9,
+                "y": 1
+            }
+        ],
+        [
+            {
+                "x": 10,
+                "y": 1
+            },
+            {
+                "x": 9,
+                "y": 1
+            }
+        ],
+        [
+            {
+                "x": 10,
+                "y": 12
+            },
+            {
+                "x": 9,
+                "y": 13
+            }
+        ],
+        [
+            {
+                "x": 10,
+                "y": 12
+            },
+            {
+                "x": 10,
+                "y": 13
+            }
+        ],
+        [
+            {
+                "x": 10,
+                "y": 13
+            },
+            {
+                "x": 10,
+                "y": 12
+            }
+        ],
+        [
+            {
+                "x": 10,
+                "y": 13
+            },
+            {
+                "x": 11,
+                "y": 12
+            }
+        ],
+        [
+            {
+                "x": 11,
+                "y": 10
+            },
+            {
+                "x": 12,
+                "y": 10
+            }
+        ],
+        [
+            {
+                "x": 11,
+                "y": 11
+            },
+            {
+                "x": 12,
+                "y": 10
+            }
+        ],
+        [
+            {
+                "x": 11,
+                "y": 11
+            },
+            {
+                "x": 12,
+                "y": 11
+            }
+        ],
+        [
+            {
+                "x": 11,
+                "y": 11
+            },
+            {
+                "x": 12,
+                "y": 12
+            }
+        ],
+        [
+            {
+                "x": 11,
+                "y": 12
+            },
+            {
+                "x": 10,
+                "y": 13
+            }
+        ],
+        [
+            {
+                "x": 11,
+                "y": 12
+            },
+            {
+                "x": 12,
+                "y": 12
+            }
+        ],
+        [
+            {
+                "x": 12,
+                "y": 10
+            },
+            {
+                "x": 11,
+                "y": 10
+            }
+        ],
+        [
+            {
+                "x": 12,
+                "y": 10
+            },
+            {
+                "x": 11,
+                "y": 11
+            }
+        ],
+        [
+            {
+                "x": 12,
+                "y": 11
+            },
+            {
+                "x": 11,
+                "y": 11
+            }
+        ],
+        [
+            {
+                "x": 12,
+                "y": 12
+            },
+            {
+                "x": 11,
+                "y": 11
+            }
+        ],
+        [
+            {
+                "x": 12,
+                "y": 12
+            },
+            {
+                "x": 11,
+                "y": 12
+            }
+        ],
+        [
+            {
+                "x": 12,
+                "y": 13
+            },
+            {
+                "x": 12,
+                "y": 14
+            }
+        ],
+        [
+            {
+                "x": 12,
+                "y": 14
+            },
+            {
+                "x": 12,
+                "y": 13
+            }
+        ],
+        [
+            {
+                "x": 12,
+                "y": 14
+            },
+            {
+                "x": 13,
+                "y": 14
+            }
+        ],
+        [
+            {
+                "x": 13,
+                "y": 14
+            },
+            {
+                "x": 12,
+                "y": 14
+            }
+        ]
+    ],
+    "m_size": 15,
+    "m_territory_name": {
+        "Aris Sanctuary": [
+            {
+                "x": 8,
+                "y": 13
+            }
+        ],
+        "Ash Hills": [
+            {
+                "x": 6,
+                "y": 14
+            },
+            {
+                "x": 5,
+                "y": 14
+            },
+            {
+                "x": 5,
+                "y": 13
+            },
+            {
+                "x": 4,
+                "y": 12
+            }
+        ],
+        "Blue Haze Hills": [
+            {
+                "x": 11,
+                "y": 7
+            },
+            {
+                "x": 12,
+                "y": 8
+            },
+            {
+                "x": 12,
+                "y": 9
+            }
+        ],
+        "Bright dol": [
+            {
+                "x": 12,
+                "y": 0
+            }
+        ],
+        "Caer Loek": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "Cursed ruins": [
+            {
+                "x": 3,
+                "y": 3
+            }
+        ],
+        "Downsmoor": [
+            {
+                "x": 10,
+                "y": 2
+            }
+        ],
+        "Echo Lake": [
+            {
+                "x": 4,
+                "y": 10
+            }
+        ],
+        "Everton": [
+            {
+                "x": 3,
+                "y": 1
+            }
+        ],
+        "Fort Rodrik": [
+            {
+                "x": 6,
+                "y": 13
+            }
+        ],
+        "Green Forest": [
+            {
+                "x": 11,
+                "y": 14
+            },
+            {
+                "x": 10,
+                "y": 14
+            }
+        ],
+        "Hedge": [
+            {
+                "x": 6,
+                "y": 2
+            },
+            {
+                "x": 6,
+                "y": 3
+            }
+        ],
+        "Howling Dol": [
+            {
+                "x": 6,
+                "y": 0
+            },
+            {
+                "x": 7,
+                "y": 0
+            }
+        ],
+        "Hunting Circle": [
+            {
+                "x": 7,
+                "y": 4
+            }
+        ],
+        "Itraitova Forge": [
+            {
+                "x": 2,
+                "y": 12
+            }
+        ],
+        "Kellos' Breath": [
+            {
+                "x": 8,
+                "y": 0
+            },
+            {
+                "x": 7,
+                "y": 1
+            },
+            {
+                "x": 8,
+                "y": 2
+            }
+        ],
+        "Lake Kernan": [
+            {
+                "x": 7,
+                "y": 5
+            }
+        ],
+        "Lake of Tears": [
+            {
+                "x": 9,
+                "y": 11
+            }
+        ],
+        "Lowlands of Bitterness": [
+            {
+                "x": 12,
+                "y": 3
+            },
+            {
+                "x": 12,
+                "y": 4
+            }
+        ],
+        "Madness Pass": [
+            {
+                "x": 13,
+                "y": 6
+            }
+        ],
+        "Misty Plains": [
+            {
+                "x": 11,
+                "y": 1
+            },
+            {
+                "x": 11,
+                "y": 2
+            },
+            {
+                "x": 12,
+                "y": 2
+            },
+            {
+                "x": 11,
+                "y": 3
+            }
+        ],
+        "Moonlight Swamp": [
+            {
+                "x": 11,
+                "y": 8
+            },
+            {
+                "x": 11,
+                "y": 9
+            }
+        ],
+        "Mountains of Despair": [
+            {
+                "x": 12,
+                "y": 6
+            },
+            {
+                "x": 11,
+                "y": 5
+            }
+        ],
+        "River Patrol": [
+            {
+                "x": 11,
+                "y": 13
+            }
+        ],
+        "River lands": [
+            {
+                "x": 6,
+                "y": 7
+            },
+            {
+                "x": 7,
+                "y": 6
+            },
+            {
+                "x": 8,
+                "y": 6
+            }
+        ],
+        "Robber freemen": [
+            {
+                "x": 1,
+                "y": 8
+            }
+        ],
+        "Rogue Peak": [
+            {
+                "x": 2,
+                "y": 2
+            }
+        ],
+        "Sandergard": [
+            {
+                "x": 13,
+                "y": 12
+            }
+        ],
+        "Sharp cliffs": [
+            {
+                "x": 3,
+                "y": 14
+            },
+            {
+                "x": 3,
+                "y": 13
+            },
+            {
+                "x": 3,
+                "y": 12
+            }
+        ],
+        "Smithy": [
+            {
+                "x": 1,
+                "y": 11
+            }
+        ],
+        "Snake Forest": [
+            {
+                "x": 4,
+                "y": 8
+            }
+        ],
+        "Southern Plains": [
+            {
+                "x": 13,
+                "y": 10
+            },
+            {
+                "x": 12,
+                "y": 11
+            },
+            {
+                "x": 12,
+                "y": 12
+            }
+        ],
+        "Starfall Forest": [
+            {
+                "x": 2,
+                "y": 0
+            },
+            {
+                "x": 1,
+                "y": 1
+            }
+        ],
+        "Stub": [
+            {
+                "x": 9,
+                "y": 0
+            },
+            {
+                "x": 10,
+                "y": 0
+            }
+        ],
+        "Suvar's Haven": [
+            {
+                "x": 1,
+                "y": 5
+            }
+        ],
+        "Talamir": [
+            {
+                "x": 5,
+                "y": 6
+            }
+        ],
+        "Telis Castle": [
+            {
+                "x": 5,
+                "y": 1
+            }
+        ],
+        "Telsvanian Plains": [
+            {
+                "x": 1,
+                "y": 3
+            },
+            {
+                "x": 2,
+                "y": 4
+            },
+            {
+                "x": 2,
+                "y": 5
+            }
+        ],
+        "The Fangs of the Mennara": [
+            {
+                "x": 7,
+                "y": 9
+            },
+            {
+                "x": 8,
+                "y": 10
+            }
+        ],
+        "The Quagmire of the Black Wing": [
+            {
+                "x": 5,
+                "y": 4
+            },
+            {
+                "x": 5,
+                "y": 5
+            },
+            {
+                "x": 4,
+                "y": 5
+            }
+        ],
+        "The Thicket of Despondency": [
+            {
+                "x": 0,
+                "y": 7
+            },
+            {
+                "x": 0,
+                "y": 8
+            },
+            {
+                "x": 0,
+                "y": 9
+            }
+        ],
+        "The firmament": [
+            {
+                "x": 11,
+                "y": 6
+            }
+        ],
+        "Trading Hail": [
+            {
+                "x": 8,
+                "y": 7
+            }
+        ],
+        "Underground City": [
+            {
+                "x": 0,
+                "y": 14
+            }
+        ],
+        "Valley of Souls": [
+            {
+                "x": 0,
+                "y": 13
+            },
+            {
+                "x": 1,
+                "y": 12
+            }
+        ],
+        "Zedrik Crossing": [
+            {
+                "x": 11,
+                "y": 10
+            }
+        ]
+    },
+    "m_towns": [
+        {
+            "x": 1,
+            "y": 11
+        },
+        {
+            "x": 5,
+            "y": 6
+        },
+        {
+            "x": 10,
+            "y": 2
+        },
+        {
+            "x": 11,
+            "y": 13
+        }
+    ]
+}

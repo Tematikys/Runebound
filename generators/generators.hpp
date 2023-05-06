@@ -1,6 +1,7 @@
 #ifndef GENERATORS_HPP_
 #define GENERATORS_HPP_
 
+#include <fstream>
 #include "nlohmann/json.hpp"
 #include "runebound_fwd.hpp"
 

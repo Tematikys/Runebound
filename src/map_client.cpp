@@ -33,8 +33,14 @@ void to_json(nlohmann::json &json, const MapClient &map) {
     json["m_size"] = map.m_size;
     json["m_rivers"] = map.m_rivers;
     json["m_map"] = map.m_map;
-    json["directions_odd_column"] = map.directions_odd_column;
-    json["directions_even_column"] = map.directions_even_column;
+    json["m_territory_name"] = map.m_territory_name;
+}
+
+void from_json(const nlohmann::json &json, MapClient &map) {
+    map.m_size = json["m_size"];
+    map.m_rivers = json["m_rivers"];
+    map.m_map = json["m_map"];
+    map.m_territory_name = json["m_territory_name"];
 }
 
 }  // namespace runebound::map
