@@ -9,12 +9,12 @@ set(NLOHMANN_INCLUDE_DIR "tpl/")
 set(SDL2_INCLUDE_DIR "tpl/SDL2/include/")
 set(SDL2_LIB_DIR "tpl/SDL2/lib/")
 
-set(SQLITE_INCLUDE_DIR "tpl/sqlite/")
+#set(SQLITE_INCLUDE_DIR "tpl/sqlite/")
 
 include_directories("include/")
 include_directories(${NLOHMANN_INCLUDE_DIR})
 include_directories(${SDL2_INCLUDE_DIR})
-include_directories(${SQLITE_INCLUDE_DIR})
+#include_directories(${SQLITE_INCLUDE_DIR})
 
 link_directories(${SDL2_LIB_DIR})
 
