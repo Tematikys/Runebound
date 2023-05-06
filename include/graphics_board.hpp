@@ -73,21 +73,9 @@ public:
 
     void render(SDL_Renderer *renderer, int x_offset, int y_offset) const;
 
-    void update_selection(const Point &dot);
+    void render_to_texture(SDL_Renderer *renderer, SDL_Texture *&texture) const;
 
-    void render_to_texture(SDL_Renderer *renderer, SDL_Texture *&texture)
-        const {
-        SDL_DestroyTexture(texture);
-        texture = SDL_CreateTexture(
-            renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
-            m_width + 1, m_height + 1
-        );
-        SDL_SetRenderTarget(renderer, texture);
-        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        SDL_RenderClear(renderer);
-        render(renderer, 0, 0);
-        SDL_SetRenderTarget(renderer, nullptr);
-    }
+    void update_selection(const Point &dot);
 
     [[nodiscard]] int width() const {
         return m_width;

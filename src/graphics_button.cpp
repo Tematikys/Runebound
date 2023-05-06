@@ -99,16 +99,6 @@ TextField::TextField(::std::string text, Button &button, int max_len)
       m_max_text_len(max_len) {
 }
 
-void TextField::push(const ::std::string &suffix) {
-    if (m_max_text_len == 0) {
-        m_text += suffix;
-    } else {
-        if (suffix.length() + m_text.length() <= m_max_text_len) {
-            m_text += suffix;
-        }
-    }
-}
-
 void TextField::render(
     SDL_Renderer *renderer,
     TTF_Font *font,
@@ -121,5 +111,15 @@ void TextField::render(
     texture.load_text_from_string(renderer, font, m_text, color);
     texture.render(renderer, x_offset, y_offset);
     texture.free();
+}
+
+void TextField::push(const ::std::string &suffix) {
+    if (m_max_text_len == 0) {
+        m_text += suffix;
+    } else {
+        if (suffix.length() + m_text.length() <= m_max_text_len) {
+            m_text += suffix;
+        }
+    }
 }
 }  // namespace runebound::graphics
