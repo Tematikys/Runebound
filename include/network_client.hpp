@@ -227,8 +227,12 @@ public:
         return m_game_client.m_last_dice_movement_result;
     };
 
-    [[nodiscard]] character::StandardCharacter get_yourself_character() const {
-        return m_character;
+    [[nodiscard]] character::Character get_yourself_character() const {
+        for (auto& character : m_game_client.m_characters){
+            if (character.get_standard_character()==m_character) {
+                return character;
+            }
+        }
     }
 
     [[nodiscard]] const std::vector<std::string> &get_game_names() const {
