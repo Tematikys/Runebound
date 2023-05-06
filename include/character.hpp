@@ -108,6 +108,10 @@ public:
         m_is_in_trade = false;
     }
 
+    void set_health(int health) {
+        m_health = health;
+    }
+
     [[nodiscard]] unsigned int get_card_fight() const {
         return *(--m_cards_fight.end());
     }
