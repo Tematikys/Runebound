@@ -19,10 +19,6 @@ enum class Characteristic { BODY, INTELLIGENCE, SPIRIT };
 
 struct Point;
 
-namespace token {
-struct Token;
-}  // namespace token
-
 namespace character {
 struct Character;
 struct CharacterClient;

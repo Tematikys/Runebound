@@ -193,6 +193,8 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         chr->start_fight(std::make_shared<fight::Fight>(
             chr, m_all_cards_fight[card].get_enemy()
         ));
+        m_characters[(m_turn + m_count_players - 1) % m_count_players]
+            ->start_fight_as_enemy();
     } else if (m_map.get_cell_map(position).get_token() == AdventureType::RESEARCH) {
         unsigned int card =
             m_card_deck_research[rng() % m_card_deck_research.size()];
@@ -221,6 +223,8 @@ void Game::end_fight(const std::shared_ptr<character::Character> &chr) {
         chr->add_trophy(AdventureType::FIGHT, chr->get_card_fight());
     }
     chr->end_fight();
+    m_characters[(m_turn + m_count_players - 1) % m_count_players]
+        ->end_fight_as_enemy();
 }
 
 std::vector<Point> Game::make_move(

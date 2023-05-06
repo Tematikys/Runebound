@@ -107,15 +107,15 @@ TEST_CASE("generating characters") {
 
 TEST_CASE("card_fight") {
     ::runebound::game::Game game;
+    auto lissa = game.make_character(runebound::character::StandardCharacter::LISSA);
     auto lord = game.make_character(
         runebound::character::StandardCharacter::LORD_HAWTHORNE
     );
-    game.relax(lord);
+    game.start_next_character_turn(lissa);
     lord->set_position(runebound::Point(13, 14));
-    CHECK(lord->get_action_points() == 2);
-    game.start_next_character_turn(lord);
     game.take_token(lord);
     CHECK(lord->get_state() == runebound::character::StateCharacter::FIGHT);
+    CHECK(lissa->get_state() == runebound::character::StateCharacter::ENEMY);
     auto fight = lord->get_current_fight();
     CHECK(lord->get_cards_fight().size() == 1);
     CHECK(lord->get_trophies().size() == 0);
@@ -124,6 +124,8 @@ TEST_CASE("card_fight") {
     game.end_fight(lord);
     CHECK(lord->get_cards_fight().size() == 0);
     CHECK(lord->get_trophies().size() == 1);
+    CHECK(lord->get_state() == runebound::character::StateCharacter::NORMAL_GAME);
+    CHECK(lissa->get_state() == runebound::character::StateCharacter::NORMAL_GAME);
 }
 
 TEST_CASE("cards") {
