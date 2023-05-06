@@ -1,6 +1,7 @@
 #ifndef GAME_CLIENT_HPP_
 #define GAME_CLIENT_HPP_
 
+#include "fight_client.hpp"
 #include "game.hpp"
 #include "map_client.hpp"
 #include "runebound_fwd.hpp"
@@ -18,7 +19,8 @@ public:
     std::vector<::runebound::character::StandardCharacter>
         m_remaining_standard_characters;
     std::vector<dice::HandDice> m_last_dice_movement_result;
-
+    bool is_fight = false;
+    runebound::fight::FightClient m_fight_client;
     GameClient() = default;
 
     explicit GameClient(const Game &game)
@@ -31,6 +33,17 @@ public:
             set_remaining.begin(), set_remaining.end()
         );
         m_remaining_standard_characters = std::move(vec_remaining);
+        if ((game.m_characters.size() != 0) &&
+            (game.m_characters[game.m_turn]->get_current_fight())) {
+            is_fight = true;
+            std::cout << "fight!!!\n";
+            fight::FightClient fight_client(
+                *game.m_characters[game.m_turn]->get_current_fight()
+            );
+            m_fight_client = fight_client;
+        } else {
+            is_fight = false;
+        }
     }
 
     friend void to_json(nlohmann::json &json, const GameClient &game);

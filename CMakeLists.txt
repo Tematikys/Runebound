@@ -30,6 +30,7 @@ add_executable(graphics_client
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
+        src/fight_client.cpp
         src/graphics.cpp
         src/graphics_board.cpp
         src/graphics_button.cpp
@@ -65,6 +66,7 @@ add_executable(network_server
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
+        src/fight_client.cpp
         src/card_meeting.cpp
         generators/generator_cards_fight.cpp
         generators/generator_characters.cpp
@@ -84,6 +86,7 @@ add_executable(network_client
         src/card_fight.cpp
         src/card_research.cpp
         src/character.cpp
+        src/fight_client.cpp
         src/character_client.cpp
         src/dice.cpp
         src/fight.cpp
