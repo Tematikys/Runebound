@@ -72,7 +72,9 @@ add_executable(network_server
         src/map_cell.cpp
         src/map_client.cpp
         src/network_server.cpp
-        src/tokens.cpp)
+        src/tokens.cpp
+        src/product.cpp
+        )
 target_link_libraries(network_server ${Boost_LIBRARIES} ws2_32 wsock32)
 # ===== NETWORK SERVER ===== #
 
@@ -93,7 +95,9 @@ add_executable(network_client
         src/map_cell.cpp
         src/map_client.cpp
         src/network_client.cpp
-        src/tokens.cpp)
+        src/tokens.cpp
+        src/product.cpp
+        )
 target_link_libraries(network_client ${Boost_LIBRARIES} ws2_32 wsock32)
 # ===== NETWORK CLIENT ===== #
 

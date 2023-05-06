@@ -54,6 +54,38 @@ public:
         ::runebound::map::from_json(json, *this);
     }
 
+    Map(const Map &other)
+        : m_rivers(other.m_rivers),
+          m_size(other.m_size),
+          m_territory_name(other.m_territory_name),
+          m_towns(other.m_towns),
+          directions_odd_column(other.directions_odd_column),
+          directions_even_column(other.directions_even_column) {
+        m_map = other.m_map;
+    }
+
+    Map(Map &&other) noexcept
+        : m_map(std::move(other.m_map)),
+          m_rivers(std::move(other.m_rivers)),
+          m_size(other.m_size),
+          m_towns(std::move(other.m_towns)),
+          m_territory_name(std::move(other.m_territory_name)),
+          directions_odd_column(other.directions_odd_column),
+          directions_even_column(other.directions_even_column) {
+    }
+
+    Map &operator=(const Map &other) {
+        m_map = other.m_map;
+        return *this;
+    }
+
+    Map &operator=(Map &&other) noexcept {
+        m_map = std::move(other.m_map);
+        return *this;
+    }
+
+    ~Map() = default;
+
     Map(int size,
         std::vector<std::vector<MapCell>> map,
         std::set<std::pair<Point, Point>> rivers,
