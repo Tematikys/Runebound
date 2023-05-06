@@ -52,9 +52,6 @@ void Window::render(
     );
     SDL_RenderClear(renderer);
 
-    const RectangleShape rect{0, 0, m_width - 1, m_height - 1};
-    rect.render_border(renderer, 0, 0, {255, 0, 0, 255});
-
     for (const auto &[name, button] : m_buttons) {
         if (m_button_visible.at(name)) {
             button.render(
@@ -89,6 +86,10 @@ void Window::render(
             );
         }
     }
+
+    const RectangleShape rect{0, 0, m_width - 1, m_height - 1};
+    rect.render_border(renderer, 0, 0, {255, 0, 0, 255});
+
     SDL_SetRenderTarget(renderer, main_texture);
     const SDL_Rect renderQuad = {x_offset, y_offset, m_width, m_height};
     SDL_RenderCopy(renderer, m_texture, &m_rect, &renderQuad);

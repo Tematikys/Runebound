@@ -30,8 +30,6 @@ add_executable(graphics_client
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
-        generators/generator_cards_fight.cpp
-        generators/generator_characters.cpp
         src/graphics.cpp
         src/graphics_board.cpp
         src/graphics_button.cpp
@@ -46,6 +44,7 @@ add_executable(graphics_client
         src/map.cpp
         src/map_cell.cpp
         src/map_client.cpp
+        src/product.cpp
         src/tokens.cpp
         tpl/SDL2/src/SDL2_framerate.cpp
         tpl/SDL2/src/SDL2_gfxPrimitives.cpp

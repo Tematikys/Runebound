@@ -30,6 +30,19 @@ void Texture::render(
     );
 }
 
+void Texture::render_to_texture(
+    SDL_Renderer *renderer,
+    int x,
+    int y,
+    SDL_Texture *texture
+) {
+    SDL_SetRenderTarget(renderer, texture);
+    const SDL_Rect renderQuad = {x, y, m_width, m_height};
+    const SDL_Rect clip = {0, 0, m_width, m_height};
+    SDL_RenderCopy(renderer, m_texture, &clip, &renderQuad);
+    SDL_SetRenderTarget(renderer, nullptr);
+}
+
 bool Texture::load_image_from_file(
     SDL_Renderer *renderer,
     const ::std::string &path

@@ -38,11 +38,9 @@ public:
 
     void render_to_texture(
         SDL_Renderer *renderer,
-        SDL_Texture *previous_texture,
-        SDL_Texture *texture_to_render_on,
-        int x_offset,
-        int y_offset,
-        SDL_Color fill_color
+        SDL_Texture *&texture,
+        SDL_Color fill_color,
+        SDL_Color border_color
     ) const;
 
     void render_border_to_texture(

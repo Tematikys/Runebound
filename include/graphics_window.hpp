@@ -206,12 +206,16 @@ public:
         if (m_textures.find(name) == m_textures.end()) {
             return;
         }
+        m_textures[name].free();
         m_textures.erase(name);
         m_texture_pos.erase(name);
         m_texture_visible.erase(name);
     }
 
     void remove_all_textures() {
+        for (auto &[name, texture] : m_textures) {
+            texture.free();
+        }
         m_textures.clear();
         m_texture_pos.clear();
         m_texture_visible.clear();

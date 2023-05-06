@@ -135,15 +135,14 @@ bool PolygonShape::in_bounds(const Point &dot) const {
 
 void PolygonShape::render_to_texture(
     SDL_Renderer *renderer,
-    SDL_Texture *previous_texture,
-    SDL_Texture *texture_to_render_on,
-    int x_offset,
-    int y_offset,
-    SDL_Color fill_color
+    SDL_Texture *&texture,
+    SDL_Color fill_color,
+    SDL_Color border_color
 ) const {
-    SDL_SetRenderTarget(renderer, texture_to_render_on);
-    render(renderer, x_offset, y_offset, fill_color);
-    SDL_SetRenderTarget(renderer, previous_texture);
+    SDL_SetRenderTarget(renderer, texture);
+    render(renderer, 0, 0, fill_color);
+    render_border(renderer, 0, 0, border_color);
+    SDL_SetRenderTarget(renderer, nullptr);
 }
 
 void PolygonShape::render_border_to_texture(

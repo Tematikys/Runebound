@@ -5,6 +5,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <graphics_config.hpp>
 #include <graphics_point.hpp>
+#include <iostream>
 #include <string>
 
 namespace runebound::graphics {
@@ -58,6 +59,13 @@ public:
         SDL_Point *center = nullptr,
         SDL_RendererFlip flip = SDL_FLIP_NONE
     ) const;
+
+    void render_to_texture(
+        SDL_Renderer *renderer,
+        int x,
+        int y,
+        SDL_Texture *texture
+    );
 
     bool
     load_image_from_file(SDL_Renderer *renderer, const ::std::string &path);

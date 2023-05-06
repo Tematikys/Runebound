@@ -210,7 +210,6 @@ void Client::init_main_menu() {
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
             m_window.get_window("main_menu")->set_active_text_field("new_game");
-            ::std::cout << "text field" << ::std::endl;
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
@@ -300,76 +299,6 @@ void Client::handle_events() {
 void Client::game_render() {
     if (m_character_selected) {
         m_board.render(m_graphic_renderer, 0, 0);
-        for (const auto &character :
-             m_network_client.get_game_client().m_characters) {
-            const Point center = get_center_of_hexagon(
-                character.get_position().x, character.get_position().y
-            );
-            ::std::string name = character.get_name();
-            if (name == "Corbin") {
-                name = "CORBIN";
-            }
-            if (name == "Elder Mok") {
-                name = "ELDER_MOK";
-            }
-            if (name == "Laurel from Bloodwood") {
-                name = "LAUREL_FROM_BLOODWOOD";
-            }
-            if (name == "Lissa") {
-                name = "LISSA";
-            }
-            if (name == "Lord Hawthorne") {
-                name = "LORD_HAWTHORNE";
-            }
-            if (name == "Master Thorn") {
-                name = "MASTER_THORN";
-            }
-            auto &texture = m_images[name];
-            texture.render(
-                m_graphic_renderer, -texture.width() / 2 + center.x(),
-                -texture.height() / 2 + center.y()
-            );
-        }
-        int dx = 0;
-        for (const auto &dice : m_network_client.get_last_dice_result()) {
-            ::std::vector<Point> vertexes;
-            PolygonShape tri;
-            auto [key, col] = *DICE_COLOR.find(dice);
-            const int size = 50;
-            const int delay = 10;
-            vertexes.emplace_back(
-                (size + delay) + (size + delay) * dx,
-                WINDOW_HEIGHT - (size + delay)
-            );
-            vertexes.emplace_back(
-                delay + (size + delay) * dx, WINDOW_HEIGHT - delay
-            );
-            vertexes.emplace_back(
-                delay + (size + delay) * dx, WINDOW_HEIGHT - (size + delay)
-            );
-            tri = PolygonShape{vertexes};
-            tri.render(m_graphic_renderer, 0, 0, col.first);
-            vertexes.pop_back();
-            vertexes.emplace_back(
-                delay + size + (size + delay) * dx, WINDOW_HEIGHT - delay
-            );
-            tri = PolygonShape{vertexes};
-            tri.render(m_graphic_renderer, 0, 0, col.second);
-            dx += 1;
-        }
-    } else {
-        for (::std::size_t i = 0; i < m_character_list.size(); ++i) {
-            m_character_list[i].render(
-                m_graphic_renderer, m_character_list_pos[i].x(),
-                m_character_list_pos[i].y()
-            );
-        }
-    }
-    for (::std::size_t i = 0; i < m_game_buttons.size(); ++i) {
-        m_game_buttons[i].render(
-            m_graphic_renderer, m_game_button_pos[i].x(),
-            m_game_button_pos[i].y()
-        );
     }
 }
 
@@ -388,23 +317,74 @@ void Client::game_update() {
 
     SDL_Texture *tex = nullptr;
     m_board.render_to_texture(m_graphic_renderer, tex);
+    for (const auto &character :
+         m_network_client.get_game_client().m_characters) {
+        const Point center = get_center_of_hexagon(
+            character.get_position().x, character.get_position().y
+        );
+        const ::std::string name = character.get_name();
+        m_images[name].render_to_texture(
+            m_graphic_renderer, -m_images[name].width() / 2 + center.x(),
+            -m_images[name].height() / 2 + center.y(), tex
+        );
+    }
+    {
+        Texture texture(tex);
+        win->remove_texture("board");
+        win->add_texture("board", texture, m_board_pos, true);
+        SDL_DestroyTexture(tex);
+        texture.free();
+    }
 
-    Texture texture(tex);
-    win->remove_texture("board");
-    win->add_texture("board", texture, {0, 0}, true);
+    const int size = 50;
+    const int delay = 10;
+    const int amount =
+        static_cast<int>(m_network_client.get_last_dice_result().size());
+    tex = SDL_CreateTexture(
+        m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+        (size + delay) * amount - delay + 1, size + 1
+    );
+    SDL_SetRenderTarget(m_graphic_renderer, tex);
+    SDL_SetRenderDrawColor(m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(m_graphic_renderer);
+    SDL_SetRenderTarget(m_graphic_renderer, nullptr);
+    int dx = 0;
+    for (const auto &dice : m_network_client.get_last_dice_result()) {
+        ::std::vector<Point> vertexes;
+        PolygonShape tri;
+        auto [key, col] = *DICE_COLOR.find(dice);
+        vertexes.emplace_back(size + (size + delay) * dx, 0);
+        vertexes.emplace_back((size + delay) * dx, size);
+        vertexes.emplace_back((size + delay) * dx, 0);
+        tri = PolygonShape{vertexes};
+        tri.render_to_texture(
+            m_graphic_renderer, tex, col.first, {0x00, 0x00, 0x00, 0xFF}
+        );
+        vertexes.pop_back();
+        vertexes.emplace_back(size + (size + delay) * dx, size);
+        tri = PolygonShape{vertexes};
+        tri.render_to_texture(
+            m_graphic_renderer, tex, col.second, {0x00, 0x00, 0x00, 0xFF}
+        );
+        dx += 1;
+    }
+    {
+        Texture texture(tex);
+        win->remove_texture("dice");
+        win->add_texture("dice", texture, {5, WINDOW_HEIGHT - size - 5}, true);
+        SDL_DestroyTexture(tex);
+        texture.free();
+    }
 
-//    SDL_DestroyTexture(tex);
-    texture.free();
-
-    //    const ::std::size_t index = m_board.get_selected_hexagon();
-    //    if (index != 0xFFFF && m_mouse_pressed) {
-    //        ::std::cout << index << ::std::endl;
-    //        m_network_client.make_move(
-    //            static_cast<int>(index / ::runebound::map::STANDARD_SIZE),
-    //            static_cast<int>(index % ::runebound::map::STANDARD_SIZE)
-    //        );
-    //        m_mouse_pressed = false;
-    //    }
+    const ::std::size_t index = m_board.get_selected_hexagon();
+    if (index != 0xFFFF && m_mouse_pressed) {
+        ::std::cout << index << ::std::endl;
+        m_network_client.make_move(
+            static_cast<int>(index / ::runebound::map::STANDARD_SIZE),
+            static_cast<int>(index % ::runebound::map::STANDARD_SIZE)
+        );
+        m_mouse_pressed = false;
+    }
 }
 
 void Client::main_menu_update() {
@@ -497,22 +477,22 @@ void Client::char_list_update() {
         ::std::string name;
         switch (character) {
             case ::runebound::character::StandardCharacter::LISSA:
-                name = "LISSA";
+                name = "Lissa";
                 break;
             case character::StandardCharacter::CORBIN:
-                name = "CORBIN";
+                name = "Corbin";
                 break;
             case character::StandardCharacter::ELDER_MOK:
-                name = "ELDER MOK";
+                name = "Elder Mok";
                 break;
             case character::StandardCharacter::LAUREL_FROM_BLOODWOOD:
-                name = "LAUREL FROM BLOODWOOD";
+                name = "Laurel from Bloodwood";
                 break;
             case character::StandardCharacter::LORD_HAWTHORNE:
-                name = "LORD HAWTHORNE";
+                name = "Lord Hawthorne";
                 break;
             case character::StandardCharacter::MASTER_THORN:
-                name = "MASTER THORN";
+                name = "Master Thorn";
                 break;
         }
         texture.load_text_from_string(
