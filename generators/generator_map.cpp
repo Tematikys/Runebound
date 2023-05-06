@@ -237,7 +237,9 @@ void make_cells(std::vector<std::vector<map::MapCell>> &map) {
     make_row(
         map, 13,
         std::vector{
-            std::pair(map::TypeCell::PLAIN, 3),
+            std::pair(map::TypeCell::PLAIN, 1),
+            std::pair(map::TypeCell::FOREST, 1),
+            std::pair(map::TypeCell::PLAIN, 1),
             std::pair(map::TypeCell::HILLS, 2),
             std::pair(map::TypeCell::MOUNTAINS, 3),
             std::pair(map::TypeCell::HILLS, 1),
@@ -247,12 +249,10 @@ void make_cells(std::vector<std::vector<map::MapCell>> &map) {
     make_row(
         map, 14,
         std::vector{
-            std::pair(map::TypeCell::PLAIN, 3),
-            std::pair(map::TypeCell::HILLS, 2),
-            std::pair(map::TypeCell::MOUNTAINS, 3),
-            std::pair(map::TypeCell::HILLS, 1),
-            std::pair(map::TypeCell::MOUNTAINS, 1),
-            std::pair(map::TypeCell::PLAIN, 5)}
+            std::pair(map::TypeCell::FOREST, 2),
+            std::pair(map::TypeCell::HILLS, 3),
+            std::pair(map::TypeCell::MOUNTAINS, 6),
+            std::pair(map::TypeCell::PLAIN, 4)}
     );
 }
 

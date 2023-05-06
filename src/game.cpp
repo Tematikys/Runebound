@@ -236,6 +236,9 @@ std::vector<Point> Game::make_move(
         chr->update_action_points(-1);
         return {m_characters[m_turn]->get_position(), end};
     }
+    if (m_last_dice_movement_result.empty()) {
+        throw NonThrownDiceException();
+    }
     std::vector<Point> result = m_map.check_move(
         m_characters[m_turn]->get_position(), end, dice_roll_results
     );
@@ -402,6 +405,25 @@ void Game::sell_product_in_special_cell(
     m_remaining_products.push_back(product);
     chr->change_gold(static_cast<int>(m_all_products[product].get_market_price()
     ));
+}
+
+void Game::start_new_round() {
+    m_number_of_rounds += 1;
+    if (m_number_of_rounds % 6 == 0) {
+        for (int row = 0; row < m_map.get_size(); ++row) {
+            for (int column = 0; column < m_map.get_size(); ++column) {
+                if (m_map.get_cell_map(Point(row, column)).get_token() !=
+                        AdventureType::NOTHING &&
+                    m_map.get_cell_map(Point(row, column)).get_side_token() ==
+                        Side::BACK) {
+                    m_map.reverse_token(Point(row, column));
+                }
+            }
+        }
+    }
+    if (m_number_of_rounds == 24) {
+        m_game_over = true;
+    }
 }
 
 }  // namespace game
