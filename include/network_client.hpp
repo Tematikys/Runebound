@@ -67,7 +67,7 @@ public:
                     std::string message;
                     std::getline(is, message);
 #ifdef NETWORK_DEBUG_INFO
-                    std::cout << "Received: " << message
+                    std::cout << "Received: " << message.substr(0, 80)
                               << " Length: " << length << '\n';
 #endif
                     parse_message(message);
@@ -79,13 +79,14 @@ public:
         );
     }
 
-    void do_write(const std::string &str) {
+    void do_write(const std::string &message) {
         socket_.async_write_some(
-            boost::asio::buffer(str + '\n'),
-            [this, str](boost::system::error_code ec, std::size_t length) {
+            boost::asio::buffer(message + '\n'),
+            [this, message](boost::system::error_code ec, std::size_t length) {
                 if (!ec) {
 #ifdef NETWORK_DEBUG_INFO
-                    std::cout << "Sent:" << str << ' ' << length << '\n';
+                    std::cout << "Sent:" << message.substr(0, 80) << ' '
+                              << length << '\n';
 #endif
 
                 } else {
@@ -228,8 +229,8 @@ public:
     };
 
     [[nodiscard]] character::Character get_yourself_character() const {
-        for (auto& character : m_game_client.m_characters){
-            if (character.get_standard_character()==m_character) {
+        for (auto &character : m_game_client.m_characters) {
+            if (character.get_standard_character() == m_character) {
                 return character;
             }
         }

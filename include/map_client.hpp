@@ -19,6 +19,7 @@ void from_json(const nlohmann::json &json, MapClient &map);
 struct MapClient {
 private:
     friend struct ::runebound::graphics::Board;
+    friend struct ::runebound::graphics::Client;
     const std::vector<Point> directions_odd_column{{-1, 0}, {0, 1},  {1, 1},
                                                    {1, 0},  {1, -1}, {0, -1}};
     const std::vector<Point> directions_even_column{{-1, 0}, {-1, 1}, {0, 1},
@@ -61,9 +62,10 @@ public:
         return *this;
     }
 
-    void reverse_token(int row, int column) {
-        m_map[row][column].reverse_token();
-    }
+    const std::map<std::string, std::vector<Point>> &get_territory_name() const;
+    int get_size() const;
+    const std::set<std::pair<Point, Point>> &get_rivers() const;
+    const std::vector<std::vector<MapCell>> &get_map() const;
 
     friend void to_json(nlohmann::json &json, const MapClient &map);
 
