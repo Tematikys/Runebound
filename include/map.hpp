@@ -19,6 +19,7 @@ void from_json(const nlohmann::json &json, Map &map);
 
 struct Map {
 private:
+    friend struct MapClient;
     std::vector<std::vector<MapCell>> m_map;  // [row][column]
     std::set<std::pair<Point, Point>> m_rivers;
     std::set<Point> m_towns;
