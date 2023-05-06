@@ -36,7 +36,7 @@ public:
         if ((game.m_characters.size() != 0) &&
             (game.m_characters[game.m_turn]->get_current_fight())) {
             is_fight = true;
-            std::cout << "fight!!!\n";
+//            std::cout << "fight!!!\n";
             fight::FightClient fight_client(
                 *game.m_characters[game.m_turn]->get_current_fight()
             );
