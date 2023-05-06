@@ -1601,7 +1601,7 @@
                 "m_special_type_cell": 3,
                 "m_territory_name": "",
                 "m_token": 3,
-                "m_type_cell": 4
+                "m_type_cell": 1
             },
             {
                 "m_road": false,
@@ -1715,7 +1715,7 @@
                 "m_special_type_cell": 3,
                 "m_territory_name": "",
                 "m_token": 3,
-                "m_type_cell": 4
+                "m_type_cell": 1
             },
             {
                 "m_road": false,
@@ -1723,15 +1723,7 @@
                 "m_special_type_cell": 3,
                 "m_territory_name": "",
                 "m_token": 3,
-                "m_type_cell": 4
-            },
-            {
-                "m_road": false,
-                "m_side_token": 0,
-                "m_special_type_cell": 3,
-                "m_territory_name": "",
-                "m_token": 3,
-                "m_type_cell": 4
+                "m_type_cell": 1
             },
             {
                 "m_road": false,
@@ -1755,30 +1747,6 @@
                 "m_special_type_cell": 3,
                 "m_territory_name": "",
                 "m_token": 3,
-                "m_type_cell": 2
-            },
-            {
-                "m_road": false,
-                "m_side_token": 0,
-                "m_special_type_cell": 3,
-                "m_territory_name": "",
-                "m_token": 3,
-                "m_type_cell": 2
-            },
-            {
-                "m_road": false,
-                "m_side_token": 0,
-                "m_special_type_cell": 3,
-                "m_territory_name": "",
-                "m_token": 3,
-                "m_type_cell": 2
-            },
-            {
-                "m_road": false,
-                "m_side_token": 0,
-                "m_special_type_cell": 3,
-                "m_territory_name": "",
-                "m_token": 3,
                 "m_type_cell": 3
             },
             {
@@ -1795,7 +1763,39 @@
                 "m_special_type_cell": 3,
                 "m_territory_name": "",
                 "m_token": 3,
-                "m_type_cell": 4
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
+            },
+            {
+                "m_road": false,
+                "m_side_token": 0,
+                "m_special_type_cell": 3,
+                "m_territory_name": "",
+                "m_token": 3,
+                "m_type_cell": 2
             },
             {
                 "m_road": false,

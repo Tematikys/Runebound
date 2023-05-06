@@ -90,7 +90,7 @@ public:
 
     TextField(const TextField &other) = delete;
 
-    TextField &operator=(TextField &&other)  noexcept {
+    TextField &operator=(TextField &&other) noexcept {
         m_text = ::std::move(other.m_text);
         m_max_text_len = other.m_max_text_len;
         m_button = ::std::move(other.m_button);
