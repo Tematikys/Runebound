@@ -10,7 +10,7 @@
 #include "game.hpp"
 #include "game_client.hpp"
 
-// #define NETWORK_DEBUG_INFO
+//#define NETWORK_DEBUG_INFO
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
@@ -135,7 +135,7 @@ public:
                 }
             }
 
-            if (data["action type"] == "pass") {
+            if (data["action type"] == "fight_pass") {
                 m_game->start_next_character_turn(user_character[m_user_name]);
                 for (const std::string &user_name : game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
@@ -145,6 +145,80 @@ public:
             if (data["action type"] == "relax") {
                 m_game->throw_relax_dice(user_character[m_user_name]);
                 m_game->relax(user_character[m_user_name]);
+                for (const std::string &user_name : game_users[m_game_name]) {
+                    user_connection[user_name]->send_game();
+                }
+            }
+
+            if (data["action type"] == "fight") {
+                if (data["fight command"] == "start round") {
+                    user_character[m_user_name]
+                        ->get_current_fight()
+                        ->start_round();
+                }
+                if (data["fight command"] == "end fight") {
+                    m_game->end_fight(user_character[m_user_name]);
+                }
+                //                if (data["fight command"] == "check end
+                //                round"){
+                //
+                //                }
+                //                if (data["fight command"] == "check end
+                //                fight"){
+                //
+                //                }
+                if (data["fight command"] == "use tokens") {
+                    if (data["token type"] == "doubling") {
+                        runebound::fight::Participant participant =
+                            data["participant"];
+                        runebound::fight::TokenHandCount token1 =
+                            data["token1"];
+                        runebound::fight::TokenHandCount token2 =
+                            data["token2"];
+                        user_character[m_user_name]
+                            ->get_current_fight()
+                            ->make_doubling(participant, token1, token2);
+                    }
+                    if (data["token type"] == "dexterity") {
+                        runebound::fight::Participant participant1 =
+                            data["participant1"];
+                        runebound::fight::Participant participant2 =
+                            data["participant2"];
+                        runebound::fight::TokenHandCount token1 =
+                            data["token1"];
+                        runebound::fight::TokenHandCount token2 =
+                            data["token2"];
+                        user_character[m_user_name]
+                            ->get_current_fight()
+                            ->make_dexterity(
+                                participant1, token1, token2, participant2
+                            );
+                    }
+                    if (data["token type"] == "damage") {
+                        runebound::fight::Participant participant =
+                            data["participant"];
+                        std::vector<runebound::fight::TokenHandCount> tokens =
+                            data["tokens"];
+                        user_character[m_user_name]
+                            ->get_current_fight()
+                            ->make_damage(participant, tokens);
+                    }
+                }
+                if (data["fight command"] == "fight_pass") {
+                    if (data["participant"] ==
+                        runebound::fight::Participant::CHARACTER) {
+                        user_character[m_user_name]
+                            ->get_current_fight()
+                            ->pass_character();
+                    } else {
+                        if (data["participant"] ==
+                            runebound::fight::Participant::ENEMY) {
+                            user_character[m_user_name]
+                                ->get_current_fight()
+                                ->pass_enemy();
+                        }
+                    }
+                }
                 for (const std::string &user_name : game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
                 }
@@ -204,7 +278,7 @@ void Connection::send_selected_character(
     answer["change type"] = "selected character";
     answer["character"] = character;
     write(answer.dump());
-};
+}
 
 void Connection::send_game() {
     json answer;
