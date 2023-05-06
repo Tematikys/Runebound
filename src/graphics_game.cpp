@@ -190,16 +190,7 @@ void Client::game_update() {
 
     win->remove_button("take_token");
 
-    const auto &characters = m_network_client.get_game_client().m_characters;
-    ::runebound::character::Character me{};
-    for (const auto &character : characters) {
-        if (character.get_standard_character() ==
-            m_network_client.get_yourself_character()) {
-            me = character;
-            break;
-        }
-    }
-
+    auto me = m_network_client.get_yourself_character();
     auto pos = me.get_position();
     auto cell = m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
 
