@@ -123,16 +123,6 @@ void PolygonShape::render_border(
     }
 }
 
-bool PolygonShape::in_bounds(const Point &dot) const {
-    return ::std::all_of(
-        m_side_coefficients.begin(), m_side_coefficients.end(),
-        [&](::std::tuple<int, int, int> coefficients) {
-            auto [a, b, c] = coefficients;
-            return dot.x() * a + dot.y() * b + c <= 0;
-        }
-    );
-}
-
 void PolygonShape::render_to_texture(
     SDL_Renderer *renderer,
     SDL_Texture *&texture,
@@ -156,6 +146,16 @@ void PolygonShape::render_border_to_texture(
     SDL_SetRenderTarget(renderer, texture_to_render_on);
     render_border(renderer, x_offset, y_offset, border_color);
     SDL_SetRenderTarget(renderer, previous_texture);
+}
+
+bool PolygonShape::in_bounds(const Point &dot) const {
+    return ::std::all_of(
+        m_side_coefficients.begin(), m_side_coefficients.end(),
+        [&](::std::tuple<int, int, int> coefficients) {
+            auto [a, b, c] = coefficients;
+            return dot.x() * a + dot.y() * b + c <= 0;
+        }
+    );
 }
 
 HexagonShape::HexagonShape(const Point &center, int radius) {

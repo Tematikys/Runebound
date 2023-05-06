@@ -89,49 +89,25 @@ public:
         SDL_Texture *main_texture = nullptr
     ) const;
 
+    void handle_events(SDL_Event event);
+
+    void update(Point mouse_pos, bool mouse_pressed);
+
     void add_button(
         const ::std::string &name,
         Button &button,
         Point pos,
         bool visible,
         bool updatable
-    ) {
-        m_buttons[name] = ::std::move(button);
-        m_button_pos[name] = pos;
-        m_button_visible[name] = visible;
-        m_button_updatable[name] = updatable;
-    }
+    );
 
-    void set_updatability_button(const ::std::string &name, bool state) {
-        if (m_buttons.find(name) == m_buttons.end()) {
-            return;
-        }
-        m_button_updatable[name] = state;
-    }
+    void set_updatability_button(const ::std::string &name, bool state);
 
-    void set_visibility_button(const ::std::string &name, bool state) {
-        if (m_buttons.find(name) == m_buttons.end()) {
-            return;
-        }
-        m_button_visible[name] = state;
-    }
+    void set_visibility_button(const ::std::string &name, bool state);
 
-    void remove_button(const ::std::string &name) {
-        if (m_buttons.find(name) == m_buttons.end()) {
-            return;
-        }
-        m_buttons.erase(name);
-        m_button_pos.erase(name);
-        m_button_visible.erase(name);
-        m_button_updatable.erase(name);
-    }
+    void remove_button(const ::std::string &name);
 
-    void remove_all_buttons() {
-        m_buttons.clear();
-        m_button_pos.clear();
-        m_button_visible.clear();
-        m_button_updatable.clear();
-    }
+    void remove_all_buttons();
 
     void add_text_field(
         const ::std::string &name,
@@ -141,85 +117,28 @@ public:
         Point pos,
         bool visible,
         bool updatable
-    ) {
-        m_text_fields[name] = ::std::move(text_field);
-        m_text_field_fonts[name] = font;
-        m_text_field_colors[name] = col;
-        m_text_field_pos[name] = pos;
-        m_text_field_visible[name] = visible;
-        m_text_field_updatable[name] = updatable;
-    }
+    );
 
-    void set_updatability_text_field(const ::std::string &name, bool state) {
-        if (m_text_fields.find(name) == m_text_fields.end()) {
-            return;
-        }
-        m_text_field_updatable[name] = state;
-    }
+    void set_updatability_text_field(const ::std::string &name, bool state);
 
-    void set_visibility_text_field(const ::std::string &name, bool state) {
-        if (m_text_fields.find(name) == m_text_fields.end()) {
-            return;
-        }
-        m_text_field_visible[name] = state;
-    }
+    void set_visibility_text_field(const ::std::string &name, bool state);
 
-    void remove_text_field(const ::std::string &name) {
-        if (m_text_fields.find(name) == m_text_fields.end()) {
-            return;
-        }
-        m_text_fields.erase(name);
-        m_text_field_pos.erase(name);
-        m_text_field_visible.erase(name);
-        m_text_field_updatable.erase(name);
-    }
+    void remove_text_field(const ::std::string &name);
 
-    void remove_all_text_fields() {
-        m_text_fields.clear();
-        m_text_field_pos.clear();
-        m_text_field_visible.clear();
-        m_text_field_updatable.clear();
-    }
+    void remove_all_text_fields();
 
     void add_texture(
         const ::std::string &name,
         Texture &texture,
         Point pos,
         bool visible
-    ) {
-        if (m_textures.find(name) != m_textures.end()) {
-            m_textures[name].free();
-        }
-        m_textures[name] = ::std::move(texture);
-        m_texture_pos[name] = pos;
-        m_texture_visible[name] = visible;
-    }
+    );
 
-    void set_visibility_texture(const ::std::string &name, bool state) {
-        if (m_textures.find(name) == m_textures.end()) {
-            return;
-        }
-        m_texture_visible[name] = state;
-    }
+    void set_visibility_texture(const ::std::string &name, bool state);
 
-    void remove_texture(const ::std::string &name) {
-        if (m_textures.find(name) == m_textures.end()) {
-            return;
-        }
-        m_textures[name].free();
-        m_textures.erase(name);
-        m_texture_pos.erase(name);
-        m_texture_visible.erase(name);
-    }
+    void remove_texture(const ::std::string &name);
 
-    void remove_all_textures() {
-        for (auto &[name, texture] : m_textures) {
-            texture.free();
-        }
-        m_textures.clear();
-        m_texture_pos.clear();
-        m_texture_visible.clear();
-    }
+    void remove_all_textures();
 
     void add_window(
         const ::std::string &name,
@@ -227,47 +146,15 @@ public:
         Point pos,
         bool visible,
         bool updatable
-    ) {
-        m_windows[name] = ::std::move(window);
-        m_window_pos[name] = pos;
-        m_window_visible[name] = visible;
-        m_window_updatable[name] = updatable;
-    }
+    );
 
-    void set_updatability_window(const ::std::string &name, bool state) {
-        if (m_windows.find(name) == m_windows.end()) {
-            return;
-        }
-        m_window_updatable[name] = state;
-    }
+    void set_updatability_window(const ::std::string &name, bool state);
 
-    void set_visibility_window(const ::std::string &name, bool state) {
-        if (m_windows.find(name) == m_windows.end()) {
-            return;
-        }
-        m_window_visible[name] = state;
-    }
+    void set_visibility_window(const ::std::string &name, bool state);
 
-    void remove_window(const ::std::string &name) {
-        if (m_windows.find(name) == m_windows.end()) {
-            return;
-        }
-        m_windows.erase(name);
-        m_window_pos.erase(name);
-        m_window_visible.erase(name);
-        m_window_updatable.erase(name);
-    }
+    void remove_window(const ::std::string &name);
 
-    void remove_all_windows() {
-        m_windows.clear();
-        m_window_pos.clear();
-        m_window_visible.clear();
-        m_window_updatable.clear();
-    }
-
-    void handle_events(SDL_Event event);
-
-    void update(Point mouse_pos, bool mouse_pressed);
+    void remove_all_windows();
 
     void activate() {
         m_is_active = true;
@@ -277,54 +164,27 @@ public:
         m_is_active = false;
     }
 
-    void reset_active_window() {
-        if (!m_active_window.empty()) {
-            m_windows[m_active_window]->deactivate();
-        }
-    }
+    void reset_active_window();
 
-    void set_active_window(const ::std::string &name) {
-        if (m_windows.find(name) == m_windows.end()) {
-            return;
-        }
-        reset_active_window();
-        m_active_window = name;
-        m_windows[name]->activate();
-    }
+    void set_active_window(const ::std::string &name);
 
     void reset_active_text_field() {
         m_active_text_field = "";
     }
 
-    void set_active_text_field(const ::std::string &name) {
-        if (m_text_fields.find(name) == m_text_fields.end()) {
-            return;
-        }
-        reset_active_text_field();
-        m_active_text_field = name;
-    }
+    void set_active_text_field(const ::std::string &name);
 
     [[nodiscard]] SDL_Texture *get_texture() {
         return m_texture;
     }
 
-    [[nodiscard]] Window *get_window(const ::std::string &name) {
-        if (m_windows.find(name) != m_windows.end()) {
-            return m_windows[name].get();
-        }
-        return nullptr;
-    }
+    [[nodiscard]] Window *get_window(const ::std::string &name);
 
     [[nodiscard]] const ::std::string &get_active_window_name() const {
         return m_active_window;
     }
 
-    [[nodiscard]] TextField *get_text_field(const ::std::string &name) {
-        if (m_text_fields.find(name) == m_text_fields.end()) {
-            return nullptr;
-        }
-        return &m_text_fields.at(name);
-    }
+    [[nodiscard]] TextField *get_text_field(const ::std::string &name);
 
     [[nodiscard]] int width() const {
         return m_width;
@@ -334,10 +194,7 @@ public:
         return m_height;
     }
 
-    [[nodiscard]] bool in_bounds(const Point &p) const {
-        return (0 <= p.x() && p.x() < m_width) &&
-               (0 <= p.y() && p.y() < m_height);
-    }
+    [[nodiscard]] bool in_bounds(const Point &p) const;
 
     [[nodiscard]] bool is_active() const {
         return m_is_active;

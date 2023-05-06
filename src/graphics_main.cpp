@@ -4,7 +4,7 @@ int main(int, char *[]) {
     ::runebound::graphics::Client client;
     client.init();
 
-    while (client.running()) {
+    while (client.is_running()) {
         client.handle_events();
         client.update();
         client.render();

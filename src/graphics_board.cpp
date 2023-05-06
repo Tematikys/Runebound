@@ -85,18 +85,6 @@ void Board::add_cell(
     m_height = ::std::max(m_height, m_cells.back().get_vertex(3).y());
 }
 
-void Board::add_river(const Segment &segment, SDL_Color color) {
-    m_rivers.push_back(segment);
-    m_river_color.push_back(color);
-    ++m_river_amount;
-}
-
-void Board::add_road(const Segment &segment, SDL_Color color) {
-    m_roads.push_back(segment);
-    m_road_color.push_back(color);
-    ++m_road_amount;
-}
-
 void Board::add_token(
     const CircleShape &circle,
     SDL_Color fill_color,
@@ -117,6 +105,18 @@ void Board::add_special(
     m_special_fill_color.push_back(fill_color);
     m_special_border_color.push_back(border_color);
     ++m_special_amount;
+}
+
+void Board::add_river(const Segment &segment, SDL_Color color) {
+    m_rivers.push_back(segment);
+    m_river_color.push_back(color);
+    ++m_river_amount;
+}
+
+void Board::add_road(const Segment &segment, SDL_Color color) {
+    m_roads.push_back(segment);
+    m_road_color.push_back(color);
+    ++m_road_amount;
 }
 
 void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
@@ -169,6 +169,20 @@ void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
             renderer, m_token_border_color[m_selected_token], x_offset, y_offset
         );
     }
+}
+
+void Board::render_to_texture(SDL_Renderer *renderer, SDL_Texture *&texture)
+    const {
+    SDL_DestroyTexture(texture);
+    texture = SDL_CreateTexture(
+        renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+        m_width + 1, m_height + 1
+    );
+    SDL_SetRenderTarget(renderer, texture);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(renderer);
+    render(renderer, 0, 0);
+    SDL_SetRenderTarget(renderer, nullptr);
 }
 
 void Board::update_selection(const Point &dot) {

@@ -56,6 +56,8 @@ public:
 
     ~Button() = default;
 
+    void render(SDL_Renderer *renderer, int x_offset, int y_offset) const;
+
     void on_click() const {
         m_on_click_function();
     };
@@ -63,8 +65,6 @@ public:
     void on_cover() const {
         m_on_cover_function();
     }
-
-    void render(SDL_Renderer *renderer, int x_offset, int y_offset) const;
 
     [[nodiscard]] bool in_bounds(const Point &p) const {
         return 0 <= p.x() && p.x() < m_width && 0 <= p.y() && p.y() < m_height;
@@ -101,6 +101,14 @@ public:
 
     ~TextField() = default;
 
+    void render(
+        SDL_Renderer *renderer,
+        TTF_Font *font,
+        SDL_Color color,
+        int x_offset,
+        int y_offset
+    ) const;
+
     void push(const ::std::string &suffix);
 
     void pop() {
@@ -120,14 +128,6 @@ public:
     void on_cover() const {
         m_button.on_cover();
     }
-
-    void render(
-        SDL_Renderer *renderer,
-        TTF_Font *font,
-        SDL_Color color,
-        int x_offset,
-        int y_offset
-    ) const;
 
     [[nodiscard]] bool in_bounds(const Point &p) const {
         return m_button.in_bounds(p);

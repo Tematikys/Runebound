@@ -69,13 +69,11 @@ public:
 
     void init_game();
 
-    void init_game_list();
+    void init_char_list();
 
     void init_main_menu();
 
     void handle_events();
-
-    void game_render();
 
     void render();
 
@@ -91,7 +89,7 @@ public:
 
     void exit();
 
-    [[nodiscard]] bool running() const {
+    [[nodiscard]] bool is_running() const {
         return m_is_running;
     };
 };

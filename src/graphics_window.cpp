@@ -95,6 +95,21 @@ void Window::render(
     SDL_RenderCopy(renderer, m_texture, &m_rect, &renderQuad);
 }
 
+void Window::render_texture(
+    SDL_Renderer *renderer,
+    int x_offset,
+    int y_offset,
+    int width,
+    int height,
+    SDL_Texture *texture,
+    SDL_Texture *main_texture
+) const {
+    SDL_SetRenderTarget(renderer, m_texture);
+    const SDL_Rect renderQuad = {x_offset, y_offset, width, height};
+    SDL_RenderCopy(renderer, texture, nullptr, &renderQuad);
+    SDL_SetRenderTarget(renderer, main_texture);
+}
+
 void Window::handle_events(SDL_Event event) {
     if (!m_is_active) {
         return;
@@ -182,19 +197,221 @@ void Window::update(Point mouse_pos, bool mouse_pressed) {
     }
 }
 
-void Window::render_texture(
-    SDL_Renderer *renderer,
-    int x_offset,
-    int y_offset,
-    int width,
-    int height,
-    SDL_Texture *texture,
-    SDL_Texture *main_texture
-) const {
-    SDL_SetRenderTarget(renderer, m_texture);
-    const SDL_Rect renderQuad = {x_offset, y_offset, width, height};
-    SDL_RenderCopy(renderer, texture, nullptr, &renderQuad);
-    SDL_SetRenderTarget(renderer, main_texture);
+void Window::add_button(
+    const std::string &name,
+    Button &button,
+    Point pos,
+    bool visible,
+    bool updatable
+) {
+    m_buttons[name] = ::std::move(button);
+    m_button_pos[name] = pos;
+    m_button_visible[name] = visible;
+    m_button_updatable[name] = updatable;
+}
+
+void Window::set_updatability_button(const std::string &name, bool state) {
+    if (m_buttons.find(name) == m_buttons.end()) {
+        return;
+    }
+    m_button_updatable[name] = state;
+}
+
+void Window::set_visibility_button(const std::string &name, bool state) {
+    if (m_buttons.find(name) == m_buttons.end()) {
+        return;
+    }
+    m_button_visible[name] = state;
+}
+
+void Window::remove_button(const std::string &name) {
+    if (m_buttons.find(name) == m_buttons.end()) {
+        return;
+    }
+    m_buttons.erase(name);
+    m_button_pos.erase(name);
+    m_button_visible.erase(name);
+    m_button_updatable.erase(name);
+}
+
+void Window::remove_all_buttons() {
+    m_buttons.clear();
+    m_button_pos.clear();
+    m_button_visible.clear();
+    m_button_updatable.clear();
+}
+
+void Window::add_text_field(
+    const std::string &name,
+    TextField &text_field,
+    TTF_Font *font,
+    SDL_Color col,
+    Point pos,
+    bool visible,
+    bool updatable
+) {
+    m_text_fields[name] = ::std::move(text_field);
+    m_text_field_fonts[name] = font;
+    m_text_field_colors[name] = col;
+    m_text_field_pos[name] = pos;
+    m_text_field_visible[name] = visible;
+    m_text_field_updatable[name] = updatable;
+}
+
+void Window::set_updatability_text_field(const std::string &name, bool state) {
+    if (m_text_fields.find(name) == m_text_fields.end()) {
+        return;
+    }
+    m_text_field_updatable[name] = state;
+}
+
+void Window::set_visibility_text_field(const std::string &name, bool state) {
+    if (m_text_fields.find(name) == m_text_fields.end()) {
+        return;
+    }
+    m_text_field_visible[name] = state;
+}
+
+void Window::remove_text_field(const std::string &name) {
+    if (m_text_fields.find(name) == m_text_fields.end()) {
+        return;
+    }
+    m_text_fields.erase(name);
+    m_text_field_pos.erase(name);
+    m_text_field_visible.erase(name);
+    m_text_field_updatable.erase(name);
+}
+
+void Window::remove_all_text_fields() {
+    m_text_fields.clear();
+    m_text_field_pos.clear();
+    m_text_field_visible.clear();
+    m_text_field_updatable.clear();
+}
+
+void Window::add_texture(
+    const ::std::string &name,
+    Texture &texture,
+    Point pos,
+    bool visible
+) {
+    if (m_textures.find(name) != m_textures.end()) {
+        m_textures[name].free();
+    }
+    m_textures[name] = ::std::move(texture);
+    m_texture_pos[name] = pos;
+    m_texture_visible[name] = visible;
+}
+
+void Window::set_visibility_texture(const ::std::string &name, bool state) {
+    if (m_textures.find(name) == m_textures.end()) {
+        return;
+    }
+    m_texture_visible[name] = state;
+}
+
+void Window::remove_texture(const ::std::string &name) {
+    if (m_textures.find(name) == m_textures.end()) {
+        return;
+    }
+    m_textures[name].free();
+    m_textures.erase(name);
+    m_texture_pos.erase(name);
+    m_texture_visible.erase(name);
+}
+
+void Window::remove_all_textures() {
+    for (auto &[name, texture] : m_textures) {
+        texture.free();
+    }
+    m_textures.clear();
+    m_texture_pos.clear();
+    m_texture_visible.clear();
+}
+
+void Window::add_window(
+    const ::std::string &name,
+    ::std::unique_ptr<Window> window,
+    Point pos,
+    bool visible,
+    bool updatable
+) {
+    m_windows[name] = ::std::move(window);
+    m_window_pos[name] = pos;
+    m_window_visible[name] = visible;
+    m_window_updatable[name] = updatable;
+}
+
+void Window::set_updatability_window(const ::std::string &name, bool state) {
+    if (m_windows.find(name) == m_windows.end()) {
+        return;
+    }
+    m_window_updatable[name] = state;
+}
+
+void Window::set_visibility_window(const ::std::string &name, bool state) {
+    if (m_windows.find(name) == m_windows.end()) {
+        return;
+    }
+    m_window_visible[name] = state;
+}
+
+void Window::remove_window(const ::std::string &name) {
+    if (m_windows.find(name) == m_windows.end()) {
+        return;
+    }
+    m_windows.erase(name);
+    m_window_pos.erase(name);
+    m_window_visible.erase(name);
+    m_window_updatable.erase(name);
+}
+
+void Window::remove_all_windows() {
+    m_windows.clear();
+    m_window_pos.clear();
+    m_window_visible.clear();
+    m_window_updatable.clear();
+}
+
+void Window::reset_active_window() {
+    if (!m_active_window.empty()) {
+        m_windows[m_active_window]->deactivate();
+    }
+}
+
+void Window::set_active_window(const std::string &name) {
+    if (m_windows.find(name) == m_windows.end()) {
+        return;
+    }
+    reset_active_window();
+    m_active_window = name;
+    m_windows[name]->activate();
+}
+
+void Window::set_active_text_field(const std::string &name) {
+    if (m_text_fields.find(name) == m_text_fields.end()) {
+        return;
+    }
+    reset_active_text_field();
+    m_active_text_field = name;
+}
+
+Window *Window::get_window(const std::string &name) {
+    if (m_windows.find(name) != m_windows.end()) {
+        return m_windows[name].get();
+    }
+    return nullptr;
+}
+
+TextField *Window::get_text_field(const std::string &name) {
+    if (m_text_fields.find(name) == m_text_fields.end()) {
+        return nullptr;
+    }
+    return &m_text_fields.at(name);
+}
+
+bool Window::in_bounds(const Point &p) const {
+    return (0 <= p.x() && p.x() < m_width) && (0 <= p.y() && p.y() < m_height);
 }
 
 }  // namespace runebound::graphics
