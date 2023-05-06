@@ -119,7 +119,10 @@ public:
     Enemy() : m_health(0) {
     }
 
-    Enemy(int health, std::vector<FightToken> fight_tokens) : m_health(health), m_fight_tokens(std::move(fight_tokens)) {}
+    Enemy(int health, std::vector<FightToken> fight_tokens)
+        : m_health(health), m_fight_tokens(std::move(fight_tokens)) {
+    }
+
     Enemy(int health, std::string name)
         : m_health(health), m_name(std::move(name)) {
     }
@@ -251,7 +254,7 @@ public:
         const std::vector<TokenHandCount> &tokens
     );
 
-    [[nodiscard]] virtual bool check_end_fight() const {
+    [[nodiscard]] bool check_end_fight() const {
         return m_character->get_health() == 0 || m_enemy.get_health() == 0;
     }
 
@@ -269,7 +272,7 @@ public:
         return m_enemy_remaining_tokens;
     }
 
-    virtual void start_round();
+    void start_round();
 };
 }  // namespace runebound::fight
 
