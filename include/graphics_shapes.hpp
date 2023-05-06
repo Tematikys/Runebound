@@ -1,6 +1,5 @@
 #ifndef RUNEBOUND_GRAPHICS_SHAPES_HPP_
 #define RUNEBOUND_GRAPHICS_SHAPES_HPP_
-
 #include <SDL2/SDL.h>
 #include <graphics_point.hpp>
 #include <tuple>
@@ -8,20 +7,50 @@
 #include <vector>
 
 namespace runebound::graphics {
-// basic polygon class
 class PolygonShape {
 protected:
-    ::std::vector<Point> m_vertexes;
-    ::std::vector<::std::tuple<int, int, int>> m_side_coefficients;
+    ::std::vector<Point> m_vertexes{};
+    ::std::vector<::std::tuple<int, int, int>> m_side_coefficients{};
 
 public:
     PolygonShape() = default;
 
+    explicit PolygonShape(const ::std::vector<Point> &vertexes)
+        : m_vertexes(vertexes) {
+        init_side_coefficients();
+    }
+
     void init_side_coefficients();
 
-    void render(SDL_Renderer *renderer, SDL_Color fill_color) const;
+    void render(
+        SDL_Renderer *renderer,
+        int x_offset,
+        int y_offset,
+        SDL_Color fill_color
+    ) const;
 
-    void render_border(SDL_Renderer *renderer, SDL_Color border_color) const;
+    void render_border(
+        SDL_Renderer *renderer,
+        int x_offset,
+        int y_offset,
+        SDL_Color border_color
+    ) const;
+
+    void render_to_texture(
+        SDL_Renderer *renderer,
+        SDL_Texture *&texture,
+        SDL_Color fill_color,
+        SDL_Color border_color
+    ) const;
+
+    void render_border_to_texture(
+        SDL_Renderer *renderer,
+        SDL_Texture *previous_texture,
+        SDL_Texture *texture_to_render_on,
+        int x_offset,
+        int y_offset,
+        SDL_Color border_color
+    ) const;
 
     [[nodiscard]] bool in_bounds(const Point &dot) const;
 
@@ -34,7 +63,6 @@ public:
     };
 };
 
-// basic hexagon class, derived to polygon
 class HexagonShape : public PolygonShape {
 public:
     HexagonShape() = default;
@@ -50,18 +78,12 @@ public:
 };
 
 class RectangleShape : public PolygonShape {
-private:
-    SDL_Rect m_rect{};
-
 public:
     RectangleShape() = default;
 
     RectangleShape(int x, int y, int width, int height);
-
-    [[nodiscard]] const SDL_Rect &get_rect() const;
 };
 
-// basic circle class
 class CircleShape {
 private:
     Point m_center;
@@ -73,9 +95,19 @@ public:
     CircleShape(const Point &center, int radius)
         : m_center(center), m_radius(radius){};
 
-    void render(SDL_Renderer *renderer, SDL_Color fill_color) const;
+    void render(
+        SDL_Renderer *renderer,
+        SDL_Color fill_color,
+        int x_offset,
+        int y_offset
+    ) const;
 
-    void render_border(SDL_Renderer *renderer, SDL_Color border_color) const;
+    void render_border(
+        SDL_Renderer *renderer,
+        SDL_Color border_color,
+        int x_offset,
+        int y_offset
+    ) const;
 
     [[nodiscard]] bool in_bounds(const Point &dot) const;
 };

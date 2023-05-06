@@ -3,19 +3,7 @@
 
 namespace {
 int sign(int x) {
-    return (x > 0) - (x < 0);
-}
-
-::runebound::graphics::Point get_center_of_hexagon(int i, int j) {
-    static const int dy = (::runebound::graphics::HEXAGON_RADIUS * 56756) >> 16;
-    if (j % 2 == 0) {
-        return {
-            ::runebound::graphics::HEXAGON_RADIUS * (2 + j * 3) / 2,
-            dy * (1 + 2 * i)};
-    }
-    return {
-        ::runebound::graphics::HEXAGON_RADIUS * (2 + j * 3) / 2,
-        dy * 2 * (1 + i)};
+    return static_cast<int>(x > 0) - static_cast<int>(x < 0);
 }
 }  // namespace
 
@@ -24,19 +12,15 @@ Board::Board(const ::runebound::map::MapClient &map) {
     for (int row = 0; row < ::runebound::map::STANDARD_SIZE; ++row) {
         for (int col = 0; col < ::runebound::map::STANDARD_SIZE; ++col) {
             auto center = get_center_of_hexagon(row, col);
-
-            // add cell
             auto [type_cell_key, cell_fill_color] =
                 *CELL_FILL_COLOR.find(map.m_map[row][col].get_type_cell());
             add_cell(
                 {center, HEXAGON_RADIUS}, cell_fill_color,
                 SDL_Color{0x00, 0x00, 0x00, 0xFF}
             );
-
-            // add special if it is
-            ::runebound::map::SpecialTypeCell special;
-            if ((special = map.m_map[row][col].get_special_type_cell()) !=
-                ::runebound::map::SpecialTypeCell::NOTHING) {
+            const ::runebound::map::SpecialTypeCell special =
+                map.m_map[row][col].get_special_type_cell();
+            if (special != ::runebound::map::SpecialTypeCell::NOTHING) {
                 auto [special_type_cell_key, special_fill_color] =
                     *SPECIAL_COLOR.find(special);
                 add_special(
@@ -44,30 +28,27 @@ Board::Board(const ::runebound::map::MapClient &map) {
                     special_fill_color, {0x00, 0x00, 0x00, 0xFF}
                 );
             }
-
-            // add token if there is
-            ::runebound::AdventureType token;
-            if ((token = map.m_map[row][col].get_token()) !=
-                ::runebound::AdventureType::NOTHING) {
+            const ::runebound::AdventureType token =
+                map.m_map[row][col].get_token();
+            if (token != ::runebound::AdventureType::NOTHING) {
                 add_token(
                     {center, HEXAGON_RADIUS / 2},
                     (*ADVENTURE_COLOR.find(token)).second,
                     {0x00, 0x00, 0x00, 0xFF}
                 );
             }
-
-            // adding roads if is it TODO
+            // TODO refactor
             if (map.m_map[row][col].check_road()) {
                 for (auto [i, j] :
                      map.get_all_neighbours(::runebound::Point(row, col))) {
                     if (map.m_map[i][j].check_road()) {
-                        Segment seg(center, get_center_of_hexagon(i, j));
+                        const Segment seg(center, get_center_of_hexagon(i, j));
                         add_road(seg, {0x80, 0x80, 0x80, 0xFF});
                         m_is_connected_to_town.push_back(false);
                     }
                     if (map.m_map[i][j].get_type_cell() ==
                         ::runebound::map::TypeCell::TOWN) {
-                        Segment seg(center, get_center_of_hexagon(i, j));
+                        const Segment seg(center, get_center_of_hexagon(i, j));
                         add_road(seg, {0x80, 0x80, 0x80, 0xFF});
                         m_is_connected_to_town.push_back(true);
                     }
@@ -75,10 +56,8 @@ Board::Board(const ::runebound::map::MapClient &map) {
             }
         }
     }
-
-    // adding rivers
     for (const auto &pair : map.m_rivers) {
-        SDL_Color river_color = {0x37, 0x1A, 0xFA, 0xFF};
+        const SDL_Color river_color = {0x37, 0x1A, 0xFA, 0xFF};
         auto [x1, y1] = pair.first;
         auto [x2, y2] = pair.second;
         auto [i, v] = *RIVER_DIRECTIONS.find(
@@ -86,9 +65,9 @@ Board::Board(const ::runebound::map::MapClient &map) {
                  (1 - ::std::abs(sign(x1 - x2))) * (2 * (y1 % 2) - 1),
              sign(y1 - y2)}
         );
-
-        HexagonShape hex = m_cells[x1 * ::runebound::map::STANDARD_SIZE + y1];
-        Segment seg = {hex.get_vertex(v.first), hex.get_vertex(v.second)};
+        const HexagonShape hex =
+            m_cells[x1 * ::runebound::map::STANDARD_SIZE + y1];
+        const Segment seg = {hex.get_vertex(v.first), hex.get_vertex(v.second)};
         add_river(seg, river_color);
     }
 }
@@ -102,6 +81,8 @@ void Board::add_cell(
     m_cell_fill_color.push_back(fill_color);
     m_cell_border_color.push_back(border_color);
     ++m_cell_amount;
+    m_width = ::std::max(m_width, m_cells.back().get_vertex(2).x());
+    m_height = ::std::max(m_height, m_cells.back().get_vertex(3).y());
 }
 
 void Board::add_river(const Segment &segment, SDL_Color color) {
@@ -138,46 +119,54 @@ void Board::add_special(
     ++m_special_amount;
 }
 
-void Board::render(SDL_Renderer *renderer) const {
-    // cells
+void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
     for (::std::size_t i = 0; i < m_cell_amount; ++i) {
-        m_cells[i].render(renderer, m_cell_fill_color[i]);
-        m_cells[i].render_border(renderer, m_cell_border_color[i]);
-    }
-    if (m_selected_cell != 0xFFFF && m_selected_token == 0xFFFF) {
-        m_cells[m_selected_cell].render(renderer, SELECTED_COLOR);
-        m_cells[m_selected_cell].render_border(
-            renderer, m_cell_border_color[m_selected_cell]
+        m_cells[i].render(renderer, x_offset, y_offset, m_cell_fill_color[i]);
+        m_cells[i].render_border(
+            renderer, x_offset, y_offset, m_cell_border_color[i]
         );
     }
-
-    // rivers TODO
+    if (m_selected_cell != 0xFFFF && m_selected_token == 0xFFFF) {
+        m_cells[m_selected_cell].render(
+            renderer, x_offset, y_offset, SELECTED_COLOR
+        );
+        m_cells[m_selected_cell].render_border(
+            renderer, x_offset, y_offset, m_cell_border_color[m_selected_cell]
+        );
+    }
+    // TODO
     for (::std::size_t i = 0; i < m_river_amount; ++i) {
-        m_rivers[i].render(renderer, m_river_color[i], 5);
+        m_rivers[i].render(renderer, m_river_color[i], 5, x_offset, y_offset);
     }
     for (::std::size_t i = 0; i < m_road_amount; ++i) {
         if (m_is_connected_to_town[i]) {
-            m_roads[i].half_render(renderer, m_road_color[i], 7);
+            m_roads[i].half_render(
+                renderer, m_road_color[i], 7, x_offset, y_offset
+            );
         } else {
-            m_roads[i].render(renderer, m_road_color[i], 7);
+            m_roads[i].render(renderer, m_road_color[i], 7, x_offset, y_offset);
         }
     }
-
-    // specials
     for (::std::size_t i = 0; i < m_special_amount; ++i) {
-        m_specials[i].render(renderer, m_special_fill_color[i]);
-        m_specials[i].render_border(renderer, m_special_border_color[i]);
+        m_specials[i].render(
+            renderer, x_offset, y_offset, m_special_fill_color[i]
+        );
+        m_specials[i].render_border(
+            renderer, x_offset, y_offset, m_special_border_color[i]
+        );
     }
-
-    // tokens
     for (::std::size_t i = 0; i < m_token_amount; ++i) {
-        m_tokens[i].render(renderer, m_token_fill_color[i]);
-        m_tokens[i].render_border(renderer, m_token_border_color[i]);
+        m_tokens[i].render(renderer, m_token_fill_color[i], x_offset, y_offset);
+        m_tokens[i].render_border(
+            renderer, m_token_border_color[i], x_offset, y_offset
+        );
     }
     if (m_selected_token != 0xFFFF) {
-        m_tokens[m_selected_token].render(renderer, SELECTED_COLOR);
+        m_tokens[m_selected_token].render(
+            renderer, SELECTED_COLOR, x_offset, y_offset
+        );
         m_tokens[m_selected_token].render_border(
-            renderer, m_token_border_color[m_selected_token]
+            renderer, m_token_border_color[m_selected_token], x_offset, y_offset
         );
     }
 }

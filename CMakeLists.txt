@@ -22,6 +22,7 @@ link_directories(${SDL2_LIB_DIR})
 add_executable(graphics_client
         src/card_adventure.cpp
         src/card_fight.cpp
+        src/card_meeting.cpp
         src/card_research.cpp
         src/character.cpp
         src/character_client.cpp
@@ -29,22 +30,21 @@ add_executable(graphics_client
         src/fight.cpp
         src/game.cpp
         src/game_client.cpp
-        generators/generator_cards_fight.cpp
-        generators/generator_characters.cpp
         src/graphics.cpp
         src/graphics_board.cpp
         src/graphics_button.cpp
         src/graphics_client.cpp
         src/graphics_config.cpp
         src/graphics_main.cpp
-        src/graphics_main_menu.cpp
         src/graphics_point.cpp
         src/graphics_segment.cpp
         src/graphics_shapes.cpp
+        src/graphics_texture.cpp
         src/graphics_window.cpp
         src/map.cpp
         src/map_cell.cpp
         src/map_client.cpp
+        src/product.cpp
         src/tokens.cpp
         tpl/SDL2/src/SDL2_framerate.cpp
         tpl/SDL2/src/SDL2_gfxPrimitives.cpp

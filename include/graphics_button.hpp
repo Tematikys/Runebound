@@ -4,43 +4,39 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <functional>
-#include <graphics.hpp>
+#include <graphics_config.hpp>
 #include <graphics_point.hpp>
 #include <graphics_shapes.hpp>
+#include <graphics_texture.hpp>
 #include <memory>
 #include <string>
 
 namespace runebound::graphics {
 class Button {
 private:
-    int m_x, m_y;
-    int m_width, m_height;
-    int m_texture_x_offset, m_texture_y_offset;
-    Texture m_texture;
-    SDL_Color m_fill_color, m_border_color;
-    ::std::function<void()> m_on_click_function, m_on_cover_function;
-    RectangleShape m_shape;
+    int m_width{0};
+    int m_height{0};
+    HorizontalButtonTextureAlign m_hor_text_align{
+        HorizontalButtonTextureAlign::LEFT};
+    VerticalButtonTextureAlign m_ver_text_align{
+        VerticalButtonTextureAlign::TOP};
+    int m_texture_x_offset{0};
+    int m_texture_y_offset{0};
+    Texture m_texture{};
+    SDL_Color m_fill_color{};
+    SDL_Color m_border_color{};
+    ::std::function<void()> m_on_click_function{};
+    ::std::function<void()> m_on_cover_function{};
+    RectangleShape m_shape{};
 
 public:
-    Button()
-        : m_x(0),
-          m_y(0),
-          m_width(0),
-          m_height(0),
-          m_texture_x_offset(0),
-          m_texture_y_offset(0),
-          m_texture(),
-          m_fill_color(),
-          m_border_color(),
-          m_on_click_function(),
-          m_on_cover_function(),
-          m_shape(){};
+    Button() = default;
 
     Button(
-        int x,
-        int y,
         int width,
         int height,
+        HorizontalButtonTextureAlign hor_text_align,
+        VerticalButtonTextureAlign ver_text_align,
         int texture_x_offset,
         int texture_y_offset,
         Texture &texture,
@@ -50,46 +46,15 @@ public:
         SDL_Color border_color = {0x00, 0x00, 0x00, 0xFF}
     );
 
-    Button(Button &&other) noexcept
-        : m_x(other.m_x),
-          m_y(other.m_y),
-          m_width(other.m_width),
-          m_height(other.m_height),
-          m_texture_x_offset(other.m_texture_x_offset),
-          m_texture_y_offset(other.m_texture_y_offset),
-          m_texture(::std::move(other.m_texture)),
-          m_fill_color(other.m_fill_color),
-          m_border_color(other.m_border_color),
-          m_on_click_function(::std::move(other.m_on_click_function)),
-          m_on_cover_function(::std::move(other.m_on_cover_function)),
-          m_shape(::std::move(other.m_shape)) {
-    }
+    Button(Button &&other) noexcept;
 
     Button(const Button &other) = delete;
 
-    Button &operator=(Button &&other) noexcept {
-        m_x = other.m_x;
-        m_y = other.m_y;
-        m_width = other.m_width;
-        m_height = other.m_height;
-        m_texture_x_offset = other.m_texture_x_offset;
-        m_texture_y_offset = other.m_texture_y_offset;
-        m_texture = ::std::move(other.m_texture);
-        m_fill_color = other.m_fill_color;
-        m_border_color = other.m_border_color;
-        m_on_click_function = ::std::move(other.m_on_click_function);
-        m_on_cover_function = ::std::move(other.m_on_cover_function);
-        m_shape = ::std::move(other.m_shape);
-        return *this;
-    }
+    Button &operator=(Button &&other) noexcept;
 
     Button &operator=(const Button &other) = delete;
 
-    ~Button() {
-        m_texture.free();
-    }
-
-    [[nodiscard]] bool in_bounds(const Point &p) const;
+    ~Button() = default;
 
     void on_click() const {
         m_on_click_function();
@@ -99,41 +64,44 @@ public:
         m_on_cover_function();
     }
 
-    void render(SDL_Renderer *renderer) const;
+    void render(SDL_Renderer *renderer, int x_offset, int y_offset) const;
 
-    void update_texture(Texture &texture) {
-        m_texture.free();
-        m_texture = ::std::move(texture);
-    }
-
-    [[nodiscard]] const SDL_Rect &get_rect() const {
-        return m_shape.get_rect();
+    [[nodiscard]] bool in_bounds(const Point &p) const {
+        return 0 <= p.x() && p.x() < m_width && 0 <= p.y() && p.y() < m_height;
     }
 };
 
 class TextField {
 private:
-    ::std::string m_text;
-    int m_max_text_len = 0;
-    Button m_button;
+    ::std::string m_text{};
+    int m_max_text_len{0};
+    Button m_button{};
 
 public:
-    TextField() : m_text(), m_button(){};
+    TextField() = default;
 
-    TextField(::std::string text, Button &button, int max_len = 0)
-        : m_text(::std::move(text)),
-          m_button(::std::move(button)),
-          m_max_text_len(max_len){};
+    TextField(::std::string text, Button &button, int max_len = 0);
 
-    void push(const ::std::string &suffix) {
-        if (m_max_text_len == 0) {
-            m_text += suffix;
-        } else {
-            if (suffix.length() + m_text.length() <= m_max_text_len) {
-                m_text += suffix;
-            }
-        }
+    TextField(TextField &&other) noexcept
+        : m_text(::std::move(other.m_text)),
+          m_max_text_len(other.m_max_text_len),
+          m_button(::std::move(other.m_button)) {
     }
+
+    TextField(const TextField &other) = delete;
+
+    TextField &operator=(TextField &&other)  noexcept {
+        m_text = ::std::move(other.m_text);
+        m_max_text_len = other.m_max_text_len;
+        m_button = ::std::move(other.m_button);
+        return *this;
+    }
+
+    TextField &operator=(const TextField &other) = delete;
+
+    ~TextField() = default;
+
+    void push(const ::std::string &suffix);
 
     void pop() {
         if (!m_text.empty()) {
@@ -153,21 +121,17 @@ public:
         m_button.on_cover();
     }
 
-    [[nodiscard]] bool in_bounds(const Point &p) const {
-        return m_button.in_bounds(p);
-    }
-
     void render(
         SDL_Renderer *renderer,
         TTF_Font *font,
         SDL_Color color,
-        int x,
-        int y,
-        SDL_Rect *clip = nullptr,
-        double angle = 0.0,
-        SDL_Point *center = nullptr,
-        SDL_RendererFlip flip = SDL_FLIP_NONE
+        int x_offset,
+        int y_offset
     ) const;
+
+    [[nodiscard]] bool in_bounds(const Point &p) const {
+        return m_button.in_bounds(p);
+    }
 
     [[nodiscard]] const ::std::string &get() const {
         return m_text;
