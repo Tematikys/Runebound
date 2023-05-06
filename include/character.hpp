@@ -13,7 +13,6 @@
 #include "fight_token.hpp"
 #include "point.hpp"
 #include "runebound_fwd.hpp"
-#include "tokens.hpp"
 
 namespace runebound {
 namespace character {
@@ -21,7 +20,7 @@ namespace character {
 void to_json(nlohmann::json &json, const Character &character);
 void from_json(const nlohmann::json &json, Character &character);
 
-enum class StateCharacter { NORMAL_GAME, FIGHT };
+enum class StateCharacter { NORMAL_GAME, FIGHT, ENEMY };
 enum class StandardCharacter {
     LISSA,
     CORBIN,
@@ -48,7 +47,6 @@ private:
     std::set<unsigned int> m_cards_meeting;
     std::set<std::pair<AdventureType, unsigned int>> m_trophies;
 
-    std::map<runebound::token::Token, int> m_tokens;
     bool m_is_in_trade = false;
     int m_max_health;
     int m_gold, m_health;
@@ -158,6 +156,14 @@ public:
     void start_fight(std::shared_ptr<::runebound::fight::Fight> fight) {
         m_current_state = StateCharacter::FIGHT;
         m_current_fight = std::move(fight);
+    }
+
+    void start_fight_as_enemy() {
+        m_current_state = StateCharacter::ENEMY;
+    }
+
+    void end_fight_as_enemy() {
+        m_current_state = StateCharacter::NORMAL_GAME;
     }
 
     [[nodiscard]] bool check_card(AdventureType type, unsigned int card) const;

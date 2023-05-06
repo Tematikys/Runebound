@@ -46,7 +46,6 @@ add_executable(graphics_client
         src/map_cell.cpp
         src/map_client.cpp
         src/product.cpp
-        src/tokens.cpp
         tpl/SDL2/src/SDL2_framerate.cpp
         tpl/SDL2/src/SDL2_gfxPrimitives.cpp
         tpl/SDL2/src/SDL2_imageFilter.cpp
@@ -74,7 +73,6 @@ add_executable(network_server
         src/map_cell.cpp
         src/map_client.cpp
         src/network_server.cpp
-        src/tokens.cpp
         src/product.cpp
         )
 target_link_libraries(network_server ${Boost_LIBRARIES} ws2_32 wsock32)
@@ -99,7 +97,6 @@ add_executable(network_client
         src/map_cell.cpp
         src/map_client.cpp
         src/network_client.cpp
-        src/tokens.cpp
         src/product.cpp
         )
 target_link_libraries(network_client ${Boost_LIBRARIES} ws2_32 wsock32)
@@ -115,7 +112,6 @@ add_executable(${PROJECT_NAME}
         tpl/doctest/doctest_main.cpp
         src/map.cpp
         src/map_cell.cpp
-        src/tokens.cpp
         src/game_client.cpp
         src/fight_client.cpp
         src/character_client.cpp

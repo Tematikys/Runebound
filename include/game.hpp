@@ -15,7 +15,6 @@
 #include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
-#include "tokens.hpp"
 
 namespace runebound {
 const int DECK_SIZE = 15;
@@ -113,7 +112,6 @@ private:
         m_characters;
     std::vector<unsigned int> m_card_deck_research, m_card_deck_fight,
         m_card_deck_skill, m_card_deck_meeting, m_remaining_products;
-    std::map<::runebound::token::Token, unsigned int> m_tokens;
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
     unsigned int m_number_of_rounds = 0;

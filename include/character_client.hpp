@@ -21,7 +21,6 @@ public:
     int m_current_health;
     std::string m_name;
     std::vector<unsigned int> m_cards;
-    std::map<::runebound::token::Token, int> m_tokens;
 
     friend void to_json(nlohmann::json &json, const CharacterClient &character);
     friend void
