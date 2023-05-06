@@ -46,7 +46,10 @@ public:
     }
 
     explicit MapClient(const Map &map) {
-        m_map = map.get_full_map();
+        m_map = map.m_map;
+        m_size = map.m_size;
+        m_territory_name = map.m_territory_name;
+        m_rivers = map.m_rivers;
     }
 
     MapClient(const MapClient &) = default;
