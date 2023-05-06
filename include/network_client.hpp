@@ -152,7 +152,7 @@ public:
 
     void pass() {
         json data;
-        data["action type"] = "fight_pass";
+        data["action type"] = "pass";
         do_write(data.dump());
     }
 
