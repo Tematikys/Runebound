@@ -378,7 +378,6 @@ void Client::game_update() {
 
     const ::std::size_t index = m_board.get_selected_hexagon();
     if (index != 0xFFFF && m_mouse_pressed) {
-        ::std::cout << index << ::std::endl;
         m_network_client.make_move(
             static_cast<int>(index / ::runebound::map::STANDARD_SIZE),
             static_cast<int>(index % ::runebound::map::STANDARD_SIZE)
