@@ -95,6 +95,15 @@ struct TradeOutsideTownException : std::runtime_error {
     }
 };
 
+struct NonThrownDiceException : std::runtime_error {
+    NonThrownDiceException()
+        : std::runtime_error(
+              "You have not rolled any dice and are not moving to an adjacent "
+              "space."
+          ) {
+    }
+};
+
 struct Game {
 private:
     friend struct GameClient;
@@ -108,7 +117,6 @@ private:
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
     unsigned int m_number_of_rounds = 0;
-
 
     std::vector<dice::HandDice> m_last_dice_movement_result;
     std::vector<dice::HandDice> m_last_dice_relax_result;
@@ -190,11 +198,8 @@ private:
 
     void end_trade(const std::shared_ptr<character::Character> &chr);
 
-    [[nodiscard]] void check_end_game_private() {
-        if (m_number_of_rounds == 24) {
-            m_game_over = true;
-        }
-    }
+    void start_new_round();
+
 public:
     Game() {
         generate_all();
@@ -204,6 +209,9 @@ public:
         return m_game_over;
     }
 
+    [[nodiscard]] unsigned int get_number_of_rounds() const {
+        return m_number_of_rounds;
+    }
 
     [[nodiscard]] std::set<Point> get_towns() const {
         return m_map.get_towns();
@@ -231,7 +239,7 @@ public:
     }
 
     [[nodiscard]] std::vector<Point> get_territory_cells(
-        const std::string territory
+        const std::string &territory
     ) {
         return m_map.get_territory_cells(territory);
     }
@@ -253,7 +261,6 @@ public:
         return m_last_dice_relax_result;
     }
 
-
     void start_next_character_turn(
         const std::shared_ptr<character::Character> &chr
     ) {
@@ -265,8 +272,7 @@ public:
         m_turn = (m_turn + 1) % m_count_players;
         m_characters[m_turn]->restore_action_points();
         if (m_turn == 0) {
-            m_number_of_rounds += 1;
-            check_end_game_private();
+            start_new_round();
         }
     }
 

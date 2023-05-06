@@ -219,3 +219,21 @@ TEST_CASE("trade") {
     game.discard_product(mok, *game.get_town_products(mok->get_position()).begin());
     CHECK(mok->check_in_trade() == false);
 }
+
+TEST_CASE("time token") {
+    runebound::game::Game game;
+    auto lissa = game.make_character(runebound::character::StandardCharacter::LISSA);
+    lissa->set_position(runebound::Point(0, 0));
+    CHECK(game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() == runebound::Side::FRONT);
+    game.take_token(lissa);
+    CHECK(game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() == runebound::Side::BACK);
+    CHECK(game.get_number_of_rounds() == 0);
+    for (int i = 0; i < 5; ++i) {
+        game.start_next_character_turn(lissa);
+        CHECK(game.get_number_of_rounds() == i + 1);
+        CHECK(game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() == runebound::Side::BACK);
+    }
+    game.start_next_character_turn(lissa);
+    CHECK(game.get_number_of_rounds() == 6);
+    CHECK(game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() == runebound::Side::FRONT);
+}

@@ -86,6 +86,7 @@ std::vector<Point> Map::check_move(
     if (check_neighbour(start, end)) {
         return {start, end};
     }
+    std::sort(dice_roll_results.begin(), dice_roll_results.end());
     do {
         auto result = make_move(
             start, end, dice_roll_results,
@@ -94,6 +95,7 @@ std::vector<Point> Map::check_move(
         if (!result.empty()) {
             return result;
         }
+
     } while (std::next_permutation(
         dice_roll_results.begin(), dice_roll_results.end()
     ));
