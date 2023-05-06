@@ -28,12 +28,17 @@ Board::Board(const ::runebound::map::MapClient &map) {
                     special_fill_color, {0x00, 0x00, 0x00, 0xFF}
                 );
             }
-            const ::runebound::AdventureType token =
-                map.m_map[row][col].get_token();
-            if (token != ::runebound::AdventureType::NOTHING) {
+            auto cell = map.m_map[row][col];
+            if (cell.get_token() != ::runebound::AdventureType::NOTHING) {
+                SDL_Color color;
+                if (cell.get_side_token() == ::runebound::Side::FRONT) {
+                    color = (*ADVENTURE_COLOR.find(cell.get_token())).second;
+                } else {
+                    color =
+                        (*USED_ADVENTURE_COLOR.find(cell.get_token())).second;
+                }
                 add_token(
-                    {center, HEXAGON_RADIUS / 2},
-                    (*ADVENTURE_COLOR.find(token)).second,
+                    {center, HEXAGON_RADIUS / 2}, color,
                     {0x00, 0x00, 0x00, 0xFF}
                 );
             }

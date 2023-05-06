@@ -15,7 +15,7 @@ void Client::init_char_list() {
         {0x00, 0x00, 0x00, 0xFF}
     );
     button = Button(
-        180, 30, HorizontalButtonTextureAlign::CENTER,
+        10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
             m_network_client.exit_game();
@@ -28,7 +28,8 @@ void Client::init_char_list() {
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
     window->add_button(
-        "main_menu", button, {WINDOW_WIDTH - 180 - 5, 5}, true, true
+        "main_menu", button,
+        {WINDOW_WIDTH - 10 * 18 - 5, WINDOW_HEIGHT - 35 * 2}, true, true
     );
     // ===== MAIN MENU BUTTON =====
 
@@ -38,7 +39,7 @@ void Client::init_char_list() {
         {0x00, 0x00, 0x00, 0xFF}
     );
     button = Button(
-        180, 30, HorizontalButtonTextureAlign::CENTER,
+        10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
             m_network_client.exit_game();
@@ -47,7 +48,8 @@ void Client::init_char_list() {
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
     window->add_button(
-        "exit", button, {WINDOW_WIDTH - 180 - 5, 40}, true, true
+        "exit", button, {WINDOW_WIDTH - 10 * 18 - 5, WINDOW_HEIGHT - 30 - 5},
+        true, true
     );
     // ===== EXIT BUTTON =====
 
@@ -67,7 +69,7 @@ void Client::char_list_update() {
         {0x00, 0x00, 0x00, 0xFF}
     );
     button = Button(
-        180, 30, HorizontalButtonTextureAlign::CENTER,
+        10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
             m_network_client.exit_game();
@@ -80,7 +82,8 @@ void Client::char_list_update() {
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
     win->add_button(
-        "main_menu", button, {WINDOW_WIDTH - 180 - 5, 5}, true, true
+        "main_menu", button,
+        {WINDOW_WIDTH - 10 * 18 - 5, WINDOW_HEIGHT - 35 * 2}, true, true
     );
     // ===== MAIN MENU BUTTON =====
 
@@ -90,15 +93,18 @@ void Client::char_list_update() {
         {0x00, 0x00, 0x00, 0xFF}
     );
     button = Button(
-        180, 30, HorizontalButtonTextureAlign::CENTER,
+        10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
-            m_is_running = false;
             m_network_client.exit_game();
+            m_is_running = false;
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
-    win->add_button("exit", button, {WINDOW_WIDTH - 180 - 5, 40}, true, true);
+    win->add_button(
+        "exit", button, {WINDOW_WIDTH - 10 * 18 - 5, WINDOW_HEIGHT - 30 - 5},
+        true, true
+    );
     // ===== EXIT BUTTON =====
 
     int i = 0;
@@ -130,7 +136,7 @@ void Client::char_list_update() {
             {0x00, 0x00, 0x00, 0xFF}
         );
         button = Button(
-            texture.width(), texture.height(),
+            texture.width(), 30,
             HorizontalButtonTextureAlign::CENTER,
             VerticalButtonTextureAlign::CENTER, 0, 0, texture,
             [character, this]() {
@@ -144,7 +150,7 @@ void Client::char_list_update() {
             []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
         );
         win->add_button(
-            name, button, {5, i * texture.height() + 5}, true, true
+            name, button, {5, i * 35 + 5}, true, true
         );
         ++i;
     }
