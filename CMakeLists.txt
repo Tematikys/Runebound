@@ -85,6 +85,7 @@ add_executable(network_client
         src/card_adventure.cpp
         src/card_fight.cpp
         src/card_research.cpp
+        src/card_meeting.cpp
         src/character.cpp
         src/fight_client.cpp
         src/character_client.cpp
