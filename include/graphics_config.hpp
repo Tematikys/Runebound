@@ -15,6 +15,8 @@ extern const ::std::map<::runebound::map::TypeCell, SDL_Color> CELL_FILL_COLOR;
 extern const ::std::map<::runebound::map::SpecialTypeCell, SDL_Color>
     SPECIAL_COLOR;
 extern const ::std::map<::runebound::AdventureType, SDL_Color> ADVENTURE_COLOR;
+extern const ::std::map<::runebound::AdventureType, SDL_Color>
+    USED_ADVENTURE_COLOR;
 extern const ::std::map<::std::pair<int, int>, ::std::pair<int, int>>
     RIVER_DIRECTIONS;
 extern const ::std::string WINDOW_TITLE;

@@ -9,13 +9,64 @@ void Client::init_game() {
     Texture texture;
     Button button;
 
+    // ===== THROW DICE BUTTON =====
+    texture.load_text_from_string(
+        m_graphic_renderer, m_fonts["FreeMono30"], "Throw dice",
+        {0x00, 0x00, 0x00, 0xFF}
+    );
+    button = Button(
+        10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
+        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+        [this]() { m_network_client.throw_move_dice(); }, []() {},
+        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    );
+    window->add_button(
+        "throw_dice", button,
+        {WINDOW_WIDTH - 10 * 18 - 5, WINDOW_HEIGHT - 35 * 5}, true, true
+    );
+    // ===== THROW DICE BUTTON =====
+
+    // ===== RELAX BUTTON =====
+    texture.load_text_from_string(
+        m_graphic_renderer, m_fonts["FreeMono30"], "Relax",
+        {0x00, 0x00, 0x00, 0xFF}
+    );
+    button = Button(
+        10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
+        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+        [this]() { m_network_client.relax(); }, []() {},
+        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    );
+    window->add_button(
+        "relax", button, {WINDOW_WIDTH - 10 * 18 - 5, WINDOW_HEIGHT - 35 * 4},
+        true, true
+    );
+    // ===== RELAX BUTTON =====
+
+    // ===== PASS BUTTON =====
+    texture.load_text_from_string(
+        m_graphic_renderer, m_fonts["FreeMono30"], "Pass",
+        {0x00, 0x00, 0x00, 0xFF}
+    );
+    button = Button(
+        10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
+        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+        [this]() { m_network_client.pass(); }, []() {},
+        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+    );
+    window->add_button(
+        "pass", button, {WINDOW_WIDTH - 10 * 18 - 5, WINDOW_HEIGHT - 35 * 3},
+        true, true
+    );
+    // ===== PASS BUTTON =====
+
     // ===== MAIN MENU BUTTON =====
     texture.load_text_from_string(
         m_graphic_renderer, m_fonts["FreeMono30"], "Main menu",
         {0x00, 0x00, 0x00, 0xFF}
     );
     button = Button(
-        180, 30, HorizontalButtonTextureAlign::CENTER,
+        10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
             m_network_client.exit_game();
@@ -27,7 +78,10 @@ void Client::init_game() {
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
-    window->add_button("main_menu", button, {615, 5}, true, true);
+    window->add_button(
+        "main_menu", button,
+        {WINDOW_WIDTH - 10 * 18 - 5, WINDOW_HEIGHT - 35 * 2}, true, true
+    );
     // ===== MAIN MENU BUTTON =====
 
     // ===== EXIT BUTTON =====
@@ -36,7 +90,7 @@ void Client::init_game() {
         {0x00, 0x00, 0x00, 0xFF}
     );
     button = Button(
-        180, 30, HorizontalButtonTextureAlign::CENTER,
+        10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
         [this]() {
             m_network_client.exit_game();
@@ -44,51 +98,11 @@ void Client::init_game() {
         },
         []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
     );
-    window->add_button("exit", button, {615, 40}, true, true);
+    window->add_button(
+        "exit", button, {WINDOW_WIDTH - 10 * 18 - 5, WINDOW_HEIGHT - 35 * 1},
+        true, true
+    );
     // ===== EXIT BUTTON =====
-
-    // ===== THROW DICE BUTTON =====
-    texture.load_text_from_string(
-        m_graphic_renderer, m_fonts["FreeMono30"], "Throw dice",
-        {0x00, 0x00, 0x00, 0xFF}
-    );
-    m_game_button_pos.emplace_back(615, 765);
-    button = Button(
-        180, 30, HorizontalButtonTextureAlign::CENTER,
-        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-        [this]() { m_network_client.throw_move_dice(); }, []() {},
-        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    );
-    window->add_button("throw_dice", button, {615, 765}, true, true);
-    // ===== THROW DICE BUTTON =====
-
-    // ===== RELAX BUTTON =====
-    texture.load_text_from_string(
-        m_graphic_renderer, m_fonts["FreeMono30"], "Relax",
-        {0x00, 0x00, 0x00, 0xFF}
-    );
-    button = Button(
-        180, 30, HorizontalButtonTextureAlign::CENTER,
-        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-        [this]() { m_network_client.relax(); }, []() {},
-        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    );
-    window->add_button("relax", button, {615, 730}, true, true);
-    // ===== RELAX BUTTON =====
-
-    // ===== PASS BUTTON =====
-    texture.load_text_from_string(
-        m_graphic_renderer, m_fonts["FreeMono30"], "Pass",
-        {0x00, 0x00, 0x00, 0xFF}
-    );
-    button = Button(
-        180, 30, HorizontalButtonTextureAlign::CENTER,
-        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-        [this]() { m_network_client.pass(); }, []() {},
-        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    );
-    window->add_button("pass", button, {615, 695}, true, true);
-    // ===== PASS BUTTON =====
 
     m_window.add_window("game", ::std::move(window), {0, 0}, false, false);
 }
@@ -126,7 +140,7 @@ void Client::game_update() {
         static_cast<int>(m_network_client.get_last_dice_result().size());
     tex = SDL_CreateTexture(
         m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
-        (size + delay) * amount - delay + 1, size + 1
+        size + 1, (size + delay) * amount - delay + 1
     );
     SDL_SetRenderTarget(m_graphic_renderer, tex);
     SDL_SetRenderDrawColor(m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -137,15 +151,15 @@ void Client::game_update() {
         ::std::vector<Point> vertexes;
         PolygonShape tri;
         auto [key, col] = *DICE_COLOR.find(dice);
-        vertexes.emplace_back(size + (size + delay) * dx, 0);
-        vertexes.emplace_back((size + delay) * dx, size);
-        vertexes.emplace_back((size + delay) * dx, 0);
+        vertexes.emplace_back(size, (size + delay) * dx);
+        vertexes.emplace_back(0, size + (size + delay) * dx);
+        vertexes.emplace_back(0, (size + delay) * dx);
         tri = PolygonShape{vertexes};
         tri.render_to_texture(
             m_graphic_renderer, tex, col.first, {0x00, 0x00, 0x00, 0xFF}
         );
         vertexes.pop_back();
-        vertexes.emplace_back(size + (size + delay) * dx, size);
+        vertexes.emplace_back(size, size + (size + delay) * dx);
         tri = PolygonShape{vertexes};
         tri.render_to_texture(
             m_graphic_renderer, tex, col.second, {0x00, 0x00, 0x00, 0xFF}
@@ -155,7 +169,12 @@ void Client::game_update() {
     {
         Texture texture(tex);
         win->remove_texture("dice");
-        win->add_texture("dice", texture, {5, WINDOW_HEIGHT - size - 5}, true);
+        win->add_texture(
+            "dice", texture,
+            {WINDOW_WIDTH - 10 * 18 - 10 - size,
+             WINDOW_HEIGHT - ((size + delay) * amount - delay + 1) - 5},
+            true
+        );
         SDL_DestroyTexture(tex);
         texture.free();
     }
@@ -167,6 +186,39 @@ void Client::game_update() {
             static_cast<int>(index % ::runebound::map::STANDARD_SIZE)
         );
         m_mouse_pressed = false;
+    }
+
+    win->remove_button("take_token");
+
+    const auto &characters = m_network_client.get_game_client().m_characters;
+    ::runebound::character::Character me{};
+    for (const auto &character : characters) {
+        if (character.get_standard_character() ==
+            m_network_client.get_yourself_character()) {
+            me = character;
+            break;
+        }
+    }
+
+    auto pos = me.get_position();
+    auto cell = m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
+
+    if (cell.get_token() != ::runebound::AdventureType::NOTHING) {
+        Texture texture;
+        texture.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono30"], "Take token",
+            {0x00, 0x00, 0x00, 0xFF}
+        );
+        Button button(
+            10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
+            VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+            [this]() { m_network_client.take_token(); }, []() {},
+            {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+        );
+        win->add_button(
+            "take_token", button,
+            {WINDOW_WIDTH - 10 * 18 - 5, WINDOW_HEIGHT - 35 * 6}, true, true
+        );
     }
 }
 }  // namespace runebound::graphics
