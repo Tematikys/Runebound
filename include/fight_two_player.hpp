@@ -1,3 +1,6 @@
+#ifndef FIGHT_TWO_PLAYER_HPP_
+#define FIGHT_TWO_PLAYER_HPP_
+
 #include <memory>
 #include "character.hpp"
 #include "fight.hpp"
@@ -9,6 +12,7 @@ enum class ParticipantTwoPlayers { CALLER, RECEIVER };
 struct FightTwoPlayer {
 private:
     std::shared_ptr<::runebound::character::Character> m_receiver;
+    std::shared_ptr<::runebound::character::Character> m_caller;
     Fight m_fight;
 
 public:
@@ -16,11 +20,19 @@ public:
         const std::shared_ptr<character::Character> &caller,
         const std::shared_ptr<character::Character> &receiver
     )
-        : m_receiver(receiver),
+        : m_receiver(receiver), m_caller(caller),
           m_fight(
               caller,
               Enemy(receiver->get_health(), receiver->get_fight_token())
           ) {
+    }
+
+    [[nodiscard]] std::shared_ptr<character::Character> get_caller() const {
+        return m_caller;
+    }
+
+    [[nodiscard]] std::shared_ptr<character::Character> get_receiver() const {
+        return m_receiver;
     }
 
     void pass_caller() {
@@ -94,3 +106,5 @@ public:
     }
 };
 }  // namespace runebound::fight
+
+#endif // FIGHT_TWO_PLAYER_HPP_

@@ -20,7 +20,7 @@ namespace character {
 void to_json(nlohmann::json &json, const Character &character);
 void from_json(const nlohmann::json &json, Character &character);
 
-enum class StateCharacter { NORMAL_GAME, FIGHT, ENEMY };
+enum class StateCharacter { NORMAL_GAME, FIGHT, ENEMY, FIGHT_TWO_PLAYER };
 enum class StandardCharacter {
     LISSA,
     CORBIN,
@@ -53,6 +53,8 @@ private:
     int m_knowledge_token = 0;
     Point m_current_position;
     std::shared_ptr<::runebound::fight::Fight> m_current_fight = nullptr;
+    std::shared_ptr<::runebound::fight::FightTwoPlayer> m_current_fight_two_player = nullptr;
+    std::shared_ptr<::runebound::character::Character> m_current_caller_to_fight = nullptr;
     std::vector<::runebound::fight::FightToken> m_fight_tokens;
     std::set<unsigned int> m_products;
 
@@ -102,6 +104,34 @@ public:
 
     void start_trade() {
         m_is_in_trade = true;
+    }
+
+
+    [[nodiscard]] bool check_caller_to_fight() const {
+        return m_current_caller_to_fight != nullptr;
+    }
+
+    [[nodiscard]] std::shared_ptr<Character> get_current_caller_to_fight() const {
+        return m_current_caller_to_fight;
+    }
+
+    void call_to_fight(const std::shared_ptr <Character> &caller) {
+        m_current_caller_to_fight = caller;
+    }
+
+    void refuse_to_fight() {
+        m_current_caller_to_fight = nullptr;
+    }
+
+    void start_fight_two_player(const std::shared_ptr <fight::FightTwoPlayer> &fight) {
+        m_current_fight_two_player = fight;
+        m_current_state = StateCharacter::FIGHT_TWO_PLAYER;
+        m_current_caller_to_fight = nullptr;
+    }
+
+    void end_fight_two_player(const std::shared_ptr <fight::FightTwoPlayer> &fight) {
+        m_current_fight_two_player = nullptr;
+        m_current_state = StateCharacter::NORMAL_GAME;
     }
 
     void end_trade() {
@@ -211,6 +241,11 @@ public:
     [[nodiscard]] std::shared_ptr<::runebound::fight::Fight> get_current_fight(
     ) const {
         return m_current_fight;
+    }
+
+    [[nodiscard]] std::shared_ptr<::runebound::fight::FightTwoPlayer> get_current_fight_two_player(
+    ) const {
+        return m_current_fight_two_player;
     }
 
     Character(

@@ -430,5 +430,28 @@ void Game::start_new_round() {
     }
 }
 
+void Game::call_to_fight(const std::shared_ptr<character::Character> &caller,
+                   const std::shared_ptr<character::Character> &receiver) {
+    check_turn(caller);
+    check_sufficiency_action_points(1);
+    receiver->call_to_fight(caller);
+    caller->update_action_points(-1);
+}
+
+void Game::accept_to_fight(const std::shared_ptr<character::Character> &receiver) {
+    if (!receiver->check_caller_to_fight()) {
+        throw NotCalledToFight();
+    }
+    auto caller = receiver->get_current_caller_to_fight();
+    std::shared_ptr <fight::FightTwoPlayer> fight = std::make_shared<fight::FightTwoPlayer>(caller, receiver);
+    caller->start_fight_two_player(fight);
+    receiver->start_fight_two_player(fight);
+}
+
+void Game::end_fight_two_player(const std::shared_ptr<character::Character> &chr) {
+    auto fight = chr->get_current_fight_two_player();
+    fight->get_caller()->end_fight();
+    fight->get_receiver()->end_fight();
+}
 }  // namespace game
 }  // namespace runebound

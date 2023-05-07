@@ -15,6 +15,7 @@
 #include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
+#include "fight_two_player.hpp"
 
 namespace runebound {
 const int DECK_SIZE = 15;
@@ -99,6 +100,14 @@ struct NonThrownDiceException : std::runtime_error {
         : std::runtime_error(
               "You have not rolled any dice and are not moving to an adjacent "
               "space."
+          ) {
+    }
+};
+
+struct NotCalledToFight : std::runtime_error {
+    NotCalledToFight()
+        : std::runtime_error(
+              "Not called to fight."
           ) {
     }
 };
@@ -314,7 +323,21 @@ public:
 
     void end_fight(const std::shared_ptr<character::Character> &chr);
 
+    void end_fight_two_player(const std::shared_ptr<character::Character> &chr);
+
     void relax(std::shared_ptr<character::Character> chr);
+
+    void call_to_fight(const std::shared_ptr<character::Character> &caller,
+                       const std::shared_ptr<character::Character> &receiver);
+
+    void refuse_to_fight(const std::shared_ptr<character::Character> &receiver) {
+        if (!receiver->check_caller_to_fight()) {
+            throw NotCalledToFight();
+        }
+        receiver->refuse_to_fight();
+    }
+
+    void accept_to_fight(const std::shared_ptr<character::Character> &receiver);
 
     [[nodiscard]] std::vector<::runebound::character::Character>
     get_character_without_shared_ptr() const {
