@@ -35,6 +35,7 @@ struct Fight;
 struct TokenHandCount;
 struct Enemy;
 struct FightClient;
+struct FightTwoPlayer;
 }  // namespace fight
 
 namespace generator {

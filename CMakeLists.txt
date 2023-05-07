@@ -121,6 +121,7 @@ add_executable(${PROJECT_NAME}
         src/card_meeting.cpp
         src/product.cpp
         #tests/test_fight.cpp
+        #tests/test_fight_two_player.cpp
         tests/test_game.cpp
         generators/generator_cards_fight.cpp
         generators/generator_characters.cpp
