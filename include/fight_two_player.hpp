@@ -13,12 +13,12 @@ private:
 
 public:
     FightTwoPlayer(
-        std::shared_ptr<character::Character> caller,
-        std::shared_ptr<character::Character> receiver
+        const std::shared_ptr<character::Character> &caller,
+        const std::shared_ptr<character::Character> &receiver
     )
-        : m_receiver(std::move(receiver)),
+        : m_receiver(receiver),
           m_fight(
-              std::move(caller),
+              caller,
               Enemy(receiver->get_health(), receiver->get_fight_token())
           ) {
     }
@@ -68,11 +68,11 @@ public:
         ParticipantTwoPlayers participant,
         const TokenHandCount &token,
         TokenHandCount dexterity_token,
-        Participant dexterity_participant
+        ParticipantTwoPlayers dexterity_participant
     ) {
         m_fight.make_dexterity(
             static_cast<Participant>(participant), token, dexterity_token,
-            dexterity_participant
+            static_cast<Participant>(dexterity_participant)
         );
         m_receiver->set_health(m_fight.get_health_enemy());
     }

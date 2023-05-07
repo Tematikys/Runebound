@@ -1,4 +1,5 @@
 #include "doctest/doctest.h"
+#include "fight_two_player.hpp"
 #include "game.hpp"
 
 TEST_CASE("game") {
@@ -107,7 +108,8 @@ TEST_CASE("generating characters") {
 
 TEST_CASE("card_fight") {
     ::runebound::game::Game game;
-    auto lissa = game.make_character(runebound::character::StandardCharacter::LISSA);
+    auto lissa =
+        game.make_character(runebound::character::StandardCharacter::LISSA);
     auto lord = game.make_character(
         runebound::character::StandardCharacter::LORD_HAWTHORNE
     );
@@ -120,12 +122,16 @@ TEST_CASE("card_fight") {
     CHECK(lord->get_cards_fight().size() == 1);
     CHECK(lord->get_trophies().size() == 0);
     fight->get_enemy()->update_health(-fight->get_enemy()->get_health());
-    fight->check_end_fight();
+    CHECK(fight->check_end_fight() == true);
     game.end_fight(lord);
     CHECK(lord->get_cards_fight().size() == 0);
     CHECK(lord->get_trophies().size() == 1);
-    CHECK(lord->get_state() == runebound::character::StateCharacter::NORMAL_GAME);
-    CHECK(lissa->get_state() == runebound::character::StateCharacter::NORMAL_GAME);
+    CHECK(
+        lord->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
+    CHECK(
+        lissa->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
 }
 
 TEST_CASE("cards") {
@@ -218,24 +224,40 @@ TEST_CASE("trade") {
         game.sell_product_in_town(mok, *mok_products.begin());
         CHECK(mok->get_gold() == 102);
     }
-    game.discard_product(mok, *game.get_town_products(mok->get_position()).begin());
+    game.discard_product(
+        mok, *game.get_town_products(mok->get_position()).begin()
+    );
     CHECK(mok->check_in_trade() == false);
 }
 
 TEST_CASE("time token") {
     runebound::game::Game game;
-    auto lissa = game.make_character(runebound::character::StandardCharacter::LISSA);
+    auto lissa =
+        game.make_character(runebound::character::StandardCharacter::LISSA);
     lissa->set_position(runebound::Point(0, 0));
-    CHECK(game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() == runebound::Side::FRONT);
+    CHECK(
+        game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() ==
+        runebound::Side::FRONT
+    );
     game.take_token(lissa);
-    CHECK(game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() == runebound::Side::BACK);
+    CHECK(
+        game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() ==
+        runebound::Side::BACK
+    );
     CHECK(game.get_number_of_rounds() == 0);
     for (int i = 0; i < 5; ++i) {
         game.start_next_character_turn(lissa);
         CHECK(game.get_number_of_rounds() == i + 1);
-        CHECK(game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() == runebound::Side::BACK);
+        CHECK(
+            game.get_map()
+                .get_cell_map(runebound::Point(0, 0))
+                .get_side_token() == runebound::Side::BACK
+        );
     }
     game.start_next_character_turn(lissa);
     CHECK(game.get_number_of_rounds() == 6);
-    CHECK(game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() == runebound::Side::FRONT);
+    CHECK(
+        game.get_map().get_cell_map(runebound::Point(0, 0)).get_side_token() ==
+        runebound::Side::FRONT
+    );
 }
