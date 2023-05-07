@@ -11,11 +11,11 @@
 #include "card_research.hpp"
 #include "character.hpp"
 #include "fight.hpp"
+#include "fight_two_player.hpp"
 #include "map.hpp"
 #include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
-#include "fight_two_player.hpp"
 
 namespace runebound {
 const int DECK_SIZE = 15;
@@ -105,10 +105,7 @@ struct NonThrownDiceException : std::runtime_error {
 };
 
 struct NotCalledToFight : std::runtime_error {
-    NotCalledToFight()
-        : std::runtime_error(
-              "Not called to fight."
-          ) {
+    NotCalledToFight() : std::runtime_error("Not called to fight.") {
     }
 };
 
@@ -327,10 +324,13 @@ public:
 
     void relax(std::shared_ptr<character::Character> chr);
 
-    void call_to_fight(const std::shared_ptr<character::Character> &caller,
-                       const std::shared_ptr<character::Character> &receiver);
+    void call_to_fight(
+        const std::shared_ptr<character::Character> &caller,
+        const std::shared_ptr<character::Character> &receiver
+    );
 
-    void refuse_to_fight(const std::shared_ptr<character::Character> &receiver) {
+    void refuse_to_fight(const std::shared_ptr<character::Character> &receiver
+    ) {
         if (!receiver->check_caller_to_fight()) {
             throw NotCalledToFight();
         }

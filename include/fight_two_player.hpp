@@ -20,7 +20,8 @@ public:
         const std::shared_ptr<character::Character> &caller,
         const std::shared_ptr<character::Character> &receiver
     )
-        : m_receiver(receiver), m_caller(caller),
+        : m_receiver(receiver),
+          m_caller(caller),
           m_fight(
               caller,
               Enemy(receiver->get_health(), receiver->get_fight_token())
@@ -94,11 +95,14 @@ public:
     }
 
     [[nodiscard]] bool check_end_fight() const {
-        return m_fight.check_end_fight();
+        return m_caller->get_health() == 0 || m_receiver->get_health() == 0;
     }
 
     [[nodiscard]] ParticipantTwoPlayers get_winner() const {
-        return static_cast<ParticipantTwoPlayers>(m_fight.get_winner());
+        if (m_caller->get_health() == 0) {
+            return ParticipantTwoPlayers::RECEIVER;
+        }
+        return ParticipantTwoPlayers::CALLER;
     }
 
     bool check_end_round() {
@@ -107,4 +111,4 @@ public:
 };
 }  // namespace runebound::fight
 
-#endif // FIGHT_TWO_PLAYER_HPP_
+#endif  // FIGHT_TWO_PLAYER_HPP_
