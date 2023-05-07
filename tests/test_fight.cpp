@@ -1,45 +1,10 @@
 #include <utility>
 #include "doctest/doctest.h"
 #include "fight.hpp"
+#include "fight_commands.hpp"
 #include "game.hpp"
 
-void print(const std::vector<runebound::fight::TokenHandCount> tokens) {
-    for (auto token : tokens) {
-        switch (token.hand) {
-            case (runebound::fight::HandFightTokens::MAGICAL_DAMAGE): {
-                std::cout << "MAGICAL";
-                break;
-            }
-            case (runebound::fight::HandFightTokens::PHYSICAL_DAMAGE): {
-                std::cout << "PHYSICAL";
-                break;
-            }
-            case (runebound::fight::HandFightTokens::ENEMY_DAMAGE): {
-                std::cout << "ENEMY";
-                break;
-            }
-            case (runebound::fight::HandFightTokens::DOUBLING): {
-                std::cout << "DOUBLING";
-                break;
-            }
-            case (runebound::fight::HandFightTokens::DEXTERITY): {
-                std::cout << "DEXTERITY";
-                break;
-            }
-            case (runebound::fight::HandFightTokens::SHIELD): {
-                std::cout << "SHIELD";
-                break;
-            }
-            case (runebound::fight::HandFightTokens::NOTHING): {
-                std::cout << "NOTHING";
-                break;
-            }
-        }
-        std::cout << ' ' << token.count << '\n';
-    }
-    std::cout << '\n';
-}
-
+namespace runebound::tests {
 void read_command(
     runebound::fight::Fight &fight,
     const std::vector<runebound::fight::TokenHandCount>
@@ -114,6 +79,8 @@ void read_command(
     }
 }
 
+}  // namespace runebound::tests
+
 TEST_CASE("Fight") {
     using namespace runebound::fight;
     ::runebound::game::Game game;
@@ -156,8 +123,8 @@ TEST_CASE("Fight") {
         } else {
             std::cout << "ENEMY turn\n";
         }
-        print(character_remaining_tokens);
-        print(enemy_remaining_tokens);
+        runebound::tests::print(character_remaining_tokens);
+        runebound::tests::print(enemy_remaining_tokens);
         std::cout << "CHARACTER HEALTH: " << character->get_health() << "; "
                   << "ENEMY HEALTH: " << fight.get_health_enemy() << '\n';
         if (fight.check_end_round()) {
@@ -166,7 +133,9 @@ TEST_CASE("Fight") {
             enemy_remaining_tokens = fight.get_enemy_remaining_tokens();
             continue;
         }
-        read_command(fight, character_remaining_tokens, enemy_remaining_tokens);
+        runebound::tests::read_command(
+            fight, character_remaining_tokens, enemy_remaining_tokens
+        );
         if (fight.check_end_fight()) {
             if (turn == runebound::fight::Participant::ENEMY) {
                 std::cout << "ENEMY win!\n";

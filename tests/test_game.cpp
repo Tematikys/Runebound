@@ -266,17 +266,41 @@ TEST_CASE("fight two player") {
     runebound::game::Game game;
     auto lissa =
         game.make_character(runebound::character::StandardCharacter::LISSA);
-    auto mok = game.make_character(runebound::character::StandardCharacter::ELDER_MOK);
+    auto mok =
+        game.make_character(runebound::character::StandardCharacter::ELDER_MOK);
     game.call_to_fight(lissa, mok);
     CHECK(lissa->get_action_points() == 2);
     CHECK(mok->get_action_points() == 3);
-    CHECK(lissa->get_state() == runebound::character::StateCharacter::NORMAL_GAME);
-    CHECK(mok->get_state() == runebound::character::StateCharacter::NORMAL_GAME);
+    CHECK(
+        lissa->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
+    CHECK(
+        mok->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
     game.accept_to_fight(mok);
     auto fight = lissa->get_current_fight_two_player();
     CHECK(fight == mok->get_current_fight_two_player());
-    CHECK(lissa->get_state() == runebound::character::StateCharacter::FIGHT_TWO_PLAYER);
-    CHECK(mok->get_state() == runebound::character::StateCharacter::FIGHT_TWO_PLAYER);
-
-
+    CHECK(
+        lissa->get_state() ==
+        runebound::character::StateCharacter::FIGHT_TWO_PLAYER
+    );
+    CHECK(
+        mok->get_state() ==
+        runebound::character::StateCharacter::FIGHT_TWO_PLAYER
+    );
+    mok->update_health(-9);
+    CHECK(fight->check_end_fight() == true);
+    CHECK(
+        fight->get_winner() == runebound::fight::ParticipantTwoPlayers::CALLER
+    );
+    game.end_fight_two_player(lissa);
+    CHECK(
+        lissa->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
+    CHECK(
+        mok->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
+    CHECK(mok->get_current_fight_two_player() == nullptr);
+    CHECK(lissa->get_current_fight_two_player() == nullptr);
+    CHECK(mok->get_current_caller_to_fight() == nullptr);
 }
