@@ -280,14 +280,8 @@ TEST_CASE("fight two player") {
     game.accept_to_fight(mok);
     auto fight = lissa->get_current_fight_two_player();
     CHECK(fight == mok->get_current_fight_two_player());
-    CHECK(
-        lissa->get_state() ==
-        runebound::character::StateCharacter::FIGHT_TWO_PLAYER
-    );
-    CHECK(
-        mok->get_state() ==
-        runebound::character::StateCharacter::FIGHT_TWO_PLAYER
-    );
+    CHECK(lissa->get_state() == runebound::character::StateCharacter::CALLER);
+    CHECK(mok->get_state() == runebound::character::StateCharacter::RECEIVER);
     mok->update_health(-9);
     CHECK(fight->check_end_fight() == true);
     CHECK(

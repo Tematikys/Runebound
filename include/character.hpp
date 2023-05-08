@@ -20,7 +20,7 @@ namespace character {
 void to_json(nlohmann::json &json, const Character &character);
 void from_json(const nlohmann::json &json, Character &character);
 
-enum class StateCharacter { NORMAL_GAME, FIGHT, ENEMY, FIGHT_TWO_PLAYER };
+enum class StateCharacter { NORMAL_GAME, FIGHT, ENEMY, CALLER, RECEIVER };
 enum class StandardCharacter {
     LISSA,
     CORBIN,
@@ -126,10 +126,11 @@ public:
     }
 
     void start_fight_two_player(
-        const std::shared_ptr<fight::FightTwoPlayer> &fight
+        const std::shared_ptr<fight::FightTwoPlayer> &fight,
+        StateCharacter status
     ) {
         m_current_fight_two_player = fight;
-        m_current_state = StateCharacter::FIGHT_TWO_PLAYER;
+        m_current_state = status;
         m_current_caller_to_fight = nullptr;
     }
 

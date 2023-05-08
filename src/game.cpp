@@ -448,8 +448,10 @@ void Game::accept_to_fight(const std::shared_ptr<character::Character> &receiver
     auto caller = receiver->get_current_caller_to_fight();
     std::shared_ptr<fight::FightTwoPlayer> fight =
         std::make_shared<fight::FightTwoPlayer>(caller, receiver);
-    caller->start_fight_two_player(fight);
-    receiver->start_fight_two_player(fight);
+    caller->start_fight_two_player(fight, character::StateCharacter::CALLER);
+    receiver->start_fight_two_player(
+        fight, character::StateCharacter::RECEIVER
+    );
 }
 
 void Game::end_fight_two_player(const std::shared_ptr<character::Character> &chr
