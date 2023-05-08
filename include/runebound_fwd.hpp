@@ -74,7 +74,7 @@ struct Client;
 namespace graphics {
 struct Board;
 struct Client;
-}
+}  // namespace graphics
 
 }  // namespace runebound
 
