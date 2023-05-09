@@ -1,7 +1,7 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
-//#define NETWORK_DEBUG_INFO
+#define NETWORK_DEBUG_INFO
 
 #include <boost/asio.hpp>
 #include <chrono>
@@ -45,7 +45,6 @@ public:
         if (answer["change type"] == "game names") {
             game_names = answer["game names"];
         }
-
         if (answer["change type"] == "game") {
             std::cout << "Game changed, maybe\n";
             runebound::game::from_json(answer, m_game_client);
@@ -229,6 +228,9 @@ public:
     };
 
     [[nodiscard]] character::Character get_yourself_character() const {
+if (m_character==runebound::character::StandardCharacter::NONE){
+    throw std::runtime_error("Character is not selected, yet");
+}
         for (auto &character : m_game_client.m_characters) {
             if (character.get_standard_character() == m_character) {
                 return character;
@@ -254,7 +256,7 @@ public:
 
 public:
     std::string m_user_name;
-    runebound::character::StandardCharacter m_character;
+    runebound::character::StandardCharacter m_character=character::StandardCharacter::NONE;
     std::vector<std::string> game_names;
     runebound::game::GameClient m_game_client;
 

@@ -10,7 +10,7 @@
 #include "game.hpp"
 #include "game_client.hpp"
 
-//#define NETWORK_DEBUG_INFO
+// #define NETWORK_DEBUG_INFO
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
@@ -52,8 +52,8 @@ public:
              message](boost::system::error_code ec, std::size_t length) {
                 if (!ec) {
 #ifdef NETWORK_DEBUG_INFO
-                    std::cout << "Sent:" << message << ' ' << length
-                              << std::endl;
+                    std::cout << "Sent:" << message.substr(0, 80) << ' '
+                              << length << std::endl;
 #endif
                 } else {
                     std::cerr << "Write failed: " << ec.message() << std::endl;
@@ -99,11 +99,11 @@ public:
 
             if (data["action type"] == "exit game") {
                 game_users[m_game_name].erase(m_user_name);
-                //                m_game->delete_character(user_character[m_user_name]);
+                // m_game->delete_character(user_character[m_user_name]);
                 user_character[m_user_name] = nullptr;
                 m_game = nullptr;
                 m_game_name = "";
-
+                send_selected_character(runebound::character::StandardCharacter::NONE);
                 for (const std::string &user_name : game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
                 }
@@ -244,8 +244,8 @@ private:
                     std::string message;
                     std::getline(is, message);
 #ifdef NETWORK_DEBUG_INFO
-                    std::cout << "Received: " << message << ' ' << length
-                              << '\n';
+                    std::cout << "Received: " << message.substr(0, 80) << ' '
+                              << length << '\n';
 #endif
                     parse_message(message);
                     do_read();
