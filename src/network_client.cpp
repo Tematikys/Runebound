@@ -24,7 +24,7 @@ int main() {
         io_context.poll();
 
         std::cout << "List of games:\n";
-        for (const auto& e : client.game_names) {
+        for (const auto &e : client.game_names) {
             std::cout << e << '\n';
         }
         std::cout << '\n';
@@ -38,7 +38,7 @@ int main() {
         io_context.poll();
 
         std::cout << "List of games:\n";
-        for (const auto& e : client.game_names) {
+        for (const auto &e : client.game_names) {
             std::cout << e << '\n';
         }
         std::cout << '\n';
@@ -58,8 +58,9 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         io_context.poll();
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        auto chr=client.get_yourself_character();
-        std::cout << static_cast<int>(chr.get_standard_character()) << "################\n";
+        auto chr = client.get_yourself_character();
+        std::cout << static_cast<int>(chr.get_standard_character())
+                  << "################\n";
         for (auto e :
              client.get_game_client().m_remaining_standard_characters) {
             std::cout << static_cast<int>(e);

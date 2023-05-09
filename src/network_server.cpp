@@ -103,7 +103,9 @@ public:
                 user_character[m_user_name] = nullptr;
                 m_game = nullptr;
                 m_game_name = "";
-                send_selected_character(runebound::character::StandardCharacter::NONE);
+                send_selected_character(
+                    runebound::character::StandardCharacter::NONE
+                );
                 for (const std::string &user_name : game_users[m_game_name]) {
                     user_connection[user_name]->send_game();
                 }
