@@ -211,6 +211,10 @@ TEST_CASE("trade") {
         102 - game.get_product(*(++new_products.begin())).get_price()
     );
     CHECK(mok->check_in_trade() == false);
+    CHECK(
+        mok->get_standard_character() ==
+        runebound::character::StandardCharacter::ELDER_MOK
+    );
     CHECK(game.get_town_products(mok->get_position()).size() == 3);
     mok->set_position(runebound::Point(11, 13));
     game.start_trade(mok);
