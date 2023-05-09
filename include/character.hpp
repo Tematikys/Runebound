@@ -22,6 +22,7 @@ void from_json(const nlohmann::json &json, Character &character);
 
 enum class StateCharacter { NORMAL_GAME, FIGHT, ENEMY, CALLER, RECEIVER };
 enum class StandardCharacter {
+    NONE,
     LISSA,
     CORBIN,
     ELDER_MOK,
@@ -39,7 +40,7 @@ private:
     int m_max_action_points = 3;
     unsigned int m_active_card_meeting;
     unsigned int m_active_card_research;
-    StandardCharacter m_standard_character = StandardCharacter::LISSA;
+    StandardCharacter m_standard_character = StandardCharacter::NONE;
     StateCharacter m_current_state = StateCharacter::NORMAL_GAME;
     std::string m_name;
     std::set<unsigned int> m_cards_research;
