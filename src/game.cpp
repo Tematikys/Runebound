@@ -267,6 +267,7 @@ std::vector<std::size_t> Game::get_possible_outcomes(
             outcomes.push_back(i);
         }
     }
+    m_last_possible_outcomes = outcomes;
     return outcomes;
 }
 
@@ -296,6 +297,7 @@ void Game::complete_card_research(
     );
     chr->pop_card(AdventureType::RESEARCH, card);
     m_last_dice_research_result.clear();
+    m_last_possible_outcomes.clear();
 }
 
 bool Game::check_characteristic(

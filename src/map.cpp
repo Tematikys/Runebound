@@ -57,17 +57,17 @@ std::vector<Point> Map::make_move(
             if (check_neighbour_in_direction(current, direction)) {
                 auto new_point = get_neighbour_in_direction(current, direction);
                 if (!dist.count(new_point) &&
-                        (get_cell_map(new_point).check_road() ||
-                         (!check_river(current, new_point) &&
-                          ::runebound::dice::check_hand_dice(
-                              get_cell_map(new_point).get_type_cell(),
-                              dice_roll_results[dist[current]]
-                          ))) ||
-                    (check_river(current, new_point) &&
-                     (dice_roll_results[dist[current]] ==
-                          ::runebound::dice::HandDice::JOKER ||
-                      dice_roll_results[dist[current]] ==
-                          ::runebound::dice::HandDice::MOUNTAINS_WATER))) {
+                    ((get_cell_map(new_point).check_road() ||
+                      (!check_river(current, new_point) &&
+                       ::runebound::dice::check_hand_dice(
+                           get_cell_map(new_point).get_type_cell(),
+                           dice_roll_results[dist[current]]
+                       ))) ||
+                     (check_river(current, new_point) &&
+                      (dice_roll_results[dist[current]] ==
+                           ::runebound::dice::HandDice::JOKER ||
+                       dice_roll_results[dist[current]] ==
+                           ::runebound::dice::HandDice::MOUNTAINS_WATER)))) {
                     dist[new_point] = dist[current] + 1;
                     parent[new_point] = current;
                     bfs_queue.push(new_point);

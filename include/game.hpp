@@ -126,6 +126,7 @@ private:
     std::vector<dice::HandDice> m_last_dice_relax_result;
     std::vector<dice::HandDice> m_last_dice_research_result;
     std::vector<unsigned int> m_last_characteristic_check;
+    std::vector<std::size_t> m_last_possible_outcomes;
 
     std::vector<cards::CardResearch> m_all_cards_research;
     std::vector<cards::CardFight> m_all_cards_fight;
@@ -236,6 +237,10 @@ public:
 
     [[nodiscard]] cards::CardMeeting get_card_meeting(unsigned int card) const {
         return m_all_cards_meeting[card];
+    }
+
+    [[nodiscard]] std::vector<std::size_t> get_last_possible_outcomes() const {
+        return m_last_possible_outcomes;
     }
 
     [[nodiscard]] cards::CardFight get_card_fight(unsigned int card) const {
