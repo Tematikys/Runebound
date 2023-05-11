@@ -153,6 +153,7 @@ TEST_CASE("cards") {
     CHECK(game.get_last_dice_movement_result().size() == 0);
     CHECK(game.get_last_dice_research_result().size() == 3);
     auto outcomes = game.get_possible_outcomes(lord);
+    CHECK(outcomes == game.get_last_possible_outcomes());
     CHECK(lord->get_cards(runebound::AdventureType::RESEARCH).size() == 1);
     if (outcomes.empty()) {
         game.complete_card_research(lord, -1);
@@ -166,6 +167,7 @@ TEST_CASE("cards") {
     } else {
         CHECK(lord->get_trophies().size() == 0);
     }
+    CHECK(game.get_last_possible_outcomes().empty());
     CHECK(lord->get_cards(runebound::AdventureType::RESEARCH).size() == 0);
     CHECK(lord->get_action_points() == 1);
     CHECK(game.get_last_dice_movement_result().size() == 0);
