@@ -7,7 +7,7 @@
 #include <set>
 
 namespace runebound {
-enum class AdventureType { MEETING, RESEARCH, FIGHT, NOTHING };
+enum class AdventureType { MEETING, RESEARCH, FIGHT, NOTHING, BOSS };
 
 enum class Side { FRONT, BACK };
 
