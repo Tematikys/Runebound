@@ -261,6 +261,14 @@ void Fight::make_doubling(
     erase_token(participant, token);
 }
 
+void Fight::make_hit(Participant participant, const TokenHandCount &token) {
+    if (m_turn != participant || m_turn != Participant::ENEMY) {
+        throw WrongCharacterTurnException();
+    }
+    change_turn();
+    m_enemy.make_hit();
+}
+
 HandFightTokens
 Fight::toss_token(Participant participant, const TokenHandCount &token) {
     if (participant == Participant::ENEMY) {

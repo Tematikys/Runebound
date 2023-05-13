@@ -2,6 +2,7 @@
 #define FIGHT_HPP_
 
 #include <exception>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -69,7 +70,8 @@ void from_json(const nlohmann::json &json, Enemy &enemy);
 
 struct Enemy {
 private:
-    int m_health;
+    int m_health, m_max_health;
+    std::function<void()> m_hit = []() {};
     std::string m_name;
 
     std::vector<FightToken> m_fight_tokens = {
@@ -112,23 +114,53 @@ private:
             HandFightTokens::ENEMY_DAMAGE,
             1,
             1
-        ),  // THERE HIT
+        )  // THERE HIT
     };
 
 public:
-    Enemy() : m_health(0) {
+    Enemy() : m_health(0), m_max_health(0) {
     }
 
     Enemy(int health, std::vector<FightToken> fight_tokens)
-        : m_health(health), m_fight_tokens(std::move(fight_tokens)) {
+        : m_health(health),
+          m_fight_tokens(std::move(fight_tokens)),
+          m_max_health(health) {
     }
 
     Enemy(int health, std::string name)
         : m_health(health), m_name(std::move(name)) {
     }
 
+    explicit Enemy(AdventureType boss) {
+        if (boss == AdventureType::BOSS) {
+            m_health = 15;
+            m_max_health = 15;
+            m_name = "Supreme Lord Marat";
+            m_fight_tokens.emplace_back(FightToken(
+                HandFightTokens::DEXTERITY, 1, 1, HandFightTokens::ENEMY_DAMAGE,
+                0, 2
+            ));
+            m_fight_tokens.emplace_back(FightToken(
+                HandFightTokens::DEXTERITY, 0, 1, HandFightTokens::ENEMY_DAMAGE,
+                0, 2
+            ));
+            m_fight_tokens.emplace_back(FightToken(
+                HandFightTokens::HIT, 0, 1, HandFightTokens::ENEMY_DAMAGE, 0, 1
+            ));
+            m_hit = std::function<void()>([this] {
+                m_health = std::min(m_health + 3, m_max_health);
+            });
+        } else {
+            m_health = 0;
+        }
+    }
+
     void update_health(int delta) {
         m_health += delta;
+    }
+
+    void make_hit() {
+        m_hit();
     }
 
     [[nodiscard]] int get_health() const {
@@ -253,6 +285,8 @@ public:
         Participant participant,
         const std::vector<TokenHandCount> &tokens
     );
+
+    void make_hit(Participant participant, const TokenHandCount &token);
 
     [[nodiscard]] bool check_end_fight() const {
         return m_character->get_health() == 0 || m_enemy.get_health() == 0;
