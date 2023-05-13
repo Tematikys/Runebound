@@ -304,3 +304,26 @@ TEST_CASE("fight two player") {
     CHECK(lissa->get_current_fight_two_player() == nullptr);
     CHECK(mok->get_current_caller_to_fight() == nullptr);
 }
+
+TEST_CASE("fight boss") {
+    runebound::fight::Enemy boss =
+        runebound::fight::Enemy(runebound::AdventureType::BOSS);
+    CHECK(boss.get_fight_token().size() == 8);
+    CHECK(boss.get_health() == 15);
+    boss.update_health(-4);
+    CHECK(boss.get_health() == 11);
+    boss.make_hit();
+    CHECK(boss.get_health() == 14);
+    boss.make_hit();
+    CHECK(boss.get_health() == 15);
+    runebound::game::Game game;
+    auto lissa =
+        game.make_character(runebound::character::StandardCharacter::LISSA);
+    lissa->change_knowledge_token(6);
+    runebound::fight::Fight fight(
+        lissa, runebound::fight::Enemy(runebound::AdventureType::BOSS)
+    );
+    CHECK(fight.get_health_enemy() == 15);
+    fight.start_round();
+    CHECK(fight.get_health_enemy() == 9);
+}
