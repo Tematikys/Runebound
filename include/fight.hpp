@@ -70,6 +70,7 @@ void from_json(const nlohmann::json &json, Enemy &enemy);
 
 struct Enemy {
 private:
+    bool m_boss = false;
     int m_health, m_max_health;
     std::function<void()> m_hit = []() {};
     std::string m_name;
@@ -150,8 +151,10 @@ public:
             m_hit = std::function<void()>([this] {
                 m_health = std::min(m_health + 3, m_max_health);
             });
+            m_boss = true;
         } else {
             m_health = 0;
+            m_max_health = 0;
         }
     }
 
@@ -161,6 +164,10 @@ public:
 
     void make_hit() {
         m_hit();
+    }
+
+    [[nodiscard]] bool check_boss() const {
+        return m_boss;
     }
 
     [[nodiscard]] int get_health() const {
@@ -191,6 +198,7 @@ private:
     friend struct FightClient;
     friend struct Character;
     friend struct Enemy;
+    bool m_fight_started = false;
     Participant m_turn = Participant::CHARACTER;
     bool m_pass_character = false;
     bool m_pass_enemy = false;

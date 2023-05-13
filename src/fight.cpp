@@ -265,6 +265,9 @@ void Fight::make_hit(Participant participant, const TokenHandCount &token) {
     if (m_turn != participant || m_turn != Participant::ENEMY) {
         throw WrongCharacterTurnException();
     }
+    if (token.hand != HandFightTokens::HIT) {
+        throw BadCombinationException();
+    }
     change_turn();
     m_enemy.make_hit();
 }
@@ -324,6 +327,14 @@ Fight::reverse_token(Participant participant, const TokenHandCount &token) {
 }
 
 void Fight::start_round() {
+    if (!m_fight_started) {
+        m_fight_started = true;
+        if (m_enemy.check_boss()) {
+            m_enemy.update_health(
+                -std::min(m_character->get_knowledge_token(), 7)
+            );
+        }
+    }
     m_pass_character = false;
     m_pass_enemy = false;
     shuffle_all_tokens();
