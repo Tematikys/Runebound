@@ -225,6 +225,26 @@ public:
                     user_connection[user_name]->send_game();
                 }
             }
+
+            if (data["action type"] == "adventure") {
+                if (data["adventure command"] == "throw_research_dice") {
+                    m_game->throw_research_dice(user_character[m_user_name]);
+                }
+                if (data["adventure command"] == "complete_card_research") {
+                    m_game->complete_card_research(
+                        user_character[m_user_name], data["outcome"]
+                    );
+                }
+                if (data["adventure command"] == "check_characteristic") {
+                    m_game->check_characteristic(
+                        user_character[m_user_name], data["card"],
+                        data["option"]
+                    );
+                }
+                for (const std::string &user_name : game_users[m_game_name]) {
+                    user_connection[user_name]->send_game();
+                }
+            }
         } catch (std::exception &e) {
             std::cout << e.what() << '\n';
             json answer;
