@@ -202,13 +202,20 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         m_card_deck_research.erase(std::find(
             m_card_deck_research.begin(), m_card_deck_research.end(), card
         ));
-    } else {
+    } else if (m_map.get_cell_map(position).get_token() == AdventureType::MEETING) {
         unsigned int card =
             m_card_deck_meeting[rng() % m_card_deck_meeting.size()];
         chr->add_card(AdventureType::MEETING, card);
         m_card_deck_meeting.erase(std::find(
             m_card_deck_meeting.begin(), m_card_deck_meeting.end(), card
         ));
+    }
+    else {
+        chr->start_fight(std::make_shared<fight::Fight>(
+            chr, fight::Enemy(AdventureType::BOSS)
+        ));
+        m_characters[(m_turn + m_count_players - 1) % m_count_players]
+            ->start_fight_as_enemy();
     }
     m_map.reverse_token(position);
     m_characters[m_turn]->update_action_points(-2);
@@ -427,8 +434,17 @@ void Game::start_new_round() {
             }
         }
     }
-    if (m_number_of_rounds == 24) {
-        m_game_over = true;
+    if (m_number_of_rounds == 12) {
+        m_boss_position = Point(11, 6);
+        m_map.make_boss(m_boss_position);
+    }
+    if (m_number_of_rounds >= 24) {
+        m_map.delete_boss(m_boss_position);
+        m_boss_position.x -= 1;
+        m_map.make_boss(m_boss_position);
+        if (m_map.get_cell_map(m_boss_position).get_territory_name() == "Talamir") {
+            m_game_over = false;
+        }
     }
 }
 
