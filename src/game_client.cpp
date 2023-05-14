@@ -19,7 +19,6 @@ void to_json(nlohmann::json &json, const GameClient &game) {
 }
 
 void from_json(const nlohmann::json &json, GameClient &game) {
-    game.is_game_need_update = true;
     game.m_map = json["m_map"];
     game.m_characters = json["m_characters"];
     game.m_remaining_standard_characters =
