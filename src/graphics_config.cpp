@@ -4,12 +4,20 @@ namespace runebound::graphics {
 const ::std::vector<::std::pair<::std::string, ::std::string>> FONTS = {
     {"data/fonts/FreeMono.ttf", "FreeMono"}};
 const ::std::vector<::std::pair<::std::string, ::std::string>> IMAGES = {
+    {"data/images/heart20.png", "heart20"},
+    {"data/images/coin20.png", "coin20"},
     {"data/images/LISSA.png", "Lissa"},
+    {"data/images/LISSA40.png", "Lissa40"},
     {"data/images/CORBIN.png", "Corbin"},
+    {"data/images/CORBIN40.png", "Corbin40"},
     {"data/images/ELDER_MOK.png", "Elder Mok"},
+    {"data/images/ELDER_MOK40.png", "Elder Mok40"},
     {"data/images/LAUREL_FROM_BLOODWOOD.png", "Laurel from Bloodwood"},
+    {"data/images/LAUREL_FROM_BLOODWOOD40.png", "Laurel from Bloodwood40"},
     {"data/images/LORD_HAWTHORNE.png", "Lord Hawthorne"},
-    {"data/images/MASTER_THORN.png", "Master Thorn"}};
+    {"data/images/LORD_HAWTHORNE40.png", "Lord Hawthorne40"},
+    {"data/images/MASTER_THORN.png", "Master Thorn"},
+    {"data/images/MASTER_THORN40.png", "Master Thorn40"}};
 const int HEXAGON_RADIUS = 26;
 const SDL_Color SELECTED_COLOR = {0xFF, 0xF7, 0x00, 0xFF};
 const ::std::map<::runebound::map::TypeCell, SDL_Color> CELL_FILL_COLOR = {

@@ -130,9 +130,12 @@ void PolygonShape::render_to_texture(
     SDL_Color border_color
 ) const {
     SDL_SetRenderTarget(renderer, texture);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+//    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     render(renderer, 0, 0, fill_color);
     render_border(renderer, 0, 0, border_color);
-    SDL_SetRenderTarget(renderer, nullptr);
+//    SDL_SetRenderTarget(renderer, nullptr);
+//    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }
 
 void PolygonShape::render_border_to_texture(
