@@ -40,6 +40,7 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer) {
         return false;
     }
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     const int imgFlags = IMG_INIT_PNG;
     if ((IMG_Init(imgFlags) & imgFlags) == 0) {
         ::std::cout << "SDL_image could not initialize! SDL_image Error:\n"

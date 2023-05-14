@@ -45,7 +45,7 @@ void Client::init() {
     init_main_menu_window();
     init_character_list_window();
     init_game_window();
-//    init_fight_window();
+    //    init_fight_window();
     m_window.set_active_window("main_menu");
     m_window.activate();
 }
@@ -79,8 +79,10 @@ void Client::handle_events() {
 }
 
 void Client::render() {
-    if(m_need_to_update) {
-        ::std::cout << "Rendered!" << m_counter << ::std::endl;
+    if (m_need_to_update) {
+        //        ::std::cout << "Rendered!" << m_counter << ::std::endl;
+        SDL_SetRenderTarget(m_graphic_renderer, nullptr);
+        SDL_SetRenderDrawBlendMode(m_graphic_renderer, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(m_graphic_renderer, 255, 255, 255, 255);
         SDL_RenderClear(m_graphic_renderer);
         m_window.render(m_graphic_renderer, 0, 0);
@@ -93,7 +95,10 @@ void Client::update() {
     m_io_context.poll();
     m_prev_mouse_pos = m_mouse_pos;
     update_mouse_pos(m_mouse_pos);
-    if(m_prev_mouse_pos != m_mouse_pos) {
+
+    m_need_to_update |= m_network_client.is_game_need_update();
+
+    if (m_prev_mouse_pos != m_mouse_pos) {
         m_need_to_update = true;
     }
     auto active_window = m_window.get_active_window_name();
