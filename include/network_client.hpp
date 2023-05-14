@@ -41,7 +41,7 @@ public:
 
     void parse_message(std::string &message) {
         json answer = json::parse(message);
-
+        game_need_update=true;
         if (answer["change type"] == "game names") {
             game_names = answer["game names"];
         }
@@ -223,7 +223,8 @@ public:
         do_write(data.dump());
     }
 
-    void start_card_execution(unsigned int card, runebound::AdventureType type) {
+    void
+    start_card_execution(unsigned int card, runebound::AdventureType type) {
         json data;
         data["action type"] = "adventure";
         data["adventure command"] = "start_card_execution";
@@ -239,7 +240,7 @@ public:
         do_write(data.dump());
     }
 
-    void complete_card_research(std::size_t outcome){
+    void complete_card_research(std::size_t outcome) {
         json data;
         data["action type"] = "adventure";
         data["adventure command"] = "complete_card_research";
@@ -247,7 +248,7 @@ public:
         do_write(data.dump());
     }
 
-    void check_characteristic(unsigned int card, cards::OptionMeeting option){
+    void check_characteristic(unsigned int card, cards::OptionMeeting option) {
         json data;
         data["action type"] = "adventure";
         data["adventure command"] = "check_characteristic";
@@ -256,8 +257,8 @@ public:
         do_write(data.dump());
     }
 
-    std::vector<std::size_t> get_possible_outcomes(){
-        return {0}; //TODO
+    std::vector<std::size_t> get_possible_outcomes() {
+        return {0};  // TODO
     };
 
     [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
@@ -287,9 +288,9 @@ public:
         return m_game_client;
     }
 
-    bool is_game_need_update(){
-        bool tmp = m_game_client.is_game_need_update;
-        m_game_client.is_game_need_update = false;
+    bool is_game_need_update() {
+        bool tmp = game_need_update;
+        game_need_update = false;
         return tmp;
     }
 
@@ -298,6 +299,7 @@ public:
     };
 
 public:
+    bool game_need_update = true;
     std::string m_user_name;
     runebound::character::StandardCharacter m_character =
         character::StandardCharacter::NONE;
