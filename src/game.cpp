@@ -209,8 +209,7 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         m_card_deck_meeting.erase(std::find(
             m_card_deck_meeting.begin(), m_card_deck_meeting.end(), card
         ));
-    }
-    else {
+    } else {
         chr->start_fight(std::make_shared<fight::Fight>(
             chr, fight::Enemy(AdventureType::BOSS)
         ));
@@ -438,12 +437,13 @@ void Game::start_new_round() {
         m_boss_position = Point(11, 6);
         m_map.make_boss(m_boss_position);
     }
-    if (m_number_of_rounds >= 24) {
+    if (m_number_of_rounds >= 25) {
         m_map.delete_boss(m_boss_position);
         m_boss_position.x -= 1;
         m_map.make_boss(m_boss_position);
-        if (m_map.get_cell_map(m_boss_position).get_territory_name() == "Talamir") {
-            m_game_over = false;
+        if (m_map.get_cell_map(m_boss_position).get_territory_name() ==
+            "Talamir") {
+            m_game_over = true;
         }
     }
 }
