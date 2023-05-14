@@ -14,19 +14,32 @@ void from_json(const nlohmann::json &json, GameClient &game);
 struct GameClient {
 public:
     friend struct ::runebound::game::Game;
+
     ::runebound::map::MapClient m_map;
+
     std::vector<::runebound::character::Character> m_characters;
     std::vector<::runebound::character::StandardCharacter>
         m_remaining_standard_characters;
+
     std::vector<dice::HandDice> m_last_dice_movement_result;
+    std::vector<dice::HandDice> m_last_dice_relax_result;
+    std::vector<dice::HandDice> m_last_dice_research_result;
+    std::vector<unsigned int> m_last_characteristic_check;
+    std::vector<std::size_t> m_last_possible_outcomes;
+
     bool is_fight = false;
     runebound::fight::FightClient m_fight_client;
+
     GameClient() = default;
 
     explicit GameClient(const Game &game)
         : m_map(game.get_map()),
           m_characters(game.get_character_without_shared_ptr()),
-          m_last_dice_movement_result(game.get_last_dice_movement_result()) {
+          m_last_dice_movement_result(game.m_last_dice_movement_result),
+          m_last_dice_relax_result(game.m_last_dice_relax_result),
+          m_last_dice_research_result(game.m_last_dice_research_result),
+          m_last_characteristic_check(game.m_last_characteristic_check),
+          m_last_possible_outcomes(game.m_last_possible_outcomes) {
         auto set_remaining =
             std::move(game.get_remaining_standard_characters());
         std::vector<::runebound::character::StandardCharacter> vec_remaining(

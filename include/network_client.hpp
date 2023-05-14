@@ -54,7 +54,7 @@ public:
         if (answer["change type"] == "selected character") {
             m_character = answer["character"];
         }
-        game_need_update=true;
+        game_need_update = true;
     }
 
     void do_read() {
@@ -256,10 +256,6 @@ public:
         data["option"] = option;
         do_write(data.dump());
     }
-
-    std::vector<std::size_t> get_possible_outcomes() {
-        return {0};  // TODO
-    };
 
     [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
         return m_game_client.m_last_dice_movement_result;
