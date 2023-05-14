@@ -55,20 +55,23 @@ int main() {
         }
 
         wait();
-        {
-            std::cout<<"Try to get not available character\n";
-            auto chr = client.get_yourself_character();
-            std::cout << "Character: "
-                      << static_cast<int>(chr.get_standard_character()) << '\n';
-        }
-        client.select_character(runebound::character::StandardCharacter::CORBIN
-        );
+        //        {
+        //            std::cout<<"Try to get not available character\n";
+        //            auto chr = client.get_yourself_character();
+        //            std::cout << "Character: "
+        //                      <<
+        //                      static_cast<int>(chr.get_standard_character())
+        //                      << '\n';
+        //        }
+        client.select_character(runebound::character::StandardCharacter::LISSA);
 
         wait();
         {
-            auto chr = client.get_yourself_character();
+            const auto &chr = client.get_yourself_character();
             std::cout << "Character: "
-                      << static_cast<int>(chr.get_standard_character()) << '\n';
+                      << static_cast<int>(chr.get_standard_character()) << ' '
+                      << chr.get_name() << ' ' << chr.get_position().x << ' '
+                      << chr.get_position().y << '\n';
             for (auto e :
                  client.get_game_client().m_remaining_standard_characters) {
                 std::cout << static_cast<int>(e);
