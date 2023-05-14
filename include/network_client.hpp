@@ -263,7 +263,7 @@ public:
 
     [[nodiscard]] character::Character get_yourself_character() const {
         if (m_character == runebound::character::StandardCharacter::NONE) {
-//            std::cout<<"Character is not selected, yet\n";
+            std::cout<<"Character is not selected, yet\n";
             throw std::runtime_error("Character is not selected, yet");
         }
         for (auto &character : m_game_client.m_characters) {
