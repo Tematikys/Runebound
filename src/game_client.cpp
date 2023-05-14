@@ -14,12 +14,12 @@ void to_json(nlohmann::json &json, const GameClient &game) {
     json["m_last_dice_movement_result"] = game.m_last_dice_movement_result;
     json["is_fight"] = game.is_fight;
     if (game.is_fight) {
-        //        std::cout << "fight!!!\n";
         json["m_fight_client"] = game.m_fight_client;
     }
 }
 
 void from_json(const nlohmann::json &json, GameClient &game) {
+    game.is_game_updated = false;
     game.m_map = json["m_map"];
     game.m_characters = json["m_characters"];
     game.m_remaining_standard_characters =
@@ -33,7 +33,6 @@ void from_json(const nlohmann::json &json, GameClient &game) {
     );
     game.is_fight = json["is_fight"];
     if (game.is_fight) {
-        //        std::cout << "fight!!!\n";
         game.m_fight_client = json["m_fight_client"];
     }
 }
