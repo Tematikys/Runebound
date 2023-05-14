@@ -223,6 +223,43 @@ public:
         do_write(data.dump());
     }
 
+    void start_card_execution(unsigned int card, runebound::AdventureType type) {
+        json data;
+        data["action type"] = "adventure";
+        data["adventure command"] = "start_card_execution";
+        data["card"] = card;
+        data["type"] = type;
+        do_write(data.dump());
+    }
+
+    void throw_research_dice() {
+        json data;
+        data["action type"] = "adventure";
+        data["adventure command"] = "throw_research_dice";
+        do_write(data.dump());
+    }
+
+    void complete_card_research(std::size_t outcome){
+        json data;
+        data["action type"] = "adventure";
+        data["adventure command"] = "complete_card_research";
+        data["outcome"] = "outcome";
+        do_write(data.dump());
+    }
+
+    void check_characteristic(unsigned int card, cards::OptionMeeting option){
+        json data;
+        data["action type"] = "adventure";
+        data["adventure command"] = "check_characteristic";
+        data["card"] = card;
+        data["option"] = option;
+        do_write(data.dump());
+    }
+
+    std::vector<std::size_t> get_possible_outcomes(){
+        return {0}; //TODO
+    };
+
     [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
         return m_game_client.m_last_dice_movement_result;
     };
