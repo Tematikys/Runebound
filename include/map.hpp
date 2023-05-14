@@ -106,7 +106,6 @@ public:
         m_map[point.x][point.y].make_boss();
     }
 
-
     void delete_boss(const Point &point) {
         m_map[point.x][point.y].delete_boss();
     }

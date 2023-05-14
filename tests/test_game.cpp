@@ -327,3 +327,58 @@ TEST_CASE("fight boss") {
     fight.start_round();
     CHECK(fight.get_health_enemy() == 9);
 }
+
+TEST_CASE("boss in game") {
+    runebound::game::Game game;
+    auto corbin =
+        game.make_character(runebound::character::StandardCharacter::CORBIN);
+    bool boss_in_game = false;
+    auto map = game.get_map();
+    for (int i = 0; i < 15; ++i) {
+        for (int j = 0; j < 15; ++j) {
+            if (map.get_cell_map(runebound::Point(i, j)).get_token() ==
+                runebound::AdventureType::BOSS) {
+                boss_in_game = true;
+            }
+        }
+    }
+    CHECK(!boss_in_game);
+    for (int i = 0; i < 11; ++i) {
+        game.start_next_character_turn(corbin);
+    }
+    map = game.get_map();
+    for (int i = 0; i < 15; ++i) {
+        for (int j = 0; j < 15; ++j) {
+            if (map.get_cell_map(runebound::Point(i, j)).get_token() ==
+                runebound::AdventureType::BOSS) {
+                boss_in_game = true;
+            }
+        }
+    }
+    CHECK(!boss_in_game);
+    game.start_next_character_turn(corbin);
+    CHECK(game.get_number_of_rounds() == 12);
+    CHECK(
+        game.get_map().get_cell_map(runebound::Point(11, 6)).get_token() ==
+        runebound::AdventureType::BOSS
+    );
+    for (int i = 0; i < 12; ++i) {
+        game.start_next_character_turn(corbin);
+        CHECK(
+            game.get_map().get_cell_map(runebound::Point(11, 6)).get_token() ==
+            runebound::AdventureType::BOSS
+        );
+        CHECK(game.check_end_game() == false);
+    }
+    for (int i = 0; i < 5; ++i) {
+        game.start_next_character_turn(corbin);
+        CHECK(
+            game.get_map()
+                .get_cell_map(runebound::Point(11 - i - 1, 6))
+                .get_token() == runebound::AdventureType::BOSS
+        );
+        CHECK(game.check_end_game() == false);
+    }
+    game.start_next_character_turn(corbin);
+    CHECK(game.check_end_game() == true);
+}
