@@ -1,7 +1,7 @@
 #include <graphics_client.hpp>
 
 namespace runebound::graphics {
-void Client::init_main_menu() {
+void Client::init_main_menu_window() {
     auto window = ::std::make_unique<Window>(Window(
         m_graphic_renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
         {0xFF, 0xFF, 0xFF, 0xFF}
@@ -76,7 +76,7 @@ void Client::init_main_menu() {
         ->add_window("game_list", ::std::move(window), {5, 40}, true, true);
 }
 
-void Client::main_menu_update() {
+void Client::update_main_menu_window() {
     auto *win = m_window.get_window("main_menu")->get_window("game_list");
     win->remove_all_buttons();
     for (::std::size_t i = m_game_list_start_index;

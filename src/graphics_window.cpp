@@ -403,6 +403,21 @@ Window *Window::get_window(const std::string &name) {
     return nullptr;
 }
 
+void Window::add_window_in_window(
+    const std::string &win_name,
+    const ::std::string &name,
+    ::std::unique_ptr<Window> window,
+    Point pos,
+    bool visible,
+    bool updatable
+) {
+    if (m_windows.find(win_name) != m_windows.end()) {
+        m_windows[win_name]->add_window(
+            name, ::std::move(window), pos, visible, updatable
+        );
+    }
+}
+
 TextField *Window::get_text_field(const std::string &name) {
     if (m_text_fields.find(name) == m_text_fields.end()) {
         return nullptr;

@@ -28,6 +28,10 @@ public:
         return m_y;
     };
 
+    bool operator==(const Point &other) const {
+        return m_x == other.m_x && m_y == other.m_y;
+    }
+
     friend Point operator+(const Point &lhs, const Point &rhs);
     friend Point operator-(const Point &lhs, const Point &rhs);
 };
