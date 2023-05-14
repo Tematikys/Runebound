@@ -102,6 +102,15 @@ public:
         return m_towns;
     }
 
+    void make_boss(const Point &point) {
+        m_map[point.x][point.y].make_boss();
+    }
+
+
+    void delete_boss(const Point &point) {
+        m_map[point.x][point.y].delete_boss();
+    }
+
     [[nodiscard]] bool check_neighbour(const Point &lhs, const Point &rhs)
         const;
 

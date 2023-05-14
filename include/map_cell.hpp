@@ -37,6 +37,11 @@ public:
         m_side_token = runebound::Side::FRONT;
     }
 
+    void delete_boss() {
+        m_token = AdventureType::NOTHING;
+    }
+
+
     void make_special_type_cell(SpecialTypeCell special_type_cell) {
         m_special_type_cell = special_type_cell;
     }
