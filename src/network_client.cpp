@@ -7,21 +7,25 @@
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
+boost::asio::io_context io_context;
+
+void wait() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    io_context.poll();
+}
 
 int main() {
     std::string user_name;
     std::cout << "Write your name:\n";
     std::cin >> user_name;
 
-    boost::asio::io_context io_context;
     boost::asio::executor_work_guard<boost::asio::io_context::executor_type>
         work_guard = boost::asio::make_work_guard(io_context);
 
     runebound::network::Client client(io_context, "127.0.0.1", 4444, user_name);
     try {
         // test commands begin
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        io_context.poll();
+        wait();
 
         std::cout << "List of games:\n";
         for (const auto &e : client.game_names) {
@@ -29,13 +33,11 @@ int main() {
         }
         std::cout << '\n';
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        io_context.poll();
+        wait();
 
         client.add_game("My game");
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        io_context.poll();
+        wait();
 
         std::cout << "List of games:\n";
         for (const auto &e : client.game_names) {
@@ -43,46 +45,56 @@ int main() {
         }
         std::cout << '\n';
         client.join_game("My game");
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        io_context.poll();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        wait();
+
         std::cout << "################";
         for (auto e :
              client.get_game_client().m_remaining_standard_characters) {
             std::cout << static_cast<int>(e);
         }
-        io_context.poll();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        wait();
+        {
+            std::cout<<"Try to get not available character\n";
+            auto chr = client.get_yourself_character();
+            std::cout << "Character: "
+                      << static_cast<int>(chr.get_standard_character()) << '\n';
+        }
         client.select_character(runebound::character::StandardCharacter::CORBIN
         );
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        io_context.poll();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        auto chr = client.get_yourself_character();
-        std::cout << static_cast<int>(chr.get_standard_character())
-                  << "################\n";
-        for (auto e :
-             client.get_game_client().m_remaining_standard_characters) {
-            std::cout << static_cast<int>(e);
+
+        wait();
+        {
+            auto chr = client.get_yourself_character();
+            std::cout << "Character: "
+                      << static_cast<int>(chr.get_standard_character()) << '\n';
+            for (auto e :
+                 client.get_game_client().m_remaining_standard_characters) {
+                std::cout << static_cast<int>(e);
+            }
         }
-        io_context.poll();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        wait();
+
         client.throw_move_dice();
-        io_context.poll();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        wait();
+
         client.make_move(1, 0);
-        io_context.poll();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        wait();
 
         client.take_token();
-        io_context.poll();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        wait();
+
         client.relax();
-        io_context.poll();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        wait();
+
         client.pass();
-        io_context.poll();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        wait();
 
         int counter = 0;
         while (!io_context.stopped()) {
@@ -98,8 +110,7 @@ int main() {
                 counter++;
             }
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            io_context.poll();
+            wait();
         }
     } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
