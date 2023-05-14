@@ -41,7 +41,6 @@ public:
 
     void parse_message(std::string &message) {
         json answer = json::parse(message);
-        game_need_update=true;
         if (answer["change type"] == "game names") {
             game_names = answer["game names"];
         }
@@ -55,6 +54,7 @@ public:
         if (answer["change type"] == "selected character") {
             m_character = answer["character"];
         }
+        game_need_update=true;
     }
 
     void do_read() {
