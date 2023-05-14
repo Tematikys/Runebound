@@ -14,7 +14,7 @@ void from_json(const nlohmann::json &json, GameClient &game);
 struct GameClient {
 public:
     friend struct ::runebound::game::Game;
-    bool is_game_updated = false;
+    bool is_game_need_update = true;
     ::runebound::map::MapClient m_map;
     std::vector<::runebound::character::Character> m_characters;
     std::vector<::runebound::character::StandardCharacter>

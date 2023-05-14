@@ -287,6 +287,12 @@ public:
         return m_game_client;
     }
 
+    bool is_game_need_update(){
+        bool tmp = m_game_client.is_game_need_update;
+        m_game_client.is_game_need_update = false;
+        return tmp;
+    }
+
     void exit() {
         io_context_.stop();
     };
