@@ -199,6 +199,15 @@ public:
     [[nodiscard]] bool is_active() const {
         return m_is_active;
     }
+
+    void add_window_in_window(
+        const std::string &win_name,
+        const ::std::string &name,
+        ::std::unique_ptr<Window> window,
+        Point pos,
+        bool visible,
+        bool updatable
+    );
 };
 }  // namespace runebound::graphics
 

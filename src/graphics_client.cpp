@@ -42,9 +42,10 @@ void Client::load_images() {
 
 void Client::init() {
     init_graphics();
-    init_main_menu();
-    init_char_list();
-    init_game();
+    init_main_menu_window();
+    init_character_list_window();
+    init_game_window();
+//    init_fight_window();
     m_window.set_active_window("main_menu");
     m_window.activate();
 }
@@ -57,9 +58,11 @@ void Client::handle_events() {
                 m_is_running = false;
                 break;
             case SDL_MOUSEBUTTONDOWN:
+                m_need_to_update = true;
                 m_mouse_pressed = true;
                 break;
             case SDL_MOUSEWHEEL:
+                m_need_to_update = true;
                 if (event.wheel.y < 0) {
                     if (m_game_list_start_index + m_game_list_show_amount <
                         m_network_client.get_game_names().size()) {
@@ -76,22 +79,30 @@ void Client::handle_events() {
 }
 
 void Client::render() {
-    SDL_SetRenderDrawColor(m_graphic_renderer, 255, 255, 255, 255);
-    SDL_RenderClear(m_graphic_renderer);
-    m_window.render(m_graphic_renderer, 0, 0);
-    SDL_RenderPresent(m_graphic_renderer);
+    if(m_need_to_update) {
+        ::std::cout << "Rendered!" << m_counter << ::std::endl;
+        SDL_SetRenderDrawColor(m_graphic_renderer, 255, 255, 255, 255);
+        SDL_RenderClear(m_graphic_renderer);
+        m_window.render(m_graphic_renderer, 0, 0);
+        SDL_RenderPresent(m_graphic_renderer);
+        m_need_to_update = false;
+    }
 }
 
 void Client::update() {
     m_io_context.poll();
+    m_prev_mouse_pos = m_mouse_pos;
     update_mouse_pos(m_mouse_pos);
+    if(m_prev_mouse_pos != m_mouse_pos) {
+        m_need_to_update = true;
+    }
     auto active_window = m_window.get_active_window_name();
     if (active_window == "main_menu") {
-        main_menu_update();
+        update_main_menu_window();
     } else if (active_window == "char_list") {
-        char_list_update();
+        update_character_list_window();
     } else if (active_window == "game") {
-        game_update();
+        update_game_window();
     }
     m_window.update(m_mouse_pos, m_mouse_pressed);
     m_mouse_pressed = false;

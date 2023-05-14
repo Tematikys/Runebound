@@ -40,7 +40,7 @@ const int WINDOW_X_OFFSET = 25;
 const int WINDOW_Y_OFFSET = 25;
 const int WINDOW_WIDTH = 960;
 const int WINDOW_HEIGHT = 720;
-const int WINDOW_FPS = 60;
+const int WINDOW_FPS = 10;
 const ::std::map<::runebound::dice::HandDice, ::std::pair<SDL_Color, SDL_Color>>
     DICE_COLOR = {
         {::runebound::dice::HandDice::PLAIN,

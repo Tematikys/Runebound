@@ -1,7 +1,7 @@
 #include <graphics_client.hpp>
 
 namespace runebound::graphics {
-void Client::init_char_list() {
+void Client::init_character_list_window() {
     auto window = ::std::make_unique<Window>(Window(
         m_graphic_renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
         {0xFF, 0xFF, 0xFF, 0xFF}
@@ -56,7 +56,7 @@ void Client::init_char_list() {
     m_window.add_window("char_list", ::std::move(window), {0, 0}, false, false);
 }
 
-void Client::char_list_update() {
+void Client::update_character_list_window() {
     auto *win = m_window.get_window("char_list");
     win->remove_all_buttons();
 

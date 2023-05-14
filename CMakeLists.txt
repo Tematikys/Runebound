@@ -34,12 +34,13 @@ add_executable(graphics_client
         src/graphics.cpp
         src/graphics_board.cpp
         src/graphics_button.cpp
-        src/graphics_char_list.cpp
+        src/graphics_character_list_window.cpp
         src/graphics_client.cpp
         src/graphics_config.cpp
-        src/graphics_game.cpp
+        src/graphics_game_window.cpp
         src/graphics_main.cpp
-        src/graphics_main_menu.cpp
+        src/graphics_main_menu_window.cpp
+        src/graphics_fight_window.cpp
         src/graphics_point.cpp
         src/graphics_segment.cpp
         src/graphics_shapes.cpp

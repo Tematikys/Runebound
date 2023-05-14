@@ -19,8 +19,8 @@ namespace runebound::graphics {
 class Client {
 private:
     Window m_window;
+    bool m_need_to_update{true};
 
-    bool m_joined_to_game{false};
     ::boost::asio::io_context m_io_context;
     ::boost::asio::executor_work_guard<::boost::asio::io_context::executor_type>
         m_work_guard = ::boost::asio::make_work_guard(m_io_context);
@@ -31,20 +31,11 @@ private:
     Point m_board_pos{5, 5};
     ::std::size_t m_game_list_start_index{0};
     ::std::size_t m_game_list_show_amount{10};
-    ::std::vector<Button> m_game_list{};
-    ::std::vector<Point> m_game_list_pos{};
 
     SDL_Window *m_graphic_window{nullptr};
     SDL_Renderer *m_graphic_renderer{nullptr};
     ::std::map<::std::string, TTF_Font *> m_fonts{};
     ::std::map<::std::string, Texture> m_images{};
-
-    ::std::vector<Texture> m_game_textures{};
-    ::std::vector<Button> m_game_buttons{};
-    ::std::vector<Point> m_game_button_pos{};
-    ::std::vector<Button> m_character_list{};
-    ::std::vector<Point> m_character_list_pos{};
-    bool m_character_selected{false};
 
     bool m_is_running{false};
     uint32_t m_frame_time{0};
@@ -53,9 +44,12 @@ private:
 
     bool m_mouse_pressed{false};
     Point m_mouse_pos{};
+    Point m_prev_mouse_pos{};
 
 public:
     Client() = default;
+
+    void update_board();
 
     void load_fonts();
 
@@ -65,23 +59,23 @@ public:
 
     void init_graphics();
 
-    void update_board();
+    void init_game_window();
 
-    void init_game();
+    void init_fight_window();
 
-    void init_char_list();
+    void init_character_list_window();
 
-    void init_main_menu();
+    void init_main_menu_window();
 
     void handle_events();
 
     void render();
 
-    void game_update();
+    void update_game_window();
 
-    void main_menu_update();
+    void update_main_menu_window();
 
-    void char_list_update();
+    void update_character_list_window();
 
     void update();
 
