@@ -115,9 +115,19 @@ public:
                 runebound::character::StandardCharacter character =
                     data["character"];
                 user_character[m_user_name] = m_game->make_character(character);
-                send_selected_character(character);
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
+                if (character ==
+                    runebound::character::StandardCharacter::NONE) {
+                    send_selected_character(character);
+                    for (const std::string &user_name :
+                         game_users[m_game_name]) {
+                        user_connection[user_name]->send_game();
+                    }
+                } else {
+                    for (const std::string &user_name :
+                         game_users[m_game_name]) {
+                        user_connection[user_name]->send_game();
+                    }
+                    send_selected_character(character);
                 }
             }
             if (data["action type"] == "throw move dice") {
