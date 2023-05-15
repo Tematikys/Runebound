@@ -89,6 +89,11 @@ void Character::end_fight() {
     m_current_fight = nullptr;
 }
 
+void Character::end_fight_with_boss() {
+    m_current_state = StateCharacter::NORMAL_GAME;
+    m_current_fight = nullptr;
+}
+
 void to_json(nlohmann::json &json, const Character &character) {
     json["m_hand_limit"] = character.m_hand_limit;
     json["m_speed"] = character.m_speed;

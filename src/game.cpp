@@ -215,12 +215,34 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         ));
         m_characters[(m_turn + m_count_players - 1) % m_count_players]
             ->start_fight_as_enemy();
+        m_map.reverse_token(position);
     }
     m_map.reverse_token(position);
     m_characters[m_turn]->update_action_points(-2);
 }
 
+void Game::end_fight_with_boss(const std::shared_ptr<character::Character> &chr
+) {
+    if (chr->get_current_fight() == nullptr) {
+        throw NoFight();
+    }
+    if (chr->get_current_fight()->get_winner() ==
+        fight::Participant::CHARACTER) {
+        m_game_over = true;
+        m_winner = chr->get_standard_character();
+    }
+    chr->end_fight_with_boss();
+    m_characters[(m_turn + m_count_players - 1) % m_count_players]
+        ->end_fight_as_enemy();
+}
+
 void Game::end_fight(const std::shared_ptr<character::Character> &chr) {
+    if (chr->get_cards(AdventureType::FIGHT).empty()) {
+        throw NoCardFight();
+    }
+    if (chr->get_current_fight() == nullptr) {
+        throw NoFight();
+    }
     if (chr->get_current_fight()->get_winner() ==
         fight::Participant::CHARACTER) {
         chr->change_gold(

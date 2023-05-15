@@ -109,6 +109,16 @@ struct NotCalledToFight : std::runtime_error {
     }
 };
 
+struct NoCardFight : std::runtime_error {
+    NoCardFight() : std::runtime_error("No fight card.") {
+    }
+};
+
+struct NoFight : std::runtime_error {
+    NoFight() : std::runtime_error("No fight.") {
+    }
+};
+
 struct Game {
 private:
     friend struct GameClient;
@@ -122,6 +132,7 @@ private:
     unsigned int m_count_players = 0;
     unsigned int m_number_of_rounds = 0;
 
+    character::StandardCharacter m_winner = character::StandardCharacter::NONE;
     Point m_boss_position = {-1, -1};
     std::vector<dice::HandDice> m_last_dice_movement_result;
     std::vector<dice::HandDice> m_last_dice_relax_result;
@@ -342,6 +353,12 @@ public:
         }
         receiver->refuse_to_fight();
     }
+
+    [[nodiscard]] character::StandardCharacter get_winner() const {
+        return m_winner;
+    }
+
+    void end_fight_with_boss(const std::shared_ptr<character::Character> &chr);
 
     void accept_to_fight(const std::shared_ptr<character::Character> &receiver);
 

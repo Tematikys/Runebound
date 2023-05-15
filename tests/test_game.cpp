@@ -382,3 +382,60 @@ TEST_CASE("boss in game") {
     game.start_next_character_turn(corbin);
     CHECK(game.check_end_game() == true);
 }
+
+TEST_CASE("fight with boss in game") {
+    runebound::game::Game game;
+    auto corbin =
+        game.make_character(runebound::character::StandardCharacter::CORBIN);
+    for (int i = 0; i < 12; ++i) {
+        game.start_next_character_turn(corbin);
+    }
+    CHECK(
+        game.get_map().get_cell_map(runebound::Point(11, 6)).get_token() ==
+        runebound::AdventureType::BOSS
+    );
+    corbin->set_position(runebound::Point(11, 6));
+    auto lord = game.make_character(
+        runebound::character::StandardCharacter::LORD_HAWTHORNE
+    );
+    game.take_token(corbin);
+    auto fight = corbin->get_current_fight();
+    CHECK(corbin->get_state() == runebound::character::StateCharacter::FIGHT);
+    CHECK(lord->get_state() == runebound::character::StateCharacter::ENEMY);
+    CHECK(fight != nullptr);
+    CHECK(fight->get_health_enemy() == 15);
+    corbin->update_health(-corbin->get_health());
+    CHECK(fight->check_end_fight() == true);
+    CHECK(fight->get_winner() == runebound::fight::Participant::ENEMY);
+    game.end_fight_with_boss(corbin);
+    CHECK(game.check_end_game() == false);
+    CHECK(game.get_winner() == runebound::character::StandardCharacter::NONE);
+    CHECK(corbin->get_health() == 0);
+    CHECK(
+        corbin->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
+    CHECK(
+        lord->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
+    game.start_next_character_turn(corbin);
+    lord->set_position(runebound::Point(11, 6));
+    game.take_token(lord);
+    auto lord_fight = lord->get_current_fight();
+    CHECK(corbin->get_state() == runebound::character::StateCharacter::ENEMY);
+    CHECK(lord->get_state() == runebound::character::StateCharacter::FIGHT);
+    CHECK(lord_fight->get_health_enemy() == 15);
+    lord_fight->get_enemy()->update_health(-15);
+    CHECK(lord_fight->get_winner() == runebound::fight::Participant::CHARACTER);
+    game.end_fight_with_boss(lord);
+    CHECK(game.check_end_game() == true);
+    CHECK(
+        game.get_winner() ==
+        runebound::character::StandardCharacter::LORD_HAWTHORNE
+    );
+    CHECK(
+        corbin->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
+    CHECK(
+        lord->get_state() == runebound::character::StateCharacter::NORMAL_GAME
+    );
+}

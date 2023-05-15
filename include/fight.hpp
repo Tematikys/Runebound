@@ -255,7 +255,10 @@ public:
         if (!check_end_fight()) {
             throw FightIsStillOnException();
         }
-        return m_turn;
+        if (m_enemy.get_health() == 0) {
+            return Participant::CHARACTER;
+        }
+        return Participant::ENEMY;
     }
 
     [[nodiscard]] Enemy *get_enemy() {
