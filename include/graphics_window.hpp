@@ -103,6 +103,8 @@ public:
 
     void set_updatability_button(const ::std::string &name, bool state);
 
+    void set_all_updatability_button(bool state);
+
     void set_visibility_button(const ::std::string &name, bool state);
 
     void remove_button(const ::std::string &name);

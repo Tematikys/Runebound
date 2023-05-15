@@ -9,27 +9,6 @@ void Client::init_game_window() {
     Texture texture;
     Button button;
 
-    // ===== FIGHT BUTTON =====
-    texture.load_text_from_string(
-        m_graphic_renderer, m_fonts["FreeMono30"], "Fight",
-        {0x00, 0x00, 0x00, 0xFF}
-    );
-    button = Button(
-        10 * 30 * 3 / 5, 30, HorizontalButtonTextureAlign::CENTER,
-        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-        [this]() {
-            m_window.get_window("game")->get_window("fight")->activate();
-            m_window.get_window("game")->set_visibility_window("fight", true);
-            m_window.get_window("game")->set_updatability_window("fight", true);
-        },
-        []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    );
-    window->add_button(
-        "fight", button,
-        {WINDOW_WIDTH - 10 * 30 * 3 / 5 - 5, WINDOW_HEIGHT - 35 * 7}, true, true
-    );
-    // ===== FIGHT BUTTON =====
-
     // ===== THROW DICE BUTTON =====
     texture.load_text_from_string(
         m_graphic_renderer, m_fonts["FreeMono30"], "Throw dice",
@@ -126,48 +105,6 @@ void Client::init_game_window() {
     // ===== EXIT BUTTON =====
 
     m_window.add_window("game", ::std::move(window), {0, 0}, false, false);
-
-    // FIGHT WINDOW
-    // VVVVVVVVVVVV
-
-    window = ::std::make_unique<Window>(Window(
-        m_graphic_renderer, WINDOW_WIDTH * 3 / 4, WINDOW_HEIGHT * 3 / 4,
-        {0xFF, 0xFF, 0xFF, 0xFF}
-    ));
-
-    // ===== CLOSE BUTTON =====
-    texture.load_text_from_string(
-        m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
-        {0x00, 0x00, 0x00, 0xFF}
-    );
-    button = Button(
-        10 * 30 * 3 / 5, 30, HorizontalButtonTextureAlign::CENTER,
-        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-        [this]() {
-            ::std::cout << "Clicked!" << ::std::endl;
-            m_window.get_window("game")->get_window("fight")->deactivate();
-            m_window.get_window("game")->set_visibility_window("fight", false);
-            m_window.get_window("game")->set_updatability_window(
-                "fight", false
-            );
-        },
-        []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-    );
-    window->add_button(
-        "exit", button,
-        {WINDOW_WIDTH * 3 / 4 - 10 * 30 * 3 / 5 - 5,
-         WINDOW_HEIGHT * 3 / 4 - 35 * 1},
-        true, true
-    );
-    // ===== CLOSE BUTTON =====
-
-    m_window.get_window("game")->add_window(
-        "fight", ::std::move(window), {WINDOW_WIDTH / 8, WINDOW_HEIGHT / 8},
-        false, false
-    );
-
-    // AAAAAAAAAAAA
-    // FIGHT WINDOW
 
     // CHARACTERS WINDOW
     // VVVVVVVVVVVV
@@ -272,44 +209,35 @@ void Client::update_game_window() {
 
     {  // TAKE TOKEN
         win->remove_button("take_token");
-        //        ::std::cout << (m_network_client.m_character !=
-        //        ::runebound::character::StandardCharacter::NONE) <<
-        //        ::std::endl; if (m_network_client.m_character !=
-        //        ::runebound::character::StandardCharacter::NONE) {
-        //            const auto me = m_network_client.get_yourself_character();
-        //            ::std::cout << (m_network_client.m_character ==
-        //            ::runebound::character::StandardCharacter::NONE) <<
-        //            ::std::endl;
-        //            ::std::cout << me.get_name() << ::std::endl;
-        //            const auto &pos = me.get_position();
-        //            const auto &cell =
-        //                m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
-        //
-        //            if (cell.get_token() !=
-        //            ::runebound::AdventureType::NOTHING) {
-        //                texture.load_text_from_string(
-        //                    m_graphic_renderer, m_fonts["FreeMono30"], "Take
-        //                    token", {0x00, 0x00, 0x00, 0xFF}
-        //                );
-        //                Button button(
-        //                    10 * 30 * 3 / 5, 30,
-        //                    HorizontalButtonTextureAlign::CENTER,
-        //                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-        //                    [this]() { m_network_client.take_token(); }, []()
-        //                    {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00,
-        //                    0xFF}
-        //                );
-        //                win->add_button(
-        //                    "take_token", button,
-        //                    {WINDOW_WIDTH - 10 * 30 * 3 / 5 - 5,
-        //                     WINDOW_HEIGHT - 35 * 6},
-        //                    true, true
-        //                );
-        //            }
-        //        }
-        //        else {
-        //            ::std::cout << "ELSE" << ::std::endl;
-        //        }
+        if (m_network_client.m_character !=
+            ::runebound::character::StandardCharacter::NONE) {
+            const auto me = m_network_client.get_yourself_character();
+            const auto &pos = me.get_position();
+            const auto &cell =
+                m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
+
+            if (cell.get_token() != ::runebound::AdventureType::NOTHING) {
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono30"], "Take token",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                Button button(
+                    10 * 30 * 3 / 5, 30, HorizontalButtonTextureAlign::CENTER,
+                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                    [this]() { m_network_client.take_token(); }, []() {},
+                    {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                );
+                win->add_button(
+                    "take_token", button,
+                    {WINDOW_WIDTH - 10 * 30 * 3 / 5 - 5,
+                     WINDOW_HEIGHT - 35 * 6},
+                    true, true
+                );
+            }
+        } else {
+            ::std::cout << "[[graphics log]] :: take token no self"
+                        << ::std::endl;
+        }
     }  // TAKE TOKEN
 
     {  // UPDATE CHARACTERS
@@ -450,5 +378,18 @@ void Client::update_game_window() {
         SDL_DestroyTexture(tex);
         texture.free();
     }  // UPDATE CHARACTERS
+
+    if (m_network_client.get_game_client().is_fight) {
+        win->get_window("fight")->activate();
+        win->set_visibility_window("fight", true);
+        win->set_updatability_window("fight", true);
+        win->set_all_updatability_button(false);
+        update_fight_window();
+    } else {
+        win->get_window("fight")->deactivate();
+        win->set_visibility_window("fight", false);
+        win->set_updatability_window("fight", false);
+        win->set_all_updatability_button(true);
+    }
 }
 }  // namespace runebound::graphics
