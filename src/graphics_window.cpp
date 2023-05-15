@@ -71,14 +71,12 @@ void Window::render(
     }
 
     for (const auto &[name, texture] : m_textures) {
-//        ::std::cout << name << ' ' << texture.width() << ' ' << texture.height() << ::std::endl;
         if (m_texture_visible.at(name)) {
             texture.render(
                 renderer, m_texture_pos.at(name).x(), m_texture_pos.at(name).y()
             );
         }
     }
-//    ::std::cout << ::std::endl;
 
     for (const auto &[name, window] : m_windows) {
         if (m_window_visible.at(name)) {
@@ -217,6 +215,12 @@ void Window::set_updatability_button(const std::string &name, bool state) {
         return;
     }
     m_button_updatable[name] = state;
+}
+
+void Window::set_all_updatability_button(bool state) {
+    for (const auto &[name, button] : m_buttons) {
+        set_updatability_button(name, state);
+    }
 }
 
 void Window::set_visibility_button(const std::string &name, bool state) {

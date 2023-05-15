@@ -6,6 +6,14 @@ const ::std::vector<::std::pair<::std::string, ::std::string>> FONTS = {
 const ::std::vector<::std::pair<::std::string, ::std::string>> IMAGES = {
     {"data/images/heart20.png", "heart20"},
     {"data/images/coin20.png", "coin20"},
+    {"data/images/shield.png", "shield"},
+    {"data/images/shield_init.png", "shield_init"},
+    {"data/images/damage.png", "damage"},
+    {"data/images/damage_init.png", "damage_init"},
+    {"data/images/magic.png", "magic"},
+    {"data/images/magic_init.png", "magic_init"},
+    {"data/images/none.png", "none"},
+    {"data/images/none_init.png", "none_init"},
     {"data/images/LISSA.png", "Lissa"},
     {"data/images/LISSA40.png", "Lissa40"},
     {"data/images/CORBIN.png", "Corbin"},
@@ -46,7 +54,7 @@ const ::std::map<::std::pair<int, int>, ::std::pair<int, int>>
 const ::std::string WINDOW_TITLE = "Runebound-0.2";
 const int WINDOW_X_OFFSET = 25;
 const int WINDOW_Y_OFFSET = 25;
-const int WINDOW_WIDTH = 960;
+const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 const int WINDOW_FPS = 10;
 const ::std::map<::runebound::dice::HandDice, ::std::pair<SDL_Color, SDL_Color>>

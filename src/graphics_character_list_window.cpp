@@ -136,8 +136,7 @@ void Client::update_character_list_window() {
             {0x00, 0x00, 0x00, 0xFF}
         );
         button = Button(
-            texture.width(), 30,
-            HorizontalButtonTextureAlign::CENTER,
+            texture.width(), 30, HorizontalButtonTextureAlign::CENTER,
             VerticalButtonTextureAlign::CENTER, 0, 0, texture,
             [character, this]() {
                 m_network_client.select_character(character);
@@ -149,9 +148,7 @@ void Client::update_character_list_window() {
             },
             []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
         );
-        win->add_button(
-            name, button, {5, i * 35 + 5}, true, true
-        );
+        win->add_button(name, button, {5, i * 35 + 5}, true, true);
         ++i;
     }
 }

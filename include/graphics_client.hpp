@@ -77,6 +77,8 @@ public:
 
     void update_character_list_window();
 
+    void update_fight_window();
+
     void update();
 
     void tick();
