@@ -24,6 +24,8 @@ void to_json(nlohmann::json &json, const GameClient &game) {
     json["m_last_characteristic_check"] = game.m_last_characteristic_check;
     json["m_last_possible_outcomes"] = game.m_last_possible_outcomes;
 
+    json["m_shops"] = game.m_shops;
+
     json["is_fight"] = game.is_fight;
     if (game.is_fight) {
         json["m_fight_client"] = game.m_fight_client;
@@ -67,6 +69,8 @@ void from_json(const nlohmann::json &json, GameClient &game) {
         json["m_last_possible_outcomes"].begin(),
         json["m_last_possible_outcomes"].end()
     );
+
+    game.m_shops = json["m_shops"];
 
     game.is_fight = json["is_fight"];
     if (game.is_fight) {
