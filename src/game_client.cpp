@@ -9,6 +9,11 @@ namespace runebound::game {
 void to_json(nlohmann::json &json, const GameClient &game) {
     json["m_map"] = game.m_map;
 
+    json["m_game_over"] = game.m_game_over;
+    json["m_turn"] = game.m_turn;
+    json["m_count_players"] = game.m_count_players;
+    json["m_number_of_rounds"] = game.m_number_of_rounds;
+
     json["m_characters"] = game.m_characters;
     json["m_remaining_standard_characters"] =
         game.m_remaining_standard_characters;
@@ -27,6 +32,11 @@ void to_json(nlohmann::json &json, const GameClient &game) {
 
 void from_json(const nlohmann::json &json, GameClient &game) {
     game.m_map = json["m_map"];
+
+    game.m_game_over = json["m_game_over"];
+    game.m_turn = json["m_turn"];
+    game.m_count_players = json["m_count_players"];
+    game.m_number_of_rounds = json["m_number_of_rounds"];
 
     game.m_characters = json["m_characters"];
     game.m_remaining_standard_characters =

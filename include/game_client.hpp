@@ -17,6 +17,11 @@ public:
 
     ::runebound::map::MapClient m_map;
 
+    bool m_game_over = false;
+    unsigned int m_turn = 0;
+    unsigned int m_count_players = 0;
+    unsigned int m_number_of_rounds = 0;
+
     std::vector<::runebound::character::Character> m_characters;
     std::vector<::runebound::character::StandardCharacter>
         m_remaining_standard_characters;
@@ -27,13 +32,22 @@ public:
     std::vector<unsigned int> m_last_characteristic_check;
     std::vector<std::size_t> m_last_possible_outcomes;
 
+    std::map<Point, std::set<unsigned int>> m_shops;
+
     bool is_fight = false;
     runebound::fight::FightClient m_fight_client;
 
     GameClient() = default;
 
     explicit GameClient(const Game &game)
-        : m_map(game.get_map()),
+        : m_map(game.m_map),
+
+          m_game_over(game.m_game_over),
+          m_turn(game.m_turn),
+          m_count_players(game.m_count_players),
+          m_number_of_rounds(game.m_number_of_rounds),
+          m_shops(game.m_shops),
+
           m_characters(game.get_character_without_shared_ptr()),
           m_last_dice_movement_result(game.m_last_dice_movement_result),
           m_last_dice_relax_result(game.m_last_dice_relax_result),
@@ -49,7 +63,6 @@ public:
         if ((game.m_characters.size() != 0) &&
             (game.m_characters[game.m_turn]->get_current_fight())) {
             is_fight = true;
-            //            std::cout << "fight!!!\n";
             fight::FightClient fight_client(
                 *game.m_characters[game.m_turn]->get_current_fight()
             );
