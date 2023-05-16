@@ -256,6 +256,45 @@ public:
         data["option"] = option;
         do_write(data.dump());
     }
+    void start_trade(){
+        json data;
+        data["action type"] = "trade";
+        data["trade command"] = "start_trade";
+        do_write(data.dump());
+    }
+
+    void sell_product_in_town(unsigned int product) {
+        json data;
+        data["action type"] = "trade";
+        data["trade command"] = "sell_product_in_town";
+        data["product"] = product;
+        do_write(data.dump());
+    }
+
+    void buy_product(unsigned int product) {
+        json data;
+        data["action type"] = "trade";
+        data["trade command"] = "buy_product";
+        data["product"] = product;
+        do_write(data.dump());
+    }
+
+    void sell_product_in_special_cell(unsigned int product) {
+        json data;
+        data["action type"] = "trade";
+        data["trade command"] = "sell_product_in_special_cell";
+        data["product"] = product;
+        do_write(data.dump());
+    }
+
+    void discard_product(unsigned int product) {
+        json data;
+        data["action type"] = "trade";
+        data["trade command"] = "discard_product";
+        data["product"] = product;
+        do_write(data.dump());
+    }
+
 
     [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
         return m_game_client.m_last_dice_movement_result;

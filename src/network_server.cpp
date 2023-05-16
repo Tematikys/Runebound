@@ -236,6 +236,28 @@ public:
                 }
             }
 
+            if (data["action type"] == "trade") {
+                if (data["trade command"] == "start_trade") {
+                    m_game->start_trade(user_character[m_user_name]);
+                } else if (data["trade command"] == "sell_product_in_town") {
+                    m_game->sell_product_in_town(
+                        user_character[m_user_name], data["product"]
+                    );
+                } else if (data["trade command"] == "buy_product") {
+                    m_game->buy_product(
+                        user_character[m_user_name], data["product"]
+                    );
+                } else if (data["trade command"] == "sell_product_in_special_cell") {
+                    m_game->sell_product_in_special_cell(
+                        user_character[m_user_name], data["product"]
+                    );
+                } else if (data["trade command"] == "discard_product") {
+                    m_game->discard_product(
+                        user_character[m_user_name], data["product"]
+                    );
+                }
+            }
+
             if (data["action type"] == "adventure") {
                 if (data["adventure command"] == "throw_research_dice") {
                     m_game->throw_research_dice(user_character[m_user_name]);
