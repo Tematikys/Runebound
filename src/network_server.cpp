@@ -163,11 +163,6 @@ public:
             }
 
             if (data["action type"] == "fight") {
-                //                if (data["fight command"] == "start round") {
-                //                    user_character[m_user_name]
-                //                        ->get_current_fight()
-                //                        ->start_round();
-                //                }
                 if (data["fight command"] == "end fight") {
                     m_game->end_fight(user_character[m_user_name]);
                 }
