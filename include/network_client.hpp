@@ -166,18 +166,16 @@ public:
     }
 
     void fight_make(
-        runebound::fight::Participant participant_character,
-        runebound::fight::Participant participant_enemy,
-        std::vector<runebound::fight::TokenHandCount> &tokens_character,
+        runebound::fight::Participant participant,
+        std::vector<runebound::fight::TokenHandCount> &tokens_me,
         std::vector<runebound::fight::TokenHandCount> &tokens_enemy
     ) {
         json data;
         data["action type"] = "fight";
         data["fight command"] = "use tokens";
         data["token type"] = "invalid";
-        data["participant_character"] = participant_character;
-        data["participant_enemy"] = participant_enemy;
-        data["tokens_character"] = tokens_character;
+        data["participant"] = participant;
+        data["tokens_me"] = tokens_me;
         data["tokens_enemy"] = tokens_enemy;
         do_write(data.dump());
     }
