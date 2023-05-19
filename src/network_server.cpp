@@ -176,11 +176,12 @@ public:
                         runebound::fight::Participant participant_me =
                             data["participant"];
                         runebound::fight::Participant participant_enemy =
-                            static_cast<runebound::fight::Participant>(
-                                (static_cast<int>(participant_me) + 1) % 2
-                            );
+                            (participant_me ==
+                             runebound::fight::Participant::CHARACTER)
+                                ? runebound::fight::Participant::ENEMY
+                                : runebound::fight::Participant::CHARACTER;
                         if (tokens_character.size() == 0) {
-                            throw std::runtime_error("net");
+                            throw std::runtime_error("0 size");
                         }
                         // Dexterity
                         for (auto token : tokens_character) {
@@ -195,7 +196,7 @@ public:
                                             tokens_enemy[0], participant_enemy
                                         );
                                 } else {
-                                    if ((tokens_enemy.size() == 0) &&
+                                    if ((tokens_enemy.empty()) &&
                                         (tokens_character.size() == 2)) {
                                         if (tokens_character[0].hand ==
                                             runebound::fight::HandFightTokens::
@@ -219,7 +220,9 @@ public:
                                                 );
                                         }
                                     } else {
-                                        throw std::runtime_error("Net");
+                                        throw std::runtime_error(
+                                            "Wrong dexterity"
+                                        );
                                     }
                                 }
                             }
@@ -228,7 +231,7 @@ public:
                         for (auto token : tokens_character) {
                             if (token.hand ==
                                 runebound::fight::HandFightTokens::DOUBLING) {
-                                if ((tokens_enemy.size() == 0) &&
+                                if ((tokens_enemy.empty()) &&
                                     (tokens_character.size() == 2)) {
                                     if (tokens_character[0].hand ==
                                         runebound::fight::HandFightTokens::
@@ -250,17 +253,17 @@ public:
                                             );
                                     }
                                 } else {
-                                    throw std::runtime_error("Net");
+                                    throw std::runtime_error("Wrong doubling");
                                 }
                             }
                         }
                         // Damadge
-                        if (tokens_enemy.size() == 0) {
+                        if (tokens_enemy.empty()) {
                             user_character[m_user_name]
                                 ->get_current_fight()
                                 ->make_damage(participant_me, tokens_character);
                         } else {
-                            throw std::runtime_error("Net");
+                            throw std::runtime_error("Wrong damadge");
                         }
                     }
 
@@ -420,10 +423,12 @@ void Connection::send_selected_character(
 
 void Connection::send_game() {
     json answer;
-    auto fight = user_character[m_user_name]->get_current_fight();
-    if (fight != nullptr) {
-        if (fight->check_end_round()) {
-            fight->start_round();
+    if (user_character.contains(m_user_name)) {
+        auto fight = user_character[m_user_name]->get_current_fight();
+        if (fight != nullptr) {
+            if (fight->check_end_round()) {
+                fight->start_round();
+            }
         }
     }
     auto game = ::runebound::game::GameClient(*m_game);
