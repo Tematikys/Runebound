@@ -6,6 +6,8 @@ const ::std::vector<::std::pair<::std::string, ::std::string>> FONTS = {
 const ::std::vector<::std::pair<::std::string, ::std::string>> IMAGES = {
     {"data/images/heart20.png", "heart20"},
     {"data/images/coin20.png", "coin20"},
+    {"data/images/fight_token.png", "fight_token"},
+    {"data/images/fight_token_selected.png", "fight_token_selected"},
     {"data/images/shield.png", "shield"},
     {"data/images/shield_init.png", "shield_init"},
     {"data/images/damage.png", "damage"},
@@ -14,6 +16,26 @@ const ::std::vector<::std::pair<::std::string, ::std::string>> IMAGES = {
     {"data/images/magic_init.png", "magic_init"},
     {"data/images/none.png", "none"},
     {"data/images/none_init.png", "none_init"},
+    {"data/images/double.png", "double"},
+    {"data/images/double_init.png", "double_init"},
+    {"data/images/dexterity.png", "dexterity"},
+    {"data/images/dexterity_init.png", "dexterity_init"},
+    {"data/images/skull.png", "skull"},
+    {"data/images/skull_init.png", "skull_init"},
+    {"data/images/shield32.png", "shield32"},
+    {"data/images/shield_init32.png", "shield_init32"},
+    {"data/images/damage32.png", "damage32"},
+    {"data/images/damage_init32.png", "damage_init32"},
+    {"data/images/magic32.png", "magic32"},
+    {"data/images/magic_init32.png", "magic_init32"},
+    {"data/images/none32.png", "none32"},
+    {"data/images/none_init32.png", "none_init32"},
+    {"data/images/double32.png", "double32"},
+    {"data/images/double_init32.png", "double_init32"},
+    {"data/images/dexterity32.png", "dexterity32"},
+    {"data/images/dexterity_init32.png", "dexterity_init32"},
+    {"data/images/skull32.png", "skull32"},
+    {"data/images/skull_init32.png", "skull_init32"},
     {"data/images/LISSA.png", "Lissa"},
     {"data/images/LISSA40.png", "Lissa40"},
     {"data/images/CORBIN.png", "Corbin"},
@@ -53,7 +75,7 @@ const ::std::map<::std::pair<int, int>, ::std::pair<int, int>>
                         {{1, -1}, {1, 2}}, {{1, 1}, {5, 0}}};
 const ::std::string WINDOW_TITLE = "Runebound-0.2";
 const int WINDOW_X_OFFSET = 25;
-const int WINDOW_Y_OFFSET = 25;
+const int WINDOW_Y_OFFSET = 50;
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 const int WINDOW_FPS = 10;

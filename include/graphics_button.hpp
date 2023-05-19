@@ -66,6 +66,14 @@ public:
         m_on_cover_function();
     }
 
+    [[nodiscard]] int width() const {
+        return m_width;
+    }
+
+    [[nodiscard]] int height() const {
+        return m_height;
+    }
+
     [[nodiscard]] bool in_bounds(const Point &p) const {
         return 0 <= p.x() && p.x() < m_width && 0 <= p.y() && p.y() < m_height;
     }
@@ -127,6 +135,14 @@ public:
 
     void on_cover() const {
         m_button.on_cover();
+    }
+
+    [[nodiscard]] int width() const {
+        return m_button.width();
+    }
+
+    [[nodiscard]] int height() const {
+        return m_button.height();
     }
 
     [[nodiscard]] bool in_bounds(const Point &p) const {

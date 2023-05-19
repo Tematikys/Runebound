@@ -327,9 +327,6 @@ void Window::remove_texture(const ::std::string &name) {
 }
 
 void Window::remove_all_textures() {
-    for (auto &[name, texture] : m_textures) {
-        remove_texture(name);
-    }
     m_textures.clear();
     m_texture_pos.clear();
     m_texture_visible.clear();

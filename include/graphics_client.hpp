@@ -63,6 +63,8 @@ public:
 
     void init_fight_window();
 
+    void init_shop_window();
+
     void init_character_list_window();
 
     void init_main_menu_window();
@@ -78,6 +80,8 @@ public:
     void update_character_list_window();
 
     void update_fight_window();
+
+    void update_shop_window();
 
     void update();
 

@@ -42,10 +42,15 @@ void Client::load_images() {
 
 void Client::init() {
     init_graphics();
+    m_window = Window(
+        m_graphic_renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
+        {0xFF, 0xFF, 0xFF, 0xFF}
+    );
     init_main_menu_window();
     init_character_list_window();
     init_game_window();
     init_fight_window();
+    init_shop_window();
     m_window.set_active_window("main_menu");
     m_window.activate();
 }
