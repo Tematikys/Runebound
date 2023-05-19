@@ -180,51 +180,6 @@ public:
         do_write(data.dump());
     }
 
-    void fight_make_doubling(
-        runebound::fight::Participant participant,
-        runebound::fight::TokenHandCount token1,
-        runebound::fight::TokenHandCount token2
-    ) {
-        json data;
-        data["action type"] = "fight";
-        data["fight command"] = "use tokens";
-        data["token type"] = "doubling";
-        data["participant"] = participant;
-        data["token1"] = token1;
-        data["token2"] = token2;
-        do_write(data.dump());
-    }
-
-    void fight_make_dexterity(
-        runebound::fight::Participant participant1,
-        runebound::fight::TokenHandCount token1,
-        runebound::fight::TokenHandCount token2,
-        runebound::fight::Participant participant2
-    ) {
-        json data;
-        data["action type"] = "fight";
-        data["fight command"] = "use tokens";
-        data["token type"] = "dexterity";
-        data["participant1"] = participant1;
-        data["participant2"] = participant2;
-        data["token1"] = token1;
-        data["token2"] = token2;
-        do_write(data.dump());
-    }
-
-    void fight_make_damage(
-        runebound::fight::Participant participant,
-        std::vector<runebound::fight::TokenHandCount> &tokens
-    ) {
-        json data;
-        data["action type"] = "fight";
-        data["fight command"] = "use tokens";
-        data["token type"] = "damage";
-        data["participant"] = participant;
-        data["tokens"] = tokens;
-        do_write(data.dump());
-    }
-
     void fight_pass(runebound::fight::Participant participant) {
         json data;
         data["action type"] = "fight";
