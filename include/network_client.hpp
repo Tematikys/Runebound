@@ -156,7 +156,7 @@ public:
         do_write(data.dump());
     }
 
-    void fight_start_round() {
+    void fight_start_round() { //не юзать
         json data;
         data["action type"] = "fight";
         data["fight command"] = "start round";
@@ -167,6 +167,24 @@ public:
         json data;
         data["action type"] = "fight";
         data["fight command"] = "end fight";
+        do_write(data.dump());
+    }
+
+    void fight_make(  // character и enemy считать тот кто действует и на кого
+                      // действует, а не как персонаж и монстр.
+        runebound::fight::Participant participant_character,
+        runebound::fight::Participant participant_enemy,
+        std::vector<runebound::fight::TokenHandCount> &tokens_character,
+        std::vector<runebound::fight::TokenHandCount> &tokens_enemy
+    ) {
+        json data;
+        data["action type"] = "fight";
+        data["fight command"] = "use tokens";
+        data["token type"] = "invalid";
+        data["participant_character"] = participant_character;
+        data["participant_enemy"] = participant_enemy;
+        data["tokens_character"] = tokens_character;
+        data["tokens_enemy"] = tokens_enemy;
         do_write(data.dump());
     }
 
@@ -256,7 +274,8 @@ public:
         data["option"] = option;
         do_write(data.dump());
     }
-    void start_trade(){
+
+    void start_trade() {
         json data;
         data["action type"] = "trade";
         data["trade command"] = "start_trade";
@@ -295,14 +314,13 @@ public:
         do_write(data.dump());
     }
 
-
     [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
         return m_game_client.m_last_dice_movement_result;
     };
 
     [[nodiscard]] character::Character get_yourself_character() const {
         if (m_character == runebound::character::StandardCharacter::NONE) {
-            std::cout<<"Character is not selected, yet\n";
+            std::cout << "Character is not selected, yet\n";
             throw std::runtime_error("Character is not selected, yet");
         }
         for (auto &character : m_game_client.m_characters) {
@@ -310,7 +328,7 @@ public:
                 return character;
             }
         }
-        std::cout<<"Hehe\n";
+        std::cout << "Hehe\n";
     }
 
     [[nodiscard]] const std::vector<std::string> &get_game_names() const {
