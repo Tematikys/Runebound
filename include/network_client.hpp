@@ -45,7 +45,9 @@ public:
             game_names = answer["game names"];
         }
         if (answer["change type"] == "game") {
+#ifdef NETWORK_DEBUG_INFO
             std::cout << "Game changed, maybe\n";
+#endif
             runebound::game::from_json(answer, m_game_client);
         }
         if (answer["change type"] == "exception") {
@@ -156,13 +158,6 @@ public:
         do_write(data.dump());
     }
 
-    void fight_start_round() { //не юзать
-        json data;
-        data["action type"] = "fight";
-        data["fight command"] = "start round";
-        do_write(data.dump());
-    }
-
     void fight_end_fight() {
         json data;
         data["action type"] = "fight";
@@ -170,8 +165,7 @@ public:
         do_write(data.dump());
     }
 
-    void fight_make(  // character и enemy считать тот кто действует и на кого
-                      // действует, а не как персонаж и монстр.
+    void fight_make(
         runebound::fight::Participant participant_character,
         runebound::fight::Participant participant_enemy,
         std::vector<runebound::fight::TokenHandCount> &tokens_character,
@@ -328,7 +322,6 @@ public:
                 return character;
             }
         }
-        std::cout << "Hehe\n";
     }
 
     [[nodiscard]] const std::vector<std::string> &get_game_names() const {
