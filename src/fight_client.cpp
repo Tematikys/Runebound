@@ -10,6 +10,8 @@ void to_json(nlohmann::json &json, const FightClient &fight) {
 
     json["m_enemy_remaining_tokens"] = fight.m_enemy_remaining_tokens;
     json["m_character_remaining_tokens"] = fight.m_character_remaining_tokens;
+
+//    json["is_round_end"] = fight.is_round_end;
 }
 
 void from_json(const nlohmann::json &json, FightClient &fight) {
@@ -21,5 +23,7 @@ void from_json(const nlohmann::json &json, FightClient &fight) {
 
     fight.m_enemy_remaining_tokens = json["m_enemy_remaining_tokens"];
     fight.m_character_remaining_tokens = json["m_character_remaining_tokens"];
+
+//    fight.is_round_end = json["is_round_end"];
 }
 }  // namespace runebound::fight

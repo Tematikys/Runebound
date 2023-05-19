@@ -8,6 +8,7 @@ struct FightClient {
     friend struct Character;
 
     Participant m_turn = Participant::CHARACTER;
+//    bool is_round_end = false;
     bool m_pass_character = false;
     bool m_pass_enemy = false;
     ::runebound::character::Character m_character;
@@ -24,11 +25,17 @@ struct FightClient {
         m_enemy = *(fight.get_enemy());
         m_enemy_remaining_tokens = fight.m_enemy_remaining_tokens;
         m_character_remaining_tokens = fight.m_character_remaining_tokens;
+
+//        is_round_end = fight.check_end_round();
     }
 
     bool check_end_fight() const {
         return m_character.get_health() == 0 || m_enemy.get_health() == 0;
     }
+
+//    bool check_end_round() const {
+//        return is_round_end;
+//    }
 
     [[nodiscard]] Participant get_turn() const {
         return m_turn;

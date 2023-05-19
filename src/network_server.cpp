@@ -163,23 +163,115 @@ public:
             }
 
             if (data["action type"] == "fight") {
-                if (data["fight command"] == "start round") {
-                    user_character[m_user_name]
-                        ->get_current_fight()
-                        ->start_round();
-                }
+                //                if (data["fight command"] == "start round") {
+                //                    user_character[m_user_name]
+                //                        ->get_current_fight()
+                //                        ->start_round();
+                //                }
                 if (data["fight command"] == "end fight") {
                     m_game->end_fight(user_character[m_user_name]);
                 }
-                //                if (data["fight command"] == "check end
-                //                round"){
-                //
-                //                }
-                //                if (data["fight command"] == "check end
-                //                fight"){
-                //
-                //                }
+
                 if (data["fight command"] == "use tokens") {
+                    if (data["token type"] == "invalid") {
+                        std::vector<runebound::fight::TokenHandCount>
+                            tokens_character = data["tokens_character"];
+                        std::vector<runebound::fight::TokenHandCount>
+                            tokens_enemy = data["tokens_enemy"];
+                        if (tokens_character.size() == 0) {
+                            throw std::runtime_error("net");
+                        }
+                        // Dexterity
+                        for (auto token : tokens_character) {
+                            if (token.hand ==
+                                runebound::fight::HandFightTokens::DEXTERITY) {
+                                if ((tokens_enemy.size() == 1) &&
+                                    (tokens_character.size() == 1)) {
+                                    user_character[m_user_name]
+                                        ->get_current_fight()
+                                        ->make_dexterity(
+                                            data["participant_character"],
+                                            tokens_character[0],
+                                            tokens_enemy[0],
+                                            data["participant_enemy"]
+                                        );
+                                } else {
+                                    if ((tokens_enemy.size() == 0) &&
+                                        (tokens_character.size() == 2)) {
+                                        if (tokens_character[0].hand ==
+                                            runebound::fight::HandFightTokens::
+                                                DEXTERITY) {
+                                            user_character[m_user_name]
+                                                ->get_current_fight()
+                                                ->make_dexterity(
+                                                    data["participant_"
+                                                         "character"],
+                                                    tokens_character[0],
+                                                    tokens_character[1],
+                                                    data["participant_"
+                                                         "character"]
+                                                );
+                                        } else {
+                                            user_character[m_user_name]
+                                                ->get_current_fight()
+                                                ->make_dexterity(
+                                                    data["participant_"
+                                                         "character"],
+                                                    tokens_character[1],
+                                                    tokens_character[0],
+                                                    data["participant_"
+                                                         "character"]
+                                                );
+                                        }
+                                    } else {
+                                        throw std::runtime_error("Net");
+                                    }
+                                }
+                            }
+                        }
+                        // Doubling
+                        for (auto token : tokens_character) {
+                            if (token.hand ==
+                                runebound::fight::HandFightTokens::DOUBLING) {
+                                if ((tokens_enemy.size() == 0) &&
+                                    (tokens_character.size() == 2)) {
+                                    if (tokens_character[0].hand ==
+                                        runebound::fight::HandFightTokens::
+                                            DOUBLING) {
+                                        user_character[m_user_name]
+                                            ->get_current_fight()
+                                            ->make_doubling(
+                                                data["participant_character"],
+                                                tokens_character[0],
+                                                tokens_character[1]
+                                            );
+                                    } else {
+                                        user_character[m_user_name]
+                                            ->get_current_fight()
+                                            ->make_doubling(
+                                                data["participant_character"],
+                                                tokens_character[1],
+                                                tokens_character[0]
+                                            );
+                                    }
+                                } else {
+                                    throw std::runtime_error("Net");
+                                }
+                            }
+                        }
+                        // Damadge
+                        if (tokens_enemy.size() == 0) {
+                            user_character[m_user_name]
+                                ->get_current_fight()
+                                ->make_damage(
+                                    data["participant_character"],
+                                    tokens_character
+                                );
+                        } else {
+                            throw std::runtime_error("Net");
+                        }
+                    }
+
                     if (data["token type"] == "doubling") {
                         runebound::fight::Participant participant =
                             data["participant"];
@@ -336,8 +428,15 @@ void Connection::send_selected_character(
 
 void Connection::send_game() {
     json answer;
+    auto fight = user_character[m_user_name]->get_current_fight();
+    if (fight != nullptr) {
+        if (fight->check_end_round()) {
+            fight->start_round();
+        }
+    }
+    auto game = ::runebound::game::GameClient(*m_game);
     answer["change type"] = "game";
-    runebound::game::to_json(answer, ::runebound::game::GameClient(*m_game));
+    runebound::game::to_json(answer, game);
     write(answer.dump());
 }
 
