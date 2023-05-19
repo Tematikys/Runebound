@@ -170,9 +170,15 @@ public:
                 if (data["fight command"] == "use tokens") {
                     if (data["token type"] == "invalid") {
                         std::vector<runebound::fight::TokenHandCount>
-                            tokens_character = data["tokens_character"];
+                            tokens_character = data["tokens_me"];
                         std::vector<runebound::fight::TokenHandCount>
                             tokens_enemy = data["tokens_enemy"];
+                        runebound::fight::Participant participant_me =
+                            data["participant"];
+                        runebound::fight::Participant participant_enemy =
+                            static_cast<runebound::fight::Participant>(
+                                (static_cast<int>(participant_me) + 1) % 2
+                            );
                         if (tokens_character.size() == 0) {
                             throw std::runtime_error("net");
                         }
@@ -185,10 +191,8 @@ public:
                                     user_character[m_user_name]
                                         ->get_current_fight()
                                         ->make_dexterity(
-                                            data["participant_character"],
-                                            tokens_character[0],
-                                            tokens_enemy[0],
-                                            data["participant_enemy"]
+                                            participant_me, tokens_character[0],
+                                            tokens_enemy[0], participant_enemy
                                         );
                                 } else {
                                     if ((tokens_enemy.size() == 0) &&
@@ -199,23 +203,19 @@ public:
                                             user_character[m_user_name]
                                                 ->get_current_fight()
                                                 ->make_dexterity(
-                                                    data["participant_"
-                                                         "character"],
+                                                    participant_me,
                                                     tokens_character[0],
                                                     tokens_character[1],
-                                                    data["participant_"
-                                                         "character"]
+                                                    participant_me
                                                 );
                                         } else {
                                             user_character[m_user_name]
                                                 ->get_current_fight()
                                                 ->make_dexterity(
-                                                    data["participant_"
-                                                         "character"],
+                                                    participant_me,
                                                     tokens_character[1],
                                                     tokens_character[0],
-                                                    data["participant_"
-                                                         "character"]
+                                                    participant_me
                                                 );
                                         }
                                     } else {
@@ -236,7 +236,7 @@ public:
                                         user_character[m_user_name]
                                             ->get_current_fight()
                                             ->make_doubling(
-                                                data["participant_character"],
+                                                participant_me,
                                                 tokens_character[0],
                                                 tokens_character[1]
                                             );
@@ -244,7 +244,7 @@ public:
                                         user_character[m_user_name]
                                             ->get_current_fight()
                                             ->make_doubling(
-                                                data["participant_character"],
+                                                participant_me,
                                                 tokens_character[1],
                                                 tokens_character[0]
                                             );
@@ -258,10 +258,7 @@ public:
                         if (tokens_enemy.size() == 0) {
                             user_character[m_user_name]
                                 ->get_current_fight()
-                                ->make_damage(
-                                    data["participant_character"],
-                                    tokens_character
-                                );
+                                ->make_damage(participant_me, tokens_character);
                         } else {
                             throw std::runtime_error("Net");
                         }
