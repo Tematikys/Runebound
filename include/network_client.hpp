@@ -173,7 +173,7 @@ public:
         json data;
         data["action type"] = "fight";
         data["fight command"] = "use tokens";
-        data["token type"] = "invalid";
+        data["token type"] = "undefined";
         data["participant"] = participant;
         data["tokens_me"] = tokens_me;
         data["tokens_enemy"] = tokens_enemy;
