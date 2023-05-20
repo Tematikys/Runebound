@@ -97,51 +97,71 @@ void Character::end_fight_with_boss() {
 void to_json(nlohmann::json &json, const Character &character) {
     json["m_hand_limit"] = character.m_hand_limit;
     json["m_speed"] = character.m_speed;
+    json["m_characteristics"] = character.m_characteristics;
     json["m_action_points"] = character.m_action_points;
     json["m_max_action_points"] = character.m_max_action_points;
+    json["m_active_card_meeting"] = character.m_active_card_meeting;
+    json["m_active_card_research"] = character.m_active_card_research;
+    json["m_standard_character"] = character.m_standard_character;
+    json["m_current_state"] = character.m_current_state;
     json["m_name"] = character.m_name;
+    json["m_cards_research"] = character.m_cards_research;
+    json["m_cards_fight"] = character.m_cards_fight;
+    json["m_cards_meeting"] = character.m_cards_meeting;
+    json["m_trophies"] = character.m_trophies;
+    json["m_is_in_trade"] = character.m_is_in_trade;
+    json["m_max_health"] = character.m_max_health;
     json["m_gold"] = character.m_gold;
     json["m_health"] = character.m_health;
-    json["m_max_health"] = character.m_max_health;
+    json["m_knowledge_token"] = character.m_knowledge_token;
     json["m_current_position"] = character.m_current_position;
-    json["m_cards_fight"] = character.m_cards_fight;
-    json["m_cards_research"] = character.m_cards_research;
     json["m_fight_tokens"] = character.m_fight_tokens;
-    json["m_trophies"] = character.m_trophies;
-    json["m_standard_character"] = character.m_standard_character;
-    json["m_characteristics"] = character.m_characteristics;
+    json["m_products"] = json["m_products"];
 }
 
 void from_json(const nlohmann::json &json, Character &character) {
     character.m_hand_limit = json["m_hand_limit"];
     character.m_speed = json["m_speed"];
+    character.m_characteristics = json["m_characteristics"];
     character.m_action_points = json["m_action_points"];
     character.m_max_action_points = json["m_max_action_points"];
-    character.m_name = json["m_name"];
-    character.m_gold = json["m_gold"];
-    character.m_health = json["m_health"];
-    character.m_max_health = json["m_max_health"];
-    character.m_current_position = json["m_current_position"];
     character.m_standard_character = json["m_standard_character"];
-    character.m_characteristics = json["m_characteristics"];
-    character.m_fight_tokens.clear();
-    for (const auto &fight_token : json["m_fight_tokens"]) {
-        character.m_fight_tokens.push_back(fight_token);
+    character.m_current_state = json["m_current_state"];
+    character.m_name = json["m_name"];
+    character.m_cards_research.clear();
+    for (const auto &card : json["m_cards_research"]) {
+        unsigned int card_int = card;
+        character.m_cards_research.insert(card_int);
     }
     character.m_cards_fight.clear();
     for (const auto &card : json["m_cards_fight"]) {
         unsigned int card_int = card;
         character.m_cards_fight.insert(card_int);
     }
-    character.m_cards_research.clear();
-    for (const auto &card : json["m_cards_research"]) {
+    character.m_cards_meeting.clear();
+    for (const auto &card : json["m_cards_meeting"]) {
         unsigned int card_int = card;
-        character.m_cards_research.insert(card_int);
+        character.m_cards_meeting.insert(card_int);
     }
     character.m_trophies.clear();
     for (const auto &card : json["m_trophies"]) {
         std::pair<::runebound::AdventureType, unsigned int> card_int = card;
         character.m_trophies.insert(card_int);
+    }
+    character.m_is_in_trade = json["m_is_in_trade"];
+    character.m_max_health = json["m_max_health"];
+    character.m_gold = json["m_gold"];
+    character.m_health = json["m_health"];
+    character.m_knowledge_token = json["m_knowledge_token"];
+    character.m_current_position = json["m_current_position"];
+    character.m_fight_tokens.clear();
+    for (const auto &fight_token : json["m_fight_tokens"]) {
+        character.m_fight_tokens.push_back(fight_token);
+    }
+    character.m_products.clear();
+    for (const auto &product : json["m_products"]) {
+        unsigned int product_int = product;
+        character.m_products.insert(product_int);
     }
 }
 }  // namespace character
