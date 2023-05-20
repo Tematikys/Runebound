@@ -38,8 +38,8 @@ private:
 
     int m_action_points = 3;
     int m_max_action_points = 3;
-    unsigned int m_active_card_meeting;
-    unsigned int m_active_card_research;
+    unsigned int m_active_card_meeting = 0;
+    unsigned int m_active_card_research = 0;
     StandardCharacter m_standard_character = StandardCharacter::NONE;
     StateCharacter m_current_state = StateCharacter::NORMAL_GAME;
     std::string m_name;
