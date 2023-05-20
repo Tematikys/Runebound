@@ -131,7 +131,6 @@ private:
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
     unsigned int m_number_of_rounds = 0;
-
     character::StandardCharacter m_winner = character::StandardCharacter::NONE;
     Point m_boss_position = {-1, -1};
     std::vector<dice::HandDice> m_last_dice_movement_result;
@@ -155,6 +154,9 @@ private:
         character::StandardCharacter::MASTER_THORN};
 
     std::map<Point, std::set<unsigned int>> m_shops;
+
+    std::shared_ptr<fight::Fight> m_current_fight = nullptr;
+    std::shared_ptr<fight::Fight> m_current_fight_two_player = nullptr;
 
     void check_turn(const std::shared_ptr<character::Character> &chr) {
         if (chr->get_name() != m_characters[m_turn]->get_name()) {
@@ -224,6 +226,15 @@ public:
 
     [[nodiscard]] bool check_end_game() const {
         return m_game_over;
+    }
+
+    [[nodiscard]] std::shared_ptr<fight::Fight> get_current_fight() const {
+        return m_current_fight;
+    }
+
+    [[nodiscard]] std::shared_ptr<fight::Fight> get_current_fight_two_player(
+    ) const {
+        return m_current_fight_two_player;
     }
 
     [[nodiscard]] unsigned int get_number_of_rounds() const {
