@@ -254,7 +254,7 @@ public:
         json data;
         data["action type"] = "adventure";
         data["adventure command"] = "complete_card_research";
-        data["outcome"] = "outcome";
+        data["outcome"] = outcome;
         do_write(data.dump());
     }
 
@@ -310,16 +310,17 @@ public:
         return m_game_client.m_last_dice_movement_result;
     };
 
-    [[nodiscard]] const character::Character* get_yourself_character() const {
+    [[nodiscard]] const character::Character *get_yourself_character() const {
         if (m_character == runebound::character::StandardCharacter::NONE) {
-            throw std::runtime_error("Character is not selected, yet");
+            std::cout << "Character is not selected, yet\n";
+            return nullptr;
         }
         for (auto &character : m_game_client.m_characters) {
             if (character.get_standard_character() == m_character) {
                 return &character;
             }
         }
-        throw std::runtime_error("Something with get_your_character is really wrong");
+        std::cout << "Something with get_your_character is really wrong\n";
         return nullptr;
     }
 
@@ -333,6 +334,10 @@ public:
 
     [[nodiscard]] const runebound::game::GameClient &get_game_client() const {
         return m_game_client;
+    }
+
+    [[nodiscard]] trade::Product get_product(unsigned int index) {
+        return m_game_client.m_all_products[index];
     }
 
     bool is_game_need_update() {

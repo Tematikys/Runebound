@@ -25,6 +25,7 @@ void to_json(nlohmann::json &json, const GameClient &game) {
     json["m_last_possible_outcomes"] = game.m_last_possible_outcomes;
 
     json["m_shops"] = game.m_shops;
+    json["m_all_products"] = game.m_all_products;
 
     json["is_fight"] = game.is_fight;
     if (game.is_fight) {
@@ -71,6 +72,10 @@ void from_json(const nlohmann::json &json, GameClient &game) {
     );
 
     game.m_shops = json["m_shops"];
+
+    game.m_all_products = std::vector<trade::Product>(
+        json["m_all_products"].begin(), json["m_all_products"].end()
+    );
 
     game.is_fight = json["is_fight"];
     if (game.is_fight) {
