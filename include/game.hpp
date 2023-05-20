@@ -156,7 +156,7 @@ private:
     std::map<Point, std::set<unsigned int>> m_shops;
 
     std::shared_ptr<fight::Fight> m_current_fight = nullptr;
-    std::shared_ptr<fight::Fight> m_current_fight_two_player = nullptr;
+    std::shared_ptr<fight::FightTwoPlayer> m_current_fight_two_player = nullptr;
 
     void check_turn(const std::shared_ptr<character::Character> &chr) {
         if (chr->get_name() != m_characters[m_turn]->get_name()) {
@@ -232,8 +232,8 @@ public:
         return m_current_fight;
     }
 
-    [[nodiscard]] std::shared_ptr<fight::Fight> get_current_fight_two_player(
-    ) const {
+    [[nodiscard]] std::shared_ptr<fight::FightTwoPlayer>
+    get_current_fight_two_player() const {
         return m_current_fight_two_player;
     }
 
