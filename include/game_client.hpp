@@ -33,6 +33,7 @@ public:
     std::vector<std::size_t> m_last_possible_outcomes;
 
     std::map<Point, std::set<unsigned int>> m_shops;
+    std::vector<trade::Product> m_all_products;
 
     bool is_fight = false;
     runebound::fight::FightClient m_fight_client;
@@ -54,7 +55,8 @@ public:
           m_last_characteristic_check(game.m_last_characteristic_check),
           m_last_possible_outcomes(game.m_last_possible_outcomes),
 
-          m_shops(game.m_shops) {
+          m_shops(game.m_shops),
+          m_all_products(game.m_all_products) {
         auto set_remaining =
             std::move(game.get_remaining_standard_characters());
         std::vector<::runebound::character::StandardCharacter> vec_remaining(
