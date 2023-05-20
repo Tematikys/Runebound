@@ -60,7 +60,7 @@ TEST_CASE("game") {
     CHECK(game.get_turn() == 2);
     game.take_token(third);
     CHECK(third->get_state() == runebound::character::StateCharacter::FIGHT);
-    auto fight = third->get_current_fight();
+    auto fight = game.get_current_fight();
     CHECK(fight != nullptr);
 }
 
@@ -118,7 +118,7 @@ TEST_CASE("card_fight") {
     game.take_token(lord);
     CHECK(lord->get_state() == runebound::character::StateCharacter::FIGHT);
     CHECK(lissa->get_state() == runebound::character::StateCharacter::ENEMY);
-    auto fight = lord->get_current_fight();
+    auto fight = game.get_current_fight();
     CHECK(lord->get_cards_fight().size() == 1);
     CHECK(lord->get_trophies().size() == 0);
     fight->get_enemy()->update_health(-fight->get_enemy()->get_health());
@@ -284,7 +284,7 @@ TEST_CASE("fight two player") {
         mok->get_state() == runebound::character::StateCharacter::NORMAL_GAME
     );
     game.accept_to_fight(mok);
-    auto fight = lissa->get_current_fight_two_player();
+    auto fight = game.get_current_fight_two_player();
     CHECK(fight == mok->get_current_fight_two_player());
     CHECK(lissa->get_state() == runebound::character::StateCharacter::CALLER);
     CHECK(mok->get_state() == runebound::character::StateCharacter::RECEIVER);
@@ -301,6 +301,7 @@ TEST_CASE("fight two player") {
         mok->get_state() == runebound::character::StateCharacter::NORMAL_GAME
     );
     CHECK(mok->get_current_fight_two_player() == nullptr);
+    CHECK(game.get_current_fight_two_player() == nullptr);
     CHECK(lissa->get_current_fight_two_player() == nullptr);
     CHECK(mok->get_current_caller_to_fight() == nullptr);
 }
@@ -399,7 +400,7 @@ TEST_CASE("fight with boss in game") {
         runebound::character::StandardCharacter::LORD_HAWTHORNE
     );
     game.take_token(corbin);
-    auto fight = corbin->get_current_fight();
+    auto fight = game.get_current_fight();
     CHECK(corbin->get_state() == runebound::character::StateCharacter::FIGHT);
     CHECK(lord->get_state() == runebound::character::StateCharacter::ENEMY);
     CHECK(fight != nullptr);
@@ -420,7 +421,7 @@ TEST_CASE("fight with boss in game") {
     game.start_next_character_turn(corbin);
     lord->set_position(runebound::Point(11, 6));
     game.take_token(lord);
-    auto lord_fight = lord->get_current_fight();
+    auto lord_fight = game.get_current_fight();
     CHECK(corbin->get_state() == runebound::character::StateCharacter::ENEMY);
     CHECK(lord->get_state() == runebound::character::StateCharacter::FIGHT);
     CHECK(lord_fight->get_health_enemy() == 15);
