@@ -131,6 +131,7 @@ add_executable(${PROJECT_NAME}
         generators/generator_map.cpp
         #tpl/sqlite/sqlite3.c
         )
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ws2_32 wsock32)
 #target_link_libraries(Runebound -lmingw32 -mwindows -mconsole sqlite3)
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
 # ===== LOGICS ===== #
