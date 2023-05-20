@@ -1,6 +1,9 @@
 {
     "m_action_points": 3,
+    "m_active_card_meeting": 0,
+    "m_active_card_research": 0,
     "m_cards_fight": [],
+    "m_cards_meeting": [],
     "m_cards_research": [],
     "m_characteristics": [
         [
@@ -20,6 +23,7 @@
         "x": 11,
         "y": 6
     },
+    "m_current_state": 0,
     "m_fight_tokens": [
         {
             "first": 0,
@@ -49,9 +53,12 @@
     "m_gold": 2,
     "m_hand_limit": 3,
     "m_health": 10,
+    "m_is_in_trade": false,
+    "m_knowledge_token": 0,
     "m_max_action_points": 3,
     "m_max_health": 10,
     "m_name": "Corbin",
+    "m_products": null,
     "m_speed": 3,
     "m_standard_character": 0,
     "m_trophies": []
