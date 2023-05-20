@@ -258,7 +258,16 @@ public:
                             }
                         }
                         // Damadge
-                        if (tokens_enemy.empty()) {
+                        if ((tokens_enemy.empty()) &&
+                            (tokens_character[0].hand ==
+                                 runebound::fight::HandFightTokens::
+                                     ENEMY_DAMAGE ||
+                             tokens_character[0].hand ==
+                                 runebound::fight::HandFightTokens::
+                                     MAGICAL_DAMAGE ||
+                             tokens_character[0].hand ==
+                                 runebound::fight::HandFightTokens::
+                                     PHYSICAL_DAMAGE)) {
                             user_character[m_user_name]
                                 ->get_current_fight()
                                 ->make_damage(participant_me, tokens_character);
