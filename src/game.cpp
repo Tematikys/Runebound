@@ -193,6 +193,7 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         chr->start_fight(std::make_shared<fight::Fight>(
             chr, m_all_cards_fight[card].get_enemy()
         ));
+        m_current_fight = chr->get_current_fight();
         m_characters[(m_turn + m_count_players - 1) % m_count_players]
             ->start_fight_as_enemy();
     } else if (m_map.get_cell_map(position).get_token() == AdventureType::RESEARCH) {
@@ -213,6 +214,7 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         chr->start_fight(std::make_shared<fight::Fight>(
             chr, fight::Enemy(AdventureType::BOSS)
         ));
+        m_current_fight = chr->get_current_fight();
         m_characters[(m_turn + m_count_players - 1) % m_count_players]
             ->start_fight_as_enemy();
         m_map.reverse_token(position);
@@ -232,6 +234,7 @@ void Game::end_fight_with_boss(const std::shared_ptr<character::Character> &chr
         m_winner = chr->get_standard_character();
     }
     chr->end_fight_with_boss();
+    m_current_fight = nullptr;
     m_characters[(m_turn + m_count_players - 1) % m_count_players]
         ->end_fight_as_enemy();
 }
@@ -251,6 +254,7 @@ void Game::end_fight(const std::shared_ptr<character::Character> &chr) {
         chr->add_trophy(AdventureType::FIGHT, chr->get_card_fight());
     }
     chr->end_fight();
+    m_current_fight = nullptr;
     m_characters[(m_turn + m_count_players - 1) % m_count_players]
         ->end_fight_as_enemy();
 }
@@ -492,6 +496,7 @@ void Game::accept_to_fight(const std::shared_ptr<character::Character> &receiver
     receiver->start_fight_two_player(
         fight, character::StateCharacter::RECEIVER
     );
+    m_current_fight_two_player = caller->get_current_fight_two_player();
 }
 
 void Game::end_fight_two_player(const std::shared_ptr<character::Character> &chr
@@ -499,6 +504,7 @@ void Game::end_fight_two_player(const std::shared_ptr<character::Character> &chr
     auto fight = chr->get_current_fight_two_player();
     fight->get_caller()->end_fight_two_player();
     fight->get_receiver()->end_fight_two_player();
+    m_current_fight_two_player = nullptr;
 }
 }  // namespace game
 }  // namespace runebound
