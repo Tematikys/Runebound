@@ -79,7 +79,9 @@ void Client::handle_events() {
                     }
                 }
         }
-        m_window.handle_events(event);
+        if(m_window.handle_events(event)) {
+            m_need_to_update = true;
+        }
     }
 }
 

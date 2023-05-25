@@ -6,7 +6,6 @@ Window::Window(Window &&other) noexcept
     : m_width(other.m_width),
       m_height(other.m_height),
       m_rect(other.m_rect),
-      m_texture(other.m_texture),
       m_buttons(::std::move(other.m_buttons)),
       m_button_pos(::std::move(other.m_button_pos)),
       m_text_fields(::std::move(other.m_text_fields)),
@@ -17,15 +16,12 @@ Window::Window(Window &&other) noexcept
       m_texture_pos(::std::move(other.m_texture_pos)),
       m_windows(::std::move(other.m_windows)),
       m_window_pos(::std::move(other.m_window_pos)) {
-    other.m_texture = nullptr;
 }
 
 Window &Window::operator=(Window &&other) noexcept {
     m_width = other.m_width;
     m_height = other.m_height;
     m_rect = other.m_rect;
-    m_texture = other.m_texture;
-    other.m_texture = nullptr;
     m_buttons = ::std::move(other.m_buttons);
     m_button_pos = ::std::move(other.m_button_pos);
     m_text_fields = ::std::move(other.m_text_fields);
@@ -45,7 +41,11 @@ void Window::render(
     int y_offset,
     SDL_Texture *main_texture
 ) const {
-    SDL_SetRenderTarget(renderer, m_texture);
+    SDL_Texture *tex = SDL_CreateTexture(
+        renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_width,
+        m_height
+    );
+    SDL_SetRenderTarget(renderer, tex);
 
     SDL_SetRenderDrawColor(
         renderer, m_color.r, m_color.g, m_color.b, m_color.a
@@ -82,7 +82,7 @@ void Window::render(
         if (m_window_visible.at(name)) {
             window->render(
                 renderer, m_window_pos.at(name).x(), m_window_pos.at(name).y(),
-                m_texture
+                tex
             );
         }
     }
@@ -92,7 +92,8 @@ void Window::render(
 
     SDL_SetRenderTarget(renderer, main_texture);
     const SDL_Rect renderQuad = {x_offset, y_offset, m_width, m_height};
-    SDL_RenderCopy(renderer, m_texture, &m_rect, &renderQuad);
+    SDL_RenderCopy(renderer, tex, &m_rect, &renderQuad);
+    SDL_DestroyTexture(tex);
 }
 
 void Window::render_texture(
@@ -104,18 +105,25 @@ void Window::render_texture(
     SDL_Texture *texture,
     SDL_Texture *main_texture
 ) const {
-    SDL_SetRenderTarget(renderer, m_texture);
+    SDL_Texture *tex = SDL_CreateTexture(
+        renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_width,
+        m_height
+    );
+    SDL_SetRenderTarget(renderer, tex);
     const SDL_Rect renderQuad = {x_offset, y_offset, width, height};
     SDL_RenderCopy(renderer, texture, nullptr, &renderQuad);
     SDL_SetRenderTarget(renderer, main_texture);
+    SDL_DestroyTexture(tex);
 }
 
-void Window::handle_events(SDL_Event event) {
+bool Window::handle_events(SDL_Event event) {
     if (!m_is_active) {
-        return;
+        return false;
     }
+    bool is_updated = false;
     if (!m_active_window.empty()) {
-        m_windows[m_active_window]->handle_events(event);
+        is_updated =
+            is_updated || m_windows[m_active_window]->handle_events(event);
     }
     switch (event.type) {
         case SDL_TEXTINPUT:
@@ -124,6 +132,7 @@ void Window::handle_events(SDL_Event event) {
                  (event.text.text[0] != 'c' && event.text.text[0] != 'C' &&
                   event.text.text[0] != 'v' && event.text.text[0] != 'V'))) {
                 m_text_fields[m_active_text_field].push(event.text.text);
+                is_updated = true;
             }
             break;
         case SDL_KEYDOWN:
@@ -132,16 +141,20 @@ void Window::handle_events(SDL_Event event) {
             }
             if (event.key.keysym.sym == SDLK_BACKSPACE) {
                 m_text_fields[m_active_text_field].pop();
+                is_updated = true;
             } else if (event.key.keysym.sym == SDLK_c && ((SDL_GetModState() & KMOD_CTRL) != 0)) {
                 SDL_SetClipboardText(
                     m_text_fields[m_active_text_field].get().c_str()
                 );
+                is_updated = true;
             } else if (event.key.keysym.sym == SDLK_v && ((SDL_GetModState() & KMOD_CTRL) != 0)) {
                 m_text_fields[m_active_text_field].clear();
                 m_text_fields[m_active_text_field].push(SDL_GetClipboardText());
+                is_updated = true;
             }
             break;
     }
+    return is_updated;
 }
 
 void Window::update(Point mouse_pos, bool mouse_pressed) {

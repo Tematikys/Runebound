@@ -19,7 +19,6 @@ private:
     bool m_is_active{false};
 
     SDL_Rect m_rect{};
-    SDL_Texture *m_texture{nullptr};
     SDL_Color m_color{255, 255, 255, 255};
 
     ::std::map<::std::string, Button> m_buttons{};
@@ -49,16 +48,7 @@ public:
     Window() = default;
 
     Window(SDL_Renderer *renderer, int width, int height, SDL_Color color)
-        : m_width(width),
-          m_height(height),
-          m_color(color),
-          m_texture(SDL_CreateTexture(
-              renderer,
-              SDL_PIXELFORMAT_RGBA8888,
-              SDL_TEXTUREACCESS_TARGET,
-              m_width,
-              m_height
-          )) {
+        : m_width(width), m_height(height), m_color(color) {
         m_rect = {0, 0, width, height};
     }
 
@@ -89,7 +79,7 @@ public:
         SDL_Texture *main_texture = nullptr
     ) const;
 
-    void handle_events(SDL_Event event);
+    bool handle_events(SDL_Event event);
 
     void update(Point mouse_pos, bool mouse_pressed);
 
@@ -175,10 +165,6 @@ public:
     }
 
     void set_active_text_field(const ::std::string &name);
-
-    [[nodiscard]] SDL_Texture *get_texture() {
-        return m_texture;
-    }
 
     [[nodiscard]] Window *get_window(const ::std::string &name);
 

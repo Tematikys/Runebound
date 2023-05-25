@@ -16,7 +16,7 @@ private:
     int m_height{0};
 
 public:
-    Texture() = default;
+    Texture() : m_texture(nullptr), m_width(0), m_height(0){};
 
     explicit Texture(SDL_Texture *&texture) : m_texture(texture) {
         int width{};
@@ -32,6 +32,9 @@ public:
           m_height(other.m_height),
           m_texture(other.m_texture) {
         other.m_texture = nullptr;
+        other.m_width = 0;
+        other.m_height = 0;
+        other.free();
     }
 
     Texture(const Texture &other) = delete;
@@ -41,6 +44,9 @@ public:
         m_height = other.m_height;
         m_texture = other.m_texture;
         other.m_texture = nullptr;
+        other.m_width = 0;
+        other.m_height = 0;
+        other.free();
         return *this;
     }
 

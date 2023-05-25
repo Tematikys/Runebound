@@ -42,8 +42,16 @@ void Client::update_fight_window() {
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this, &char_vec = character_selected_tokens,
                  &enemy_vec = enemy_selected_tokens]() {
-                    std::cout << char_vec.size() << ' ' << enemy_vec.size()
-                              << std::endl;
+                    std::cout
+                        << "Char use: " << char_vec.size()
+                        << " Enemy use: " << enemy_vec.size() << " total char: "
+                        << m_network_client.get_game_client()
+                               .m_fight_client.m_character_remaining_tokens
+                               .size()
+                        << " total enemy: "
+                        << m_network_client.get_game_client()
+                               .m_fight_client.m_enemy_remaining_tokens.size()
+                        << std::endl;
                     if (m_network_client.get_yourself_character()->get_state(
                         ) == ::runebound::character::StateCharacter::FIGHT) {
                         m_network_client.fight_make(
