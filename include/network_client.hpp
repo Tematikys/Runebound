@@ -297,7 +297,7 @@ public:
 
     bool is_game_need_update() {
         bool tmp = game_need_update;
-        game_need_update = false;
+        // game_need_update = false;
         return tmp;
     }
 
