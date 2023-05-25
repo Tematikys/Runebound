@@ -497,15 +497,7 @@ public:
         unsigned int product
     );
 
-    [[nodiscard]] std::vector <Point> get_possible_moves() const {
-        if (m_last_dice_movement_result.empty()) {
-            if (m_characters[m_turn]->get_action_points() == 0) {
-                return {};
-            }
-            return m_map.get_neighbours(m_characters[m_turn]->get_position());
-        }
-        return m_map.get_possible_moves(m_characters[m_turn]->get_position(), m_last_dice_movement_result);
-    }
+    [[nodiscard]] std::vector <Point> get_possible_moves() const;
 
     // friend void to_json(nlohmann::json &json, const Game &game);
     // friend void from_json(const nlohmann::json &json, Game &game);
