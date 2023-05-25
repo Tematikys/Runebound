@@ -233,7 +233,7 @@ void Client::update_game_window() {
         if (m_network_client.m_character !=
             ::runebound::character::StandardCharacter::NONE) {
             const auto me = m_network_client.get_yourself_character();
-            const auto &pos = me.get_position();
+            const auto &pos = me->get_position();
             const auto &cell =
                 m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
 
@@ -267,7 +267,7 @@ void Client::update_game_window() {
         if (m_network_client.m_character !=
             ::runebound::character::StandardCharacter::NONE) {
             const auto me = m_network_client.get_yourself_character();
-            const auto &pos = me.get_position();
+            const auto &pos = me->get_position();
             const auto &cell =
                 m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
             if (cell.get_type_cell() == ::runebound::map::TypeCell::TOWN) {
@@ -313,7 +313,7 @@ void Client::update_game_window() {
             if (m_network_client.m_character !=
                     ::runebound::character::StandardCharacter::NONE &&
                 character.get_name() ==
-                    m_network_client.get_yourself_character().get_name()) {
+                    m_network_client.get_yourself_character()->get_name()) {
                 continue;
             }
             const auto name = character.get_name();
@@ -451,9 +451,9 @@ void Client::update_game_window() {
             window->remove_all_textures();
             RectangleShape rect;
             auto character = m_network_client.get_yourself_character();
-            const auto name = character.get_name();
-            const auto gold = ::std::to_string(character.get_gold());
-            const auto health = ::std::to_string(character.get_health());
+            const auto name = character->get_name();
+            const auto gold = ::std::to_string(character->get_gold());
+            const auto health = ::std::to_string(character->get_health());
             {  // CHARACTER
                 tex = SDL_CreateTexture(
                     m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,

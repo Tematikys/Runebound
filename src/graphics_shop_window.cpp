@@ -48,7 +48,7 @@ void Client::update_shop_window() {
     if (m_network_client.m_character !=
         ::runebound::character::StandardCharacter::NONE) {
         const auto me = m_network_client.get_yourself_character();
-        const auto &pos = me.get_position();
+        const auto &pos = me->get_position();
         const auto &cell =
             m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
         ::std::set<unsigned int> shop;
