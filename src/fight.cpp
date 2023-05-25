@@ -232,7 +232,6 @@ void Fight::make_damage(
     const std::vector<TokenHandCount> &tokens
 ) {
     if (m_turn != participant) {
-        std::cout << "OK" << ::std::endl;
         throw WrongCharacterTurnException();
     }
     if (!check_combination_tokens(tokens)) {
