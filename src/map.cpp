@@ -118,5 +118,17 @@ void from_json(const nlohmann::json &json, Map &map) {
     map.m_territory_name = json["m_territory_name"];
 }
 
+std::vector <Point> Map::get_neighbours(Point current) const {
+    auto directions = get_directions(current);
+    std::vector <Point> result;
+    for (const auto &direction : directions) {
+        if (check_neighbour(current, get_neighbour_in_direction(current, direction))) {
+            result.push_back(get_neighbour_in_direction(current, direction));
+        }
+    }
+    return result;
+}
+
+
 }  // namespace map
 }  // namespace runebound
