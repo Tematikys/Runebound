@@ -1,7 +1,7 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
-// #define NETWORK_DEBUG_INFO
+#define NETWORK_DEBUG_INFO
 
 #include <boost/asio.hpp>
 #include <chrono>

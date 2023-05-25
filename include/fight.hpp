@@ -33,7 +33,6 @@ struct ForeignTokenException : std::runtime_error {
     }
 };
 
-
 void to_json(nlohmann::json &json, const TokenHandCount &token_hand_count);
 void from_json(const nlohmann::json &json, TokenHandCount &token_hand_count);
 
