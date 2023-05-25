@@ -497,12 +497,14 @@ public:
         unsigned int product
     );
 
-    void check_characteristic_additionally(
-        const std::shared_ptr<character::Character> &chr,
-        unsigned int card
-    ) {
-        // TODO, card skill when they will be in the game not only as a
-        // characteristic checking card
+    [[nodiscard]] std::vector <Point> get_possible_moves() const {
+        if (m_last_dice_movement_result.empty()) {
+            if (m_characters[m_turn]->get_action_points() == 0) {
+                return {};
+            }
+            return m_map.get_neighbours(m_characters[m_turn]->get_position());
+        }
+        return m_map.get_possible_moves(m_characters[m_turn]->get_position(), m_last_dice_movement_result);
     }
 
     // friend void to_json(nlohmann::json &json, const Game &game);
