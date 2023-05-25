@@ -10,7 +10,7 @@
 #include "game.hpp"
 #include "game_client.hpp"
 
-// #define NETWORK_DEBUG_INFO
+#define NETWORK_DEBUG_INFO
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
@@ -169,6 +169,7 @@ public:
 
                 if (data["fight command"] == "use tokens") {
                     if (data["token type"] == "undefined") {
+                        std::cout << data.dump() << "\n";
                         std::vector<runebound::fight::TokenHandCount>
                             tokens_me = data["tokens_me"];
                         std::vector<runebound::fight::TokenHandCount>
@@ -183,34 +184,34 @@ public:
                         if (tokens_me.empty()) {
                             throw std::runtime_error("0 size");
                         }
+
+                        bool is_checked = false;
+
                         // Dexterity
                         for (auto token : tokens_me) {
                             if (token.hand ==
                                 runebound::fight::HandFightTokens::DEXTERITY) {
+                                is_checked = true;
                                 if ((tokens_enemy.size() == 1) &&
                                     (tokens_me.size() == 1)) {
-                                    m_game
-                                        ->get_current_fight()
-                                        ->make_dexterity(
-                                            participant_me, tokens_me[0],
-                                            tokens_enemy[0], participant_enemy
-                                        );
+                                    m_game->get_current_fight()->make_dexterity(
+                                        participant_me, tokens_me[0],
+                                        tokens_enemy[0], participant_enemy
+                                    );
                                 } else {
                                     if ((tokens_enemy.empty()) &&
                                         (tokens_me.size() == 2)) {
                                         if (tokens_me[0].hand ==
                                             runebound::fight::HandFightTokens::
                                                 DEXTERITY) {
-                                            m_game
-                                                ->get_current_fight()
+                                            m_game->get_current_fight()
                                                 ->make_dexterity(
                                                     participant_me,
                                                     tokens_me[0], tokens_me[1],
                                                     participant_me
                                                 );
                                         } else {
-                                            m_game
-                                                ->get_current_fight()
+                                            m_game->get_current_fight()
                                                 ->make_dexterity(
                                                     participant_me,
                                                     tokens_me[1], tokens_me[0],
@@ -226,52 +227,62 @@ public:
                             }
                         }
                         // Doubling
-                        for (auto token : tokens_me) {
-                            if (token.hand ==
-                                runebound::fight::HandFightTokens::DOUBLING) {
-                                if ((tokens_enemy.empty()) &&
-                                    (tokens_me.size() == 2)) {
-                                    if (tokens_me[0].hand ==
-                                        runebound::fight::HandFightTokens::
-                                            DOUBLING) {
-                                        m_game
-                                            ->get_current_fight()
-                                            ->make_doubling(
-                                                participant_me, tokens_me[0],
-                                                tokens_me[1]
-                                            );
+                        if (!is_checked) {
+                            for (auto token : tokens_me) {
+                                if (token.hand ==
+                                    runebound::fight::HandFightTokens::
+                                        DOUBLING) {
+                                    is_checked = true;
+                                    if ((tokens_enemy.empty()) &&
+                                        (tokens_me.size() == 2)) {
+                                        if (tokens_me[0].hand ==
+                                            runebound::fight::HandFightTokens::
+                                                DOUBLING) {
+                                            m_game->get_current_fight()
+                                                ->make_doubling(
+                                                    participant_me,
+                                                    tokens_me[0], tokens_me[1]
+                                                );
+                                        } else {
+                                            m_game->get_current_fight()
+                                                ->make_doubling(
+                                                    participant_me,
+                                                    tokens_me[1], tokens_me[0]
+                                                );
+                                        }
                                     } else {
-                                        m_game
-                                            ->get_current_fight()
-                                            ->make_doubling(
-                                                participant_me, tokens_me[1],
-                                                tokens_me[0]
-                                            );
+                                        throw std::runtime_error(
+                                            "Wrong doubling"
+                                        );
                                     }
-                                } else {
-                                    throw std::runtime_error("Wrong doubling");
                                 }
                             }
                         }
-                        // Damage
-                        if ((tokens_enemy.empty()) &&
-                            (tokens_me[0].hand ==
-                                 runebound::fight::HandFightTokens::
-                                     ENEMY_DAMAGE ||
-                             tokens_me[0].hand ==
-                                 runebound::fight::HandFightTokens::
-                                     MAGICAL_DAMAGE ||
-                             tokens_me[0].hand ==
-                                 runebound::fight::HandFightTokens::
-                                     PHYSICAL_DAMAGE)) {
-                            m_game
-                                ->get_current_fight()
-                                ->make_damage(participant_me, tokens_me);
-                        } else {
-                            throw std::runtime_error("Wrong damage");
+                        // Damadge
+                        if (!is_checked) {
+                            if ((tokens_enemy.empty()) &&
+                                (tokens_me[0].hand ==
+                                     runebound::fight::HandFightTokens::
+                                         ENEMY_DAMAGE ||
+                                 tokens_me[0].hand ==
+                                     runebound::fight::HandFightTokens::
+                                         MAGICAL_DAMAGE ||
+                                 tokens_me[0].hand ==
+                                     runebound::fight::HandFightTokens::
+                                         PHYSICAL_DAMAGE)) {
+                                is_checked = true;
+                                m_game->get_current_fight()->make_damage(
+                                    participant_me, tokens_me
+                                );
+                            } else {
+                                throw std::runtime_error("Wrong damadge");
+                            }
+                        }
+                        if (!is_checked) {
+                            throw std::runtime_error("Wrong combination");
                         }
                     }
-
+                    // THERE
                     if (data["token type"] == "doubling") {
                         runebound::fight::Participant participant =
                             data["participant"];
@@ -279,9 +290,9 @@ public:
                             data["token1"];
                         runebound::fight::TokenHandCount token2 =
                             data["token2"];
-                        m_game
-                            ->get_current_fight()
-                            ->make_doubling(participant, token1, token2);
+                        m_game->get_current_fight()->make_doubling(
+                            participant, token1, token2
+                        );
                     }
                     if (data["token type"] == "dexterity") {
                         runebound::fight::Participant participant1 =
@@ -292,39 +303,32 @@ public:
                             data["token1"];
                         runebound::fight::TokenHandCount token2 =
                             data["token2"];
-                        m_game
-                            ->get_current_fight()
-                            ->make_dexterity(
-                                participant1, token1, token2, participant2
-                            );
+                        m_game->get_current_fight()->make_dexterity(
+                            participant1, token1, token2, participant2
+                        );
                     }
                     if (data["token type"] == "damage") {
                         runebound::fight::Participant participant =
                             data["participant"];
                         std::vector<runebound::fight::TokenHandCount> tokens =
                             data["tokens"];
-                        m_game
-                            ->get_current_fight()
-                            ->make_damage(participant, tokens);
+                        m_game->get_current_fight()->make_damage(
+                            participant, tokens
+                        );
                     }
                 }
                 if (data["fight command"] == "fight_pass") {
                     if (data["participant"] ==
                         runebound::fight::Participant::CHARACTER) {
-                        m_game
-                            ->get_current_fight()
-                            ->pass_character();
+                        m_game->get_current_fight()->pass_character();
                     } else {
                         if (data["participant"] ==
                             runebound::fight::Participant::ENEMY) {
-                            m_game
-                                ->get_current_fight()
-                                ->pass_enemy();
+                            m_game->get_current_fight()->pass_enemy();
                         }
                     }
                 }
                 for (const std::string &user_name : game_users[m_game_name]) {
-
                     user_connection[user_name]->send_game();
                 }
             }

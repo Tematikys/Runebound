@@ -207,15 +207,22 @@ void Fight::change_turn() {
     }
 }
 
-
-void Fight::check_existence_token(Participant participant, TokenHandCount token) {
+void Fight::check_existence_token(
+    Participant participant,
+    TokenHandCount token
+) {
     if (participant == Participant::CHARACTER) {
-        if (std::count(m_character_remaining_tokens.begin(), m_character_remaining_tokens.end(), token) == 0) {
+        if (std::count(
+                m_character_remaining_tokens.begin(),
+                m_character_remaining_tokens.end(), token
+            ) == 0) {
             throw ForeignTokenException();
         }
-    }
-    else {
-        if (std::count(m_enemy_remaining_tokens.begin(), m_enemy_remaining_tokens.end(), token) == 0) {
+    } else {
+        if (std::count(
+                m_enemy_remaining_tokens.begin(),
+                m_enemy_remaining_tokens.end(), token
+            ) == 0) {
             throw ForeignTokenException();
         }
     }
@@ -267,13 +274,14 @@ void Fight::make_damage(
     } else {
         make_damage(Participant::CHARACTER, count_damage(tokens));
     }
-    std::cout << "KATYA" << m_character_remaining_tokens.size() << ' ' << m_enemy_remaining_tokens.size() << std::endl;
+    std::cout << "KATYA" << m_character_remaining_tokens.size() << ' '
+              << m_enemy_remaining_tokens.size() << std::endl;
     for (auto token : tokens) {
         erase_token(participant, token);
     }
-    std::cout << "KATYA" << m_character_remaining_tokens.size() << ' ' << m_enemy_remaining_tokens.size() << std::endl;
+    std::cout << "KATYA" << m_character_remaining_tokens.size() << ' '
+              << m_enemy_remaining_tokens.size() << std::endl;
 }
-
 
 void Fight::make_doubling(
     Participant participant,
