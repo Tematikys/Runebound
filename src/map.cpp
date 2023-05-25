@@ -118,17 +118,81 @@ void from_json(const nlohmann::json &json, Map &map) {
     map.m_territory_name = json["m_territory_name"];
 }
 
-std::vector <Point> Map::get_neighbours(Point current) const {
+std::vector<Point> Map::get_neighbours(Point current) const {
     auto directions = get_directions(current);
-    std::vector <Point> result;
+    std::vector<Point> result;
     for (const auto &direction : directions) {
-        if (check_neighbour(current, get_neighbour_in_direction(current, direction))) {
+        if (check_neighbour(
+                current, get_neighbour_in_direction(current, direction)
+            )) {
             result.push_back(get_neighbour_in_direction(current, direction));
         }
     }
     return result;
 }
 
+std::vector<Point> Map::get_possible_moves(
+    Point start,
+    std::vector<::runebound::dice::HandDice> dice_roll_results
+) const {
+    std::map<Point, unsigned int> dist;
+    std::sort(dice_roll_results.begin(), dice_roll_results.end());
+    do {
+        dist[start] = 0;
+        std::queue<Point> bfs_queue;
+        bfs_queue.push(start);
+        while (!bfs_queue.empty()) {
+            auto current = bfs_queue.front();
+            bfs_queue.pop();
+            if (dist[current] >
+                static_cast<unsigned int>(dice_roll_results.size())) {
+                break;
+            }
+            for (const auto &direction : get_directions(current)) {
+                if (check_neighbour_in_direction(current, direction)) {
+                    auto new_point =
+                        get_neighbour_in_direction(current, direction);
+                    if (!dist.count(new_point) &&
+                        ((get_cell_map(new_point).check_road() ||
+                          (!check_river(current, new_point) &&
+                           ::runebound::dice::check_hand_dice(
+                               get_cell_map(new_point).get_type_cell(),
+                               dice_roll_results[dist[current]]
+                           ))) ||
+                         (check_river(current, new_point) &&
+                          (dice_roll_results[dist[current]] ==
+                               ::runebound::dice::HandDice::JOKER ||
+                           dice_roll_results[dist[current]] ==
+                               ::runebound::dice::HandDice::MOUNTAINS_WATER))
+                        )) {
+                        if (dist[current] + 1 <=
+                            static_cast<unsigned int>(dice_roll_results.size()
+                            )) {
+                            dist[new_point] = dist[current] + 1;
+                            bfs_queue.push(new_point);
+                        }
+                    }
+                }
+            }
+        }
+
+    } while (std::next_permutation(
+        dice_roll_results.begin(), dice_roll_results.end()
+    ));
+    std::vector<Point> possible_moves;
+    auto neighbours = get_neighbours(start);
+    for (const auto &neighbour : neighbours) {
+        if (!dist.count(neighbour)) {
+            dist[neighbour] = 1;
+        }
+    }
+    for (const auto &move : dist) {
+        if (move.first != start) {
+            possible_moves.push_back(move.first);
+        }
+    }
+    return possible_moves;
+}
 
 }  // namespace map
 }  // namespace runebound

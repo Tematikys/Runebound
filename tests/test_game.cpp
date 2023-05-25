@@ -440,3 +440,13 @@ TEST_CASE("fight with boss in game") {
         lord->get_state() == runebound::character::StateCharacter::NORMAL_GAME
     );
 }
+
+TEST_CASE("neighbours cells") {
+    runebound::game::Game game;
+    auto lissa =
+        game.make_character(runebound::character::StandardCharacter::LISSA);
+    CHECK(lissa->get_position() == runebound::Point(8, 13));
+    CHECK(game.get_possible_moves().size() == 6);
+    game.throw_movement_dice(lissa);
+    CHECK(game.get_possible_moves().size() > 6);
+}

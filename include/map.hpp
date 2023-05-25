@@ -4,12 +4,12 @@
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <queue>
 #include <set>
 #include <vector>
 #include "dice.hpp"
 #include "map_cell.hpp"
 #include "point.hpp"
-#include <queue>
 
 namespace runebound::map {
 
@@ -187,62 +187,12 @@ public:
         return map;
     }
 
-    [[nodiscard]] std::vector <Point> get_neighbours(Point current) const;
+    [[nodiscard]] std::vector<Point> get_neighbours(Point current) const;
 
-    [[nodiscard]] std::vector <Point> get_possible_moves(Point start, std::vector<::runebound::dice::HandDice> dice_roll_results) const {
-        std::map<Point, unsigned int> dist;
-        std::sort(dice_roll_results.begin(), dice_roll_results.end());
-        do {
-            dist[start] = 0;
-            std::queue<Point> bfs_queue;
-            while (!bfs_queue.empty()) {
-                auto current = bfs_queue.front();
-                bfs_queue.pop();
-                if (dist[current] >
-                    static_cast<unsigned int>(dice_roll_results.size())) {
-                    break;
-                }
-                for (const auto &direction : get_directions(current)) {
-                    if (check_neighbour_in_direction(current, direction)) {
-                        auto new_point =
-                            get_neighbour_in_direction(current, direction);
-                        if (!dist.count(new_point) &&
-                            ((get_cell_map(new_point).check_road() ||
-                              (!check_river(current, new_point) &&
-                               ::runebound::dice::check_hand_dice(
-                                   get_cell_map(new_point).get_type_cell(),
-                                   dice_roll_results[dist[current]]
-                               ))) ||
-                             (check_river(current, new_point) &&
-                              (dice_roll_results[dist[current]] ==
-                                   ::runebound::dice::HandDice::JOKER ||
-                               dice_roll_results[dist[current]] ==
-                                   ::runebound::dice::HandDice::MOUNTAINS_WATER)
-                             ))) {
-                            if (dist[current] + 1 <=
-                                static_cast<unsigned int>(
-                                    dice_roll_results.size()
-                                )) {
-                                dist[new_point] = dist[current] + 1;
-                                bfs_queue.push(new_point);
-                            }
-                        }
-                    }
-                }
-            }
-
-        } while (std::next_permutation(
-            dice_roll_results.begin(), dice_roll_results.end()
-        ));
-        std::vector <Point> possible_moves;
-        for (const auto &move : dist) {
-            if (move.first != start) {
-                possible_moves.push_back(move.first);
-            }
-        }
-        return possible_moves;
-    }
-
+    [[nodiscard]] std::vector<Point> get_possible_moves(
+        Point start,
+        std::vector<::runebound::dice::HandDice> dice_roll_results
+    ) const;
 };
 }  // namespace runebound::map
 
