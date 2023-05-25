@@ -201,6 +201,20 @@ void Fight::change_turn() {
     }
 }
 
+
+void Fight::check_existence_token(Participant participant, TokenHandCount token) {
+    if (participant == Participant::CHARACTER) {
+        if (std::find(m_character_remaining_tokens.begin(), m_character_remaining_tokens.end(), token) == m_character_remaining_tokens.end()) {
+            throw ForeignTokenException();
+        }
+    }
+    else {
+        if (std::find(m_enemy_remaining_tokens.begin(), m_enemy_remaining_tokens.end(), token) == m_enemy_remaining_tokens.end()) {
+            throw ForeignTokenException();
+        }
+    }
+}
+
 void Fight::make_dexterity(
     runebound::fight::Participant participant,
     const TokenHandCount &token,
@@ -210,6 +224,7 @@ void Fight::make_dexterity(
     if (m_turn != participant) {
         throw WrongCharacterTurnException();
     }
+    check_existence_token(participant, token);
     change_turn();
     if (participant == Participant::CHARACTER) {
         if (dexterity_participant == Participant::CHARACTER) {
@@ -237,6 +252,9 @@ void Fight::make_damage(
     if (!check_combination_tokens(tokens)) {
         throw BadCombinationException();
     }
+    for (const auto &token : tokens) {
+        check_existence_token(participant, token);
+    }
     change_turn();
     if (participant == Participant::CHARACTER) {
         make_damage(Participant::ENEMY, count_damage(tokens));
@@ -248,6 +266,7 @@ void Fight::make_damage(
     }
 }
 
+
 void Fight::make_doubling(
     Participant participant,
     const TokenHandCount &token,
@@ -256,6 +275,7 @@ void Fight::make_doubling(
     if (m_turn != participant) {
         throw WrongCharacterTurnException();
     }
+    check_existence_token(participant, token);
     change_turn();
     make_doubling_private(participant, doubling_token);
     erase_token(participant, token);
@@ -265,6 +285,7 @@ void Fight::make_hit(Participant participant, const TokenHandCount &token) {
     if (m_turn != participant || m_turn != Participant::ENEMY) {
         throw WrongCharacterTurnException();
     }
+    check_existence_token(participant, token);
     if (token.hand != HandFightTokens::HIT) {
         throw BadCombinationException();
     }

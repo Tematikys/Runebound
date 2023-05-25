@@ -28,6 +28,12 @@ struct FightIsStillOnException : std::runtime_error {
     }
 };
 
+struct ForeignTokenException : std::runtime_error {
+    ForeignTokenException() : std::runtime_error("Foreign token") {
+    }
+};
+
+
 void to_json(nlohmann::json &json, const TokenHandCount &token_hand_count);
 void from_json(const nlohmann::json &json, TokenHandCount &token_hand_count);
 
@@ -235,6 +241,8 @@ private:
     static int count_damage(const std::vector<TokenHandCount> &tokens);
 
     void change_turn();
+
+    void check_existence_token(Participant participant, TokenHandCount token);
 
     [[nodiscard]] bool check_end_round_private(
         const std::vector<TokenHandCount> &tokens
