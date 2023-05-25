@@ -10,7 +10,7 @@
 #include "game.hpp"
 #include "game_client.hpp"
 
-#define NETWORK_DEBUG_INFO
+// #define NETWORK_DEBUG_INFO
 
 using boost::asio::ip::tcp;
 using json = nlohmann::json;
@@ -169,7 +169,7 @@ public:
 
                 if (data["fight command"] == "use tokens") {
                     if (data["token type"] == "undefined") {
-                        std::cout << data.dump() << "\n";
+                        // std::cout << data.dump() << "\n";
                         std::vector<runebound::fight::TokenHandCount>
                             tokens_me = data["tokens_me"];
                         std::vector<runebound::fight::TokenHandCount>
@@ -258,7 +258,7 @@ public:
                                 }
                             }
                         }
-                        // Damadge
+                        // Damage
                         if (!is_checked) {
                             if ((tokens_enemy.empty()) &&
                                 (tokens_me[0].hand ==
@@ -275,14 +275,14 @@ public:
                                     participant_me, tokens_me
                                 );
                             } else {
-                                throw std::runtime_error("Wrong damadge");
+                                throw std::runtime_error("Wrong damage");
                             }
                         }
                         if (!is_checked) {
                             throw std::runtime_error("Wrong combination");
                         }
                     }
-                    // THERE
+
                     if (data["token type"] == "doubling") {
                         runebound::fight::Participant participant =
                             data["participant"];

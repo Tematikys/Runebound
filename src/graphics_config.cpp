@@ -76,7 +76,7 @@ const ::std::map<::std::pair<int, int>, ::std::pair<int, int>>
 const ::std::string WINDOW_TITLE = "Runebound-0.2";
 const int WINDOW_X_OFFSET = 25;
 const int WINDOW_Y_OFFSET = 50;
-const int WINDOW_WIDTH = 900;
+const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 const int WINDOW_FPS = 10;
 const ::std::map<::runebound::dice::HandDice, ::std::pair<SDL_Color, SDL_Color>>
