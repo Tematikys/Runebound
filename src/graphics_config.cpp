@@ -1,6 +1,8 @@
 #include <graphics_config.hpp>
 
 namespace runebound::graphics {
+bool SHOW_CLIENT_DEBUG_INFO = false;
+bool SHOW_TEXTURE_DEBUG_INFO = false;
 const ::std::vector<::std::pair<::std::string, ::std::string>> FONTS = {
     {"data/fonts/FreeMono.ttf", "FreeMono"}};
 const ::std::vector<::std::pair<::std::string, ::std::string>> IMAGES = {

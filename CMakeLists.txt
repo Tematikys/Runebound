@@ -14,9 +14,27 @@ set(SDL2_LIB_DIR "tpl/SDL2/lib/")
 include_directories("include/")
 include_directories(${NLOHMANN_INCLUDE_DIR})
 include_directories(${SDL2_INCLUDE_DIR})
+
 #include_directories(${SQLITE_INCLUDE_DIR})
 
 link_directories(${SDL2_LIB_DIR})
+
+# ===== DLL =====
+#include("dll/CMakeLists.txt")
+#
+#include(GNUInstallDirs)
+#add_library(graphics_config SHARED src/graphics_config.cpp)
+#
+#set_target_properties(graphics_config PROPERTIES
+#        PUBLIC_HEADER include/graphics_config.hpp)
+#configure_file(dll/RUNEBOUND_DLL.pc.in dll/RUNEBOUND_DLL.pc @ONLY)
+#target_include_directories(graphics_config PRIVATE ".")
+#install(TARGETS graphics_config
+#        LIBRARY DESTINATION "dll/"
+#        PUBLIC_HEADER DESTINATION "dll/")
+#install(FILES dll/RUNEBOUND_DLL.pc
+#        DESTINATION ./pkgconfig)
+# ===== DLL =====
 
 # ===== GRAPHICS CLIENT ===== #
 add_executable(graphics_client

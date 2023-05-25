@@ -1,14 +1,12 @@
 #ifndef RUNEBOUND_GRAPHICS_BOARD_HPP_
 #define RUNEBOUND_GRAPHICS_BOARD_HPP_
 
-#include <SDL2/SDL.h>
 #include <graphics.hpp>
 #include <graphics_config.hpp>
 #include <graphics_point.hpp>
 #include <graphics_segment.hpp>
 #include <graphics_shapes.hpp>
 #include <map_client.hpp>
-#include <optional>
 #include <vector>
 
 namespace runebound::graphics {

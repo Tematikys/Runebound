@@ -1,15 +1,11 @@
 #ifndef RUNEBOUND_CLIENT_HPP_
 #define RUNEBOUND_CLIENT_HPP_
 
-#include <SDL2/SDL.h>
-#include <character.hpp>
-#include <game_client.hpp>
 #include <graphics.hpp>
 #include <graphics_board.hpp>
 #include <graphics_button.hpp>
 #include <graphics_config.hpp>
 #include <graphics_window.hpp>
-#include <map.hpp>
 #include <map>
 #include <network_client.hpp>
 #include <string>
