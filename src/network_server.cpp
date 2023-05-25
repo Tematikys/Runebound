@@ -253,7 +253,7 @@ public:
                                 }
                             }
                         }
-                        // Damadge
+                        // Damage
                         if ((tokens_enemy.empty()) &&
                             (tokens_me[0].hand ==
                                  runebound::fight::HandFightTokens::
@@ -268,7 +268,7 @@ public:
                                 ->get_current_fight()
                                 ->make_damage(participant_me, tokens_me);
                         } else {
-                            throw std::runtime_error("Wrong damadge");
+                            throw std::runtime_error("Wrong damage");
                         }
                     }
 
@@ -324,6 +324,7 @@ public:
                     }
                 }
                 for (const std::string &user_name : game_users[m_game_name]) {
+
                     user_connection[user_name]->send_game();
                 }
             }

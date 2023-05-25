@@ -117,6 +117,7 @@ void Client::update() {
     m_window.update(m_mouse_pos, m_mouse_pressed);
     m_mouse_pressed = false;
     ++m_counter;
+    m_network_client.game_need_update = false;
 }
 
 void Client::tick() {

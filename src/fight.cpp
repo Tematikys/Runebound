@@ -192,6 +192,12 @@ bool Fight::check_end_round() {
 }
 
 void Fight::change_turn() {
+    if (check_end_round_private(m_character_remaining_tokens)) {
+        m_pass_character = true;
+    }
+    if (check_end_round_private(m_enemy_remaining_tokens)) {
+        m_pass_enemy = true;
+    }
     if (m_pass_enemy) {
         m_turn = Participant::CHARACTER;
     } else if (m_pass_character) {
@@ -204,12 +210,12 @@ void Fight::change_turn() {
 
 void Fight::check_existence_token(Participant participant, TokenHandCount token) {
     if (participant == Participant::CHARACTER) {
-        if (std::find(m_character_remaining_tokens.begin(), m_character_remaining_tokens.end(), token) == m_character_remaining_tokens.end()) {
+        if (std::count(m_character_remaining_tokens.begin(), m_character_remaining_tokens.end(), token) == 0) {
             throw ForeignTokenException();
         }
     }
     else {
-        if (std::find(m_enemy_remaining_tokens.begin(), m_enemy_remaining_tokens.end(), token) == m_enemy_remaining_tokens.end()) {
+        if (std::count(m_enemy_remaining_tokens.begin(), m_enemy_remaining_tokens.end(), token) == 0) {
             throw ForeignTokenException();
         }
     }
@@ -261,9 +267,11 @@ void Fight::make_damage(
     } else {
         make_damage(Participant::CHARACTER, count_damage(tokens));
     }
+    std::cout << "KATYA" << m_character_remaining_tokens.size() << ' ' << m_enemy_remaining_tokens.size() << std::endl;
     for (auto token : tokens) {
         erase_token(participant, token);
     }
+    std::cout << "KATYA" << m_character_remaining_tokens.size() << ' ' << m_enemy_remaining_tokens.size() << std::endl;
 }
 
 
