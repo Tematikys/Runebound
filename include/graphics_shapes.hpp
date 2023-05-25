@@ -1,6 +1,6 @@
 #ifndef RUNEBOUND_GRAPHICS_SHAPES_HPP_
 #define RUNEBOUND_GRAPHICS_SHAPES_HPP_
-#include <SDL2/SDL.h>
+#include <graphics_config.hpp>
 #include <graphics_point.hpp>
 #include <tuple>
 #include <utility>

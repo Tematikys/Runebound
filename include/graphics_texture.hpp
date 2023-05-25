@@ -1,10 +1,7 @@
 #ifndef RUNEBOUND_GRAPHICS_TEXTURE_HPP_
 #define RUNEBOUND_GRAPHICS_TEXTURE_HPP_
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+
 #include <graphics_config.hpp>
-#include <graphics_point.hpp>
 #include <iostream>
 #include <string>
 
@@ -16,39 +13,14 @@ private:
     int m_height{0};
 
 public:
-    Texture() : m_texture(nullptr), m_width(0), m_height(0){};
+    Texture();
 
-    explicit Texture(SDL_Texture *&texture) : m_texture(texture) {
-        int width{};
-        int height{};
-        SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
-        texture = nullptr;
-        m_width = width;
-        m_height = height;
-    }
+    explicit Texture(SDL_Texture *&texture);
 
-    Texture(Texture &&other) noexcept
-        : m_width(other.m_width),
-          m_height(other.m_height),
-          m_texture(other.m_texture) {
-        other.m_texture = nullptr;
-        other.m_width = 0;
-        other.m_height = 0;
-        other.free();
-    }
-
+    Texture(Texture &&other) noexcept;
     Texture(const Texture &other) = delete;
 
-    Texture &operator=(Texture &&other) noexcept {
-        m_width = other.m_width;
-        m_height = other.m_height;
-        m_texture = other.m_texture;
-        other.m_texture = nullptr;
-        other.m_width = 0;
-        other.m_height = 0;
-        other.free();
-        return *this;
-    }
+    Texture &operator=(Texture &&other) noexcept ;
 
     Texture &operator=(const Texture &other) = delete;
 

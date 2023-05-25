@@ -1,8 +1,6 @@
 #ifndef RUNEBOUND_GRAPHICS_BUTTON_HPP_
 #define RUNEBOUND_GRAPHICS_BUTTON_HPP_
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <functional>
 #include <graphics_config.hpp>
 #include <graphics_point.hpp>

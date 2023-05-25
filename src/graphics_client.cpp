@@ -1,7 +1,7 @@
+#include <fstream>
 #include <graphics_client.hpp>
 #include <iostream>
-#include <memory>
-#include <utility>
+#include <string>
 
 namespace runebound::graphics {
 void Client::update_board() {
@@ -10,7 +10,9 @@ void Client::update_board() {
 
 void Client::init_graphics() {
     if (!SDL_init(m_graphic_window, m_graphic_renderer)) {
-        ::std::cout << "Failed to inti SDL!" << ::std::endl;
+        if (SHOW_CLIENT_DEBUG_INFO) {
+            ::std::cout << "Failed to inti SDL!" << ::std::endl;
+        }
         return;
     }
     m_is_running = true;
@@ -26,7 +28,9 @@ void Client::load_fonts() {
             m_fonts[name] = nullptr;
             load_font(m_fonts[name], path, i);
             if (m_fonts[name] == nullptr) {
-                ::std::cout << "Failed to load: " << name << ::std::endl;
+                if (SHOW_CLIENT_DEBUG_INFO) {
+                    ::std::cout << "Failed to load: " << name << ::std::endl;
+                }
                 return;
             }
         }
@@ -41,12 +45,26 @@ void Client::load_images() {
 }
 
 void Client::init() {
+    ::std::ifstream settings("settings.txt");
+    if (settings.is_open()) {
+        ::std::string ignore;
+        settings >> ignore >> SHOW_CLIENT_DEBUG_INFO;
+        settings >> ignore >> SHOW_TEXTURE_DEBUG_INFO;
+    } else {
+        throw ::std::runtime_error("Settings can not be opened");
+    }
     init_graphics();
     m_window = Window(
         m_graphic_renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
         {0xFF, 0xFF, 0xFF, 0xFF}
     );
+    if (SHOW_CLIENT_DEBUG_INFO) {
+        ::std::cout << "===== Start init main menu =====" << ::std::endl;
+    }
     init_main_menu_window();
+    if (SHOW_CLIENT_DEBUG_INFO) {
+        ::std::cout << "===== End init main menu =====" << ::std::endl;
+    }
     init_character_list_window();
     init_game_window();
     init_fight_window();
@@ -79,7 +97,7 @@ void Client::handle_events() {
                     }
                 }
         }
-        if(m_window.handle_events(event)) {
+        if (m_window.handle_events(event)) {
             m_need_to_update = true;
         }
     }
@@ -87,7 +105,6 @@ void Client::handle_events() {
 
 void Client::render() {
     if (m_need_to_update) {
-        //        ::std::cout << "Rendered!" << m_counter << ::std::endl;
         SDL_SetRenderTarget(m_graphic_renderer, nullptr);
         SDL_SetRenderDrawBlendMode(m_graphic_renderer, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(m_graphic_renderer, 255, 255, 255, 255);
@@ -132,10 +149,6 @@ void Client::tick() {
 
 void Client::exit() {
     m_network_client.exit();
-    for (auto &[name, font] : m_fonts) {
-        TTF_CloseFont(font);
-        font = nullptr;
-    }
     for (auto &[name, image] : m_images) {
         image.free();
     }

@@ -1,7 +1,7 @@
 #ifndef RUNEBOUND_GRAPHICS_SEGMENT_HPP_
 #define RUNEBOUND_GRAPHICS_SEGMENT_HPP_
 
-#include <SDL2/SDL.h>
+#include <graphics_config.hpp>
 #include <graphics_point.hpp>
 
 namespace runebound::graphics {

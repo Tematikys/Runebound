@@ -57,19 +57,19 @@ void Client::init_main_menu_window() {
             window->add_button("add_game", button, {586, 5}, true, true);
         }  // ===== ADD GAME BUTTON =====
 
-        {  // ===== EXIT BUTTON =====
-            texture.load_text_from_string(
-                m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
-                {0x00, 0x00, 0x00, 0xFF}
-            );
-            button = Button(
-                8 * 18, 30, HorizontalButtonTextureAlign::CENTER,
-                VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-                [this]() { m_is_running = false; }, []() {},
-                {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-            );
-            window->add_button("exit", button, {586, 40}, true, true);
-        }  // ===== EXIT BUTTON =====
+                {  // ===== EXIT BUTTON =====
+                    texture.load_text_from_string(
+                        m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
+                        {0x00, 0x00, 0x00, 0xFF}
+                    );
+                    button = Button(
+                        8 * 18, 30, HorizontalButtonTextureAlign::CENTER,
+                        VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                        [this]() { m_is_running = false; }, []() {},
+                        {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                    );
+                    window->add_button("exit", button, {586, 40}, true, true);
+                }  // ===== EXIT BUTTON =====
         window->activate();
 
         win->add_window("main_menu", ::std::move(window), {0, 0}, true, true);
@@ -85,7 +85,7 @@ void Client::init_main_menu_window() {
 }
 
 void Client::update_main_menu_window() {
-    auto *win = m_window.get_window("main_menu")->get_window("game_list");
+        auto *win = m_window.get_window("main_menu")->get_window("game_list");
     win->remove_all_buttons();
     for (::std::size_t i = m_game_list_start_index;
          i < ::std::min(
