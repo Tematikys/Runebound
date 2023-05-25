@@ -506,5 +506,18 @@ void Game::end_fight_two_player(const std::shared_ptr<character::Character> &chr
     fight->get_receiver()->end_fight_two_player();
     m_current_fight_two_player = nullptr;
 }
+
+std::vector <Point> Game::get_possible_moves() const {
+    if (m_characters.empty()) {
+        return {};
+    }
+    if (m_last_dice_movement_result.empty()) {
+        if (m_characters[m_turn]->get_action_points() == 0) {
+            return {};
+        }
+        return m_map.get_neighbours(m_characters[m_turn]->get_position());
+    }
+    return m_map.get_possible_moves(m_characters[m_turn]->get_position(), m_last_dice_movement_result);
+}
 }  // namespace game
 }  // namespace runebound

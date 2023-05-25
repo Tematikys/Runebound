@@ -231,7 +231,6 @@ public:
                 }
             }
 
-
         } while (std::next_permutation(
             dice_roll_results.begin(), dice_roll_results.end()
         ));
