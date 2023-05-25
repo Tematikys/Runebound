@@ -50,10 +50,16 @@ void Client::update_fight_window() {
                             char_vec, enemy_vec
                         );
                     } else {
-                        m_network_client.fight_make(
-                            ::runebound::fight::Participant::ENEMY, enemy_vec,
-                            char_vec
-                        );
+                        if (m_network_client.get_yourself_character().get_state(
+                            ) ==
+                            ::runebound::character::StateCharacter::ENEMY) {
+                            m_network_client.fight_make(
+                                ::runebound::fight::Participant::ENEMY,
+                                enemy_vec, char_vec
+                            );
+                        } else {
+                            ::std::cout << "Invalid State\n" << ::std::endl;
+                        }
                     }
                 },
                 []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
