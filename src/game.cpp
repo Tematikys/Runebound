@@ -507,7 +507,7 @@ void Game::end_fight_two_player(const std::shared_ptr<character::Character> &chr
     m_current_fight_two_player = nullptr;
 }
 
-std::vector <Point> Game::get_possible_moves() const {
+std::vector<Point> Game::get_possible_moves() const {
     if (m_characters.empty()) {
         return {};
     }
@@ -517,7 +517,9 @@ std::vector <Point> Game::get_possible_moves() const {
         }
         return m_map.get_neighbours(m_characters[m_turn]->get_position());
     }
-    return m_map.get_possible_moves(m_characters[m_turn]->get_position(), m_last_dice_movement_result);
+    return m_map.get_possible_moves(
+        m_characters[m_turn]->get_position(), m_last_dice_movement_result
+    );
 }
 }  // namespace game
 }  // namespace runebound

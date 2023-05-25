@@ -497,7 +497,7 @@ public:
         unsigned int product
     );
 
-    [[nodiscard]] std::vector <Point> get_possible_moves() const;
+    [[nodiscard]] std::vector<Point> get_possible_moves() const;
 
     // friend void to_json(nlohmann::json &json, const Game &game);
     // friend void from_json(const nlohmann::json &json, Game &game);
