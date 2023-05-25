@@ -46,7 +46,9 @@ public:
 
     Texture &operator=(const Texture &other) = delete;
 
-    ~Texture() = default;
+    ~Texture() {
+        free();
+    };
 
     void free();
 
