@@ -290,6 +290,7 @@ void Client::update_game_window() {
                         );
                         m_window.get_window("game")
                             ->set_all_updatability_button(false);
+                        m_network_client.start_trade();
                     },
                     []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
                 );

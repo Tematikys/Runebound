@@ -3,11 +3,11 @@
 
 namespace runebound::graphics {
 void Texture::free() {
+    m_width = 0;
+    m_height = 0;
     if (m_texture != nullptr) {
         SDL_DestroyTexture(m_texture);
         m_texture = nullptr;
-        m_width = 0;
-        m_height = 0;
     }
 }
 
