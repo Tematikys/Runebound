@@ -559,13 +559,15 @@ void Client::update_game_window() {
     {  // SHOW FIGHT WINDOW
         auto *win = m_window.get_window("game");
         if (m_network_client.get_game_client().is_fight) {
-            win->get_window("fight")->activate();
+            win->set_active_window("fight");
             win->set_visibility_window("fight", true);
             win->set_updatability_window("fight", true);
             win->set_all_updatability_button(false);
             update_fight_window();
         } else {
+            win->reset_active_window();
             win->get_window("fight")->deactivate();
+            win->get_window("fight")->deactivate_all_window();
             win->set_visibility_window("fight", false);
             win->set_updatability_window("fight", false);
             win->set_all_updatability_button(true);

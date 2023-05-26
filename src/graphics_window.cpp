@@ -392,6 +392,7 @@ void Window::remove_all_windows() {
 void Window::reset_active_window() {
     if (!m_active_window.empty()) {
         m_windows[m_active_window]->deactivate();
+        m_active_window = "";
     }
 }
 
