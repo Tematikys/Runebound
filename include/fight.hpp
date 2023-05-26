@@ -274,10 +274,14 @@ public:
 
     void pass_character() {
         m_pass_character = true;
+        change_turn();
+        check_end_round();
     }
 
     void pass_enemy() {
         m_pass_enemy = true;
+        change_turn();
+        check_end_round();
     }
 
     bool check_end_round();
