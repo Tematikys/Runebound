@@ -67,4 +67,3 @@ public:
 };
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_TEXTURE_HPP_
-
