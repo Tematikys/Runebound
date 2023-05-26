@@ -276,13 +276,11 @@ void Client::update_fight_window() {
             }  // BACKGROUND
             {  // FACE SIDE
                 bool init = false;
-                int num = 0;
+                int num = token.count;
                 if (token.token.first == token.hand) {
                     init = token.token.first_lead;
-                    num = token.token.first_count;
                 } else {
                     init = token.token.second_lead;
-                    num = token.token.second_count;
                 }
                 ::std::string name;
                 switch (token.hand) {
@@ -326,15 +324,13 @@ void Client::update_fight_window() {
             }  // FACE SIDE
             {  // BACK SIDE
                 bool init = false;
-                int num = 0;
+                int num = token.count;
                 ::std::string name;
                 ::runebound::fight::HandFightTokens target{};
                 if (token.token.first == token.hand) {
                     target = token.token.second;
-                    num = token.token.second_count;
                     init = token.token.second_lead;
                 } else {
-                    num = token.token.first_count;
                     target = token.token.first;
                     init = token.token.first_lead;
                 }
@@ -426,13 +422,11 @@ void Client::update_fight_window() {
             }  // BACKGROUND
             {  // FACE SIDE
                 bool init = false;
-                int num = 0;
+                int num = token.count;
                 if (token.token.first == token.hand) {
                     init = token.token.first_lead;
-                    num = token.token.first_count;
                 } else {
                     init = token.token.second_lead;
-                    num = token.token.second_count;
                 }
                 ::std::string name;
                 switch (token.hand) {
@@ -476,15 +470,13 @@ void Client::update_fight_window() {
             }  // FACE SIDE
             {  // BACK SIDE
                 bool init = false;
-                int num = 0;
+                int num = token.count;
                 ::std::string name;
                 ::runebound::fight::HandFightTokens target{};
                 if (token.token.first == token.hand) {
                     target = token.token.second;
-                    num = token.token.second_count;
                     init = token.token.second_lead;
                 } else {
-                    num = token.token.first_count;
                     target = token.token.first;
                     init = token.token.first_lead;
                 }
