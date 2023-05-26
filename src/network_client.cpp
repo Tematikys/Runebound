@@ -20,7 +20,7 @@ int main() {
     std::cin >> user_name;
 
     boost::asio::executor_work_guard<boost::asio::io_context::executor_type>
-        work_guard = boost::asio::make_work_guard(io_context);
+            work_guard = boost::asio::make_work_guard(io_context);
 
     runebound::network::Client client(io_context, "127.0.0.1", 4444, user_name);
     try {
@@ -28,7 +28,7 @@ int main() {
         wait();
 
         std::cout << "List of games:\n";
-        for (const auto &e : client.game_names) {
+        for (const auto &e: client.game_names) {
             std::cout << e << '\n';
         }
         std::cout << '\n';
@@ -40,7 +40,7 @@ int main() {
         wait();
 
         std::cout << "List of games:\n";
-        for (const auto &e : client.game_names) {
+        for (const auto &e: client.game_names) {
             std::cout << e << '\n';
         }
         std::cout << '\n';
@@ -49,15 +49,15 @@ int main() {
         wait();
 
         std::cout << "################";
-        for (auto e :
-             client.get_game_client().m_remaining_standard_characters) {
+        for (auto e:
+                client.get_game_client().m_remaining_standard_characters) {
             std::cout << static_cast<int>(e);
         }
 
         wait();
         //        {
         //            std::cout<<"Try to get not available character\n";
-        //            auto chr = client.get_yourself_character();
+        //            auto chr = *client.get_yourself_character();
         //            std::cout << "Character: "
         //                      <<
         //                      static_cast<int>(chr.get_standard_character())
@@ -67,13 +67,13 @@ int main() {
 
         wait();
         {
-            const auto &chr = client.get_yourself_character();
+            const auto &chr = *client.get_yourself_character();
             std::cout << "Character: "
                       << static_cast<int>(chr.get_standard_character()) << ' '
                       << chr.get_name() << ' ' << chr.get_position().x << ' '
                       << chr.get_position().y << '\n';
-            for (auto e :
-                 client.get_game_client().m_remaining_standard_characters) {
+            for (auto e:
+                    client.get_game_client().m_remaining_standard_characters) {
                 std::cout << static_cast<int>(e);
             }
         }
