@@ -39,6 +39,7 @@ public:
         });
     }
 
+private:
     void parse_message(std::string &message) {
         json answer = json::parse(message);
         if (answer["change type"] == "game names") {
@@ -98,6 +99,7 @@ public:
         );
     }
 
+public:
     void take_token() {
         json data;
         data["action type"] = "take token";
@@ -289,6 +291,10 @@ public:
 
     [[nodiscard]] const runebound::game::GameClient &get_game_client() const {
         return m_game_client;
+    }
+
+    [[nodiscard]] auto get_winner() const {
+        return m_game_client.m_fight_client.get_winner();
     }
 
     [[nodiscard]] trade::Product get_product(unsigned int index) {
