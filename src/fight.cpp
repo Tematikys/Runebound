@@ -315,9 +315,13 @@ Fight::toss_token(Participant participant, const TokenHandCount &token) {
         for (auto &enemy_token : m_enemy_remaining_tokens) {
             if (token == enemy_token) {
                 if (rng() % 2 == 0) {
-                    enemy_token.hand = enemy_token.token.first;
-                } else {
-                    enemy_token.hand = enemy_token.token.second;
+                    if (enemy_token.hand == enemy_token.token.second) {
+                        enemy_token.hand = enemy_token.token.first;
+                        enemy_token.count = enemy_token.token.first_count;
+                    } else {
+                        enemy_token.hand = enemy_token.token.second;
+                        enemy_token.count = enemy_token.token.second_count;
+                    }
                 }
                 return enemy_token.hand;
             }
@@ -326,9 +330,13 @@ Fight::toss_token(Participant participant, const TokenHandCount &token) {
     for (auto &character_token : m_character_remaining_tokens) {
         if (token == character_token) {
             if (rng() % 2 == 0) {
-                character_token.hand = character_token.token.first;
-            } else {
-                character_token.hand = character_token.token.second;
+                if (character_token.hand == character_token.token.second) {
+                    character_token.hand = character_token.token.first;
+                    character_token.count = character_token.token.first_count;
+                } else {
+                    character_token.hand = character_token.token.second;
+                    character_token.count = character_token.token.second_count;
+                }
             }
             return character_token.hand;
         }
@@ -343,8 +351,10 @@ Fight::reverse_token(Participant participant, const TokenHandCount &token) {
             if (token == enemy_token) {
                 if (enemy_token.hand == enemy_token.token.second) {
                     enemy_token.hand = enemy_token.token.first;
+                    enemy_token.count = enemy_token.token.first_count;
                 } else {
                     enemy_token.hand = enemy_token.token.second;
+                    enemy_token.count = enemy_token.token.second_count;
                 }
                 return enemy_token.hand;
             }
@@ -354,8 +364,10 @@ Fight::reverse_token(Participant participant, const TokenHandCount &token) {
         if (token == character_token) {
             if (character_token.hand == character_token.token.second) {
                 character_token.hand = character_token.token.first;
+                character_token.count = character_token.token.first_count;
             } else {
                 character_token.hand = character_token.token.second;
+                character_token.count = character_token.token.second_count;
             }
             return character_token.hand;
         }
