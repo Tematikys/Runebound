@@ -154,6 +154,12 @@ public:
         m_is_active = false;
     }
 
+    void deactivate_all_window() {
+        for(auto &[name, win] : m_windows) {
+            win->deactivate();
+        }
+    }
+
     void reset_active_window();
 
     void set_active_window(const ::std::string &name);

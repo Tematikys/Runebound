@@ -3,14 +3,24 @@
 
 namespace runebound::graphics {
 void Client::init_fight_window() {
-    auto window = ::std::make_unique<Window>(Window(
-        m_graphic_renderer, WINDOW_WIDTH * 3 / 4, WINDOW_HEIGHT * 3 / 4,
-        {0xFF, 0xFF, 0xFF, 0xFF}
-    ));
-    m_window.get_window("game")->add_window(
-        "fight", ::std::move(window), {WINDOW_WIDTH / 8, WINDOW_HEIGHT / 8},
-        false, false
-    );
+    {  // FIGHT WINDOW
+        auto window = ::std::make_unique<Window>(Window(
+            m_graphic_renderer, WINDOW_WIDTH * 3 / 4, WINDOW_HEIGHT * 3 / 4,
+            {0xFF, 0xFF, 0xFF, 0xFF}
+        ));
+        m_window.get_window("game")->add_window(
+            "fight", ::std::move(window), {WINDOW_WIDTH / 8, WINDOW_HEIGHT / 8},
+            false, false
+        );
+    }  // FIGHT WINDOW
+    {  // WIN / LOSE WINDOW
+        auto *win = m_window.get_window("game")->get_window("fight");
+        auto window = ::std::make_unique<Window>(Window(
+            m_graphic_renderer, win->width(), win->height(),
+            {0xFF, 0xFF, 0xFF, 0xFF}
+        ));
+        win->add_window("win_lose", ::std::move(window), {0, 0}, false, false);
+    }  // WIN / LOSE WINDOW
 }
 
 void Client::update_fight_window() {
@@ -18,9 +28,6 @@ void Client::update_fight_window() {
     win->remove_all_textures();
     win->remove_all_buttons();
     const auto &fight = m_network_client.get_game_client().m_fight_client;
-    if (fight.check_end_fight()) {
-        m_network_client.fight_end_fight();
-    }
 
     static ::std::vector<::runebound::fight::TokenHandCount>
         character_selected_tokens;
@@ -37,6 +44,132 @@ void Client::update_fight_window() {
     std::vector<::runebound::fight::TokenHandCount> opponent_tokens;
     ::std::string your_name;
     ::std::string opponent_name;
+
+    bool am_i_char = false;
+    ::runebound::character::Character opponent;
+
+    {  // GET YOURSELF AND OPPONENT
+        if (m_network_client.get_yourself_character() != nullptr &&
+            m_network_client.get_yourself_character()->get_state() ==
+                ::runebound::character::StateCharacter::FIGHT) {
+            am_i_char = true;
+            your_tokens = fight.m_character_remaining_tokens;
+            opponent_tokens = fight.m_enemy_remaining_tokens;
+            your_name = m_network_client.get_yourself_character()->get_name();
+            opponent_name = fight.m_enemy.get_name();
+        } else {
+            am_i_char = false;
+            opponent_tokens = fight.m_character_remaining_tokens;
+            your_tokens = fight.m_enemy_remaining_tokens;
+            your_name = fight.m_enemy.get_name();
+            for (const auto &op : m_network_client.m_game_client.m_characters) {
+                if (op.get_state() ==
+                    ::runebound::character::StateCharacter::FIGHT) {
+                    opponent = op;
+                    opponent_name = op.get_name();
+                    break;
+                }
+            }
+        }
+    }  // GET YOURSELF AND OPPONENT
+
+    if (fight.check_end_fight()) {
+        auto winner = m_network_client.get_winner();
+        win->get_window("win_lose")->activate();
+        win->set_visibility_window("win_lose", true);
+        win->set_updatability_window("win_lose", true);
+        win->set_all_updatability_button(false);
+        if (winner == ::runebound::fight::Participant::CHARACTER) {
+            Texture texture;
+            texture.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono50"], "Player win",
+                {0x00, 0x00, 0x00, 0xFF}
+            );
+            win->get_window("win_lose")
+                ->add_texture(
+                    "res", texture,
+                    {(win->get_window("win_lose")->width() - texture.width()) /
+                         2,
+                     (win->get_window("win_lose")->height() - texture.height()
+                     ) / 2 -
+                         25},
+                    true
+                );
+            texture.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono50"],
+                "Reward: ", {0x00, 0x00, 0x00, 0xFF}
+            );
+            win->get_window("win_lose")
+                ->add_texture(
+                    "prize", texture,
+                    {(win->get_window("win_lose")->width() - texture.width()) /
+                         2,
+                     (win->get_window("win_lose")->height() - texture.height()
+                     ) / 2 +
+                         25},
+                    true
+                );
+        } else {
+            Texture texture;
+            texture.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono50"], "Player lose",
+                {0x00, 0x00, 0x00, 0xFF}
+            );
+            win->get_window("win_lose")
+                ->add_texture(
+                    "res", texture,
+                    {(win->get_window("win_lose")->width() - texture.width()) /
+                         2,
+                     (win->get_window("win_lose")->height() - texture.height()
+                     ) / 2},
+                    true
+                );
+        }
+        if (am_i_char) {
+            {  // EXIT BUTTON
+                Texture texture;
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                Button button = Button(
+                    200, 30, HorizontalButtonTextureAlign::CENTER,
+                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                    [this]() {
+                        m_window.get_window("game")
+                            ->get_window("fight")
+                            ->get_window("win_lose")
+                            ->deactivate();
+                        m_window.get_window("game")
+                            ->get_window("fight")
+                            ->get_window("win_lose")
+                            ->deactivate_all_window();
+                        m_window.get_window("game")
+                            ->get_window("fight")
+                            ->set_visibility_window("win_lose", false);
+                        m_window.get_window("game")
+                            ->get_window("fight")
+                            ->set_updatability_window("win_lose", false);
+                        m_window.get_window("game")
+                            ->get_window("fight")
+                            ->set_all_updatability_button(true);
+                        m_network_client.fight_end_fight();
+                    },
+                    []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                );
+                win->get_window("win_lose")
+                    ->add_button(
+                        "exit", button,
+                        {win->get_window("win_lose")->width() - button.width() -
+                             5,
+                         win->get_window("win_lose")->height() -
+                             button.height() - 5},
+                        true, true
+                    );
+            }  // EXIT BUTTON
+        }
+        return;
+    }
 
     {  // USE BUTTON
         if (m_network_client.get_yourself_character() != nullptr) {
@@ -114,34 +247,6 @@ void Client::update_fight_window() {
             );
         }
     }  // PASS BUTTON
-
-    bool am_i_char = false;
-    ::runebound::character::Character opponent;
-
-    {  // GET YOURSELF AND OPPONENT
-        if (m_network_client.get_yourself_character() != nullptr &&
-            m_network_client.get_yourself_character()->get_state() ==
-                ::runebound::character::StateCharacter::FIGHT) {
-            am_i_char = true;
-            your_tokens = fight.m_character_remaining_tokens;
-            opponent_tokens = fight.m_enemy_remaining_tokens;
-            your_name = m_network_client.get_yourself_character()->get_name();
-            opponent_name = fight.m_enemy.get_name();
-        } else {
-            am_i_char = false;
-            opponent_tokens = fight.m_character_remaining_tokens;
-            your_tokens = fight.m_enemy_remaining_tokens;
-            your_name = fight.m_enemy.get_name();
-            for (const auto &op : m_network_client.m_game_client.m_characters) {
-                if (op.get_state() ==
-                    ::runebound::character::StateCharacter::FIGHT) {
-                    opponent = op;
-                    opponent_name = op.get_name();
-                    break;
-                }
-            }
-        }
-    }  // GET YOURSELF AND OPPONENT
 
     {  // TURN
         Texture texture;
