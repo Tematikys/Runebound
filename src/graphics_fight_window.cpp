@@ -426,10 +426,13 @@ void Client::update_fight_window() {
             }  // BACKGROUND
             {  // FACE SIDE
                 bool init = false;
+                int num = 0;
                 if (token.token.first == token.hand) {
                     init = token.token.first_lead;
+                    num = token.token.first_count;
                 } else {
                     init = token.token.second_lead;
+                    num = token.token.second_count;
                 }
                 ::std::string name;
                 switch (token.hand) {
@@ -464,15 +467,24 @@ void Client::update_fight_window() {
                 m_images[name].render_to_texture(
                     m_graphic_renderer, 20, 20, tex
                 );
+                Texture texture;
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono40"],
+                    ::std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
+                );
+                texture.render_to_texture(m_graphic_renderer, 80, 30, tex);
             }  // FACE SIDE
             {  // BACK SIDE
                 bool init = false;
+                int num = 0;
                 ::std::string name;
                 ::runebound::fight::HandFightTokens target{};
                 if (token.token.first == token.hand) {
                     target = token.token.second;
+                    num = token.token.second_count;
                     init = token.token.second_lead;
                 } else {
+                    num = token.token.first_count;
                     target = token.token.first;
                     init = token.token.first_lead;
                 }
@@ -508,6 +520,12 @@ void Client::update_fight_window() {
                 m_images[name + "32"].render_to_texture(
                     m_graphic_renderer, 77, 77, tex
                 );
+                Texture texture;
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono20"],
+                    ::std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
+                );
+                texture.render_to_texture(m_graphic_renderer, 75, 100, tex);
             }  // BACK SIDE
         }      // RENDER
         Texture texture(tex);
