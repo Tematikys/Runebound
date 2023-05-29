@@ -225,40 +225,25 @@ void Client::update_game_window() {
             }
         }
     }  // SELECTED HEXAGON
-    {  // TAKE TOKEN
-        SDL_Texture *tex = nullptr;
-        Texture texture;
+    {  // TURN
         auto *window = m_window.get_window("game");
-        window->remove_button("take_token");
-        if (m_network_client.m_character !=
-            ::runebound::character::StandardCharacter::NONE) {
-            const auto me = m_network_client.get_yourself_character();
-            const auto &pos = me->get_position();
-            const auto &cell =
-                m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
-
-            if (cell.get_token() != ::runebound::AdventureType::NOTHING) {
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono30"], "Take token",
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                Button button(
-                    200, 30, HorizontalButtonTextureAlign::CENTER,
-                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-                    [this]() { m_network_client.take_token(); }, []() {},
-                    {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-                );
-                window->add_button(
-                    "take_token", button,
-                    {window->width() - 205, window->height() - 35 * 6}, true,
-                    true
-                );
-            }
-        } else {
-            ::std::cout << "[[graphics log]] :: take token no self"
-                        << ::std::endl;
+        Texture texture;
+        if (!m_network_client.get_game_client().m_characters.empty()) {
+            const auto turn_name =
+                m_network_client.get_game_client()
+                    .m_characters[m_network_client.get_game_client().m_turn]
+                    .get_name();
+            texture.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono30"], "Turn: " + turn_name,
+                {0x00, 0x00, 0x00, 0xFF}
+            );
+            window->add_texture(
+                "turn", texture,
+                {window->width() - texture.width(), window->height() - 35 * 8},
+                true
+            );
         }
-    }  // TAKE TOKEN
+    }  // TURN
     {  // TRADE
         SDL_Texture *tex = nullptr;
         Texture texture;
@@ -302,6 +287,40 @@ void Client::update_game_window() {
             }
         }
     }  // TRADE
+    {  // TAKE TOKEN
+        SDL_Texture *tex = nullptr;
+        Texture texture;
+        auto *window = m_window.get_window("game");
+        window->remove_button("take_token");
+        if (m_network_client.m_character !=
+            ::runebound::character::StandardCharacter::NONE) {
+            const auto me = m_network_client.get_yourself_character();
+            const auto &pos = me->get_position();
+            const auto &cell =
+                m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
+
+            if (cell.get_token() != ::runebound::AdventureType::NOTHING) {
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono30"], "Take token",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                Button button(
+                    200, 30, HorizontalButtonTextureAlign::CENTER,
+                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                    [this]() { m_network_client.take_token(); }, []() {},
+                    {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                );
+                window->add_button(
+                    "take_token", button,
+                    {window->width() - 205, window->height() - 35 * 6}, true,
+                    true
+                );
+            }
+        } else {
+            ::std::cout << "[[graphics log]] :: take token no self"
+                        << ::std::endl;
+        }
+    }  // TAKE TOKEN
     {  // UPDATE CHARACTERS
         SDL_Texture *tex = nullptr;
         Texture texture;
