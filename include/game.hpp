@@ -21,8 +21,9 @@ namespace runebound {
 const int DECK_SIZE = 15;
 
 namespace game {
-// void to_json(nlohmann::json &json, const Game &game);
-// void from_json(const nlohmann::json &json, Game &game);
+
+void to_json(nlohmann::json &json, const Game &game);
+void from_json(const nlohmann::json &json, Game &game);
 
 struct WrongCharacterTurnException : std::runtime_error {
     WrongCharacterTurnException()
@@ -373,6 +374,15 @@ public:
 
     void accept_to_fight(const std::shared_ptr<character::Character> &receiver);
 
+    [[nodiscard]] std::shared_ptr <character::Character> get_character(const character::StandardCharacter &standard_character) const {
+        for (const auto &character : m_characters) {
+            if (character->get_standard_character() == standard_character) {
+                return character;
+            }
+        }
+        return nullptr;
+    }
+
     [[nodiscard]] std::vector<::runebound::character::Character>
     get_character_without_shared_ptr() const {
         std::vector<::runebound::character::Character> result;
@@ -499,8 +509,8 @@ public:
 
     [[nodiscard]] std::vector<Point> get_possible_moves() const;
 
-    // friend void to_json(nlohmann::json &json, const Game &game);
-    // friend void from_json(const nlohmann::json &json, Game &game);
+    friend void to_json(nlohmann::json &json, const Game &game);
+    friend void from_json(const nlohmann::json &json, Game &game);
 };
 }  // namespace game
 }  // namespace runebound

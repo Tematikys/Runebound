@@ -198,6 +198,9 @@ public:
     }
 };
 
+void to_json(nlohmann::json &json, const Fight &fight);
+void from_json(const nlohmann::json &json, Fight &fight, const runebound::game::Game &game);
+
 struct Fight {
 private:
     friend struct FightClient;
@@ -329,6 +332,10 @@ public:
     }
 
     void start_round();
+
+    friend void to_json(nlohmann::json &json, const Fight &fight);
+    friend void from_json(const nlohmann::json &json, Fight &fight, const runebound::game::Game &game);
+
 };
 }  // namespace runebound::fight
 

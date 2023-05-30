@@ -10,18 +10,77 @@
 namespace runebound {
 namespace game {
 
-/*
+
 void to_json(nlohmann::json &json, const Game &game) {
+    json["m_game_over"] = game.m_game_over;
     json["m_map"] = game.m_map;
-    json["m_characters"] = game.m_characters;
+    json["m_characters"] = std::vector <character::Character>{};
+    for (const auto &character : game.m_characters) {
+        json["m_characters"] = *character;
+    }
     json["m_card_deck_research"] = game.m_card_deck_research;
-    json["m_tokens"] = game.m_tokens;
+    json["m_card_deck_fight"] = game.m_card_deck_fight;
+    json["m_card_deck_skill"] = game.m_card_deck_skill;
+    json["m_card_deck_meeting"] = game.m_card_deck_meeting;
+    json["m_remaining_products"] = game.m_remaining_products;
     json["m_turn"] = game.m_turn;
     json["m_count_players"] = game.m_count_players;
-    json["ALL_CARDS_RESEARCH"] = game.ALL_CARDS_RESEARCH;
+    json["m_number_of_rounds"] = game.m_number_of_rounds;
+    json["m_winner"] = game.m_winner;
+    json["m_boss_position"] = game.m_boss_position;
+    json["m_last_dice_movement_result"] = game.m_last_dice_movement_result;
+    json["m_last_dice_relax_result"] = game.m_last_dice_relax_result;
+    json["m_last_dice_research_result"] = game.m_last_dice_research_result;
+    json["m_last_characteristic_check"] = game.m_last_characteristic_check;
+    json["m_last_possible_outcomes"] = game.m_last_possible_outcomes;
+    json["m_all_cards_research"] = game.m_all_cards_research;
+    json["m_all_cards_fight"] = game.m_all_cards_fight;
+    json["m_all_cards_meeting"] = game.m_all_cards_meeting;
+    json["m_all_skill_cards"] = game.m_all_skill_cards;
+    json["m_all_products"] = game.m_all_products;
+    json["m_remaining_standard_characters"] = game.m_remaining_standard_characters;
+    json["m_shops"] = game.m_shops;
+    json["m_current_fight"] = *game.m_current_fight;
+    json["m_current_fight_two_player"] = *game.m_current_fight_two_player;
 }
 
+namespace {
+    template <typename T>
+    void fill_vector(const nlohmann::json &json, std::vector <T> &vec) {
+        vec.clear();
+        for (const auto &elem : json) {
+            vec.push_back(elem);
+        }
+    }
+}
 void from_json(const nlohmann::json &json, Game &game) {
+    game.m_game_over = json["m_game_over"];
+    game.m_map = json["m_map"];
+    game.m_characters.clear();
+    for (const auto &character : json["m_characters"]) {
+        game.m_characters.push_back(std::make_shared<character::Character>(character::Character(character)));
+    }
+    fill_vector(json["m_card_deck_research"], game.m_card_deck_research);
+    fill_vector(json["m_card_deck_fight"], game.m_card_deck_fight);
+    fill_vector(json["m_card_deck_skill"], game.m_card_deck_skill);
+    fill_vector(json["m_card_deck_meeting"], game.m_card_deck_meeting);
+    fill_vector(json["m_remaining_products"], game.m_remaining_products);
+    game.m_turn = json["m_turn"];
+    game.m_count_players = json["m_count_players"];
+    game.m_number_of_rounds = json["m_number_of_rounds"];
+    game.m_winner = json["m_winner"];
+    game.m_boss_position = json["m_boss_position"];
+    fill_vector(json["m_last_dice_movement_result"], game.m_last_dice_movement_result);
+    fill_vector(json["m_last_dice_relax_result"], game.m_last_dice_relax_result);
+    fill_vector(json["m_last_dice_research_result"], game.m_last_dice_research_result);
+    fill_vector(json["m_last_characteristic_check"], game.m_last_characteristic_check);
+    fill_vector(json["m_last_possible_outcomes"], game.m_last_possible_outcomes);
+    fill_vector(json["m_all_cards_research"], game.m_all_cards_research);
+    fill_vector(json["m_all_cards_fight"], game.m_all_cards_fight);
+    fill_vector(json["m_all_cards_meeting"], game.m_all_cards_meeting);
+    fill_vector(json["m_all_skill_cards"], game.m_all_skill_cards);
+    fill_vector(json["m_all_products"], game.m_all_products);
+    fill_vector(json["m_remaining_standard_characters"], game.m_remaining_standard_characters);
     int count_players = json["M_COUNT_PLAYERS"];
     std::vector<unsigned int> cards;
     for (const nlohmann::json &card : json["m_card_deck_research"]) {
@@ -34,7 +93,7 @@ void from_json(const nlohmann::json &json, Game &game) {
     game.m_tokens = json["m_tokens"];
     game.m_turn = json["m_turn"];
 }
-*/
+
 Point Game::get_position_character(
     const std::shared_ptr<character::Character> &chr
 ) const {
