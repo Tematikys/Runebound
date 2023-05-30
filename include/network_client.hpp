@@ -301,6 +301,10 @@ public:
         return m_game_client.m_all_products[index];
     }
 
+    [[nodiscard]] std::vector<Point> get_possible_moves() {
+        return m_game_client.m_possible_moves;
+    }
+
     bool is_game_need_update() {
         bool tmp = game_need_update;
         // game_need_update = false;

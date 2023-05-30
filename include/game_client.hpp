@@ -31,6 +31,7 @@ public:
     std::vector<dice::HandDice> m_last_dice_research_result;
     std::vector<unsigned int> m_last_characteristic_check;
     std::vector<std::size_t> m_last_possible_outcomes;
+    std::vector<Point> m_possible_moves;
 
     std::map<Point, std::set<unsigned int>> m_shops;
     std::vector<trade::Product> m_all_products;
@@ -54,15 +55,18 @@ public:
           m_last_dice_research_result(game.m_last_dice_research_result),
           m_last_characteristic_check(game.m_last_characteristic_check),
           m_last_possible_outcomes(game.m_last_possible_outcomes),
-
+          m_possible_moves(game.get_possible_moves()),
           m_shops(game.m_shops),
           m_all_products(game.m_all_products) {
         auto set_remaining =
             std::move(game.get_remaining_standard_characters());
+
         std::vector<::runebound::character::StandardCharacter> vec_remaining(
             set_remaining.begin(), set_remaining.end()
         );
+
         m_remaining_standard_characters = std::move(vec_remaining);
+
         if ((game.m_characters.size() != 0) &&
             (game.m_characters[game.m_turn]->get_current_fight())) {
             is_fight = true;
