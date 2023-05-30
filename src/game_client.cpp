@@ -23,6 +23,7 @@ void to_json(nlohmann::json &json, const GameClient &game) {
     json["m_last_dice_research_result"] = game.m_last_dice_research_result;
     json["m_last_characteristic_check"] = game.m_last_characteristic_check;
     json["m_last_possible_outcomes"] = game.m_last_possible_outcomes;
+    json["m_possible_moves"] = game.m_possible_moves;
 
     json["m_shops"] = game.m_shops;
     json["m_all_products"] = game.m_all_products;
@@ -69,6 +70,10 @@ void from_json(const nlohmann::json &json, GameClient &game) {
     game.m_last_possible_outcomes = std::vector<std::size_t>(
         json["m_last_possible_outcomes"].begin(),
         json["m_last_possible_outcomes"].end()
+    );
+
+    game.m_possible_moves = std::vector<Point>(
+        json["m_possible_moves"].begin(), json["m_possible_moves"].end()
     );
 
     game.m_shops = json["m_shops"];
