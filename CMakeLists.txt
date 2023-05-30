@@ -104,6 +104,7 @@ add_executable(network_client
         src/map_client.cpp
         src/network_client.cpp
         src/product.cpp
+        src/fight_two_player.cpp
         )
 target_link_libraries(network_client ${Boost_LIBRARIES} ws2_32 wsock32)
 # ===== NETWORK CLIENT ===== #
@@ -126,6 +127,7 @@ add_executable(${PROJECT_NAME}
         src/card_fight.cpp
         src/card_meeting.cpp
         src/product.cpp
+        src/fight_two_player.cpp
         #tests/test_fight.cpp
         #tests/test_fight_two_player.cpp
         tests/test_game.cpp

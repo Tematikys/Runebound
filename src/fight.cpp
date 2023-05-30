@@ -1,5 +1,6 @@
 #include "fight.hpp"
 #include <vector>
+#include "game.hpp"
 
 namespace runebound::fight {
 
@@ -397,5 +398,28 @@ void Fight::start_round() {
         m_turn = Participant::ENEMY;
     }
 }
+
+void to_json(nlohmann::json &json, const Fight &fight) {
+    json["m_fight_started"] = fight.m_fight_started;
+    json["m_turn"] = fight.m_turn;
+    json["m_pass_character"] = fight.m_pass_character;
+    json["m_pass_enemy"] = fight.m_pass_enemy;
+    json["m_character"] = fight.m_character->get_standard_character();
+    json["m_enemy"] = fight.m_enemy;
+    json["m_enemy_remaining_tokens"] = fight.m_enemy_remaining_tokens;
+    json["m_character_remaining_tokens"] = fight.m_character_remaining_tokens;
+}
+
+void from_json(const nlohmann::json &json, Fight &fight, const runebound::game::Game &game) {
+    fight.m_fight_started = json["m_fight_started"];
+    fight.m_turn = json["m_turn"];
+    fight.m_pass_character = json["m_pass_character"];
+    fight.m_pass_enemy = json["m_pass_enemy"];
+    fight.m_character = game.get_character(json["m_character"]);
+    fight.m_enemy = json["m_enemy"];
+    fight.m_enemy_remaining_tokens = json["m_enemy_remaining_tokens"];
+    fight.m_character_remaining_tokens = json["m_character_remaining_tokens"];
+}
+
 
 }  // namespace runebound::fight

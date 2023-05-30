@@ -4,10 +4,14 @@
 #include <memory>
 #include "character.hpp"
 #include "fight.hpp"
+#include "runebound_fwd.hpp"
 
 namespace runebound::fight {
 
 enum class ParticipantTwoPlayers { CALLER, RECEIVER };
+
+void to_json(nlohmann::json &json, const FightTwoPlayer &fight);
+void from_json(const nlohmann::json &json, FightTwoPlayer &fight, const game::Game &game);
 
 struct FightTwoPlayer {
 private:
@@ -108,6 +112,10 @@ public:
     bool check_end_round() {
         return m_fight.check_end_round();
     }
+
+    friend void to_json(nlohmann::json &json, const FightTwoPlayer &fight);
+
+    friend void from_json(const nlohmann::json &json, FightTwoPlayer &fight, const game::Game &game);
 };
 }  // namespace runebound::fight
 
