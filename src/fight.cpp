@@ -410,7 +410,11 @@ void to_json(nlohmann::json &json, const Fight &fight) {
     json["m_character_remaining_tokens"] = fight.m_character_remaining_tokens;
 }
 
-void from_json(const nlohmann::json &json, Fight &fight, const runebound::game::Game &game) {
+void from_json(
+    const nlohmann::json &json,
+    Fight &fight,
+    const runebound::game::Game &game
+) {
     fight.m_fight_started = json["m_fight_started"];
     fight.m_turn = json["m_turn"];
     fight.m_pass_character = json["m_pass_character"];
@@ -420,6 +424,5 @@ void from_json(const nlohmann::json &json, Fight &fight, const runebound::game::
     fight.m_enemy_remaining_tokens = json["m_enemy_remaining_tokens"];
     fight.m_character_remaining_tokens = json["m_character_remaining_tokens"];
 }
-
 
 }  // namespace runebound::fight

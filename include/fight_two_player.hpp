@@ -11,7 +11,11 @@ namespace runebound::fight {
 enum class ParticipantTwoPlayers { CALLER, RECEIVER };
 
 void to_json(nlohmann::json &json, const FightTwoPlayer &fight);
-void from_json(const nlohmann::json &json, FightTwoPlayer &fight, const game::Game &game);
+void from_json(
+    const nlohmann::json &json,
+    FightTwoPlayer &fight,
+    const game::Game &game
+);
 
 struct FightTwoPlayer {
 private:
@@ -117,7 +121,11 @@ public:
 
     friend void to_json(nlohmann::json &json, const FightTwoPlayer &fight);
 
-    friend void from_json(const nlohmann::json &json, FightTwoPlayer &fight, const game::Game &game);
+    friend void from_json(
+        const nlohmann::json &json,
+        FightTwoPlayer &fight,
+        const game::Game &game
+    );
 };
 }  // namespace runebound::fight
 

@@ -10,11 +10,10 @@
 namespace runebound {
 namespace game {
 
-
 void to_json(nlohmann::json &json, const Game &game) {
     json["m_game_over"] = game.m_game_over;
     json["m_map"] = game.m_map;
-    json["m_characters"] = std::vector <character::Character>{};
+    json["m_characters"] = std::vector<character::Character>{};
     for (const auto &character : game.m_characters) {
         json["m_characters"].push_back(*character);
     }
@@ -38,37 +37,39 @@ void to_json(nlohmann::json &json, const Game &game) {
     json["m_all_cards_meeting"] = game.m_all_cards_meeting;
     json["m_all_skill_cards"] = game.m_all_skill_cards;
     json["m_all_products"] = game.m_all_products;
-    json["m_remaining_standard_characters"] = game.m_remaining_standard_characters;
+    json["m_remaining_standard_characters"] =
+        game.m_remaining_standard_characters;
     json["m_shops"] = game.m_shops;
     if (game.m_current_fight == nullptr) {
         json["m_current_fight"] = nullptr;
-    }
-    else {
+    } else {
         json["m_current_fight"] = *game.m_current_fight;
     }
     if (game.m_current_fight_two_player == nullptr) {
         json["m_current_fight_two_player"] = nullptr;
-    }
-    else {
+    } else {
         json["m_current_fight_two_player"] = *game.m_current_fight_two_player;
     }
 }
 
 namespace {
-    template <typename T>
-    void fill_vector(const nlohmann::json &json, std::vector <T> &vec) {
-        vec.clear();
-        for (const auto &elem : json) {
-            vec.push_back(elem);
-        }
+template <typename T>
+void fill_vector(const nlohmann::json &json, std::vector<T> &vec) {
+    vec.clear();
+    for (const auto &elem : json) {
+        vec.push_back(elem);
     }
 }
+}  // namespace
+
 void from_json(const nlohmann::json &json, Game &game) {
     game.m_game_over = json["m_game_over"];
     game.m_map = json["m_map"];
     game.m_characters.clear();
     for (const auto &character : json["m_characters"]) {
-        game.m_characters.push_back(std::make_shared<character::Character>(character::Character(character)));
+        game.m_characters.push_back(std::make_shared<character::Character>(
+            character::Character(character)
+        ));
     }
     fill_vector(json["m_card_deck_research"], game.m_card_deck_research);
     fill_vector(json["m_card_deck_fight"], game.m_card_deck_fight);
@@ -80,11 +81,21 @@ void from_json(const nlohmann::json &json, Game &game) {
     game.m_number_of_rounds = json["m_number_of_rounds"];
     game.m_winner = json["m_winner"];
     game.m_boss_position = json["m_boss_position"];
-    fill_vector(json["m_last_dice_movement_result"], game.m_last_dice_movement_result);
-    fill_vector(json["m_last_dice_relax_result"], game.m_last_dice_relax_result);
-    fill_vector(json["m_last_dice_research_result"], game.m_last_dice_research_result);
-    fill_vector(json["m_last_characteristic_check"], game.m_last_characteristic_check);
-    fill_vector(json["m_last_possible_outcomes"], game.m_last_possible_outcomes);
+    fill_vector(
+        json["m_last_dice_movement_result"], game.m_last_dice_movement_result
+    );
+    fill_vector(
+        json["m_last_dice_relax_result"], game.m_last_dice_relax_result
+    );
+    fill_vector(
+        json["m_last_dice_research_result"], game.m_last_dice_research_result
+    );
+    fill_vector(
+        json["m_last_characteristic_check"], game.m_last_characteristic_check
+    );
+    fill_vector(
+        json["m_last_possible_outcomes"], game.m_last_possible_outcomes
+    );
     game.m_all_cards_research.clear();
     for (const auto &json_card_research : json["m_all_cards_research"]) {
         cards::CardResearch card;
@@ -95,26 +106,31 @@ void from_json(const nlohmann::json &json, Game &game) {
     fill_vector(json["m_all_cards_meeting"], game.m_all_cards_meeting);
     fill_vector(json["m_all_skill_cards"], game.m_all_skill_cards);
     fill_vector(json["m_all_products"], game.m_all_products);
-    game.m_remaining_standard_characters = std::set<character::StandardCharacter>(
-        json["m_remaining_standard_characters"].begin(),
-        json["m_remaining_standard_characters"].end()
+    game.m_remaining_standard_characters =
+        std::set<character::StandardCharacter>(
+            json["m_remaining_standard_characters"].begin(),
+            json["m_remaining_standard_characters"].end()
+        );
+    game.m_shops = std::map<Point, std::set<unsigned int>>(
+        json["m_shops"].begin(), json["m_shops"].end()
     );
-    game.m_shops = std::map<Point, std::set<unsigned int>>(json["m_shops"].begin(), json["m_shops"].end());
     if (json["m_current_fight"] != nullptr) {
         fight::Fight fight;
         from_json(json["m_current_fight"], fight, game);
-        game.m_current_fight = std::make_shared<fight::Fight>(fight::Fight(fight));
-    }
-    else {
+        game.m_current_fight =
+            std::make_shared<fight::Fight>(fight::Fight(fight));
+    } else {
         game.m_current_fight = nullptr;
     }
 
     if (json["m_current_fight_two_player"] != nullptr) {
         fight::FightTwoPlayer fight_two_player;
         from_json(json["m_current_fight_two_player"], fight_two_player, game);
-        game.m_current_fight_two_player = std::make_shared<fight::FightTwoPlayer>(fight::FightTwoPlayer(fight_two_player));
-    }
-    else {
+        game.m_current_fight_two_player =
+            std::make_shared<fight::FightTwoPlayer>(
+                fight::FightTwoPlayer(fight_two_player)
+            );
+    } else {
         game.m_current_fight_two_player = nullptr;
     }
 }

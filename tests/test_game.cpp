@@ -455,7 +455,8 @@ TEST_CASE("to_json from_json game") {
     runebound::game::Game game;
     auto lissa =
         game.make_character(runebound::character::StandardCharacter::LISSA);
-    auto mok = game.make_character(runebound::character::StandardCharacter::ELDER_MOK);
+    auto mok =
+        game.make_character(runebound::character::StandardCharacter::ELDER_MOK);
     mok->set_position(runebound::Point(11, 1));
     nlohmann::json json, json_after;
     runebound::game::to_json(json, game);
