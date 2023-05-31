@@ -88,7 +88,7 @@ void Window::render(
     }
 
     const RectangleShape rect{0, 0, m_width - 1, m_height - 1};
-    rect.render_border(renderer, 0, 0, {255, 0, 0, 255});
+    rect.render_border(renderer, 0, 0, {255, 0, 0, 255}, 1);
 
     SDL_SetRenderTarget(renderer, main_texture);
     const SDL_Rect renderQuad = {x_offset, y_offset, m_width, m_height};

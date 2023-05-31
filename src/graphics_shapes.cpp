@@ -108,17 +108,27 @@ void PolygonShape::render_border(
     SDL_Renderer *renderer,
     int x_offset,
     int y_offset,
-    SDL_Color border_color
+    SDL_Color border_color,
+    int thickness
 ) const {
-    SDL_SetRenderDrawColor(
-        renderer, border_color.r, border_color.g, border_color.b, border_color.a
-    );
     for (::std::size_t i = 0; i < get_number_of_vertexes(); ++i) {
-        SDL_RenderDrawLine(
-            renderer, get_vertex(i).x() + x_offset,
-            get_vertex(i).y() + y_offset,
-            get_vertex((i + 1) % get_number_of_vertexes()).x() + x_offset,
-            get_vertex((i + 1) % get_number_of_vertexes()).y() + y_offset
+        circleRGBA(
+            renderer, static_cast<short>(get_vertex(i).x() + x_offset),
+            static_cast<short>(get_vertex(i).y() + y_offset),
+            static_cast<short>(thickness / 2), border_color.r, border_color.g,
+            border_color.b, border_color.a
+        );
+        thickLineRGBA(
+            renderer, static_cast<short>(get_vertex(i).x() + x_offset),
+            static_cast<short>(get_vertex(i).y() + y_offset),
+            static_cast<short>(
+                get_vertex((i + 1) % get_number_of_vertexes()).x() + x_offset
+            ),
+            static_cast<short>(
+                get_vertex((i + 1) % get_number_of_vertexes()).y() + y_offset
+            ),
+            thickness, border_color.r, border_color.g, border_color.b,
+            border_color.a
         );
     }
 }
@@ -133,7 +143,7 @@ void PolygonShape::render_to_texture(
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     //    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     render(renderer, 0, 0, fill_color);
-    render_border(renderer, 0, 0, border_color);
+    render_border(renderer, 0, 0, border_color, 1);
     //    SDL_SetRenderTarget(renderer, nullptr);
     //    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }
@@ -147,7 +157,7 @@ void PolygonShape::render_border_to_texture(
     SDL_Color border_color
 ) const {
     SDL_SetRenderTarget(renderer, texture_to_render_on);
-    render_border(renderer, x_offset, y_offset, border_color);
+    render_border(renderer, x_offset, y_offset, border_color, 1);
     SDL_SetRenderTarget(renderer, previous_texture);
 }
 

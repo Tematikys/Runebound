@@ -87,7 +87,7 @@ Button &Button::operator=(Button &&other) noexcept {
 
 void Button::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
     m_shape.render(renderer, x_offset, y_offset, m_fill_color);
-    m_shape.render_border(renderer, x_offset, y_offset, m_border_color);
+    m_shape.render_border(renderer, x_offset, y_offset, m_border_color, 1);
     m_texture.render(
         renderer, x_offset + m_texture_x_offset, y_offset + m_texture_y_offset
     );
