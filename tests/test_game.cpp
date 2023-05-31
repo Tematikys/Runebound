@@ -450,3 +450,17 @@ TEST_CASE("neighbours cells") {
     game.throw_movement_dice(lissa);
     CHECK(game.get_possible_moves().size() > 6);
 }
+
+TEST_CASE("to_json from_json game") {
+    runebound::game::Game game;
+    auto lissa =
+        game.make_character(runebound::character::StandardCharacter::LISSA);
+    auto mok = game.make_character(runebound::character::StandardCharacter::ELDER_MOK);
+    mok->set_position(runebound::Point(11, 1));
+    nlohmann::json json, json_after;
+    runebound::game::to_json(json, game);
+    runebound::game::Game game_after_json;
+    runebound::game::from_json(json, game_after_json);
+    runebound::game::to_json(json_after, game_after_json);
+    CHECK(json == json_after);
+}
