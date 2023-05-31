@@ -16,6 +16,8 @@ private:
     int m_required_number_trophies;
 
 public:
+    SkillCard() = default;
+
     SkillCard(bool success, Characteristic characteristic, int trophies)
         : m_success(success),
           m_characteristic(characteristic),

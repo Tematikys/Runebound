@@ -16,7 +16,7 @@ void to_json(nlohmann::json &json, const Game &game) {
     json["m_map"] = game.m_map;
     json["m_characters"] = std::vector <character::Character>{};
     for (const auto &character : game.m_characters) {
-        json["m_characters"] = *character;
+        json["m_characters"].push_back(*character);
     }
     json["m_card_deck_research"] = game.m_card_deck_research;
     json["m_card_deck_fight"] = game.m_card_deck_fight;
@@ -40,8 +40,18 @@ void to_json(nlohmann::json &json, const Game &game) {
     json["m_all_products"] = game.m_all_products;
     json["m_remaining_standard_characters"] = game.m_remaining_standard_characters;
     json["m_shops"] = game.m_shops;
-    json["m_current_fight"] = *game.m_current_fight;
-    json["m_current_fight_two_player"] = *game.m_current_fight_two_player;
+    if (game.m_current_fight == nullptr) {
+        json["m_current_fight"] = nullptr;
+    }
+    else {
+        json["m_current_fight"] = *game.m_current_fight;
+    }
+    if (game.m_current_fight_two_player == nullptr) {
+        json["m_current_fight_two_player"] = nullptr;
+    }
+    else {
+        json["m_current_fight_two_player"] = *game.m_current_fight_two_player;
+    }
 }
 
 namespace {
@@ -75,23 +85,38 @@ void from_json(const nlohmann::json &json, Game &game) {
     fill_vector(json["m_last_dice_research_result"], game.m_last_dice_research_result);
     fill_vector(json["m_last_characteristic_check"], game.m_last_characteristic_check);
     fill_vector(json["m_last_possible_outcomes"], game.m_last_possible_outcomes);
-    fill_vector(json["m_all_cards_research"], game.m_all_cards_research);
+    game.m_all_cards_research.clear();
+    for (const auto &json_card_research : json["m_all_cards_research"]) {
+        cards::CardResearch card;
+        from_json(json_card_research, card, game.m_map);
+        game.m_all_cards_research.push_back(card);
+    }
     fill_vector(json["m_all_cards_fight"], game.m_all_cards_fight);
     fill_vector(json["m_all_cards_meeting"], game.m_all_cards_meeting);
     fill_vector(json["m_all_skill_cards"], game.m_all_skill_cards);
     fill_vector(json["m_all_products"], game.m_all_products);
-    fill_vector(json["m_remaining_standard_characters"], game.m_remaining_standard_characters);
-    int count_players = json["M_COUNT_PLAYERS"];
-    std::vector<unsigned int> cards;
-    for (const nlohmann::json &card : json["m_card_deck_research"]) {
-        cards.push_back(card);
+    game.m_remaining_standard_characters = std::set<character::StandardCharacter>(
+        json["m_remaining_standard_characters"].begin(),
+        json["m_remaining_standard_characters"].end()
+    );
+    game.m_shops = std::map<Point, std::set<unsigned int>>(json["m_shops"].begin(), json["m_shops"].end());
+    if (json["m_current_fight"] != nullptr) {
+        fight::Fight fight;
+        from_json(json["m_current_fight"], fight, game);
+        game.m_current_fight = std::make_shared<fight::Fight>(fight::Fight(fight));
     }
-    game.m_card_deck_research = cards;
-    game.m_count_players = json["m_count_players"];
-    game.m_map = json["m_map"];
-    game.m_characters = json["m_characters"];
-    game.m_tokens = json["m_tokens"];
-    game.m_turn = json["m_turn"];
+    else {
+        game.m_current_fight = nullptr;
+    }
+
+    if (json["m_current_fight_two_player"] != nullptr) {
+        fight::FightTwoPlayer fight_two_player;
+        from_json(json["m_current_fight_two_player"], fight_two_player, game);
+        game.m_current_fight_two_player = std::make_shared<fight::FightTwoPlayer>(fight::FightTwoPlayer(fight_two_player));
+    }
+    else {
+        game.m_current_fight_two_player = nullptr;
+    }
 }
 
 Point Game::get_position_character(

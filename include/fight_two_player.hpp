@@ -20,6 +20,8 @@ private:
     Fight m_fight;
 
 public:
+    FightTwoPlayer() = default;
+
     FightTwoPlayer(
         const std::shared_ptr<character::Character> &caller,
         const std::shared_ptr<character::Character> &receiver
