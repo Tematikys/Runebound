@@ -374,7 +374,9 @@ public:
 
     void accept_to_fight(const std::shared_ptr<character::Character> &receiver);
 
-    [[nodiscard]] std::shared_ptr <character::Character> get_character(const character::StandardCharacter &standard_character) const {
+    [[nodiscard]] std::shared_ptr<character::Character> get_character(
+        const character::StandardCharacter &standard_character
+    ) const {
         for (const auto &character : m_characters) {
             if (character->get_standard_character() == standard_character) {
                 return character;
