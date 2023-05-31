@@ -45,8 +45,12 @@ void Client::update_fight_window() {
     const auto enemy_name = enemy.get_name();
     const auto my_role = m_network_client.get_yourself_character()->get_state();
 
+    // TODO
+    static int round_number(1);
+
     {  // UPDATE TOKENS
         if (m_network_client.is_game_need_update()) {
+            ++round_number;
             character_selected_tokens.clear();
             enemy_selected_tokens.clear();
         }
@@ -54,6 +58,7 @@ void Client::update_fight_window() {
 
     {  // CHECK END OF FIGHT
         if (fight.check_end_fight()) {
+            round_number = 1;
             auto winner = m_network_client.get_winner();
             win->get_window("win_lose")->activate();
             win->set_visibility_window("win_lose", true);
@@ -76,23 +81,23 @@ void Client::update_fight_window() {
                              25},
                         true
                     );
-                //                texture.load_text_from_string(
-                //                    m_graphic_renderer, m_fonts["FreeMono50"],
-                //                    "Reward: ", {0x00, 0x00, 0x00, 0xFF}
-                //                );
-                //                win->get_window("win_lose")
-                //                    ->add_texture(
-                //                        "prize", texture,
-                //                        {(win->get_window("win_lose")->width()
-                //                        - texture.width()
-                //                         ) / 2,
-                //                         (win->get_window("win_lose")->height()
-                //                         -
-                //                          texture.height()) /
-                //                                 2 +
-                //                             25},
-                //                        true
-                //                    );
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono50"],
+                    "Reward: "
+                    "Bogdan have not added it yet",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                win->get_window("win_lose")
+                    ->add_texture(
+                        "prize", texture,
+                        {(win->get_window("win_lose")->width() - texture.width()
+                         ) / 2,
+                         (win->get_window("win_lose")->height() -
+                          texture.height()) /
+                                 2 +
+                             25},
+                        true
+                    );
             } else {
                 Texture texture;
                 texture.load_text_from_string(
@@ -270,6 +275,20 @@ void Client::update_fight_window() {
             true
         );
     }  // TURN
+
+    {  // ROUND NUMBER
+        Texture texture;
+        texture.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono30"],
+            "Round: " + std::to_string(round_number), {0x00, 0x00, 0x00, 0xFF}
+        );
+        win->add_texture(
+            "round", texture,
+            {win->width() - texture.width() - 5,
+             win->height() - 138 - texture.height() - 5 - 3 * 35},
+            true
+        );
+    }  // ROUND NUMBER
 
     {  // CHARACTER NAME
         Texture texture;

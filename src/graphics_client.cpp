@@ -6,6 +6,8 @@
 namespace runebound::graphics {
 void Client::update_board() {
     m_board = Board(m_network_client.get_game_client().m_map);
+    // TODO if my turn, then show, else no
+    //
     //    if (m_network_client.get_yourself_character() != nullptr &&
     //        m_network_client.get_game_client()
     //                .m_characters[m_network_client.get_game_client().m_turn]
