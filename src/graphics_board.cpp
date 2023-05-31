@@ -128,7 +128,7 @@ void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
     for (::std::size_t i = 0; i < m_cell_amount; ++i) {
         m_cells[i].render(renderer, x_offset, y_offset, m_cell_fill_color[i]);
         m_cells[i].render_border(
-            renderer, x_offset, y_offset, m_cell_border_color[i]
+            renderer, x_offset, y_offset, m_cell_border_color[i], 1
         );
     }
     if (m_selected_cell != 0xFFFF && m_selected_token == 0xFFFF) {
@@ -136,7 +136,15 @@ void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
             renderer, x_offset, y_offset, SELECTED_COLOR
         );
         m_cells[m_selected_cell].render_border(
-            renderer, x_offset, y_offset, m_cell_border_color[m_selected_cell]
+            renderer, x_offset, y_offset, m_cell_border_color[m_selected_cell],
+            1
+        );
+    }
+    for (const auto &e : m_available_hexagons) {
+        auto center = get_center_of_hexagon(e.x(), e.y());
+        const auto hex = HexagonShape(center, HEXAGON_RADIUS - 2);
+        hex.render_border(
+            renderer, x_offset, y_offset, {0xFF, 0x00, 0x00, 0xFF}, 3
         );
     }
     // TODO
@@ -157,7 +165,7 @@ void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
             renderer, x_offset, y_offset, m_special_fill_color[i]
         );
         m_specials[i].render_border(
-            renderer, x_offset, y_offset, m_special_border_color[i]
+            renderer, x_offset, y_offset, m_special_border_color[i], 1
         );
     }
     for (::std::size_t i = 0; i < m_token_amount; ++i) {

@@ -7,6 +7,7 @@
 #include <graphics_segment.hpp>
 #include <graphics_shapes.hpp>
 #include <map_client.hpp>
+#include <utility>
 #include <vector>
 
 namespace runebound::graphics {
@@ -32,12 +33,14 @@ private:
     ::std::vector<Segment> m_rivers{};
     ::std::vector<SDL_Color> m_river_color{};
     ::std::size_t m_river_amount{0};
-    // TODO refactor
+    // TODO
     ::std::vector<bool> m_is_connected_to_town = {};
 
     ::std::vector<Segment> m_roads{};
     ::std::vector<SDL_Color> m_road_color{};
     ::std::size_t m_road_amount{0};
+
+    ::std::vector<Point> m_available_hexagons{};
 
     int m_width{0};
     int m_height{0};
@@ -74,6 +77,10 @@ public:
     void render_to_texture(SDL_Renderer *renderer, SDL_Texture *&texture) const;
 
     void update_selection(const Point &dot);
+
+    void update_available_hexagons(::std::vector<Point> hexagons) {
+        m_available_hexagons = std::move(hexagons);
+    }
 
     [[nodiscard]] int width() const {
         return m_width;

@@ -33,7 +33,8 @@ public:
         SDL_Renderer *renderer,
         int x_offset,
         int y_offset,
-        SDL_Color border_color
+        SDL_Color border_color,
+        int thickness
     ) const;
 
     void render_to_texture(
