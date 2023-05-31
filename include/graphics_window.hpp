@@ -155,7 +155,7 @@ public:
     }
 
     void deactivate_all_window() {
-        for(auto &[name, win] : m_windows) {
+        for (auto &[name, win] : m_windows) {
             win->deactivate();
         }
     }
