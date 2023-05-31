@@ -1,5 +1,6 @@
 #ifndef RUNEBOUND_GRAPHICS_POINT_HPP_
 #define RUNEBOUND_GRAPHICS_POINT_HPP_
+#include <point.hpp>
 #include <utility>
 
 namespace runebound::graphics {
@@ -19,6 +20,8 @@ public:
 
     explicit Point(::std::pair<int, int> coords)
         : m_x(coords.first), m_y(coords.second){};
+
+    explicit Point(const ::runebound::Point &p) : m_x(p.x), m_y(p.y){};
 
     [[nodiscard]] int x() const {
         return m_x;
