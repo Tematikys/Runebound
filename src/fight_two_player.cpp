@@ -17,7 +17,7 @@ void from_json(
     const game::Game &game
 ) {
     fight.m_receiver = game.get_character(json["m_receiver"]);
-    fight.m_receiver = game.get_character(json["m_receiver"]);
+    fight.m_receiver = game.get_character(json["m_caller"]);
     fight::from_json(json["m_fight"], fight.m_fight, game);
 }
 
