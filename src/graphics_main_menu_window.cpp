@@ -4,10 +4,9 @@ namespace runebound::graphics {
 void Client::init_main_menu_window() {
     {  // MAIN MENU WINDOW
         auto *win = &m_window;
-        auto window = ::std::make_unique<Window>(Window(
-            m_graphic_renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
-            {0xFF, 0xFF, 0xFF, 0xFF}
-        ));
+        auto window = ::std::make_unique<Window>(
+            Window(WINDOW_WIDTH, WINDOW_HEIGHT, {0xFF, 0xFF, 0xFF, 0xFF})
+        );
         Texture texture;
         Button button;
         TextField text_field;
@@ -77,7 +76,7 @@ void Client::init_main_menu_window() {
     {  // GAME LIST WINDOW
         auto *win = &m_window;
         auto window = ::std::make_unique<Window>(
-            Window(m_graphic_renderer, 32 * 18, 355, {255, 255, 255, 255})
+            Window(32 * 18, 355, {255, 255, 255, 255})
         );
         win->get_window("main_menu")
             ->add_window("game_list", ::std::move(window), {5, 40}, true, true);

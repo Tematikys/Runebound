@@ -2,10 +2,9 @@
 
 namespace runebound::graphics {
 void Client::init_character_list_window() {
-    auto window = ::std::make_unique<Window>(Window(
-        m_graphic_renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
-        {0xFF, 0xFF, 0xFF, 0xFF}
-    ));
+    auto window = ::std::make_unique<Window>(
+        Window(WINDOW_WIDTH, WINDOW_HEIGHT, {0xFF, 0xFF, 0xFF, 0xFF})
+    );
     Texture texture;
     Button button;
 

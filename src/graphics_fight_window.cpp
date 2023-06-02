@@ -5,7 +5,7 @@ namespace runebound::graphics {
 void Client::init_fight_window() {
     {  // FIGHT WINDOW
         auto window = ::std::make_unique<Window>(Window(
-            m_graphic_renderer, WINDOW_WIDTH * 3 / 4, WINDOW_HEIGHT * 3 / 4,
+            WINDOW_WIDTH * 3 / 4, WINDOW_HEIGHT * 3 / 4,
             {0xFF, 0xFF, 0xFF, 0xFF}
         ));
         m_window.get_window("game")->add_window(
@@ -15,10 +15,9 @@ void Client::init_fight_window() {
     }  // FIGHT WINDOW
     {  // WIN / LOSE WINDOW
         auto *win = m_window.get_window("game")->get_window("fight");
-        auto window = ::std::make_unique<Window>(Window(
-            m_graphic_renderer, win->width(), win->height(),
-            {0xFF, 0xFF, 0xFF, 0xFF}
-        ));
+        auto window = ::std::make_unique<Window>(
+            Window(win->width(), win->height(), {0xFF, 0xFF, 0xFF, 0xFF})
+        );
         win->add_window("win_lose", ::std::move(window), {0, 0}, false, false);
     }  // WIN / LOSE WINDOW
 }

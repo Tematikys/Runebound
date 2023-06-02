@@ -4,10 +4,9 @@ namespace runebound::graphics {
 void Client::init_game_window() {
     {  // GAME WINDOW
         auto *win = &m_window;
-        auto window = ::std::make_unique<Window>(Window(
-            m_graphic_renderer, win->width(), win->height(),
-            {0xFF, 0xFF, 0xFF, 0xFF}
-        ));
+        auto window = ::std::make_unique<Window>(
+            Window(win->width(), win->height(), {0xFF, 0xFF, 0xFF, 0xFF})
+        );
         Texture texture;
         Button button;
         {  // THROW DICE BUTTON
@@ -112,10 +111,11 @@ void Client::init_game_window() {
         }  // EXIT BUTTON
         win->add_window("game", ::std::move(window), {0, 0}, false, false);
     }  // GAME WINDOW
+
     {  // CHARACTERS WINDOW
         auto *win = m_window.get_window("game");
         auto window = ::std::make_unique<Window>(
-            Window(m_graphic_renderer, 360, 385, {0xFF, 0xFF, 0xFF, 0xFF})
+            Window(360, 385, {0xFF, 0xFF, 0xFF, 0xFF})
         );
         auto window_width = window->width();
         win->add_window(
@@ -123,11 +123,11 @@ void Client::init_game_window() {
             true, true
         );
     }  // CHARACTERS WINDOW
+
     {  // PLAYER WINDOW
         auto *win = m_window.get_window("game");
-        auto window = ::std::make_unique<Window>(
-            Window(m_graphic_renderer, 360, 60, {0xFF, 0xFF, 0xFF, 0xFF})
-        );
+        auto window = ::std::make_unique<Window>(Window(360, 60, {0xFF, 0xFF, 0xFF, 0xFF})
+            );
         auto window_width = window->width();
         auto window_height = window->height();
         win->add_window(
@@ -164,6 +164,7 @@ void Client::update_game_window() {
         SDL_DestroyTexture(tex);
         texture.free();
     }  // BOARD
+
     {  // DICES
         SDL_Texture *tex = nullptr;
         Texture texture;
@@ -212,6 +213,7 @@ void Client::update_game_window() {
         SDL_DestroyTexture(tex);
         texture.free();
     }  // DICES
+
     {  // SELECTED HEXAGON
         if (m_window.get_window("game")->get_active_window_name() != "fight") {
             const ::std::size_t index = m_board.get_selected_hexagon();
@@ -225,6 +227,7 @@ void Client::update_game_window() {
             }
         }
     }  // SELECTED HEXAGON
+
     {  // TURN
         auto *window = m_window.get_window("game");
         Texture texture;
@@ -244,14 +247,14 @@ void Client::update_game_window() {
             );
         }
     }  // TURN
+
     {  // TRADE
-        SDL_Texture *tex = nullptr;
         Texture texture;
         auto *window = m_window.get_window("game");
         window->remove_button("trade");
         if (m_network_client.m_character !=
             ::runebound::character::StandardCharacter::NONE) {
-            const auto me = m_network_client.get_yourself_character();
+            const auto *me = m_network_client.get_yourself_character();
             const auto &pos = me->get_position();
             const auto &cell =
                 m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
@@ -264,6 +267,7 @@ void Client::update_game_window() {
                     200, 30, HorizontalButtonTextureAlign::CENTER,
                     VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                     [this]() {
+                        m_window.get_window("game")->set_active_window("shop");
                         m_window.get_window("game")
                             ->get_window("shop")
                             ->activate();
@@ -287,14 +291,14 @@ void Client::update_game_window() {
             }
         }
     }  // TRADE
+
     {  // TAKE TOKEN
-        SDL_Texture *tex = nullptr;
         Texture texture;
         auto *window = m_window.get_window("game");
         window->remove_button("take_token");
         if (m_network_client.m_character !=
             ::runebound::character::StandardCharacter::NONE) {
-            const auto me = m_network_client.get_yourself_character();
+            const auto *me = m_network_client.get_yourself_character();
             const auto &pos = me->get_position();
             const auto &cell =
                 m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
@@ -321,6 +325,7 @@ void Client::update_game_window() {
                         << ::std::endl;
         }
     }  // TAKE TOKEN
+
     {  // UPDATE CHARACTERS
         SDL_Texture *tex = nullptr;
         Texture texture;
@@ -461,6 +466,7 @@ void Client::update_game_window() {
         SDL_DestroyTexture(tex);
         texture.free();
     }  // UPDATE CHARACTERS
+
     {  // UPDATE PLAYER
         if (m_network_client.m_character !=
             character::StandardCharacter::NONE) {
@@ -470,7 +476,7 @@ void Client::update_game_window() {
             auto *window = win->get_window("player");
             window->remove_all_textures();
             RectangleShape rect;
-            auto character = m_network_client.get_yourself_character();
+            const auto *character = m_network_client.get_yourself_character();
             const auto name = character->get_name();
             const auto gold = ::std::to_string(character->get_gold());
             const auto health = ::std::to_string(character->get_health());
@@ -575,6 +581,7 @@ void Client::update_game_window() {
             texture.free();
         }
     }  // UPDATE PLAYER
+
     {  // SHOW FIGHT WINDOW
         auto *win = m_window.get_window("game");
         if (m_network_client.get_game_client().is_fight) {
@@ -584,7 +591,6 @@ void Client::update_game_window() {
             win->set_all_updatability_button(false);
             update_fight_window();
         } else {
-            win->reset_active_window();
             win->get_window("fight")->deactivate();
             win->get_window("fight")->deactivate_all_window();
             win->set_visibility_window("fight", false);
@@ -592,6 +598,7 @@ void Client::update_game_window() {
             win->set_all_updatability_button(true);
         }
     }  // SHOW FIGHT WINDOW
+
     {  // TRADE UPDATE
         auto *win = m_window.get_window("game");
         if (win->get_active_window_name() == "shop") {
