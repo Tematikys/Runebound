@@ -45,7 +45,7 @@ private:
 public:
     Window() = default;
 
-    Window(SDL_Renderer *renderer, int width, int height, SDL_Color color)
+    Window(int width, int height, SDL_Color color)
         : m_width(width), m_height(height), m_color(color) {
         m_rect = {0, 0, width, height};
     }
