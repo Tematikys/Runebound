@@ -126,7 +126,8 @@ void Client::init_game_window() {
 
     {  // PLAYER WINDOW
         auto *win = m_window.get_window("game");
-        auto window = ::std::make_unique<Window>(Window(360, 60, {0xFF, 0xFF, 0xFF, 0xFF})
+        auto window =
+            ::std::make_unique<Window>(Window(360, 60, {0xFF, 0xFF, 0xFF, 0xFF})
             );
         auto window_width = window->width();
         auto window_height = window->height();
