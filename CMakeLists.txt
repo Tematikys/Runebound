@@ -69,6 +69,7 @@ add_executable(network_server
         src/character_client.cpp
         src/dice.cpp
         src/fight.cpp
+        src/fight_two_player.cpp
         src/game.cpp
         src/game_client.cpp
         src/fight_client.cpp
@@ -131,6 +132,7 @@ add_executable(${PROJECT_NAME}
         #tests/test_fight.cpp
         #tests/test_fight_two_player.cpp
         tests/test_game.cpp
+        #tests/test_bot.cpp
         generators/generator_cards_fight.cpp
         generators/generator_characters.cpp
         generators/generator_cards_meeting.cpp
