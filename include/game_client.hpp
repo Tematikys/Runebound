@@ -21,6 +21,7 @@ public:
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
     unsigned int m_number_of_rounds = 0;
+    unsigned int m_reward_gold_for_fight = 0;
 
     std::vector<::runebound::character::Character> m_characters;
     std::vector<::runebound::character::StandardCharacter>
@@ -65,6 +66,11 @@ public:
             set_remaining.begin(), set_remaining.end()
         );
 
+        if (game.m_current_fight != nullptr) {
+            m_reward_gold_for_fight =
+                game.m_all_cards_fight[game.m_current_active_card_fight]
+                    .get_gold_award();
+        }
         m_remaining_standard_characters = std::move(vec_remaining);
 
         if ((game.m_characters.size() != 0) &&

@@ -43,7 +43,7 @@ void Client::update_fight_window() {
     const auto character_name = character.get_name();
     const auto enemy_name = enemy.get_name();
     const auto my_role = m_network_client.get_yourself_character()->get_state();
-
+    const auto &game = m_network_client.get_game_client();
     // TODO
 
     {  // UPDATE TOKENS
@@ -55,6 +55,13 @@ void Client::update_fight_window() {
 
     {  // CHECK END OF FIGHT
         if (fight.check_end_fight()) {
+            auto *win_lose =
+                m_window.get_window("game")->get_window("fight")->get_window(
+                    "win_lose"
+                );
+            win_lose->remove_all_textures();
+            win_lose->remove_all_buttons();
+
             auto winner = m_network_client.get_winner();
             win->get_window("win_lose")->activate();
             win->set_visibility_window("win_lose", true);
@@ -77,10 +84,11 @@ void Client::update_fight_window() {
                              25},
                         true
                     );
+
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono50"],
-                    "Reward: "
-                    "Bogdan have not added it yet",
+                    "Reward: Gold: " +
+                        std::to_string(game.m_reward_gold_for_fight) + "!",
                     {0x00, 0x00, 0x00, 0xFF}
                 );
                 win->get_window("win_lose")
@@ -276,7 +284,8 @@ void Client::update_fight_window() {
         Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"],
-            "Round: " + std::to_string(fight.m_number_of_rounds), {0x00, 0x00, 0x00, 0xFF}
+            "Round: " + std::to_string(fight.m_number_of_rounds),
+            {0x00, 0x00, 0x00, 0xFF}
         );
         win->add_texture(
             "round", texture,

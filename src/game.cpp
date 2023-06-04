@@ -37,6 +37,7 @@ void to_json(nlohmann::json &json, const Game &game) {
     json["m_all_cards_meeting"] = game.m_all_cards_meeting;
     json["m_all_skill_cards"] = game.m_all_skill_cards;
     json["m_all_products"] = game.m_all_products;
+    json["m_current_active_card_fight"] = game.m_current_active_card_fight;
     json["m_remaining_standard_characters"] =
         game.m_remaining_standard_characters;
     json["m_shops"] = game.m_shops;
@@ -65,6 +66,7 @@ void fill_vector(const nlohmann::json &json, std::vector<T> &vec) {
 void from_json(const nlohmann::json &json, Game &game) {
     game.m_game_over = json["m_game_over"];
     game.m_map = json["m_map"];
+    game.m_current_active_card_fight = json["m_current_active_card_fight"];
     game.m_characters.clear();
     for (const auto &character : json["m_characters"]) {
         game.m_characters.push_back(std::make_shared<character::Character>(
@@ -286,6 +288,7 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
     }
     if (m_map.get_cell_map(position).get_token() == AdventureType::FIGHT) {
         unsigned int card = m_card_deck_fight[rng() % m_card_deck_fight.size()];
+        m_current_active_card_fight = card;
         chr->add_card(AdventureType::FIGHT, card);
         m_card_deck_fight.erase(
             std::find(m_card_deck_fight.begin(), m_card_deck_fight.end(), card)

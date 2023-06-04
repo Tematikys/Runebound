@@ -132,6 +132,7 @@ private:
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
     unsigned int m_number_of_rounds = 0;
+    unsigned int m_current_active_card_fight = 0;
     character::StandardCharacter m_winner = character::StandardCharacter::NONE;
     Point m_boss_position = {-1, -1};
     std::vector<dice::HandDice> m_last_dice_movement_result;
