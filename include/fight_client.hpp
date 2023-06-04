@@ -10,6 +10,7 @@ struct FightClient {
     Participant m_turn = Participant::CHARACTER;
     bool m_pass_character = false;
     bool m_pass_enemy = false;
+    unsigned int m_number_of_rounds = 0;
     ::runebound::character::Character m_character;
     Enemy m_enemy;
     std::vector<TokenHandCount> m_enemy_remaining_tokens;
@@ -25,6 +26,7 @@ struct FightClient {
         m_enemy = *(fight.get_enemy());
         m_enemy_remaining_tokens = fight.m_enemy_remaining_tokens;
         m_character_remaining_tokens = fight.m_character_remaining_tokens;
+        m_number_of_rounds = fight.m_number_of_rounds;
     }
 
     bool check_end_fight() const {

@@ -377,6 +377,7 @@ Fight::reverse_token(Participant participant, const TokenHandCount &token) {
 }
 
 void Fight::start_round() {
+    m_number_of_rounds += 1;
     if (!m_fight_started) {
         m_fight_started = true;
         if (m_enemy.check_boss()) {
@@ -405,9 +406,11 @@ void to_json(nlohmann::json &json, const Fight &fight) {
     json["m_pass_character"] = fight.m_pass_character;
     json["m_pass_enemy"] = fight.m_pass_enemy;
     json["m_character"] = fight.m_character->get_standard_character();
+    json["m_character"] = fight.m_character->get_standard_character();
     json["m_enemy"] = fight.m_enemy;
     json["m_enemy_remaining_tokens"] = fight.m_enemy_remaining_tokens;
     json["m_character_remaining_tokens"] = fight.m_character_remaining_tokens;
+    json["m_number_of_rounds"] = fight.m_number_of_rounds;
 }
 
 void from_json(
@@ -423,6 +426,7 @@ void from_json(
     fight.m_enemy = json["m_enemy"];
     fight.m_enemy_remaining_tokens = json["m_enemy_remaining_tokens"];
     fight.m_character_remaining_tokens = json["m_character_remaining_tokens"];
+    fight.m_number_of_rounds = json["m_number_of_rounds"];
 }
 
 }  // namespace runebound::fight

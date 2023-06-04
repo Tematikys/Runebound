@@ -214,6 +214,7 @@ private:
     Participant m_turn = Participant::CHARACTER;
     bool m_pass_character = false;
     bool m_pass_enemy = false;
+    unsigned int m_number_of_rounds = 0;
     std::shared_ptr<::runebound::character::Character> m_character;
     ::runebound::fight::Enemy m_enemy;
     std::vector<TokenHandCount> m_enemy_remaining_tokens;
@@ -294,6 +295,10 @@ public:
     }
 
     bool check_end_round();
+
+    [[nodiscard]] unsigned int get_number_of_rounds() const {
+        return m_number_of_rounds;
+    }
 
     [[nodiscard]] int get_health_enemy() const {
         return m_enemy.get_health();

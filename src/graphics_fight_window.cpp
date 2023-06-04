@@ -45,11 +45,9 @@ void Client::update_fight_window() {
     const auto my_role = m_network_client.get_yourself_character()->get_state();
 
     // TODO
-    static int round_number(1);
 
     {  // UPDATE TOKENS
         if (m_network_client.is_game_need_update()) {
-            ++round_number;
             character_selected_tokens.clear();
             enemy_selected_tokens.clear();
         }
@@ -57,7 +55,6 @@ void Client::update_fight_window() {
 
     {  // CHECK END OF FIGHT
         if (fight.check_end_fight()) {
-            round_number = 1;
             auto winner = m_network_client.get_winner();
             win->get_window("win_lose")->activate();
             win->set_visibility_window("win_lose", true);
@@ -279,7 +276,7 @@ void Client::update_fight_window() {
         Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"],
-            "Round: " + std::to_string(round_number), {0x00, 0x00, 0x00, 0xFF}
+            "Round: " + std::to_string(fight.m_number_of_rounds), {0x00, 0x00, 0x00, 0xFF}
         );
         win->add_texture(
             "round", texture,

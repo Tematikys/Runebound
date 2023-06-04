@@ -29,6 +29,7 @@ add_executable(graphics_client
         src/character_client.cpp
         src/dice.cpp
         src/fight.cpp
+        src/fight_two_player.cpp
         src/game.cpp
         src/game_client.cpp
         src/fight_client.cpp
