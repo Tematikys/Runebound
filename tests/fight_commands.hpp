@@ -1,10 +1,10 @@
 #ifndef FIGHT_COMMANDS_HPP_
 #define FIGHT_COMMANDS_HPP_
 
-#include "runebound_fwd.hpp"
-#include <vector>
 #include <iostream>
+#include <vector>
 #include "fight.hpp"
+#include "runebound_fwd.hpp"
 
 namespace runebound::tests {
 void print(const std::vector<runebound::fight::TokenHandCount> tokens) {
@@ -43,6 +43,6 @@ void print(const std::vector<runebound::fight::TokenHandCount> tokens) {
     }
     std::cout << '\n';
 }
-} // namespace runebound::tests
+}  // namespace runebound::tests
 
-#endif // FIGHT_COMMANDS_HPP_
+#endif  // FIGHT_COMMANDS_HPP_

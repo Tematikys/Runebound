@@ -135,9 +135,14 @@ std::vector<Point> Map::get_possible_moves(
     Point start,
     std::vector<::runebound::dice::HandDice> dice_roll_results
 ) const {
-    std::map<Point, unsigned int> dist;
     std::sort(dice_roll_results.begin(), dice_roll_results.end());
+    std::set<Point> result;
+    auto neighbours = get_neighbours(start);
+    for (const auto &neighbour : neighbours) {
+        result.insert(neighbour);
+    }
     do {
+        std::map<Point, unsigned int> dist;
         dist[start] = 0;
         std::queue<Point> bfs_queue;
         bfs_queue.push(start);
@@ -175,21 +180,16 @@ std::vector<Point> Map::get_possible_moves(
                 }
             }
         }
+        for (const auto &move : dist) {
+            result.insert(move.first);
+        }
 
     } while (std::next_permutation(
         dice_roll_results.begin(), dice_roll_results.end()
     ));
     std::vector<Point> possible_moves;
-    auto neighbours = get_neighbours(start);
-    for (const auto &neighbour : neighbours) {
-        if (!dist.count(neighbour)) {
-            dist[neighbour] = 1;
-        }
-    }
-    for (const auto &move : dist) {
-        if (move.first != start) {
-            possible_moves.push_back(move.first);
-        }
+    for (const auto &move : result) {
+        possible_moves.push_back(move);
     }
     return possible_moves;
 }
