@@ -133,20 +133,46 @@ add_executable(${PROJECT_NAME}
         #tests/test_fight.cpp
         #tests/test_fight_two_player.cpp
         tests/test_game.cpp
-        #tests/test_bot.cpp
         generators/generator_cards_fight.cpp
         generators/generator_characters.cpp
         generators/generator_cards_meeting.cpp
         generators/generator_cards_research.cpp
         generators/generator_products.cpp
         generators/generator_map.cpp
-        #tpl/sqlite/sqlite3.c
         )
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ws2_32 wsock32)
-#target_link_libraries(Runebound -lmingw32 -mwindows -mconsole sqlite3)
 #target_link_libraries(${PROJECT_NAME} PRIVATE pqxx)
 # ===== LOGICS ===== #
 
 
 
+# ===== BOT ===== #
+add_executable(bot
+        src/card_adventure.cpp
+        src/card_research.cpp
+        src/character.cpp
+        src/dice.cpp
+        src/game.cpp
+        src/map.cpp
+        src/map_cell.cpp
+        src/game_client.cpp
+        src/fight_client.cpp
+        src/character_client.cpp
+        src/map_client.cpp
+        src/fight.cpp
+        src/fight_two_player.cpp
+        src/card_fight.cpp
+        src/card_meeting.cpp
+        src/product.cpp
+        tests/test_bot.cpp
+        generators/generator_cards_fight.cpp
+        generators/generator_characters.cpp
+        generators/generator_cards_meeting.cpp
+        generators/generator_cards_research.cpp
+        generators/generator_products.cpp
+        generators/generator_map.cpp
+        )
+target_link_libraries(bot -lmingw32 -mwindows -mconsole -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf)
+target_link_libraries(bot ${Boost_LIBRARIES} ws2_32 wsock32)
+# ===== BOT ===== #
 

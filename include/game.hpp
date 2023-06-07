@@ -221,6 +221,16 @@ private:
 
     void start_new_round();
 
+    void make_game_turn_bot(const std::shared_ptr <character::Character> &chr);
+
+    unsigned int get_enemy(unsigned int number_of_character) {
+        for (unsigned int i = 1; i < m_count_players; ++i) {
+            if (!m_characters[(number_of_character + m_count_players - i) % m_count_players]->check_bot()) {
+                return (number_of_character + m_count_players - i) % m_count_players;
+            }
+        }
+        return number_of_character;
+    }
 public:
     Game() {
         generate_all();
@@ -238,6 +248,8 @@ public:
     get_current_fight_two_player() const {
         return m_current_fight_two_player;
     }
+
+    void add_bot();
 
     [[nodiscard]] unsigned int get_number_of_rounds() const {
         return m_number_of_rounds;
@@ -297,18 +309,7 @@ public:
 
     void start_next_character_turn(
         const std::shared_ptr<character::Character> &chr
-    ) {
-        check_turn(chr);
-        m_last_dice_movement_result.clear();
-        m_last_dice_research_result.clear();
-        m_last_dice_relax_result.clear();
-        m_last_characteristic_check.clear();
-        m_turn = (m_turn + 1) % m_count_players;
-        m_characters[m_turn]->restore_action_points();
-        if (m_turn == 0) {
-            start_new_round();
-        }
-    }
+    );
 
     std::vector<dice::HandDice> throw_movement_dice(
         const std::shared_ptr<character::Character> &chr
