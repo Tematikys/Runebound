@@ -97,6 +97,7 @@ void Character::end_fight_with_boss() {
 void to_json(nlohmann::json &json, const Character &character) {
     json["m_hand_limit"] = character.m_hand_limit;
     json["m_speed"] = character.m_speed;
+    json["m_bot"] = character.m_bot;
     json["m_characteristics"] = character.m_characteristics;
     json["m_action_points"] = character.m_action_points;
     json["m_max_action_points"] = character.m_max_action_points;
@@ -116,12 +117,13 @@ void to_json(nlohmann::json &json, const Character &character) {
     json["m_knowledge_token"] = character.m_knowledge_token;
     json["m_current_position"] = character.m_current_position;
     json["m_fight_tokens"] = character.m_fight_tokens;
-    json["m_products"] = json["m_products"];
+    json["m_products"] = character.m_products;
 }
 
 void from_json(const nlohmann::json &json, Character &character) {
     character.m_hand_limit = json["m_hand_limit"];
     character.m_speed = json["m_speed"];
+    character.m_bot = json["m_bot"];
     character.m_characteristics = json["m_characteristics"];
     character.m_action_points = json["m_action_points"];
     character.m_max_action_points = json["m_max_action_points"];

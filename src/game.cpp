@@ -6,6 +6,8 @@
 #include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
+#include <chrono>
+#include <thread>
 
 namespace runebound {
 namespace game {
@@ -161,6 +163,51 @@ bool Game::check_characteristic_private(
     return false;
 }
 
+void Game::start_next_character_turn(
+    const std::shared_ptr<character::Character> &chr
+) {
+    check_turn(chr);
+    m_last_dice_movement_result.clear();
+    m_last_dice_research_result.clear();
+    m_last_dice_relax_result.clear();
+    m_last_characteristic_check.clear();
+    m_turn = (m_turn + 1) % m_count_players;
+    m_characters[m_turn]->restore_action_points();
+    if (m_turn == 0) {
+        start_new_round();
+    }
+    if (m_characters[m_turn]->check_bot()) {
+        make_game_turn_bot(m_characters[m_turn]);
+    }
+}
+
+void Game::make_game_turn_bot(const std::shared_ptr <character::Character> &chr) {
+    for (int i = 0; i < 3; ++i) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        throw_movement_dice(chr);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        auto possible_moves = get_possible_moves();
+        make_move(chr, possible_moves[rng() % possible_moves.size()], m_last_dice_movement_result);
+    }
+    start_next_character_turn(chr);
+}
+
+
+void Game::add_bot() {
+    if (m_remaining_standard_characters.empty()) {
+        throw CharacterAlreadySelected();
+    }
+    auto standard_character = *m_remaining_standard_characters.begin();
+    m_characters.emplace_back(
+        std::make_shared<::runebound::character::Character>(
+            ::runebound::character::Character(standard_character)
+        )
+    );
+    m_characters.back()->make_bot();
+    m_count_players += 1;
+    m_remaining_standard_characters.erase(standard_character);
+}
+
 std::shared_ptr<::runebound::character::Character> Game::make_character(
     const ::runebound::character::StandardCharacter &name
 ) {
@@ -297,6 +344,7 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
             chr, m_all_cards_fight[card].get_enemy()
         ));
         m_current_fight = chr->get_current_fight();
+
         m_characters[(m_turn + m_count_players - 1) % m_count_players]
             ->start_fight_as_enemy();
     } else if (m_map.get_cell_map(position).get_token() == AdventureType::RESEARCH) {
