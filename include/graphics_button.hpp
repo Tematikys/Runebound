@@ -23,8 +23,8 @@ private:
     Texture m_texture{};
     SDL_Color m_fill_color{};
     SDL_Color m_border_color{};
-    ::std::function<void()> m_on_click_function{};
-    ::std::function<void()> m_on_cover_function{};
+    std::function<void()> m_on_click_function{};
+    std::function<void()> m_on_cover_function{};
     RectangleShape m_shape{};
 
 public:
@@ -38,8 +38,8 @@ public:
         int texture_x_offset,
         int texture_y_offset,
         Texture &texture,
-        ::std::function<void()> on_click_function,
-        ::std::function<void()> on_cover_function,
+        std::function<void()> on_click_function,
+        std::function<void()> on_cover_function,
         SDL_Color fill_color = {0xFF, 0xFF, 0xFF, 0xFF},
         SDL_Color border_color = {0x00, 0x00, 0x00, 0xFF}
     );
@@ -79,27 +79,27 @@ public:
 
 class TextField {
 private:
-    ::std::string m_text{};
+    std::string m_text{};
     int m_max_text_len{0};
     Button m_button{};
 
 public:
     TextField() = default;
 
-    TextField(::std::string text, Button &button, int max_len = 0);
+    TextField(std::string text, Button &button, int max_len = 0);
 
     TextField(TextField &&other) noexcept
-        : m_text(::std::move(other.m_text)),
+        : m_text(std::move(other.m_text)),
           m_max_text_len(other.m_max_text_len),
-          m_button(::std::move(other.m_button)) {
+          m_button(std::move(other.m_button)) {
     }
 
     TextField(const TextField &other) = delete;
 
     TextField &operator=(TextField &&other) noexcept {
-        m_text = ::std::move(other.m_text);
+        m_text = std::move(other.m_text);
         m_max_text_len = other.m_max_text_len;
-        m_button = ::std::move(other.m_button);
+        m_button = std::move(other.m_button);
         return *this;
     }
 
@@ -115,7 +115,7 @@ public:
         int y_offset
     ) const;
 
-    void push(const ::std::string &suffix);
+    void push(const std::string &suffix);
 
     void pop() {
         if (!m_text.empty()) {
@@ -147,7 +147,7 @@ public:
         return m_button.in_bounds(p);
     }
 
-    [[nodiscard]] const ::std::string &get() const {
+    [[nodiscard]] const std::string &get() const {
         return m_text;
     }
 };

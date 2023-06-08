@@ -4,7 +4,7 @@ namespace runebound::graphics {
 void Client::init_game_window() {
     {  // GAME WINDOW
         auto *win = &m_window;
-        auto window = ::std::make_unique<Window>(
+        auto window = std::make_unique<Window>(
             Window(win->width(), win->height(), {0xFF, 0xFF, 0xFF, 0xFF})
         );
         Texture texture;
@@ -109,17 +109,17 @@ void Client::init_game_window() {
                 true, true
             );
         }  // EXIT BUTTON
-        win->add_window("game", ::std::move(window), {0, 0}, false, false);
+        win->add_window("game", std::move(window), {0, 0}, false, false);
     }  // GAME WINDOW
 
     {  // CHARACTERS WINDOW
         auto *win = m_window.get_window("game");
-        auto window = ::std::make_unique<Window>(
+        auto window = std::make_unique<Window>(
             Window(360, 385, {0xFF, 0xFF, 0xFF, 0xFF})
         );
         auto window_width = window->width();
         win->add_window(
-            "chars", ::std::move(window), {win->width() - window_width - 5, 5},
+            "chars", std::move(window), {win->width() - window_width - 5, 5},
             true, true
         );
     }  // CHARACTERS WINDOW
@@ -127,12 +127,12 @@ void Client::init_game_window() {
     {  // PLAYER WINDOW
         auto *win = m_window.get_window("game");
         auto window =
-            ::std::make_unique<Window>(Window(360, 60, {0xFF, 0xFF, 0xFF, 0xFF})
+            std::make_unique<Window>(Window(360, 60, {0xFF, 0xFF, 0xFF, 0xFF})
             );
         auto window_width = window->width();
         auto window_height = window->height();
         win->add_window(
-            "player", ::std::move(window),
+            "player", std::move(window),
             {win->width() - window_width - 265,
              win->height() - window_height - 5},
             true, true
@@ -153,7 +153,7 @@ void Client::update_game_window() {
             const Point center = get_center_of_hexagon(
                 character.get_position().x, character.get_position().y
             );
-            const ::std::string name = character.get_name();
+            const std::string name = character.get_name();
             m_images[name].render_to_texture(
                 m_graphic_renderer, -m_images[name].width() / 2 + center.x(),
                 -m_images[name].height() / 2 + center.y(), tex
@@ -185,7 +185,7 @@ void Client::update_game_window() {
         SDL_SetRenderTarget(m_graphic_renderer, nullptr);
         int dx = 0;
         for (const auto &dice : m_network_client.get_last_dice_result()) {
-            ::std::vector<Point> vertexes;
+            std::vector<Point> vertexes;
             PolygonShape tri;
             auto [key, col] = *DICE_COLOR.find(dice);
             vertexes.emplace_back(size, (size + delay) * dx);
@@ -217,7 +217,7 @@ void Client::update_game_window() {
 
     {  // SELECTED HEXAGON
         if (m_window.get_window("game")->get_active_window_name().empty()) {
-            const ::std::size_t index = m_board.get_selected_hexagon();
+            const std::size_t index = m_board.get_selected_hexagon();
             if (index != 0xFFFF && m_mouse_pressed &&
                 !m_network_client.get_game_client().is_fight) {
                 m_network_client.make_move(
@@ -341,8 +341,8 @@ void Client::update_game_window() {
                 );
             }
         } else {
-            ::std::cout << "[[graphics log]] :: take token no self"
-                        << ::std::endl;
+            std::cout << "[[graphics log]] :: take token no self"
+                        << std::endl;
         }
     }  // TAKE TOKEN
 
@@ -362,8 +362,8 @@ void Client::update_game_window() {
                 continue;
             }
             const auto name = character.get_name();
-            const auto gold = ::std::to_string(character.get_gold());
-            const auto health = ::std::to_string(character.get_health());
+            const auto gold = std::to_string(character.get_gold());
+            const auto health = std::to_string(character.get_health());
             {  // CHARACTER
                 tex = SDL_CreateTexture(
                     m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
@@ -498,8 +498,8 @@ void Client::update_game_window() {
             RectangleShape rect;
             const auto *character = m_network_client.get_yourself_character();
             const auto name = character->get_name();
-            const auto gold = ::std::to_string(character->get_gold());
-            const auto health = ::std::to_string(character->get_health());
+            const auto gold = std::to_string(character->get_gold());
+            const auto health = std::to_string(character->get_health());
             {  // CHARACTER
                 tex = SDL_CreateTexture(
                     m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,

@@ -9,13 +9,13 @@
 namespace runebound::graphics {
 class PolygonShape {
 protected:
-    ::std::vector<Point> m_vertexes{};
-    ::std::vector<::std::tuple<int, int, int>> m_side_coefficients{};
+    std::vector<Point> m_vertexes{};
+    std::vector<std::tuple<int, int, int>> m_side_coefficients{};
 
 public:
     PolygonShape() = default;
 
-    explicit PolygonShape(const ::std::vector<Point> &vertexes)
+    explicit PolygonShape(const std::vector<Point> &vertexes)
         : m_vertexes(vertexes) {
         init_side_coefficients();
     }
@@ -55,11 +55,11 @@ public:
 
     [[nodiscard]] bool in_bounds(const Point &dot) const;
 
-    [[nodiscard]] Point get_vertex(::std::size_t index) const {
+    [[nodiscard]] Point get_vertex(std::size_t index) const {
         return m_vertexes[index];
     };
 
-    [[nodiscard]] ::std::size_t get_number_of_vertexes() const {
+    [[nodiscard]] std::size_t get_number_of_vertexes() const {
         return m_vertexes.size();
     };
 };

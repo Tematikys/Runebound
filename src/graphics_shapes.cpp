@@ -4,7 +4,7 @@
 
 namespace runebound::graphics {
 void PolygonShape::init_side_coefficients() {
-    for (::std::size_t i = 0; i < m_vertexes.size(); ++i) {
+    for (std::size_t i = 0; i < m_vertexes.size(); ++i) {
         const int x1 = m_vertexes[(i + 1) % 6].x();
         const int y1 = m_vertexes[(i + 1) % 6].y();
         const int x2 = m_vertexes[i].x();
@@ -111,7 +111,7 @@ void PolygonShape::render_border(
     SDL_Color border_color,
     int thickness
 ) const {
-    for (::std::size_t i = 0; i < get_number_of_vertexes(); ++i) {
+    for (std::size_t i = 0; i < get_number_of_vertexes(); ++i) {
         circleRGBA(
             renderer, static_cast<short>(get_vertex(i).x() + x_offset),
             static_cast<short>(get_vertex(i).y() + y_offset),
@@ -162,9 +162,9 @@ void PolygonShape::render_border_to_texture(
 }
 
 bool PolygonShape::in_bounds(const Point &dot) const {
-    return ::std::all_of(
+    return std::all_of(
         m_side_coefficients.begin(), m_side_coefficients.end(),
-        [&](::std::tuple<int, int, int> coefficients) {
+        [&](std::tuple<int, int, int> coefficients) {
             auto [a, b, c] = coefficients;
             return dot.x() * a + dot.y() * b + c <= 0;
         }

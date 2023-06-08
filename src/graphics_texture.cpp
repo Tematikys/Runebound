@@ -4,8 +4,8 @@
 namespace runebound::graphics {
 void Texture::free() {
     if (SHOW_TEXTURE_DEBUG_INFO) {
-        ::std::cout << "Deallocate " << this << " with " << m_texture
-                    << ::std::endl;
+        std::cout << "Deallocate " << this << " with " << m_texture
+                    << std::endl;
     }
     m_width = 0;
     m_height = 0;
@@ -49,15 +49,15 @@ void Texture::render_to_texture(
 
 bool Texture::load_image_from_file(
     SDL_Renderer *renderer,
-    const ::std::string &path
+    const std::string &path
 ) {
     free();
     SDL_Texture *new_texture = nullptr;
     SDL_Surface *loaded_surface = IMG_Load(path.c_str());
     if (loaded_surface == nullptr) {
         if (SHOW_TEXTURE_DEBUG_INFO) {
-            ::std::cout << "Unable to load image! SDL_image Error:\n"
-                        << path << ' ' << IMG_GetError() << ::std::endl;
+            std::cout << "Unable to load image! SDL_image Error:\n"
+                        << path << ' ' << IMG_GetError() << std::endl;
         }
     } else {
         SDL_SetColorKey(
@@ -67,8 +67,8 @@ bool Texture::load_image_from_file(
         new_texture = SDL_CreateTextureFromSurface(renderer, loaded_surface);
         if (new_texture == nullptr) {
             if (SHOW_TEXTURE_DEBUG_INFO) {
-                ::std::cout << "Unable to create texture from! SDL Error:\n"
-                            << path << ' ' << SDL_GetError() << ::std::endl;
+                std::cout << "Unable to create texture from! SDL Error:\n"
+                            << path << ' ' << SDL_GetError() << std::endl;
             }
         } else {
             m_width = loaded_surface->w;
@@ -83,7 +83,7 @@ bool Texture::load_image_from_file(
 bool Texture::load_text_from_string(
     SDL_Renderer *renderer,
     TTF_Font *font,
-    const ::std::string &text,
+    const std::string &text,
     SDL_Color color
 ) {
     free();
@@ -93,16 +93,16 @@ bool Texture::load_text_from_string(
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), color);
     if (text_surface == nullptr) {
         if (SHOW_TEXTURE_DEBUG_INFO) {
-            ::std::cout << "Unable to render text surface! SDL_ttf Error:\n"
-                        << TTF_GetError() << ::std::endl;
+            std::cout << "Unable to render text surface! SDL_ttf Error:\n"
+                        << TTF_GetError() << std::endl;
         }
     } else {
         m_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
         if (m_texture == nullptr) {
             if (SHOW_TEXTURE_DEBUG_INFO) {
-                ::std::cout << "Unable to create texture from rendered text! "
+                std::cout << "Unable to create texture from rendered text! "
                                "SDL Error:\n"
-                            << SDL_GetError() << ::std::endl;
+                            << SDL_GetError() << std::endl;
             }
         } else {
             m_width = text_surface->w;
@@ -115,14 +115,14 @@ bool Texture::load_text_from_string(
 
 Texture::Texture() : m_texture(nullptr), m_width(0), m_height(0) {
     if (SHOW_TEXTURE_DEBUG_INFO) {
-        ::std::cout << "Default: " << this << ::std::endl;
+        std::cout << "Default: " << this << std::endl;
     }
 }
 
 Texture::Texture(SDL_Texture *&texture) : m_texture(texture) {
     if (SHOW_TEXTURE_DEBUG_INFO) {
-        ::std::cout << "Generated new texture " << this << " with " << m_texture
-                    << ::std::endl;
+        std::cout << "Generated new texture " << this << " with " << m_texture
+                    << std::endl;
     }
     int width{};
     int height{};
@@ -137,8 +137,8 @@ Texture::Texture(Texture &&other) noexcept
       m_height(other.m_height),
       m_texture(other.m_texture) {
     if (SHOW_TEXTURE_DEBUG_INFO) {
-        ::std::cout << "move() to " << this << " with " << m_texture << " from "
-                    << &other << ::std::endl;
+        std::cout << "move() to " << this << " with " << m_texture << " from "
+                    << &other << std::endl;
     }
     other.m_texture = nullptr;
     other.m_width = 0;
@@ -148,8 +148,8 @@ Texture::Texture(Texture &&other) noexcept
 
 Texture &Texture::operator=(Texture &&other) noexcept {
     if (SHOW_TEXTURE_DEBUG_INFO) {
-        ::std::cout << "move= to " << this << " with " << m_texture << " from "
-                    << &other << ::std::endl;
+        std::cout << "move= to " << this << " with " << m_texture << " from "
+                    << &other << std::endl;
     }
     m_width = other.m_width;
     m_height = other.m_height;
