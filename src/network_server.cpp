@@ -374,6 +374,14 @@ public:
                     user_connection[user_name]->send_game();
                 }
             }
+
+            if (data["action type"] == "add_bot") {
+                // m_game->add_bot();
+                for (const std::string &user_name : game_users[m_game_name]) {
+                    user_connection[user_name]->send_game();
+                }
+            }
+
         } catch (std::exception &e) {
             std::cout << e.what() << '\n';
             json answer;

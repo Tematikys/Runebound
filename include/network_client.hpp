@@ -263,6 +263,12 @@ public:
         do_write(data.dump());
     }
 
+    void add_bot() {
+        json data;
+        data["action type"] = "add_bot";
+        do_write(data.dump());
+    }
+
     [[nodiscard]] std::vector<dice::HandDice> get_last_dice_result() const {
         return m_game_client.m_last_dice_movement_result;
     };
