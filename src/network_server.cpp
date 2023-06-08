@@ -36,6 +36,7 @@ public:
         runebound::character::StandardCharacter character
     );
     void send_game();
+    void send_game_for_all();
 
     void start() {
         std::cout << "Some connected\n";
@@ -70,9 +71,7 @@ public:
 
             if (data["action type"] == "take token") {
                 m_game->take_token(user_character[m_user_name]);
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
-                }
+                send_game_for_all();
             }
             if (data["action type"] == "add game") {
                 std::string game_name = data["game name"];
@@ -92,9 +91,7 @@ public:
                 user_connection[m_user_name] = this;
                 game_users[m_game_name].insert(m_user_name);
 
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
-                }
+                send_game_for_all();
             }
 
             if (data["action type"] == "exit game") {
@@ -106,9 +103,7 @@ public:
                 send_selected_character(
                     runebound::character::StandardCharacter::NONE
                 );
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
-                }
+                send_game_for_all();
             }
 
             if (data["action type"] == "select character") {
@@ -118,23 +113,15 @@ public:
                 if (character ==
                     runebound::character::StandardCharacter::NONE) {
                     send_selected_character(character);
-                    for (const std::string &user_name :
-                         game_users[m_game_name]) {
-                        user_connection[user_name]->send_game();
-                    }
+                    send_game_for_all();
                 } else {
-                    for (const std::string &user_name :
-                         game_users[m_game_name]) {
-                        user_connection[user_name]->send_game();
-                    }
+                    send_game_for_all();
                     send_selected_character(character);
                 }
             }
             if (data["action type"] == "throw move dice") {
                 m_game->throw_movement_dice(user_character[m_user_name]);
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
-                }
+                send_game_for_all();
             }
             if (data["action type"] == "make move") {
                 int x = data["x"], y = data["y"];
@@ -142,24 +129,18 @@ public:
                 auto path = m_game->make_move(
                     user_character[m_user_name], {x, y}, dice
                 );
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
-                }
+                send_game_for_all();
             }
 
             if (data["action type"] == "pass") {
                 m_game->start_next_character_turn(user_character[m_user_name]);
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
-                }
+                send_game_for_all();
             }
 
             if (data["action type"] == "relax") {
                 m_game->throw_relax_dice(user_character[m_user_name]);
                 m_game->relax(user_character[m_user_name]);
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
-                }
+                send_game_for_all();
             }
 
             if (data["action type"] == "fight") {
@@ -282,40 +263,6 @@ public:
                             throw std::runtime_error("Wrong combination");
                         }
                     }
-
-                    if (data["token type"] == "doubling") {
-                        runebound::fight::Participant participant =
-                            data["participant"];
-                        runebound::fight::TokenHandCount token1 =
-                            data["token1"];
-                        runebound::fight::TokenHandCount token2 =
-                            data["token2"];
-                        m_game->get_current_fight()->make_doubling(
-                            participant, token1, token2
-                        );
-                    }
-                    if (data["token type"] == "dexterity") {
-                        runebound::fight::Participant participant1 =
-                            data["participant1"];
-                        runebound::fight::Participant participant2 =
-                            data["participant2"];
-                        runebound::fight::TokenHandCount token1 =
-                            data["token1"];
-                        runebound::fight::TokenHandCount token2 =
-                            data["token2"];
-                        m_game->get_current_fight()->make_dexterity(
-                            participant1, token1, token2, participant2
-                        );
-                    }
-                    if (data["token type"] == "damage") {
-                        runebound::fight::Participant participant =
-                            data["participant"];
-                        std::vector<runebound::fight::TokenHandCount> tokens =
-                            data["tokens"];
-                        m_game->get_current_fight()->make_damage(
-                            participant, tokens
-                        );
-                    }
                 }
                 if (data["fight command"] == "fight_pass") {
                     if (data["participant"] ==
@@ -328,9 +275,7 @@ public:
                         }
                     }
                 }
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
-                }
+                send_game_for_all();
             }
 
             if (data["action type"] == "trade") {
@@ -373,16 +318,12 @@ public:
                         data["option"]
                     );
                 }
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
-                }
+                send_game_for_all();
             }
 
             if (data["action type"] == "add_bot") {
                 // m_game->add_bot();
-                for (const std::string &user_name : game_users[m_game_name]) {
-                    user_connection[user_name]->send_game();
-                }
+                send_game_for_all();
             }
 
         } catch (std::exception &e) {
@@ -456,6 +397,12 @@ void Connection::send_game() {
     answer["change type"] = "game";
     runebound::game::to_json(answer, game);
     write(answer.dump());
+}
+
+void Connection::send_game_for_all() {
+    for (const std::string &user_name : game_users[m_game_name]) {
+        user_connection[user_name]->send_game();
+    }
 }
 
 class Server {
