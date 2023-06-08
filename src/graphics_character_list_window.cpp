@@ -2,7 +2,7 @@
 
 namespace runebound::graphics {
 void Client::init_character_list_window() {
-    auto window = ::std::make_unique<Window>(
+    auto window = std::make_unique<Window>(
         Window(WINDOW_WIDTH, WINDOW_HEIGHT, {0xFF, 0xFF, 0xFF, 0xFF})
     );
     Texture texture;
@@ -52,7 +52,7 @@ void Client::init_character_list_window() {
     );
     // ===== EXIT BUTTON =====
 
-    m_window.add_window("char_list", ::std::move(window), {0, 0}, false, false);
+    m_window.add_window("char_list", std::move(window), {0, 0}, false, false);
 }
 
 void Client::update_character_list_window() {
@@ -109,7 +109,7 @@ void Client::update_character_list_window() {
     int i = 0;
     for (const auto &character :
          m_network_client.get_game_client().m_remaining_standard_characters) {
-        ::std::string name;
+        std::string name;
         switch (character) {
             case ::runebound::character::StandardCharacter::LISSA:
                 name = "Lissa";

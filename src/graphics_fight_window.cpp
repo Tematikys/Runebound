@@ -4,21 +4,21 @@
 namespace runebound::graphics {
 void Client::init_fight_window() {
     {  // FIGHT WINDOW
-        auto window = ::std::make_unique<Window>(Window(
+        auto window = std::make_unique<Window>(Window(
             WINDOW_WIDTH * 3 / 4, WINDOW_HEIGHT * 3 / 4,
             {0xFF, 0xFF, 0xFF, 0xFF}
         ));
         m_window.get_window("game")->add_window(
-            "fight", ::std::move(window), {WINDOW_WIDTH / 8, WINDOW_HEIGHT / 8},
+            "fight", std::move(window), {WINDOW_WIDTH / 8, WINDOW_HEIGHT / 8},
             false, false
         );
     }  // FIGHT WINDOW
     {  // WIN / LOSE WINDOW
         auto *win = m_window.get_window("game")->get_window("fight");
-        auto window = ::std::make_unique<Window>(
+        auto window = std::make_unique<Window>(
             Window(win->width(), win->height(), {0xFF, 0xFF, 0xFF, 0xFF})
         );
-        win->add_window("win_lose", ::std::move(window), {0, 0}, false, false);
+        win->add_window("win_lose", std::move(window), {0, 0}, false, false);
     }  // WIN / LOSE WINDOW
 }
 
@@ -30,9 +30,9 @@ void Client::update_fight_window() {
     win->remove_all_textures();
     win->remove_all_buttons();
 
-    static ::std::vector<::runebound::fight::TokenHandCount>
+    static std::vector<::runebound::fight::TokenHandCount>
         character_selected_tokens;
-    static ::std::vector<::runebound::fight::TokenHandCount>
+    static std::vector<::runebound::fight::TokenHandCount>
         enemy_selected_tokens;
 
     const auto &fight = m_network_client.get_game_client().m_fight_client;
@@ -200,9 +200,9 @@ void Client::update_fight_window() {
                                 enemy_vec, char_vec
                             );
                         } else {
-                            ::std::cout << "[[log]] :: Invalid state on using "
+                            std::cout << "[[log]] :: Invalid state on using "
                                            "fight tokens (fight window)"
-                                        << ::std::endl;
+                                        << std::endl;
                         }
                     }
                 },
@@ -242,10 +242,10 @@ void Client::update_fight_window() {
                                 ::runebound::fight::Participant::ENEMY
                             );
                         } else {
-                            ::std::cout
+                            std::cout
                                 << "[[log]] :: Invalid state on passing "
                                    "(fight window)"
-                                << ::std::endl;
+                                << std::endl;
                         }
                     }
                 },
@@ -262,7 +262,7 @@ void Client::update_fight_window() {
 
     {  // TURN
         Texture texture;
-        ::std::string turn_name;
+        std::string turn_name;
         if (fight.get_turn() == ::runebound::fight::Participant::CHARACTER) {
             turn_name = character_name;
         } else {
@@ -297,7 +297,7 @@ void Client::update_fight_window() {
 
     {  // CHARACTER NAME
         Texture texture;
-        ::std::string text = character_name;
+        std::string text = character_name;
         if (my_role == ::runebound::character::StateCharacter::FIGHT) {
             text = "You are: " + text;
         }
@@ -320,7 +320,7 @@ void Client::update_fight_window() {
         m_images["heart20"].render_to_texture(m_graphic_renderer, 0, 0, tex);
         Texture texture = Texture(tex);
         win->add_texture("char_heart", texture, {5, 173}, true);
-        const auto health = ::std::to_string(character.get_health());
+        const auto health = std::to_string(character.get_health());
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono20"], health,
             {0x00, 0x00, 0x00, 0xFF}
@@ -343,7 +343,7 @@ void Client::update_fight_window() {
             "enemy_heart", texture,
             {5, win->height() - 138 - texture.height() - 5 - 35}, true
         );
-        const auto health = ::std::to_string(fight.m_enemy.get_health());
+        const auto health = std::to_string(fight.m_enemy.get_health());
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono20"], health,
             {0x00, 0x00, 0x00, 0xFF}
@@ -356,7 +356,7 @@ void Client::update_fight_window() {
 
     {  // ENEMY NAME
         Texture texture;
-        ::std::string text = enemy_name;
+        std::string text = enemy_name;
         if (my_role == ::runebound::character::StateCharacter::ENEMY) {
             text = "You are: " + text;
         }
@@ -382,7 +382,7 @@ void Client::update_fight_window() {
         SDL_SetRenderTarget(m_graphic_renderer, nullptr);
         {      // RENDER
             {  // BACKGROUND
-                if (::std::find(
+                if (std::find(
                         character_selected_tokens.begin(),
                         character_selected_tokens.end(), token
                     ) == character_selected_tokens.end()) {
@@ -403,7 +403,7 @@ void Client::update_fight_window() {
                 } else {
                     init = token.token.second_lead;
                 }
-                ::std::string name;
+                std::string name;
                 switch (token.hand) {
                     case fight::HandFightTokens::PHYSICAL_DAMAGE:
                         name = "damage";
@@ -439,14 +439,14 @@ void Client::update_fight_window() {
                 Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono40"],
-                    ::std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
+                    std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 80, 30, tex);
             }  // FACE SIDE
             {  // BACK SIDE
                 bool init = false;
                 int num = 0;
-                ::std::string name;
+                std::string name;
                 ::runebound::fight::HandFightTokens target{};
                 if (token.token.first == token.hand) {
                     target = token.token.second;
@@ -492,7 +492,7 @@ void Client::update_fight_window() {
                 Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
-                    ::std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
+                    std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 75, 100, tex);
             }  // BACK SIDE
@@ -504,7 +504,7 @@ void Client::update_fight_window() {
                 128, 128, HorizontalButtonTextureAlign::NONE,
                 VerticalButtonTextureAlign::NONE, 0, 0, texture,
                 [&vec = character_selected_tokens, token]() {
-                    auto pos = ::std::find(vec.begin(), vec.end(), token);
+                    auto pos = std::find(vec.begin(), vec.end(), token);
                     if (pos == vec.end()) {
                         vec.push_back(token);
                     } else {
@@ -514,12 +514,12 @@ void Client::update_fight_window() {
                 []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0xFF, 0xFF, 0xFF, 0xFF}
             );
             win->add_button(
-                "char" + ::std::to_string(count), button, {5 + 133 * count, 5},
+                "char" + std::to_string(count), button, {5 + 133 * count, 5},
                 true, true
             );
         } else {
             win->add_texture(
-                "char" + ::std::to_string(count), texture, {5 + 133 * count, 5},
+                "char" + std::to_string(count), texture, {5 + 133 * count, 5},
                 true
             );
         }
@@ -538,7 +538,7 @@ void Client::update_fight_window() {
         SDL_SetRenderTarget(m_graphic_renderer, nullptr);
         {      // RENDER
             {  // BACKGROUND
-                if (::std::find(
+                if (std::find(
                         enemy_selected_tokens.begin(),
                         enemy_selected_tokens.end(), token
                     ) == enemy_selected_tokens.end()) {
@@ -559,7 +559,7 @@ void Client::update_fight_window() {
                 } else {
                     init = token.token.second_lead;
                 }
-                ::std::string name;
+                std::string name;
                 switch (token.hand) {
                     case fight::HandFightTokens::PHYSICAL_DAMAGE:
                         name = "damage";
@@ -595,14 +595,14 @@ void Client::update_fight_window() {
                 Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono40"],
-                    ::std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
+                    std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 80, 30, tex);
             }  // FACE SIDE
             {  // BACK SIDE
                 bool init = false;
                 int num = 0;
-                ::std::string name;
+                std::string name;
                 ::runebound::fight::HandFightTokens target{};
                 if (token.token.first == token.hand) {
                     target = token.token.second;
@@ -648,7 +648,7 @@ void Client::update_fight_window() {
                 Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
-                    ::std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
+                    std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 75, 100, tex);
             }  // BACK SIDE
@@ -660,7 +660,7 @@ void Client::update_fight_window() {
                 128, 128, HorizontalButtonTextureAlign::NONE,
                 VerticalButtonTextureAlign::NONE, 0, 0, texture,
                 [&vec = enemy_selected_tokens, token]() {
-                    auto pos = ::std::find(vec.begin(), vec.end(), token);
+                    auto pos = std::find(vec.begin(), vec.end(), token);
                     if (pos == vec.end()) {
                         vec.push_back(token);
                     } else {
@@ -670,12 +670,12 @@ void Client::update_fight_window() {
                 []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0xFF, 0xFF, 0xFF, 0xFF}
             );
             win->add_button(
-                "enemy" + ::std::to_string(count), button,
+                "enemy" + std::to_string(count), button,
                 {5 + 133 * count, win->height() - 133}, true, true
             );
         } else {
             win->add_texture(
-                "enemy" + ::std::to_string(count), texture,
+                "enemy" + std::to_string(count), texture,
                 {5 + 133 * count, win->height() - 133}, true
             );
         }

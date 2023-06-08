@@ -25,13 +25,13 @@ private:
 
     Board m_board{};
     Point m_board_pos{5, 5};
-    ::std::size_t m_game_list_start_index{0};
-    ::std::size_t m_game_list_show_amount{10};
+    std::size_t m_game_list_start_index{0};
+    std::size_t m_game_list_show_amount{10};
 
     SDL_Window *m_graphic_window{nullptr};
     SDL_Renderer *m_graphic_renderer{nullptr};
-    ::std::map<::std::string, TTF_Font *> m_fonts{};
-    ::std::map<::std::string, Texture> m_images{};
+    std::map<std::string, TTF_Font *> m_fonts{};
+    std::map<std::string, Texture> m_images{};
 
     bool m_is_running{false};
     uint32_t m_frame_time{0};

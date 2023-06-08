@@ -7,7 +7,7 @@ void Client::init_shop_window() {
     Button button;
 
     auto *win = m_window.get_window("game");
-    auto window = ::std::make_unique<Window>(
+    auto window = std::make_unique<Window>(
         Window(win->width(), win->height(), {0xFF, 0xFF, 0xFF, 0xFF})
     );
 
@@ -38,7 +38,7 @@ void Client::init_shop_window() {
         );
     }  //  CLOSE BUTTON
 
-    win->add_window("shop", ::std::move(window), {0, 0}, false, false);
+    win->add_window("shop", std::move(window), {0, 0}, false, false);
 }
 
 void Client::update_shop_window() {
@@ -48,11 +48,11 @@ void Client::update_shop_window() {
     auto *win = m_window.get_window("game")->get_window("shop");
     win->remove_all_textures();
     for (int i = 1; i <= 4; ++i) {
-        win->remove_button(::std::to_string(i));
+        win->remove_button(std::to_string(i));
     }
     const auto &pos = m_network_client.get_yourself_character()->get_position();
     if (!m_network_client.get_game_client().m_shops.contains(pos)) {
-        ::std::cout << "Trade does not exist" << ::std::endl;
+        std::cout << "Trade does not exist" << std::endl;
         return;
     }
 
@@ -61,7 +61,7 @@ void Client::update_shop_window() {
         selected_shop_item = 0;
     }
 
-    const ::std::set<unsigned int> shop =
+    const std::set<unsigned int> shop =
         m_network_client.get_game_client().m_shops.at(pos);
     {  // UPDATE PRODUCTS
         int count = 0;
@@ -121,7 +121,7 @@ void Client::update_shop_window() {
             {  // PRICE
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Price: " + ::std::to_string(prod.get_price()),
+                    "Price: " + std::to_string(prod.get_price()),
                     {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 1, 21, tex);
@@ -130,7 +130,7 @@ void Client::update_shop_window() {
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
                     "Marker price: " +
-                        ::std::to_string(prod.get_market_price()),
+                        std::to_string(prod.get_market_price()),
                     {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 1, 41, tex);
@@ -139,7 +139,7 @@ void Client::update_shop_window() {
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
                     "Delta health: " +
-                        ::std::to_string(prod.get_delta_max_health()),
+                        std::to_string(prod.get_delta_max_health()),
                     {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 1, 61, tex);
@@ -147,7 +147,7 @@ void Client::update_shop_window() {
             {  // DELTA SPEED
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Delta speed: " + ::std::to_string(prod.get_delta_speed()),
+                    "Delta speed: " + std::to_string(prod.get_delta_speed()),
                     {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 1, 81, tex);
@@ -156,7 +156,7 @@ void Client::update_shop_window() {
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
                     "Delta hand limit: " +
-                        ::std::to_string(prod.get_delta_hand_limit()),
+                        std::to_string(prod.get_delta_hand_limit()),
                     {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 1, 101, tex);
@@ -170,7 +170,7 @@ void Client::update_shop_window() {
                 auto chars = prod.get_delta_characteristic();
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
-                    "    Body: " + ::std::to_string(
+                    "    Body: " + std::to_string(
                                        chars[::runebound::Characteristic::BODY]
                                    ),
                     {0x00, 0x00, 0x00, 0xFF}
@@ -179,7 +179,7 @@ void Client::update_shop_window() {
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
                     "    Intelligence: " +
-                        ::std::to_string(
+                        std::to_string(
                             chars[::runebound::Characteristic::INTELLIGENCE]
                         ),
                     {0x00, 0x00, 0x00, 0xFF}
@@ -188,7 +188,7 @@ void Client::update_shop_window() {
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
                     "    Spirit: " +
-                        ::std::to_string(
+                        std::to_string(
                             chars[::runebound::Characteristic::INTELLIGENCE]
                         ),
                     {0x00, 0x00, 0x00, 0xFF}
@@ -216,7 +216,7 @@ void Client::update_shop_window() {
                     {  // FACE SIDE
                         const bool init = token.value().first_lead;
                         const int num = token.value().first_count;
-                        ::std::string token_name;
+                        std::string token_name;
                         switch (token.value().first) {
                             case fight::HandFightTokens::PHYSICAL_DAMAGE:
                                 token_name = "damage";
@@ -252,7 +252,7 @@ void Client::update_shop_window() {
                         Texture token_texture;
                         token_texture.load_text_from_string(
                             m_graphic_renderer, m_fonts["FreeMono40"],
-                            ::std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
+                            std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
                         );
                         token_texture.render_to_texture(
                             m_graphic_renderer, 80, 30, token_tex
@@ -261,7 +261,7 @@ void Client::update_shop_window() {
                     {  // BACK SIDE
                         const bool init = token.value().second_lead;
                         const int num = token.value().second_count;
-                        ::std::string token_name;
+                        std::string token_name;
                         switch (token.value().second) {
                             case fight::HandFightTokens::PHYSICAL_DAMAGE:
                                 token_name = "damage";
@@ -297,7 +297,7 @@ void Client::update_shop_window() {
                         Texture token_texture;
                         token_texture.load_text_from_string(
                             m_graphic_renderer, m_fonts["FreeMono20"],
-                            ::std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
+                            std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
                         );
                         token_texture.render_to_texture(
                             m_graphic_renderer, 75, 100, token_tex

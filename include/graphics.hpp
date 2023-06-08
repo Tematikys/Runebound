@@ -12,6 +12,6 @@ bool SDL_init(SDL_Window *&window, SDL_Renderer *&renderer);
 
 void update_mouse_pos(Point &pos);
 
-bool load_font(TTF_Font *&font, const ::std::string &path, int font_size);
+bool load_font(TTF_Font *&font, const std::string &path, int font_size);
 }  // namespace runebound::graphics
 #endif  // RUNEBOUND_GRAPHICS_HPP_

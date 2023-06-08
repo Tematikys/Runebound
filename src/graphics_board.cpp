@@ -67,7 +67,7 @@ Board::Board(const ::runebound::map::MapClient &map) {
         auto [x2, y2] = pair.second;
         auto [i, v] = *RIVER_DIRECTIONS.find(
             {sign(x1 - x2) +
-                 (1 - ::std::abs(sign(x1 - x2))) * (2 * (y1 % 2) - 1),
+                 (1 - std::abs(sign(x1 - x2))) * (2 * (y1 % 2) - 1),
              sign(y1 - y2)}
         );
         const HexagonShape hex =
@@ -86,8 +86,8 @@ void Board::add_cell(
     m_cell_fill_color.push_back(fill_color);
     m_cell_border_color.push_back(border_color);
     ++m_cell_amount;
-    m_width = ::std::max(m_width, m_cells.back().get_vertex(2).x());
-    m_height = ::std::max(m_height, m_cells.back().get_vertex(3).y());
+    m_width = std::max(m_width, m_cells.back().get_vertex(2).x());
+    m_height = std::max(m_height, m_cells.back().get_vertex(3).y());
 }
 
 void Board::add_token(
@@ -125,7 +125,7 @@ void Board::add_road(const Segment &segment, SDL_Color color) {
 }
 
 void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
-    for (::std::size_t i = 0; i < m_cell_amount; ++i) {
+    for (std::size_t i = 0; i < m_cell_amount; ++i) {
         m_cells[i].render(renderer, x_offset, y_offset, m_cell_fill_color[i]);
         m_cells[i].render_border(
             renderer, x_offset, y_offset, m_cell_border_color[i], 1
@@ -148,10 +148,10 @@ void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
         );
     }
     // TODO
-    for (::std::size_t i = 0; i < m_river_amount; ++i) {
+    for (std::size_t i = 0; i < m_river_amount; ++i) {
         m_rivers[i].render(renderer, m_river_color[i], 5, x_offset, y_offset);
     }
-    for (::std::size_t i = 0; i < m_road_amount; ++i) {
+    for (std::size_t i = 0; i < m_road_amount; ++i) {
         if (m_is_connected_to_town[i]) {
             m_roads[i].half_render(
                 renderer, m_road_color[i], 7, x_offset, y_offset
@@ -160,7 +160,7 @@ void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
             m_roads[i].render(renderer, m_road_color[i], 7, x_offset, y_offset);
         }
     }
-    for (::std::size_t i = 0; i < m_special_amount; ++i) {
+    for (std::size_t i = 0; i < m_special_amount; ++i) {
         m_specials[i].render(
             renderer, x_offset, y_offset, m_special_fill_color[i]
         );
@@ -168,7 +168,7 @@ void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
             renderer, x_offset, y_offset, m_special_border_color[i], 1
         );
     }
-    for (::std::size_t i = 0; i < m_token_amount; ++i) {
+    for (std::size_t i = 0; i < m_token_amount; ++i) {
         m_tokens[i].render(renderer, m_token_fill_color[i], x_offset, y_offset);
         m_tokens[i].render_border(
             renderer, m_token_border_color[i], x_offset, y_offset
@@ -201,13 +201,13 @@ void Board::render_to_texture(SDL_Renderer *renderer, SDL_Texture *&texture)
 void Board::update_selection(const Point &dot) {
     m_selected_cell = 0xFFFF;
     m_selected_token = 0xFFFF;
-    for (::std::size_t i = 0; i < m_cell_amount; ++i) {
+    for (std::size_t i = 0; i < m_cell_amount; ++i) {
         if (m_cells[i].in_bounds(dot)) {
             m_selected_cell = i;
             break;
         }
     }
-    for (::std::size_t i = 0; i < m_token_amount; ++i) {
+    for (std::size_t i = 0; i < m_token_amount; ++i) {
         if (m_tokens[i].in_bounds(dot)) {
             m_selected_token = i;
             break;

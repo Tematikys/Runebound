@@ -48,12 +48,12 @@ public:
     );
 
     bool
-    load_image_from_file(SDL_Renderer *renderer, const ::std::string &path);
+    load_image_from_file(SDL_Renderer *renderer, const std::string &path);
 
     bool load_text_from_string(
         SDL_Renderer *renderer,
         TTF_Font *font,
-        const ::std::string &text,
+        const std::string &text,
         SDL_Color color
     );
 

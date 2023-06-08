@@ -6,32 +6,32 @@ Window::Window(Window &&other) noexcept
     : m_width(other.m_width),
       m_height(other.m_height),
       m_rect(other.m_rect),
-      m_buttons(::std::move(other.m_buttons)),
-      m_button_pos(::std::move(other.m_button_pos)),
-      m_text_fields(::std::move(other.m_text_fields)),
-      m_text_field_pos(::std::move(other.m_text_field_pos)),
-      m_text_field_fonts(::std::move(other.m_text_field_fonts)),
-      m_text_field_colors(::std::move(other.m_text_field_colors)),
-      m_textures(::std::move(other.m_textures)),
-      m_texture_pos(::std::move(other.m_texture_pos)),
-      m_windows(::std::move(other.m_windows)),
-      m_window_pos(::std::move(other.m_window_pos)) {
+      m_buttons(std::move(other.m_buttons)),
+      m_button_pos(std::move(other.m_button_pos)),
+      m_text_fields(std::move(other.m_text_fields)),
+      m_text_field_pos(std::move(other.m_text_field_pos)),
+      m_text_field_fonts(std::move(other.m_text_field_fonts)),
+      m_text_field_colors(std::move(other.m_text_field_colors)),
+      m_textures(std::move(other.m_textures)),
+      m_texture_pos(std::move(other.m_texture_pos)),
+      m_windows(std::move(other.m_windows)),
+      m_window_pos(std::move(other.m_window_pos)) {
 }
 
 Window &Window::operator=(Window &&other) noexcept {
     m_width = other.m_width;
     m_height = other.m_height;
     m_rect = other.m_rect;
-    m_buttons = ::std::move(other.m_buttons);
-    m_button_pos = ::std::move(other.m_button_pos);
-    m_text_fields = ::std::move(other.m_text_fields);
-    m_text_field_pos = ::std::move(other.m_text_field_pos);
-    m_text_field_fonts = ::std::move(other.m_text_field_fonts);
-    m_text_field_colors = ::std::move(other.m_text_field_colors);
-    m_textures = ::std::move(other.m_textures);
-    m_texture_pos = ::std::move(other.m_texture_pos);
-    m_windows = ::std::move(other.m_windows);
-    m_window_pos = ::std::move(other.m_window_pos);
+    m_buttons = std::move(other.m_buttons);
+    m_button_pos = std::move(other.m_button_pos);
+    m_text_fields = std::move(other.m_text_fields);
+    m_text_field_pos = std::move(other.m_text_field_pos);
+    m_text_field_fonts = std::move(other.m_text_field_fonts);
+    m_text_field_colors = std::move(other.m_text_field_colors);
+    m_textures = std::move(other.m_textures);
+    m_texture_pos = std::move(other.m_texture_pos);
+    m_windows = std::move(other.m_windows);
+    m_window_pos = std::move(other.m_window_pos);
     return *this;
 }
 
@@ -224,7 +224,7 @@ void Window::add_button(
     bool visible,
     bool updatable
 ) {
-    m_buttons[name] = ::std::move(button);
+    m_buttons[name] = std::move(button);
     m_button_pos[name] = pos;
     m_button_visible[name] = visible;
     m_button_updatable[name] = updatable;
@@ -276,7 +276,7 @@ void Window::add_text_field(
     bool visible,
     bool updatable
 ) {
-    m_text_fields[name] = ::std::move(text_field);
+    m_text_fields[name] = std::move(text_field);
     m_text_field_fonts[name] = font;
     m_text_field_colors[name] = col;
     m_text_field_pos[name] = pos;
@@ -316,7 +316,7 @@ void Window::remove_all_text_fields() {
 }
 
 void Window::add_texture(
-    const ::std::string &name,
+    const std::string &name,
     Texture &texture,
     Point pos,
     bool visible
@@ -324,19 +324,19 @@ void Window::add_texture(
     if (m_textures.find(name) != m_textures.end()) {
         m_textures[name].free();
     }
-    m_textures[name] = ::std::move(texture);
+    m_textures[name] = std::move(texture);
     m_texture_pos[name] = pos;
     m_texture_visible[name] = visible;
 }
 
-void Window::set_visibility_texture(const ::std::string &name, bool state) {
+void Window::set_visibility_texture(const std::string &name, bool state) {
     if (m_textures.find(name) == m_textures.end()) {
         return;
     }
     m_texture_visible[name] = state;
 }
 
-void Window::remove_texture(const ::std::string &name) {
+void Window::remove_texture(const std::string &name) {
     if (m_textures.find(name) == m_textures.end()) {
         return;
     }
@@ -353,33 +353,33 @@ void Window::remove_all_textures() {
 }
 
 void Window::add_window(
-    const ::std::string &name,
-    ::std::unique_ptr<Window> window,
+    const std::string &name,
+    std::unique_ptr<Window> window,
     Point pos,
     bool visible,
     bool updatable
 ) {
-    m_windows[name] = ::std::move(window);
+    m_windows[name] = std::move(window);
     m_window_pos[name] = pos;
     m_window_visible[name] = visible;
     m_window_updatable[name] = updatable;
 }
 
-void Window::set_updatability_window(const ::std::string &name, bool state) {
+void Window::set_updatability_window(const std::string &name, bool state) {
     if (m_windows.find(name) == m_windows.end()) {
         return;
     }
     m_window_updatable[name] = state;
 }
 
-void Window::set_visibility_window(const ::std::string &name, bool state) {
+void Window::set_visibility_window(const std::string &name, bool state) {
     if (m_windows.find(name) == m_windows.end()) {
         return;
     }
     m_window_visible[name] = state;
 }
 
-void Window::remove_window(const ::std::string &name) {
+void Window::remove_window(const std::string &name) {
     if (m_windows.find(name) == m_windows.end()) {
         return;
     }
@@ -429,15 +429,15 @@ Window *Window::get_window(const std::string &name) {
 
 void Window::add_window_in_window(
     const std::string &win_name,
-    const ::std::string &name,
-    ::std::unique_ptr<Window> window,
+    const std::string &name,
+    std::unique_ptr<Window> window,
     Point pos,
     bool visible,
     bool updatable
 ) {
     if (m_windows.find(win_name) != m_windows.end()) {
         m_windows[win_name]->add_window(
-            name, ::std::move(window), pos, visible, updatable
+            name, std::move(window), pos, visible, updatable
         );
     }
 }

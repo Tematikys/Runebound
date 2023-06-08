@@ -11,7 +11,7 @@ void Client::update_board() {
     if (m_network_client.get_yourself_character() != nullptr &&
         &(game.m_characters[game.m_turn]) ==
             m_network_client.get_yourself_character()) {
-        ::std::vector<Point> hexagons;
+        std::vector<Point> hexagons;
         for (const auto &e :
              m_network_client.get_game_client().m_possible_moves) {
             hexagons.emplace_back(e.x, e.y);
@@ -23,7 +23,7 @@ void Client::update_board() {
 void Client::init_graphics() {
     if (!SDL_init(m_graphic_window, m_graphic_renderer)) {
         if (SHOW_CLIENT_DEBUG_INFO) {
-            ::std::cout << "Failed to inti SDL!" << ::std::endl;
+            std::cout << "Failed to inti SDL!" << std::endl;
         }
         return;
     }
@@ -36,12 +36,12 @@ void Client::init_graphics() {
 void Client::load_fonts() {
     for (auto [path, font_name] : FONTS) {
         for (int i = 1; i < 201; ++i) {
-            const ::std::string name = font_name + ::std::to_string(i);
+            const std::string name = font_name + std::to_string(i);
             m_fonts[name] = nullptr;
             load_font(m_fonts[name], path, i);
             if (m_fonts[name] == nullptr) {
                 if (SHOW_CLIENT_DEBUG_INFO) {
-                    ::std::cout << "Failed to load: " << name << ::std::endl;
+                    std::cout << "Failed to load: " << name << std::endl;
                 }
                 return;
             }
@@ -57,23 +57,23 @@ void Client::load_images() {
 }
 
 void Client::init() {
-    ::std::ifstream settings("settings.txt");
+    std::ifstream settings("settings.txt");
     if (settings.is_open()) {
-        ::std::string ignore;
+        std::string ignore;
         settings >> ignore >> SHOW_CLIENT_DEBUG_INFO;
         settings >> ignore >> SHOW_TEXTURE_DEBUG_INFO;
         settings >> ignore >> SHOW_SHOP_DEBUG_INFO;
     } else {
-        throw ::std::runtime_error("Settings can not be opened");
+        throw std::runtime_error("Settings can not be opened");
     }
     init_graphics();
     m_window = Window(WINDOW_WIDTH, WINDOW_HEIGHT, {0xFF, 0xFF, 0xFF, 0xFF});
     if (SHOW_CLIENT_DEBUG_INFO) {
-        ::std::cout << "===== Start init main menu =====" << ::std::endl;
+        std::cout << "===== Start init main menu =====" << std::endl;
     }
     init_main_menu_window();
     if (SHOW_CLIENT_DEBUG_INFO) {
-        ::std::cout << "===== End init main menu =====" << ::std::endl;
+        std::cout << "===== End init main menu =====" << std::endl;
     }
     init_character_list_window();
     init_game_window();

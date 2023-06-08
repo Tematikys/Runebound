@@ -4,7 +4,7 @@ namespace runebound::graphics {
 void Client::init_main_menu_window() {
     {  // MAIN MENU WINDOW
         auto *win = &m_window;
-        auto window = ::std::make_unique<Window>(
+        auto window = std::make_unique<Window>(
             Window(WINDOW_WIDTH, WINDOW_HEIGHT, {0xFF, 0xFF, 0xFF, 0xFF})
         );
         Texture texture;
@@ -71,23 +71,23 @@ void Client::init_main_menu_window() {
         }  // ===== EXIT BUTTON =====
         window->activate();
 
-        win->add_window("main_menu", ::std::move(window), {0, 0}, true, true);
+        win->add_window("main_menu", std::move(window), {0, 0}, true, true);
     }  // MAIN MENU WINDOW
     {  // GAME LIST WINDOW
         auto *win = &m_window;
-        auto window = ::std::make_unique<Window>(
+        auto window = std::make_unique<Window>(
             Window(32 * 18, 355, {255, 255, 255, 255})
         );
         win->get_window("main_menu")
-            ->add_window("game_list", ::std::move(window), {5, 40}, true, true);
+            ->add_window("game_list", std::move(window), {5, 40}, true, true);
     }  // GAME LIST WINDOW
 }
 
 void Client::update_main_menu_window() {
     auto *win = m_window.get_window("main_menu")->get_window("game_list");
     win->remove_all_buttons();
-    for (::std::size_t i = m_game_list_start_index;
-         i < ::std::min(
+    for (std::size_t i = m_game_list_start_index;
+         i < std::min(
                  m_game_list_start_index + m_game_list_show_amount,
                  m_network_client.get_game_names_size()
              );
