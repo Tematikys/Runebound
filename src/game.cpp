@@ -176,24 +176,6 @@ void Game::start_next_character_turn(
     if (m_turn == 0) {
         start_new_round();
     }
-    if (m_characters[m_turn]->check_bot()) {
-        make_game_turn_bot(m_characters[m_turn]);
-    }
-}
-
-void Game::make_game_turn_bot(const std::shared_ptr<character::Character> &chr
-) {
-    for (int i = 0; i < 3; ++i) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        throw_movement_dice(chr);
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        auto possible_moves = get_possible_moves();
-        make_move(
-            chr, possible_moves[rng() % possible_moves.size()],
-            m_last_dice_movement_result
-        );
-    }
-    start_next_character_turn(chr);
 }
 
 void Game::add_bot() {
@@ -415,6 +397,7 @@ std::vector<Point> Game::make_move(
     std::vector<::runebound::dice::HandDice> &dice_roll_results
 ) {
     check_turn(chr);
+    check_characters_in_map_cell(end);
     if (m_last_dice_movement_result.empty() &&
         m_map.check_neighbour(m_characters[m_turn]->get_position(), end)) {
         check_sufficiency_action_points(1);
@@ -661,15 +644,19 @@ std::vector<Point> Game::get_possible_moves() const {
     if (m_characters.empty()) {
         return {};
     }
-    if (m_last_dice_movement_result.empty()) {
-        if (m_characters[m_turn]->get_action_points() == 0) {
-            return {};
-        }
-        return m_map.get_neighbours(m_characters[m_turn]->get_position());
-    }
-    return m_map.get_possible_moves(
+    auto result = m_map.get_possible_moves(
         m_characters[m_turn]->get_position(), m_last_dice_movement_result
     );
+    for (const auto &character : m_characters) {
+        if (result.count(character->get_position()) > 0) {
+            result.erase(character->get_position());
+        }
+    }
+    std::vector<Point> possible_moves;
+    for (const auto &cell : result) {
+        possible_moves.push_back(cell);
+    }
+    return possible_moves;
 }
 }  // namespace game
 }  // namespace runebound

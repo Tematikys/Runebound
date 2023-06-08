@@ -1,10 +1,12 @@
 #include <boost/asio.hpp>
+#include <chrono>
 #include <deque>
 #include <iostream>
 #include <map>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <set>
+#include <thread>
 #include "character.hpp"
 #include "fight.hpp"
 #include "game.hpp"
@@ -135,6 +137,9 @@ public:
             if (data["action type"] == "pass") {
                 m_game->start_next_character_turn(user_character[m_user_name]);
                 send_game_for_all();
+                while (m_game->get_active_character()->is_bot()) {
+                    play_as_bot();
+                }
             }
 
             if (data["action type"] == "relax") {
@@ -320,7 +325,7 @@ public:
             }
 
             if (data["action type"] == "add_bot") {
-                // m_game->add_bot();
+                m_game->add_bot();
                 send_game_for_all();
             }
 
@@ -356,6 +361,25 @@ private:
                 }
             }
         );
+    }
+
+    void play_as_bot() {
+        auto bot = m_game->get_active_character();
+        for (int turn = 0; turn < 3; ++turn) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+            m_game->throw_movement_dice(bot);
+            send_game_for_all();
+            std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+            auto possible_moves = m_game->get_possible_moves();
+            m_game->make_move(
+                bot, possible_moves[runebound::rng() % possible_moves.size()]
+            );
+            send_game_for_all();
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
+
+        m_game->start_next_character_turn(bot);
+        send_game_for_all();
     }
 
     boost::asio::streambuf m_buffer;

@@ -312,9 +312,11 @@ public:
     }
 
     [[nodiscard]] unsigned int get_active_character_action_points() const {
-        if (m_game_client.m_count_players){
-            return m_game_client.m_characters[m_game_client.m_turn].get_action_points();
-        } else return 0;
+        if (m_game_client.m_count_players) {
+            return m_game_client.m_characters[m_game_client.m_turn]
+                .get_action_points();
+        } else
+            return 0;
     }
 
     [[nodiscard]] bool is_game_need_update() const {

@@ -120,6 +120,11 @@ struct NoFight : std::runtime_error {
     }
 };
 
+struct CellBusy : std::runtime_error {
+    CellBusy() : std::runtime_error("Cell busy.") {
+    }
+};
+
 struct Game {
 private:
     friend struct GameClient;
@@ -221,19 +226,25 @@ private:
 
     void start_new_round();
 
-    void make_game_turn_bot(const std::shared_ptr<character::Character> &chr);
-
     unsigned int get_enemy(unsigned int number_of_character) {
         for (unsigned int i = 1; i < m_count_players; ++i) {
             if (!m_characters
                      [(number_of_character + m_count_players - i) %
                       m_count_players]
-                         ->check_bot()) {
+                         ->is_bot()) {
                 return (number_of_character + m_count_players - i) %
                        m_count_players;
             }
         }
         return number_of_character;
+    }
+
+    void check_characters_in_map_cell(const Point &point) {
+        for (const auto &character : m_characters) {
+            if (character->get_position() == point) {
+                throw CellBusy();
+            }
+        }
     }
 
 public:
@@ -447,11 +458,23 @@ public:
         return m_turn;
     }
 
+    [[nodiscard]] std::shared_ptr<character::Character> get_active_character(
+    ) const {
+        return m_characters[m_turn];
+    }
+
     std::vector<Point> make_move(
         const std::shared_ptr<character::Character> &chr,
         const Point &point,
         std::vector<::runebound::dice::HandDice> &dice_roll_results
     );
+
+    std::vector<Point> make_move(
+        const std::shared_ptr<character::Character> &chr,
+        const Point &point
+    ) {
+        return make_move(chr, point, m_last_dice_movement_result);
+    }
 
     void start_card_execution(
         const std::shared_ptr<character::Character> &chr,

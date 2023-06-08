@@ -189,7 +189,7 @@ public:
 
     [[nodiscard]] std::vector<Point> get_neighbours(Point current) const;
 
-    [[nodiscard]] std::vector<Point> get_possible_moves(
+    [[nodiscard]] std::set<Point> get_possible_moves(
         Point start,
         std::vector<::runebound::dice::HandDice> dice_roll_results
     ) const;

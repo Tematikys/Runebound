@@ -36,7 +36,7 @@ private:
     unsigned int m_hand_limit, m_speed;
     std::map<Characteristic, int> m_characteristics;
 
-    bool m_bot = false;
+    bool m_is_bot = false;
     int m_action_points = 3;
     int m_max_action_points = 3;
     unsigned int m_active_card_meeting = 0;
@@ -93,11 +93,11 @@ public:
     }
 
     void make_bot() {
-        m_bot = true;
+        m_is_bot = true;
     }
 
-    [[nodiscard]] bool check_bot() const {
-        return m_bot;
+    [[nodiscard]] bool is_bot() const {
+        return m_is_bot;
     }
 
     explicit Character(const StandardCharacter &chr);
