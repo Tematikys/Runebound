@@ -79,7 +79,7 @@ public:
 
     bool handle_events(SDL_Event event);
 
-    void update(Point mouse_pos, bool mouse_pressed);
+    bool update(Point mouse_pos, bool &mouse_pressed);
 
     void add_button(
         const ::std::string &name,

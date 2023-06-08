@@ -122,8 +122,7 @@ bool Window::handle_events(SDL_Event event) {
     }
     bool is_updated = false;
     if (!m_active_window.empty()) {
-        is_updated =
-            is_updated || m_windows[m_active_window]->handle_events(event);
+        is_updated |= m_windows[m_active_window]->handle_events(event);
     }
     switch (event.type) {
         case SDL_TEXTINPUT:
@@ -157,9 +156,13 @@ bool Window::handle_events(SDL_Event event) {
     return is_updated;
 }
 
-void Window::update(Point mouse_pos, bool mouse_pressed) {
+bool Window::update(Point mouse_pos, bool &mouse_pressed) {
     if (!m_is_active) {
-        return;
+        return false;
+    }
+    bool updated = false;
+    if (!m_active_window.empty()) {
+        updated |= m_windows[m_active_window]->update(mouse_pos, mouse_pressed);
     }
     for (const auto &[name, window] : m_windows) {
         if (m_window_updatable[name] &&
@@ -169,7 +172,7 @@ void Window::update(Point mouse_pos, bool mouse_pressed) {
             ) &&
             mouse_pressed) {
             set_active_window(name);
-            window->update(
+            updated |= window->update(
                 mouse_pos -
                     Point(m_window_pos[name].x(), m_window_pos[name].y()),
                 mouse_pressed
@@ -188,12 +191,14 @@ void Window::update(Point mouse_pos, bool mouse_pressed) {
             if (mouse_pressed) {
                 mouse_pressed = false;
                 text_field.on_click();
+                updated = true;
             }
         }
     }
     if (mouse_pressed) {
         reset_active_window();
         reset_active_text_field();
+        updated = true;
     }
     for (const auto &[name, button] : m_buttons) {
         if (m_button_updatable[name] &&
@@ -205,9 +210,11 @@ void Window::update(Point mouse_pos, bool mouse_pressed) {
             if (mouse_pressed) {
                 mouse_pressed = false;
                 button.on_click();
+                updated = true;
             }
         }
     }
+    return updated;
 }
 
 void Window::add_button(
