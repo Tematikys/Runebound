@@ -1,13 +1,13 @@
 #include "game.hpp"
+#include <chrono>
 #include <filesystem>
 #include <nlohmann/json.hpp>
+#include <thread>
 #include "card_fight.hpp"
 #include "point.hpp"
 #include "product.hpp"
 #include "runebound_fwd.hpp"
 #include "skill_card.hpp"
-#include <chrono>
-#include <thread>
 
 namespace runebound {
 namespace game {
@@ -181,17 +181,20 @@ void Game::start_next_character_turn(
     }
 }
 
-void Game::make_game_turn_bot(const std::shared_ptr <character::Character> &chr) {
+void Game::make_game_turn_bot(const std::shared_ptr<character::Character> &chr
+) {
     for (int i = 0; i < 3; ++i) {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         throw_movement_dice(chr);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         auto possible_moves = get_possible_moves();
-        make_move(chr, possible_moves[rng() % possible_moves.size()], m_last_dice_movement_result);
+        make_move(
+            chr, possible_moves[rng() % possible_moves.size()],
+            m_last_dice_movement_result
+        );
     }
     start_next_character_turn(chr);
 }
-
 
 void Game::add_bot() {
     if (m_remaining_standard_characters.empty()) {
@@ -345,8 +348,7 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
         ));
         m_current_fight = chr->get_current_fight();
 
-        m_characters[(m_turn + m_count_players - 1) % m_count_players]
-            ->start_fight_as_enemy();
+        m_characters[get_enemy(m_turn)]->start_fight_as_enemy();
     } else if (m_map.get_cell_map(position).get_token() == AdventureType::RESEARCH) {
         unsigned int card =
             m_card_deck_research[rng() % m_card_deck_research.size()];
@@ -366,8 +368,7 @@ void Game::take_token(const std::shared_ptr<character::Character> &chr) {
             chr, fight::Enemy(AdventureType::BOSS)
         ));
         m_current_fight = chr->get_current_fight();
-        m_characters[(m_turn + m_count_players - 1) % m_count_players]
-            ->start_fight_as_enemy();
+        m_characters[get_enemy(m_turn)]->start_fight_as_enemy();
         m_map.reverse_token(position);
     }
     m_map.reverse_token(position);
@@ -386,8 +387,7 @@ void Game::end_fight_with_boss(const std::shared_ptr<character::Character> &chr
     }
     chr->end_fight_with_boss();
     m_current_fight = nullptr;
-    m_characters[(m_turn + m_count_players - 1) % m_count_players]
-        ->end_fight_as_enemy();
+    m_characters[get_enemy(m_turn)]->end_fight_as_enemy();
 }
 
 void Game::end_fight(const std::shared_ptr<character::Character> &chr) {
@@ -406,8 +406,7 @@ void Game::end_fight(const std::shared_ptr<character::Character> &chr) {
     }
     chr->end_fight();
     m_current_fight = nullptr;
-    m_characters[(m_turn + m_count_players - 1) % m_count_players]
-        ->end_fight_as_enemy();
+    m_characters[get_enemy(m_turn)]->end_fight_as_enemy();
 }
 
 std::vector<Point> Game::make_move(
