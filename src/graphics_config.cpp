@@ -72,10 +72,9 @@ const std::map<::runebound::AdventureType, SDL_Color> USED_ADVENTURE_COLOR = {
     {::runebound::AdventureType::MEETING, {0x00, 0x00, 0x00, 0xFF}},
     {::runebound::AdventureType::RESEARCH, {0x00, 0x00, 0x00, 0xFF}},
     {::runebound::AdventureType::FIGHT, {0x00, 0x00, 0x00, 0xFF}}};
-const std::map<std::pair<int, int>, std::pair<int, int>>
-    RIVER_DIRECTIONS = {{{-1, 0}, {3, 4}}, {{-1, -1}, {2, 3}},
-                        {{-1, 1}, {4, 5}}, {{1, 0}, {0, 1}},
-                        {{1, -1}, {1, 2}}, {{1, 1}, {5, 0}}};
+const std::map<std::pair<int, int>, std::pair<int, int>> RIVER_DIRECTIONS = {
+    {{-1, 0}, {3, 4}}, {{-1, -1}, {2, 3}}, {{-1, 1}, {4, 5}},
+    {{1, 0}, {0, 1}},  {{1, -1}, {1, 2}},  {{1, 1}, {5, 0}}};
 const std::string WINDOW_TITLE = "Runebound-0.2";
 const int WINDOW_X_OFFSET = 25;
 const int WINDOW_Y_OFFSET = 50;

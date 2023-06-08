@@ -75,9 +75,9 @@ void Client::init_main_menu_window() {
     }  // MAIN MENU WINDOW
     {  // GAME LIST WINDOW
         auto *win = &m_window;
-        auto window = std::make_unique<Window>(
-            Window(32 * 18, 355, {255, 255, 255, 255})
-        );
+        auto window =
+            std::make_unique<Window>(Window(32 * 18, 355, {255, 255, 255, 255})
+            );
         win->get_window("main_menu")
             ->add_window("game_list", std::move(window), {5, 40}, true, true);
     }  // GAME LIST WINDOW

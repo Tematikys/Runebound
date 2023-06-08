@@ -47,8 +47,7 @@ public:
         SDL_Texture *texture
     );
 
-    bool
-    load_image_from_file(SDL_Renderer *renderer, const std::string &path);
+    bool load_image_from_file(SDL_Renderer *renderer, const std::string &path);
 
     bool load_text_from_string(
         SDL_Renderer *renderer,
