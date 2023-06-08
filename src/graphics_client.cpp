@@ -6,19 +6,18 @@
 namespace runebound::graphics {
 void Client::update_board() {
     m_board = Board(m_network_client.get_game_client().m_map);
-    // TODO if my turn, then show, else no
-    //
-    //    if (m_network_client.get_yourself_character() != nullptr &&
-    //        m_network_client.get_game_client()
-    //                .m_characters[m_network_client.get_game_client().m_turn]
-    //                ==
-    //            *(m_network_client.get_yourself_character())) {
-    ::std::vector<Point> hexagons;
-    for (const auto &e : m_network_client.get_game_client().m_possible_moves) {
-        hexagons.emplace_back(e.x, e.y);
+
+    const auto &game = m_network_client.get_game_client();
+    if (m_network_client.get_yourself_character() != nullptr &&
+        &(game.m_characters[game.m_turn]) ==
+            m_network_client.get_yourself_character()) {
+        ::std::vector<Point> hexagons;
+        for (const auto &e :
+             m_network_client.get_game_client().m_possible_moves) {
+            hexagons.emplace_back(e.x, e.y);
+        }
+        m_board.update_available_hexagons(hexagons);
     }
-    m_board.update_available_hexagons(hexagons);
-    //    }
 }
 
 void Client::init_graphics() {
