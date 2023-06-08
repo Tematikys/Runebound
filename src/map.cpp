@@ -131,10 +131,15 @@ std::vector<Point> Map::get_neighbours(Point current) const {
     return result;
 }
 
-std::vector<Point> Map::get_possible_moves(
+std::set<Point> Map::get_possible_moves(
     Point start,
     std::vector<::runebound::dice::HandDice> dice_roll_results
 ) const {
+    if (dice_roll_results.empty()) {
+        auto neighbours = get_neighbours(start);
+        std::set<Point> result(neighbours.begin(), neighbours.end());
+        return result;
+    }
     std::sort(dice_roll_results.begin(), dice_roll_results.end());
     std::set<Point> result;
     auto neighbours = get_neighbours(start);
@@ -187,11 +192,7 @@ std::vector<Point> Map::get_possible_moves(
     } while (std::next_permutation(
         dice_roll_results.begin(), dice_roll_results.end()
     ));
-    std::vector<Point> possible_moves;
-    for (const auto &move : result) {
-        possible_moves.push_back(move);
-    }
-    return possible_moves;
+    return result;
 }
 
 }  // namespace map
