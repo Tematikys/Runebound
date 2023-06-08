@@ -255,8 +255,9 @@ void Client::update_game_window() {
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"],
                 "Action Points: " +
-                    std::to_string(m_network_client.get_game_client()
-                                       .get_active_character_action_points()),
+                    std::to_string(
+                        m_network_client.get_active_character_action_points()
+                    ),
                 {0x00, 0x00, 0x00, 0xFF}
             );
             window->add_texture(
