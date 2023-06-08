@@ -114,9 +114,9 @@ void Client::init_game_window() {
 
     {  // CHARACTERS WINDOW
         auto *win = m_window.get_window("game");
-        auto window = std::make_unique<Window>(
-            Window(360, 385, {0xFF, 0xFF, 0xFF, 0xFF})
-        );
+        auto window =
+            std::make_unique<Window>(Window(360, 385, {0xFF, 0xFF, 0xFF, 0xFF})
+            );
         auto window_width = window->width();
         win->add_window(
             "chars", std::move(window), {win->width() - window_width - 5, 5},
@@ -127,8 +127,7 @@ void Client::init_game_window() {
     {  // PLAYER WINDOW
         auto *win = m_window.get_window("game");
         auto window =
-            std::make_unique<Window>(Window(360, 60, {0xFF, 0xFF, 0xFF, 0xFF})
-            );
+            std::make_unique<Window>(Window(360, 60, {0xFF, 0xFF, 0xFF, 0xFF}));
         auto window_width = window->width();
         auto window_height = window->height();
         win->add_window(
@@ -268,6 +267,26 @@ void Client::update_game_window() {
         }
     }  // ACTION POINTS
 
+    {  // ADD BOT
+        Texture texture;
+        auto *window = m_window.get_window("game");
+        window->remove_button("add_bot");
+        texture.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono30"], "Add bot",
+            {0x00, 0x00, 0x00, 0xFF}
+        );
+        Button button(
+            200, 30, HorizontalButtonTextureAlign::CENTER,
+            VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+            [this]() { m_network_client.add_bot(); }, []() {},
+            {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+        );
+        window->add_button(
+            "add_bot", button,
+            {window->width() - 2 * 205, window->height() - 35 * 7}, true, true
+        );
+    }  // ADD BOT
+
     {  // TRADE
         Texture texture;
         auto *window = m_window.get_window("game");
@@ -341,8 +360,7 @@ void Client::update_game_window() {
                 );
             }
         } else {
-            std::cout << "[[graphics log]] :: take token no self"
-                        << std::endl;
+            std::cout << "[[graphics log]] :: take token no self" << std::endl;
         }
     }  // TAKE TOKEN
 
