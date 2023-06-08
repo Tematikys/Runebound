@@ -85,10 +85,6 @@ public:
         }
     }
 
-    [[nodiscard]] int get_active_character_action_points() const {
-        return 1;
-    }
-
     friend void to_json(nlohmann::json &json, const GameClient &game);
 
     friend void from_json(const nlohmann::json &json, GameClient &game);

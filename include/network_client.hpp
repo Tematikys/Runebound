@@ -307,11 +307,17 @@ public:
         return m_game_client.m_all_products[index];
     }
 
-    [[nodiscard]] std::vector<Point> get_possible_moves() {
+    [[nodiscard]] std::vector<Point> get_possible_moves() const {
         return m_game_client.m_possible_moves;
     }
 
-    bool is_game_need_update() {
+    [[nodiscard]] unsigned int get_active_character_action_points() const {
+        if (m_game_client.m_count_players){
+            return m_game_client.m_characters[m_game_client.m_turn].get_action_points();
+        } else return 0;
+    }
+
+    [[nodiscard]] bool is_game_need_update() const {
         bool tmp = game_need_update;
         // game_need_update = false;
         return tmp;
