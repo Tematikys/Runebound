@@ -221,16 +221,21 @@ private:
 
     void start_new_round();
 
-    void make_game_turn_bot(const std::shared_ptr <character::Character> &chr);
+    void make_game_turn_bot(const std::shared_ptr<character::Character> &chr);
 
     unsigned int get_enemy(unsigned int number_of_character) {
         for (unsigned int i = 1; i < m_count_players; ++i) {
-            if (!m_characters[(number_of_character + m_count_players - i) % m_count_players]->check_bot()) {
-                return (number_of_character + m_count_players - i) % m_count_players;
+            if (!m_characters
+                     [(number_of_character + m_count_players - i) %
+                      m_count_players]
+                         ->check_bot()) {
+                return (number_of_character + m_count_players - i) %
+                       m_count_players;
             }
         }
         return number_of_character;
     }
+
 public:
     Game() {
         generate_all();
