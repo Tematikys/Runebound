@@ -275,13 +275,9 @@ void Fight::make_damage(
     } else {
         make_damage(Participant::CHARACTER, count_damage(tokens));
     }
-    std::cout << "KATYA" << m_character_remaining_tokens.size() << ' '
-              << m_enemy_remaining_tokens.size() << std::endl;
     for (auto token : tokens) {
         erase_token(participant, token);
     }
-    std::cout << "KATYA" << m_character_remaining_tokens.size() << ' '
-              << m_enemy_remaining_tokens.size() << std::endl;
 }
 
 void Fight::make_doubling(
