@@ -66,8 +66,7 @@ Board::Board(const ::runebound::map::MapClient &map) {
         auto [x1, y1] = pair.first;
         auto [x2, y2] = pair.second;
         auto [i, v] = *RIVER_DIRECTIONS.find(
-            {sign(x1 - x2) +
-                 (1 - std::abs(sign(x1 - x2))) * (2 * (y1 % 2) - 1),
+            {sign(x1 - x2) + (1 - std::abs(sign(x1 - x2))) * (2 * (y1 % 2) - 1),
              sign(y1 - y2)}
         );
         const HexagonShape hex =

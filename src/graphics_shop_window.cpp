@@ -129,8 +129,7 @@ void Client::update_shop_window() {
             {  // MARKET PRICE
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Marker price: " +
-                        std::to_string(prod.get_market_price()),
+                    "Marker price: " + std::to_string(prod.get_market_price()),
                     {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 1, 41, tex);
@@ -170,9 +169,9 @@ void Client::update_shop_window() {
                 auto chars = prod.get_delta_characteristic();
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"],
-                    "    Body: " + std::to_string(
-                                       chars[::runebound::Characteristic::BODY]
-                                   ),
+                    "    Body: " +
+                        std::to_string(chars[::runebound::Characteristic::BODY]
+                        ),
                     {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(m_graphic_renderer, 1, 141, tex);

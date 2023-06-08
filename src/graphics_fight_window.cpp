@@ -201,8 +201,8 @@ void Client::update_fight_window() {
                             );
                         } else {
                             std::cout << "[[log]] :: Invalid state on using "
-                                           "fight tokens (fight window)"
-                                        << std::endl;
+                                         "fight tokens (fight window)"
+                                      << std::endl;
                         }
                     }
                 },
@@ -242,10 +242,9 @@ void Client::update_fight_window() {
                                 ::runebound::fight::Participant::ENEMY
                             );
                         } else {
-                            std::cout
-                                << "[[log]] :: Invalid state on passing "
-                                   "(fight window)"
-                                << std::endl;
+                            std::cout << "[[log]] :: Invalid state on passing "
+                                         "(fight window)"
+                                      << std::endl;
                         }
                     }
                 },
