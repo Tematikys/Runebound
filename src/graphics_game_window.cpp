@@ -243,11 +243,30 @@ void Client::update_game_window() {
             );
             window->add_texture(
                 "turn", texture,
-                {window->width() - texture.width(), window->height() - 35 * 8},
+                {window->width() - texture.width(), window->height() - 35 * 9},
                 true
             );
         }
     }  // TURN
+
+    {  // ACTION POINTS
+        auto *window = m_window.get_window("game");
+        Texture texture;
+        if (!m_network_client.get_game_client().m_characters.empty()) {
+            texture.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono30"],
+                "Action Points: " +
+                    std::to_string(m_network_client.get_game_client()
+                                       .get_active_character_action_points()),
+                {0x00, 0x00, 0x00, 0xFF}
+            );
+            window->add_texture(
+                "points", texture,
+                {window->width() - texture.width(), window->height() - 35 * 8},
+                true
+            );
+        }
+    }  // ACTION POINTS
 
     {  // TRADE
         Texture texture;
