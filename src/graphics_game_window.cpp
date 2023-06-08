@@ -216,7 +216,7 @@ void Client::update_game_window() {
     }  // DICES
 
     {  // SELECTED HEXAGON
-        if (m_window.get_window("game")->get_active_window_name() != "fight") {
+        if (m_window.get_window("game")->get_active_window_name().empty()) {
             const ::std::size_t index = m_board.get_selected_hexagon();
             if (index != 0xFFFF && m_mouse_pressed &&
                 !m_network_client.get_game_client().is_fight) {

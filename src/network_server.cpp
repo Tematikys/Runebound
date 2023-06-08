@@ -353,6 +353,9 @@ public:
                         user_character[m_user_name], data["product"]
                     );
                 }
+                for (const std::string &user_name : game_users[m_game_name]) {
+                    user_connection[user_name]->send_game();
+                }
             }
 
             if (data["action type"] == "adventure") {

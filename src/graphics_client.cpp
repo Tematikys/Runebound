@@ -144,7 +144,9 @@ void Client::update() {
     } else if (active_window == "game") {
         update_game_window();
     }
-    m_window.update(m_mouse_pos, m_mouse_pressed);
+    if (m_window.update(m_mouse_pos, m_mouse_pressed)) {
+        m_need_to_update = true;
+    }
     m_mouse_pressed = false;
     ++m_counter;
     m_network_client.game_need_update = false;

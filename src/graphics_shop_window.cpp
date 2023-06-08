@@ -7,9 +7,9 @@ void Client::init_shop_window() {
     Button button;
 
     auto *win = m_window.get_window("game");
-    auto window = ::std::make_unique<Window>(Window(
-        win->width() * 3 / 4, win->height() * 3 / 4, {0xFF, 0xFF, 0xFF, 0xFF}
-    ));
+    auto window = ::std::make_unique<Window>(
+        Window(win->width(), win->height(), {0xFF, 0xFF, 0xFF, 0xFF})
+    );
 
     {  // CLOSE BUTTON
         texture.load_text_from_string(
@@ -38,10 +38,7 @@ void Client::init_shop_window() {
         );
     }  //  CLOSE BUTTON
 
-    win->add_window(
-        "shop", ::std::move(window), {win->width() / 8, win->height() / 8},
-        false, false
-    );
+    win->add_window("shop", ::std::move(window), {0, 0}, false, false);
 }
 
 void Client::update_shop_window() {
@@ -50,11 +47,20 @@ void Client::update_shop_window() {
     }
     auto *win = m_window.get_window("game")->get_window("shop");
     win->remove_all_textures();
+    for (int i = 1; i <= 4; ++i) {
+        win->remove_button(::std::to_string(i));
+    }
     const auto &pos = m_network_client.get_yourself_character()->get_position();
     if (!m_network_client.get_game_client().m_shops.contains(pos)) {
         ::std::cout << "Trade does not exist" << ::std::endl;
         return;
     }
+
+    static int selected_shop_item = 0;
+    if (m_network_client.is_game_need_update()) {
+        selected_shop_item = 0;
+    }
+
     const ::std::set<unsigned int> shop =
         m_network_client.get_game_client().m_shops.at(pos);
     {  // UPDATE PRODUCTS
@@ -63,18 +69,43 @@ void Client::update_shop_window() {
             auto prod = m_network_client.get_product(e);
             SDL_Texture *tex = SDL_CreateTexture(
                 m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
-                SDL_TEXTUREACCESS_TARGET, 300, 500
+                SDL_TEXTUREACCESS_TARGET, 300, 330
             );
+            SDL_Color col;
+            if (selected_shop_item == count + 1) {
+                col = {0xBD, 0xCA, 0x03, 0xFF};
+            } else {
+                col = {0xFF, 0xFF, 0xFF, 0xFF};
+            }
             SDL_SetRenderTarget(m_graphic_renderer, tex);
-            SDL_SetRenderDrawColor(m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_SetRenderDrawColor(
+                m_graphic_renderer, col.r, col.g, col.b, col.a
+            );
             SDL_RenderClear(m_graphic_renderer);
             SDL_SetRenderTarget(m_graphic_renderer, nullptr);
             Texture texture;
             {  // BORDER
-                const RectangleShape rect = RectangleShape(0, 0, 299, 499);
+                const RectangleShape rect = RectangleShape(0, 0, 299, 329);
                 rect.render_to_texture(
-                    m_graphic_renderer, tex, {0xFF, 0xFF, 0xFF, 0xFF},
-                    {0x00, 0xFF, 0x00, 0xFF}
+                    m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
+                );
+                Texture temp;
+                Button button(
+                    300, 330, HorizontalButtonTextureAlign::CENTER,
+                    VerticalButtonTextureAlign::CENTER, 0, 0, temp,
+                    [&e = selected_shop_item, count, this]() {
+                        if (e == count + 1) {
+                            e = 0;
+                        } else {
+                            e = count + 1;
+                        }
+                        this->m_need_to_update = true;
+                    },
+                    []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                );
+                win->add_button(
+                    std::to_string(count + 1), button, {5 + 305 * count, 5},
+                    false, true
                 );
             }  // BORDER
             const auto name = prod.get_product_name();
@@ -171,7 +202,7 @@ void Client::update_shop_window() {
                 );
                 SDL_SetRenderTarget(m_graphic_renderer, token_tex);
                 SDL_SetRenderDrawColor(
-                    m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF
+                    m_graphic_renderer, col.r, col.g, col.b, col.a
                 );
                 SDL_RenderClear(m_graphic_renderer);
                 SDL_SetRenderTarget(m_graphic_renderer, nullptr);
