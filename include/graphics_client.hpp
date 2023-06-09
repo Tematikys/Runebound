@@ -65,6 +65,8 @@ public:
 
     void init_main_menu_window();
 
+    void init_inventory_window();
+
     void handle_events();
 
     void render();
@@ -78,6 +80,8 @@ public:
     void update_fight_window();
 
     void update_shop_window();
+
+    void update_inventory_window();
 
     void update();
 

@@ -629,12 +629,6 @@ void Client::update_game_window() {
             win->set_updatability_window("fight", true);
             win->set_all_updatability_button(false);
             update_fight_window();
-        } else {
-            win->get_window("fight")->deactivate();
-            win->get_window("fight")->deactivate_all_window();
-            win->set_visibility_window("fight", false);
-            win->set_updatability_window("fight", false);
-            win->set_all_updatability_button(true);
         }
     }  // SHOW FIGHT WINDOW
 
@@ -644,5 +638,42 @@ void Client::update_game_window() {
             update_shop_window();
         }
     }  // TRADE UPDATE
+
+    {  // INVENTORY
+        Texture texture;
+        auto *window = m_window.get_window("game");
+        window->remove_button("inventory");
+        texture.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono30"], "Inventory",
+            {0x00, 0x00, 0x00, 0xFF}
+        );
+        Button button(
+            200, 30, HorizontalButtonTextureAlign::CENTER,
+            VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+            [this]() {
+                m_window.get_window("game")->set_active_window("inventory");
+                m_window.get_window("game")->set_visibility_window(
+                    "inventory", true
+                );
+                m_window.get_window("game")->set_updatability_window(
+                    "inventory", true
+                );
+                m_window.get_window("game")->set_all_updatability_button(false);
+                update_fight_window();
+            },
+            []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+        );
+        window->add_button(
+            "inventory", button,
+            {window->width() - 2 * 205, window->height() - 35 * 6}, true, true
+        );
+    }  // INVENTORY
+
+    {  // INVENTORY UPDATE
+        auto *win = m_window.get_window("game");
+        if (win->get_active_window_name() == "inventory") {
+            update_inventory_window();
+        }
+    }  // INVENTORY UPDATE
 }
 }  // namespace runebound::graphics
