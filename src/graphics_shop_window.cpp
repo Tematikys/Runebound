@@ -193,7 +193,7 @@ void Client::update_shop_window() {
                     prod.get_product_name(), {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(
-                    m_graphic_renderer, 101 - texture.width() / 2, 1, tex
+                    m_graphic_renderer, 151 - texture.width() / 2, 1, tex
                 );
             }  // NAME
             {  // PRICE
@@ -391,6 +391,5 @@ void Client::update_shop_window() {
             ++count;
         }
     }  // UPDATE PRODUCTS
-    m_need_to_update = true;
 }
 }  // namespace runebound::graphics

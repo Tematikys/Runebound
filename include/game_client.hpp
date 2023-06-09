@@ -36,6 +36,7 @@ public:
 
     std::map<Point, std::set<unsigned int>> m_shops;
     std::vector<trade::Product> m_all_products;
+    std::vector<cards::CardMeeting> m_all_cards_meeting;
 
     bool is_fight = false;
     runebound::fight::FightClient m_fight_client;
@@ -58,7 +59,8 @@ public:
           m_last_possible_outcomes(game.m_last_possible_outcomes),
           m_possible_moves(game.get_possible_moves()),
           m_shops(game.m_shops),
-          m_all_products(game.m_all_products) {
+          m_all_products(game.m_all_products),
+          m_all_cards_meeting(game.m_all_cards_meeting) {
         auto set_remaining =
             std::move(game.get_remaining_standard_characters());
 

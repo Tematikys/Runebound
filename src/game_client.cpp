@@ -33,6 +33,7 @@ void to_json(nlohmann::json &json, const GameClient &game) {
     if (game.is_fight) {
         json["m_fight_client"] = game.m_fight_client;
     }
+    json["m_all_cards_meeting"] = game.m_all_cards_meeting;
 }
 
 void from_json(const nlohmann::json &json, GameClient &game) {
@@ -87,5 +88,8 @@ void from_json(const nlohmann::json &json, GameClient &game) {
     if (game.is_fight) {
         game.m_fight_client = json["m_fight_client"];
     }
+    game.m_all_cards_meeting = std::vector<cards::CardMeeting>(
+        json["m_all_cards_meeting"].begin(), json["m_all_cards_meeting"].end()
+    );
 }
 }  // namespace runebound::game
