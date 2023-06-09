@@ -57,9 +57,84 @@ void Client::update_shop_window() {
     }
 
     static int selected_shop_item = 0;
+    static unsigned int selected_shop_item_id = 0;
     if (m_network_client.is_game_need_update()) {
         selected_shop_item = 0;
+        selected_shop_item_id = 0;
     }
+
+    static bool create_buttons = true;
+
+    {  // UPDATE BUTTONS
+        if (create_buttons) {
+            create_buttons = false;
+            Texture texture;
+            Button button;
+            {  // BUY BUTTON
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono30"], "Buy",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                button = Button(
+                    200, 30, HorizontalButtonTextureAlign::CENTER,
+                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                    [&is_selected = selected_shop_item,
+                     &id = selected_shop_item_id, this]() {
+                        if (is_selected != 0) {
+                            m_network_client.buy_product(id);
+                        }
+                    },
+                    []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                );
+                win->add_button(
+                    "Buy", button, {win->width() - 205, win->height() - 35 * 2},
+                    true, true
+                );
+            }  //  BUY BUTTON
+            {  // SELL BUTTON
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono30"], "Sell",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                button = Button(
+                    200, 30, HorizontalButtonTextureAlign::CENTER,
+                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                    [&is_selected = selected_shop_item,
+                     &id = selected_shop_item_id, this]() {
+                        if (is_selected != 0) {
+                            m_network_client.sell_product_in_town(id);
+                        }
+                    },
+                    []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                );
+                win->add_button(
+                    "sell", button,
+                    {win->width() - 205, win->height() - 35 * 3}, true, true
+                );
+            }  //  SELL BUTTON
+            {  // DISCARD BUTTON
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono30"], "Discard",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                button = Button(
+                    200, 30, HorizontalButtonTextureAlign::CENTER,
+                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                    [&is_selected = selected_shop_item,
+                     &id = selected_shop_item_id, this]() {
+                        if (is_selected != 0) {
+                            m_network_client.discard_product(id);
+                        }
+                    },
+                    []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                );
+                win->add_button(
+                    "discard", button,
+                    {win->width() - 205, win->height() - 35 * 4}, true, true
+                );
+            }  //  DISCARD BUTTON
+        }
+    }  // UPDATE BUTTONS
 
     const std::set<unsigned int> shop =
         m_network_client.get_game_client().m_shops.at(pos);
@@ -93,13 +168,16 @@ void Client::update_shop_window() {
                 Button button(
                     300, 330, HorizontalButtonTextureAlign::CENTER,
                     VerticalButtonTextureAlign::CENTER, 0, 0, temp,
-                    [&e = selected_shop_item, count, this]() {
-                        if (e == count + 1) {
-                            e = 0;
+                    [&num = selected_shop_item, &id = selected_shop_item_id, e,
+                     count, this]() {
+                        if (num == count + 1) {
+                            num = 0;
+                            id = 0;
                         } else {
-                            e = count + 1;
+                            num = count + 1;
+                            id = e;
                         }
-                        this->m_need_to_update = true;
+                        m_need_to_update = true;
                     },
                     []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
                 );
@@ -313,5 +391,6 @@ void Client::update_shop_window() {
             ++count;
         }
     }  // UPDATE PRODUCTS
+    m_need_to_update = true;
 }
 }  // namespace runebound::graphics
