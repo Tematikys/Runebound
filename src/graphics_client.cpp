@@ -79,6 +79,7 @@ void Client::init() {
     init_game_window();
     init_fight_window();
     init_shop_window();
+    init_inventory_window();
     m_window.set_active_window("main_menu");
     m_window.activate();
 }

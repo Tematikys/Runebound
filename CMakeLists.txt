@@ -40,6 +40,7 @@ add_executable(graphics_client
         src/graphics_client.cpp
         src/graphics_config.cpp
         src/graphics_game_window.cpp
+        src/graphics_inventory_window.cpp
         src/graphics_main.cpp
         src/graphics_main_menu_window.cpp
         src/graphics_fight_window.cpp

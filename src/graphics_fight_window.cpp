@@ -148,6 +148,19 @@ void Client::update_fight_window() {
                                 ->get_window("fight")
                                 ->set_all_updatability_button(true);
                             m_network_client.fight_end_fight();
+                            m_window.get_window("game")
+                                ->get_window("fight")
+                                ->deactivate();
+                            m_window.get_window("game")
+                                ->get_window("fight")
+                                ->deactivate_all_window();
+                            m_window.get_window("game")->set_visibility_window(
+                                "fight", false
+                            );
+                            m_window.get_window("game")
+                                ->set_updatability_window("fight", false);
+                            m_window.get_window("game")
+                                ->set_all_updatability_button(true);
                         },
                         []() {}, {0xFF, 0xFF, 0xFF, 0xFF},
                         {0x00, 0x00, 0x00, 0xFF}
