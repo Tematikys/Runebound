@@ -44,8 +44,7 @@ void Client::update_inventory_window() {
     auto *win = m_window.get_window("game")->get_window("inventory");
     win->remove_all_textures();
 
-    auto prods =
-        m_network_client.get_yourself_character()->get_products();
+    auto prods = m_network_client.get_yourself_character()->get_products();
     {  // UPDATE PRODUCTS
         int count = 0;
         for (auto e : prods) {
@@ -54,7 +53,7 @@ void Client::update_inventory_window() {
                 m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
                 SDL_TEXTUREACCESS_TARGET, 300, 330
             );
-            SDL_Color col = {0xFF, 0xFF, 0xFF, 0xFF};
+            const SDL_Color col = {0xFF, 0xFF, 0xFF, 0xFF};
             SDL_SetRenderTarget(m_graphic_renderer, tex);
             SDL_SetRenderDrawColor(
                 m_graphic_renderer, col.r, col.g, col.b, col.a
@@ -273,6 +272,127 @@ void Client::update_inventory_window() {
             ++count;
         }
     }  // UPDATE PRODUCTS
-    m_need_to_update = true;
+    {  // UPDATE MEETINGS
+        int count = 0;
+        for (auto id : m_network_client.get_yourself_character()->get_cards(
+                 ::runebound::AdventureType::MEETING
+             )) {
+            auto card =
+                m_network_client.get_game_client().m_all_cards_meeting[id];
+            SDL_Texture *tex = SDL_CreateTexture(
+                m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
+                SDL_TEXTUREACCESS_TARGET, 300, 120
+            );
+            const SDL_Color col = {0xFF, 0xFF, 0xFF, 0xFF};
+            SDL_SetRenderTarget(m_graphic_renderer, tex);
+            SDL_SetRenderDrawColor(
+                m_graphic_renderer, col.r, col.g, col.b, col.a
+            );
+            SDL_RenderClear(m_graphic_renderer);
+            SDL_SetRenderTarget(m_graphic_renderer, nullptr);
+            Texture texture;
+            {  // BORDER
+                const RectangleShape rect = RectangleShape(0, 0, 299, 119);
+                rect.render_to_texture(
+                    m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
+                );
+            }  // BORDER
+            const auto name = card.get_name();
+            {  // NAME
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono20"], name,
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                texture.render_to_texture(
+                    m_graphic_renderer, 151 - texture.width() / 2, 1, tex
+                );
+            }  // NAME
+            {  // FIRST | SECOND
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono20"],
+                    "            |First|Second", {0x00, 0x00, 0x00, 0xFF}
+                );
+                texture.render_to_texture(m_graphic_renderer, 1, 21, tex);
+            }  // FIRST | SECOND
+            {  // GOLD
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono20"],
+                    "Gold        |" +
+                        std::to_string(card.get_gold_award(
+                            ::runebound::cards::OptionMeeting::FIRST
+                        )) +
+                        "    |" +
+                        std::to_string(card.get_gold_award(
+                            ::runebound::cards::OptionMeeting::SECOND
+                        )) +
+                        "     ",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                texture.render_to_texture(m_graphic_renderer, 1, 41, tex);
+            }  // GOLD
+            {  // CHAR
+                auto convert = [](runebound::Characteristic c) {
+                    switch (c) {
+                        case runebound::Characteristic::BODY:
+                            return std::string("body ");
+                        case runebound::Characteristic::INTELLIGENCE:
+                            return std::string("intel");
+                        case runebound::Characteristic::SPIRIT:
+                            return std::string("spir ");
+                    }
+                };
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono20"],
+                    "Characteris.|" +
+                        convert(card.get_verifiable_characteristic(
+                            ::runebound::cards::OptionMeeting::FIRST
+                        )) +
+                        "|" +
+                        convert(card.get_verifiable_characteristic(
+                            ::runebound::cards::OptionMeeting::SECOND
+                        )),
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                texture.render_to_texture(m_graphic_renderer, 1, 61, tex);
+            }  // CHAR
+            {  // DELTA CHAR
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono20"],
+                    "Delta char. |-" +
+                        std::to_string(card.get_change_characteristic(
+                            ::runebound::cards::OptionMeeting::FIRST
+                        )) +
+                        "    |-" +
+                        std::to_string(card.get_change_characteristic(
+                            ::runebound::cards::OptionMeeting::SECOND
+                        )) +
+                        "    ",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                texture.render_to_texture(m_graphic_renderer, 1, 81, tex);
+            }  // DELTA CHAR
+            {  // KNOWLEDGE
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono20"],
+                    "Delta char. |" +
+                        std::to_string(card.get_knowledge_token(
+                            ::runebound::cards::OptionMeeting::FIRST
+                        )) +
+                        "     |" +
+                        std::to_string(card.get_knowledge_token(
+                            ::runebound::cards::OptionMeeting::SECOND
+                        )) +
+                        "     ",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                texture.render_to_texture(m_graphic_renderer, 1, 101, tex);
+            }  // KNOWLEDGE
+            texture = Texture(tex);
+            win->add_texture(name, texture, {5 + 305 * count, 5}, true);
+            SDL_DestroyTexture(tex);
+            texture.free();
+            ++count;
+        }
+    }  // UPDATE MEETINGS
 }
 }  // namespace runebound::graphics
