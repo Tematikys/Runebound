@@ -43,6 +43,7 @@ void to_json(nlohmann::json &json, const Game &game) {
     json["m_remaining_standard_characters"] =
         game.m_remaining_standard_characters;
     json["m_shops"] = game.m_shops;
+    json["m_free_characters"] = game.m_free_characters;
     if (game.m_current_fight == nullptr) {
         json["m_current_fight"] = nullptr;
     } else {
@@ -74,6 +75,10 @@ void from_json(const nlohmann::json &json, Game &game) {
         game.m_characters.push_back(std::make_shared<character::Character>(
             character::Character(character)
         ));
+    }
+    game.m_matching_standard_characters.clear();
+    for (const auto &character : game.m_characters) {
+        game.m_matching_standard_characters[character->get_standard_character()] = character;
     }
     fill_vector(json["m_card_deck_research"], game.m_card_deck_research);
     fill_vector(json["m_card_deck_fight"], game.m_card_deck_fight);
@@ -115,6 +120,11 @@ void from_json(const nlohmann::json &json, Game &game) {
             json["m_remaining_standard_characters"].begin(),
             json["m_remaining_standard_characters"].end()
         );
+
+    game.m_free_characters = std::set<character::StandardCharacter>(
+        json["m_free_characters"].begin(),
+        json["m_free_characters"].end()
+    );
     game.m_shops = std::map<Point, std::set<unsigned int>>(
         json["m_shops"].begin(), json["m_shops"].end()
     );
@@ -188,8 +198,9 @@ void Game::add_bot() {
             ::runebound::character::Character(standard_character)
         )
     );
-    m_characters.back()->make_bot();
+    m_characters.back()->make_new_state_in_game(character::StateCharacterInGame::BOT);
     m_count_players += 1;
+    m_matching_standard_characters[standard_character] = m_characters.back();
     m_remaining_standard_characters.erase(standard_character);
 }
 
@@ -206,6 +217,7 @@ std::shared_ptr<::runebound::character::Character> Game::make_character(
     );
     m_count_players += 1;
     m_remaining_standard_characters.erase(name);
+    m_matching_standard_characters[name] = m_characters.back();
     return m_characters.back();
 }
 
@@ -658,5 +670,27 @@ std::vector<Point> Game::get_possible_moves() const {
     }
     return possible_moves;
 }
+
+void Game::exit_game(const std::shared_ptr <character::Character> &chr) {
+    if (m_free_characters.count(chr->get_standard_character()) > 0) {
+        throw NotSelectedCharacter();
+    }
+    chr->make_new_state_in_game(character::StateCharacterInGame::INACTIVE);
+    m_free_characters.insert(chr->get_standard_character());
+}
+
+void Game::exit_game_and_replace_with_bot(const std::shared_ptr <character::Character> &chr) {
+    exit_game(chr);
+    chr->make_new_state_in_game(character::StateCharacterInGame::BOT);
+}
+
+void Game::join_game(character::StandardCharacter character) {
+    if (m_free_characters.count(character) == 0) {
+        throw NotSelectedCharacter();
+    }
+    m_matching_standard_characters[character]->make_new_state_in_game(character::StateCharacterInGame::PLAYER);
+    m_free_characters.erase(character);
+}
+
 }  // namespace game
 }  // namespace runebound

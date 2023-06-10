@@ -137,7 +137,7 @@ public:
             if (data["action type"] == "pass") {
                 m_game->start_next_character_turn(user_character[m_user_name]);
                 send_game_for_all();
-                while (m_game->get_active_character()->is_bot()) {
+                while (m_game->get_active_character()->get_state_in_game() == runebound::character::StateCharacterInGame::BOT) {
                     play_as_bot();
                 }
             }
