@@ -1,6 +1,7 @@
 #include <boost/asio.hpp>
 #include <chrono>
 #include <deque>
+#include <filesystem>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -28,6 +29,19 @@ std::map<std::string, std::shared_ptr<runebound::character::Character>>
 std::map<std::string, Connection *> user_connection;
 int counter = 0;
 
+void save_game(const std::string &game_name) {
+    // можно вынести в метод для клиента save_game
+    // ещё можно сделать сохранение у клиента
+
+    json data;
+    runebound::game::Game game = games[game_name];
+    to_json(data, game);
+    data["game_name"] = game_name;
+    std::ofstream file("save/" + game_name + ".json");
+    file << data;
+    file.close();
+}
+
 class Connection : public std::enable_shared_from_this<Connection> {
 public:
     explicit Connection(tcp::socket socket) : socket_(std::move(socket)) {
@@ -37,7 +51,6 @@ public:
     void send_selected_character(
         runebound::character::StandardCharacter character
     );
-    void send_game();
     void send_game_for_all();
 
     void start() {
@@ -82,6 +95,7 @@ public:
                 for (auto session : connections) {
                     session->send_game_names();
                 }
+                save_game(game_name);
             }
 
             if (data["action type"] == "join game") {
@@ -412,8 +426,7 @@ void Connection::send_selected_character(
     write(answer.dump());
 }
 
-void Connection::send_game() {
-    json answer;
+void Connection::send_game_for_all() {
     if (user_character.contains(m_user_name)) {
         auto fight = m_game->get_current_fight();
         if (fight != nullptr) {
@@ -422,16 +435,17 @@ void Connection::send_game() {
             }
         }
     }
+    json answer;
+
     auto game = ::runebound::game::GameClient(*m_game);
     answer["change type"] = "game";
     runebound::game::to_json(answer, game);
-    write(answer.dump());
-}
 
-void Connection::send_game_for_all() {
     for (const std::string &user_name : game_users[m_game_name]) {
-        user_connection[user_name]->send_game();
+        user_connection[user_name]->write(answer.dump());
     }
+
+    save_game(m_game_name);
 }
 
 class Server {
@@ -460,6 +474,21 @@ private:
 
 int main() {
     try {
+        std::filesystem::path folder_path = "save";
+        for (const auto &entry :
+             std::filesystem::directory_iterator(folder_path)) {
+            if (entry.is_regular_file()) {
+                std::cout << "Opening file: " << entry.path() << std::endl;
+                std::ifstream file(entry.path());
+                json data;
+                file >> data;
+                std::string game_name = data["game_name"];
+                game_names.push_back(game_name);
+                runebound::game::Game game;
+                from_json(data, game);
+                games[game_name] = game;
+            }
+        }
         boost::asio::io_context io_context;
         Server server(io_context, 4444);
         io_context.run();
