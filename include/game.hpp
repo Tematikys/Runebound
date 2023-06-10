@@ -125,6 +125,12 @@ struct CellBusy : std::runtime_error {
     }
 };
 
+struct NotSelectedCharacter : std::runtime_error {
+        NotSelectedCharacter() : std::runtime_error("Error with a free character.") {
+    }
+};
+
+
 struct Game {
 private:
     friend struct GameClient;
@@ -160,8 +166,10 @@ private:
         character::StandardCharacter::LORD_HAWTHORNE,
         character::StandardCharacter::MASTER_THORN};
 
-    std::map<Point, std::set<unsigned int>> m_shops;
+    std::set <character::StandardCharacter> m_free_characters;
 
+    std::map<Point, std::set<unsigned int>> m_shops;
+    std::map <character::StandardCharacter, std::shared_ptr<::runebound::character::Character>> m_matching_standard_characters;
     std::shared_ptr<fight::Fight> m_current_fight = nullptr;
     std::shared_ptr<fight::FightTwoPlayer> m_current_fight_two_player = nullptr;
 
@@ -228,10 +236,10 @@ private:
 
     unsigned int get_enemy(unsigned int number_of_character) {
         for (unsigned int i = 1; i < m_count_players; ++i) {
-            if (!m_characters
+            if (m_characters
                      [(number_of_character + m_count_players - i) %
                       m_count_players]
-                         ->is_bot()) {
+                         ->get_state_in_game() == character::StateCharacterInGame::PLAYER) {
                 return (number_of_character + m_count_players - i) %
                        m_count_players;
             }
@@ -252,8 +260,16 @@ public:
         generate_all();
     };
 
+    [[nodiscard]] std::map <character::StandardCharacter, std::shared_ptr<::runebound::character::Character>> get_matching_standard_characters() const {
+        return m_matching_standard_characters;
+    }
+
     [[nodiscard]] bool check_end_game() const {
         return m_game_over;
+    }
+
+    [[nodiscard]] std::set <character::StandardCharacter> get_free_characters() const {
+        return m_free_characters;
     }
 
     [[nodiscard]] std::shared_ptr<fight::Fight> get_current_fight() const {
@@ -540,6 +556,10 @@ public:
     );
 
     [[nodiscard]] std::vector<Point> get_possible_moves() const;
+
+    void exit_game(const std::shared_ptr <character::Character> &chr);
+    void exit_game_and_replace_with_bot(const std::shared_ptr <character::Character> &chr);
+    void join_game(character::StandardCharacter character);
 
     friend void to_json(nlohmann::json &json, const Game &game);
     friend void from_json(const nlohmann::json &json, Game &game);

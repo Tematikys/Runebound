@@ -21,6 +21,8 @@ void to_json(nlohmann::json &json, const Character &character);
 void from_json(const nlohmann::json &json, Character &character);
 
 enum class StateCharacter { NORMAL_GAME, FIGHT, ENEMY, CALLER, RECEIVER };
+enum class StateCharacterInGame { PLAYER, BOT, INACTIVE };
+
 enum class StandardCharacter {
     NONE,
     LISSA,
@@ -36,7 +38,7 @@ private:
     unsigned int m_hand_limit, m_speed;
     std::map<Characteristic, int> m_characteristics;
 
-    bool m_is_bot = false;
+    StateCharacterInGame m_state_in_game = StateCharacterInGame::PLAYER;
     int m_action_points = 3;
     int m_max_action_points = 3;
     unsigned int m_active_card_meeting = 0;
@@ -92,12 +94,12 @@ public:
           m_name(std::move(name)) {
     }
 
-    void make_bot() {
-        m_is_bot = true;
+    void make_new_state_in_game(StateCharacterInGame new_state) {
+        m_state_in_game = new_state;
     }
 
-    [[nodiscard]] bool is_bot() const {
-        return m_is_bot;
+    [[nodiscard]] StateCharacterInGame get_state_in_game() const {
+        return m_state_in_game;
     }
 
     explicit Character(const StandardCharacter &chr);
