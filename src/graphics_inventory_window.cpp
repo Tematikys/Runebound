@@ -41,6 +41,19 @@ void Client::update_inventory_window() {
     if (m_network_client.get_yourself_character() == nullptr) {
         return;
     }
+
+    static auto comp_text_render = [this](
+                                       const std::string &text, Point pos,
+                                       SDL_Texture *tex
+                                   ) {
+        static Texture texture;
+        texture.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono20"], text,
+            {0x00, 0x00, 0x00, 0xFF}
+        );
+        texture.render_to_texture(m_graphic_renderer, pos.x(), pos.y(), tex);
+    };
+
     auto *win = m_window.get_window("game")->get_window("inventory");
     win->remove_all_textures();
 
@@ -61,98 +74,53 @@ void Client::update_inventory_window() {
             SDL_RenderClear(m_graphic_renderer);
             SDL_SetRenderTarget(m_graphic_renderer, nullptr);
             Texture texture;
-            {  // BORDER
-                const RectangleShape rect = RectangleShape(0, 0, 299, 329);
-                rect.render_to_texture(
-                    m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
-                );
-            }  // BORDER
+            const RectangleShape rect = RectangleShape(0, 0, 299, 329);
+            rect.render_to_texture(
+                m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
+            );
             const auto name = prod.get_product_name();
-            {  // NAME
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    prod.get_product_name(), {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(
-                    m_graphic_renderer, 101 - texture.width() / 2, 1, tex
-                );
-            }  // NAME
-            {  // PRICE
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Price: " + std::to_string(prod.get_price()),
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 21, tex);
-            }  // PRICE
-            {  // MARKET PRICE
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Marker price: " + std::to_string(prod.get_market_price()),
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 41, tex);
-            }  // MARKET PRICE
-            {  // DELTA HEATH
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Delta health: " +
-                        std::to_string(prod.get_delta_max_health()),
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 61, tex);
-            }  // DELTA HEALTH
-            {  // DELTA SPEED
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Delta speed: " + std::to_string(prod.get_delta_speed()),
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 81, tex);
-            }  // DELTA SPEED
-            {  // DELTA HAND LIMIT
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Delta hand limit: " +
-                        std::to_string(prod.get_delta_hand_limit()),
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 101, tex);
-            }  // DELTA HAND LIMIT
-            {  // CHARACTERISTICS
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Characteristics:", {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 121, tex);
-                auto chars = prod.get_delta_characteristic();
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "    Body: " +
-                        std::to_string(chars[::runebound::Characteristic::BODY]
-                        ),
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 141, tex);
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "    Intelligence: " +
-                        std::to_string(
-                            chars[::runebound::Characteristic::INTELLIGENCE]
-                        ),
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 161, tex);
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "    Spirit: " +
-                        std::to_string(
-                            chars[::runebound::Characteristic::INTELLIGENCE]
-                        ),
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 181, tex);
-            }  // CHARACTERISTICS
+            comp_text_render(name, {101 - texture.width() / 2, 1}, tex);
+            comp_text_render(
+                "Price: " + std::to_string(prod.get_price()), {1, 21}, tex
+            );
+            comp_text_render(
+                "Marker price: " + std::to_string(prod.get_market_price()),
+                {1, 41}, tex
+            );
+            comp_text_render(
+                "Delta health: " + std::to_string(prod.get_delta_max_health()),
+                {1, 61}, tex
+            );
+            comp_text_render(
+                "Delta speed: " + std::to_string(prod.get_delta_speed()),
+                {1, 81}, tex
+            );
+            comp_text_render(
+                "Delta hand limit: " +
+                    std::to_string(prod.get_delta_hand_limit()),
+                {1, 101}, tex
+            );
+            comp_text_render("Characteristics:", {1, 121}, tex);
+            auto chars = prod.get_delta_characteristic();
+            comp_text_render(
+                "    Body: " +
+                    std::to_string(chars[::runebound::Characteristic::BODY]),
+                {1, 141}, tex
+            );
+            comp_text_render(
+                "    Intelligence: " +
+                    std::to_string(
+                        chars[::runebound::Characteristic::INTELLIGENCE]
+                    ),
+                {1, 161}, tex
+            );
+            comp_text_render(
+                "    Spirit: " +
+                    std::to_string(
+                        chars[::runebound::Characteristic::INTELLIGENCE]
+                    ),
+                {1, 181}, tex
+            );
             {  // FIGHT TOKEN
                 SDL_Texture *token_tex = SDL_CreateTexture(
                     m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
@@ -174,91 +142,31 @@ void Client::update_inventory_window() {
                     {  // FACE SIDE
                         const bool init = token.value().first_lead;
                         const int num = token.value().first_count;
-                        std::string token_name;
-                        switch (token.value().first) {
-                            case fight::HandFightTokens::PHYSICAL_DAMAGE:
-                                token_name = "damage";
-                                break;
-                            case fight::HandFightTokens::MAGICAL_DAMAGE:
-                                token_name = "magic";
-                                break;
-                            case fight::HandFightTokens::DEXTERITY:
-                                token_name = "dexterity";
-                                break;
-                            case fight::HandFightTokens::HIT:
-                                token_name = "hit";
-                                break;
-                            case fight::HandFightTokens::ENEMY_DAMAGE:
-                                token_name = "skull";
-                                break;
-                            case fight::HandFightTokens::DOUBLING:
-                                token_name = "double";
-                                break;
-                            case fight::HandFightTokens::SHIELD:
-                                token_name = "shield";
-                                break;
-                            case fight::HandFightTokens::NOTHING:
-                                token_name = "none";
-                                break;
-                        }
+                        std::string token_name =
+                            HAND_FIGHT_TOKENS_TO_STR.at(token.value().first);
                         if (init) {
                             token_name += "_init";
                         }
                         m_images[token_name].render_to_texture(
                             m_graphic_renderer, 20, 20, token_tex
                         );
-                        Texture token_texture;
-                        token_texture.load_text_from_string(
-                            m_graphic_renderer, m_fonts["FreeMono40"],
-                            std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
-                        );
-                        token_texture.render_to_texture(
-                            m_graphic_renderer, 80, 30, token_tex
+                        comp_text_render(
+                            std::to_string(num), {80, 30}, token_tex
                         );
                     }  // FACE SIDE
                     {  // BACK SIDE
                         const bool init = token.value().second_lead;
                         const int num = token.value().second_count;
-                        std::string token_name;
-                        switch (token.value().second) {
-                            case fight::HandFightTokens::PHYSICAL_DAMAGE:
-                                token_name = "damage";
-                                break;
-                            case fight::HandFightTokens::MAGICAL_DAMAGE:
-                                token_name = "magic";
-                                break;
-                            case fight::HandFightTokens::DEXTERITY:
-                                token_name = "dexterity";
-                                break;
-                            case fight::HandFightTokens::HIT:
-                                token_name = "hit";
-                                break;
-                            case fight::HandFightTokens::ENEMY_DAMAGE:
-                                token_name = "skull";
-                                break;
-                            case fight::HandFightTokens::DOUBLING:
-                                token_name = "double";
-                                break;
-                            case fight::HandFightTokens::SHIELD:
-                                token_name = "shield";
-                                break;
-                            case fight::HandFightTokens::NOTHING:
-                                token_name = "none";
-                                break;
-                        }
+                        std::string token_name =
+                            HAND_FIGHT_TOKENS_TO_STR.at(token.value().first);
                         if (init) {
                             token_name += "_init";
                         }
                         m_images[token_name + "32"].render_to_texture(
                             m_graphic_renderer, 77, 77, token_tex
                         );
-                        Texture token_texture;
-                        token_texture.load_text_from_string(
-                            m_graphic_renderer, m_fonts["FreeMono20"],
-                            std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
-                        );
-                        token_texture.render_to_texture(
-                            m_graphic_renderer, 75, 100, token_tex
+                        comp_text_render(
+                            std::to_string(num), {75, 100}, token_tex
                         );
                     }  // BACK SIDE
                 }
@@ -291,102 +199,76 @@ void Client::update_inventory_window() {
             SDL_RenderClear(m_graphic_renderer);
             SDL_SetRenderTarget(m_graphic_renderer, nullptr);
             Texture texture;
-            {  // BORDER
-                const RectangleShape rect = RectangleShape(0, 0, 299, 119);
-                rect.render_to_texture(
-                    m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
-                );
-            }  // BORDER
+            const RectangleShape rect = RectangleShape(0, 0, 299, 119);
+            rect.render_to_texture(
+                m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
+            );
             const auto name = card.get_name();
-            {  // NAME
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"], name,
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(
-                    m_graphic_renderer, 151 - texture.width() / 2, 1, tex
-                );
-            }  // NAME
-            {  // FIRST | SECOND
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "            |First|Second", {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 21, tex);
-            }  // FIRST | SECOND
-            {  // GOLD
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Gold        |" +
-                        std::to_string(card.get_gold_award(
-                            ::runebound::cards::OptionMeeting::FIRST
-                        )) +
-                        "    |" +
-                        std::to_string(card.get_gold_award(
-                            ::runebound::cards::OptionMeeting::SECOND
-                        )) +
-                        "     ",
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 41, tex);
-            }  // GOLD
-            {  // CHAR
-                auto convert = [](runebound::Characteristic c) {
-                    switch (c) {
-                        case runebound::Characteristic::BODY:
-                            return std::string("body ");
-                        case runebound::Characteristic::INTELLIGENCE:
-                            return std::string("intel");
-                        case runebound::Characteristic::SPIRIT:
-                            return std::string("spir ");
-                    }
-                };
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Characteris.|" +
-                        convert(card.get_verifiable_characteristic(
-                            ::runebound::cards::OptionMeeting::FIRST
-                        )) +
-                        "|" +
-                        convert(card.get_verifiable_characteristic(
-                            ::runebound::cards::OptionMeeting::SECOND
-                        )),
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 61, tex);
-            }  // CHAR
-            {  // DELTA CHAR
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Delta char. |-" +
-                        std::to_string(card.get_change_characteristic(
-                            ::runebound::cards::OptionMeeting::FIRST
-                        )) +
-                        "    |-" +
-                        std::to_string(card.get_change_characteristic(
-                            ::runebound::cards::OptionMeeting::SECOND
-                        )) +
-                        "    ",
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 81, tex);
-            }  // DELTA CHAR
-            {  // KNOWLEDGE
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    "Delta char. |" +
-                        std::to_string(card.get_knowledge_token(
-                            ::runebound::cards::OptionMeeting::FIRST
-                        )) +
-                        "     |" +
-                        std::to_string(card.get_knowledge_token(
-                            ::runebound::cards::OptionMeeting::SECOND
-                        )) +
-                        "     ",
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 1, 101, tex);
-            }  // KNOWLEDGE
+            texture.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono20"], name,
+                {0x00, 0x00, 0x00, 0xFF}
+            );
+            texture.render_to_texture(
+                m_graphic_renderer, 151 - texture.width() / 2, 1, tex
+            );
+            comp_text_render("            |First|Second", {1, 21}, tex);
+            comp_text_render(
+                "Gold        |" +
+                    std::to_string(card.get_gold_award(
+                        ::runebound::cards::OptionMeeting::FIRST
+                    )) +
+                    "    |" +
+                    std::to_string(card.get_gold_award(
+                        ::runebound::cards::OptionMeeting::SECOND
+                    )) +
+                    "     ",
+                {1, 41}, tex
+            );
+            auto convert = [](runebound::Characteristic c) {
+                switch (c) {
+                    case runebound::Characteristic::BODY:
+                        return std::string("body ");
+                    case runebound::Characteristic::INTELLIGENCE:
+                        return std::string("intel");
+                    case runebound::Characteristic::SPIRIT:
+                        return std::string("spir ");
+                }
+            };
+            comp_text_render(
+                "Characteris.|" +
+                    convert(card.get_verifiable_characteristic(
+                        ::runebound::cards::OptionMeeting::FIRST
+                    )) +
+                    "|" +
+                    convert(card.get_verifiable_characteristic(
+                        ::runebound::cards::OptionMeeting::SECOND
+                    )),
+                {1, 61}, tex
+            );
+            comp_text_render(
+                "Delta char. |" +
+                    std::to_string(card.get_change_characteristic(
+                        ::runebound::cards::OptionMeeting::FIRST
+                    )) +
+                    "    |" +
+                    std::to_string(card.get_change_characteristic(
+                        ::runebound::cards::OptionMeeting::SECOND
+                    )) +
+                    "    ",
+                {1, 81}, tex
+            );
+            comp_text_render(
+                "Delta know. |" +
+                    std::to_string(card.get_knowledge_token(
+                        ::runebound::cards::OptionMeeting::FIRST
+                    )) +
+                    "    |" +
+                    std::to_string(card.get_knowledge_token(
+                        ::runebound::cards::OptionMeeting::SECOND
+                    )) +
+                    "     ",
+                {1, 101}, tex
+            );
             texture = Texture(tex);
             win->add_texture(name, texture, {5 + 305 * count, 5}, true);
             SDL_DestroyTexture(tex);

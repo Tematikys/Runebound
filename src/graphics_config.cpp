@@ -4,6 +4,19 @@ namespace runebound::graphics {
 bool SHOW_CLIENT_DEBUG_INFO = false;
 bool SHOW_TEXTURE_DEBUG_INFO = false;
 bool SHOW_SHOP_DEBUG_INFO = false;
+
+const std::map<::runebound::fight::HandFightTokens, std::string>
+    HAND_FIGHT_TOKENS_TO_STR = {
+        {fight::HandFightTokens::PHYSICAL_DAMAGE, "damage"},
+        {fight::HandFightTokens::MAGICAL_DAMAGE, "magic"},
+        {fight::HandFightTokens::DEXTERITY, "dexterity"},
+        {fight::HandFightTokens::HIT, "hit"},
+        {fight::HandFightTokens::ENEMY_DAMAGE, "skull"},
+        {fight::HandFightTokens::DOUBLING, "double"},
+        {fight::HandFightTokens::SHIELD, "shield"},
+        {fight::HandFightTokens::NOTHING, "none"},
+};
+
 const std::vector<std::pair<std::string, std::string>> FONTS = {
     {"data/fonts/FreeMono.ttf", "FreeMono"}};
 const std::vector<std::pair<std::string, std::string>> IMAGES = {
