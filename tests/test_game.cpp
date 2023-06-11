@@ -465,3 +465,40 @@ TEST_CASE("to_json from_json game") {
     runebound::game::to_json(json_after, game_after_json);
     CHECK(json == json_after);
 }
+
+TEST_CASE("exit and join game") {
+    runebound::game::Game game;
+    auto lissa =
+        game.make_character(runebound::character::StandardCharacter::LISSA);
+    game.add_bot();
+    CHECK(game.get_free_characters().size() == 1);
+    game.join_game(runebound::character::StandardCharacter::CORBIN);
+    CHECK(game.get_free_characters().size() == 0);
+    auto corbin = game.get_matching_standard_characters(
+    )[runebound::character::StandardCharacter::CORBIN];
+    game.throw_movement_dice(lissa);
+    game.start_next_character_turn(lissa);
+    game.throw_movement_dice(corbin);
+    game.relax(corbin);
+    game.exit_game(lissa);
+    CHECK(game.get_turn() == 1);
+    game.start_next_character_turn(corbin);
+    CHECK(game.get_turn() == 0);
+    CHECK(
+        lissa->get_state_in_game() ==
+        runebound::character::StateCharacterInGame::INACTIVE
+    );
+    CHECK(game.get_free_characters().size() == 1);
+    game.join_game(runebound::character::StandardCharacter::LISSA);
+    CHECK(
+        lissa->get_state_in_game() ==
+        runebound::character::StateCharacterInGame::PLAYER
+    );
+    CHECK(game.get_free_characters().size() == 0);
+    game.exit_game_and_replace_with_bot(lissa);
+    CHECK(
+        lissa->get_state_in_game() ==
+        runebound::character::StateCharacterInGame::BOT
+    );
+    CHECK(game.get_free_characters().size() == 1);
+}
