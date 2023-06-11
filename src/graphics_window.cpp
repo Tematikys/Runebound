@@ -52,6 +52,14 @@ void Window::render(
     );
     SDL_RenderClear(renderer);
 
+    for (const auto &[name, texture] : m_textures) {
+        if (m_texture_visible.at(name)) {
+            texture.render(
+                renderer, m_texture_pos.at(name).x(), m_texture_pos.at(name).y()
+            );
+        }
+    }
+
     for (const auto &[name, button] : m_buttons) {
         if (m_button_visible.at(name)) {
             button.render(
@@ -66,14 +74,6 @@ void Window::render(
                 renderer, m_text_field_fonts.at(name),
                 m_text_field_colors.at(name), m_text_field_pos.at(name).x(),
                 m_text_field_pos.at(name).y()
-            );
-        }
-    }
-
-    for (const auto &[name, texture] : m_textures) {
-        if (m_texture_visible.at(name)) {
-            texture.render(
-                renderer, m_texture_pos.at(name).x(), m_texture_pos.at(name).y()
             );
         }
     }
