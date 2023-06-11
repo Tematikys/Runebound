@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <fight.hpp>
 #include <map.hpp>
 #include <string>
 #include <vector>
@@ -13,6 +14,8 @@ extern bool SHOW_CLIENT_DEBUG_INFO;
 extern bool SHOW_TEXTURE_DEBUG_INFO;
 extern bool SHOW_SHOP_DEBUG_INFO;
 
+extern const std::map<::runebound::fight::HandFightTokens, std::string>
+    HAND_FIGHT_TOKENS_TO_STR;
 extern const std::vector<std::pair<std::string, std::string>> FONTS;
 extern const std::vector<std::pair<std::string, std::string>> IMAGES;
 extern const int HEXAGON_RADIUS;
