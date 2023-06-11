@@ -56,6 +56,10 @@ void Client::update_inventory_window() {
 
     auto *win = m_window.get_window("game")->get_window("inventory");
     win->remove_all_textures();
+    for (int i = 0; i < 10; ++i) {
+        win->remove_button(std::to_string(i) + "first");
+        win->remove_button(std::to_string(i) + "second");
+    }
 
     auto prods = m_network_client.get_yourself_character()->get_products();
     {  // UPDATE PRODUCTS
@@ -199,6 +203,7 @@ void Client::update_inventory_window() {
             SDL_RenderClear(m_graphic_renderer);
             SDL_SetRenderTarget(m_graphic_renderer, nullptr);
             Texture texture;
+            Button button;
             const RectangleShape rect = RectangleShape(0, 0, 299, 119);
             rect.render_to_texture(
                 m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
@@ -211,7 +216,56 @@ void Client::update_inventory_window() {
             texture.render_to_texture(
                 m_graphic_renderer, 151 - texture.width() / 2, 1, tex
             );
-            comp_text_render("            |First|Second", {1, 21}, tex);
+            {  // FIRST
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono20"], "First",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                button = Button(
+                    texture.width(), texture.height(),
+                    HorizontalButtonTextureAlign::CENTER,
+                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                    [this, id]() {
+                        m_network_client.start_card_execution(
+                            id, ::runebound::AdventureType::MEETING
+                        );
+                        m_network_client.check_characteristic(
+                            id, ::runebound::cards::OptionMeeting::FIRST
+                        );
+                    },
+                    []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                );
+                win->add_button(
+                    std::to_string(count) + "first", button, {1 + 12 * 13, 356},
+                    true, true
+                );
+            }  // FIRST
+            {  // SECOND
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono20"], "Second",
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                button = Button(
+                    texture.width(), texture.height(),
+                    HorizontalButtonTextureAlign::CENTER,
+                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                    [this, id]() {
+                        m_network_client.start_card_execution(
+                            id, ::runebound::AdventureType::MEETING
+                        );
+                        m_network_client.check_characteristic(
+                            id, ::runebound::cards::OptionMeeting::SECOND
+                        );
+                    },
+                    []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                );
+                win->add_button(
+                    std::to_string(count) + "second", button,
+                    {1 + 12 * 19, 356}, true, true
+                );
+            }  // SECOND
+            //            comp_text_render("            |First|Second", {1, 21},
+            //            tex);
             comp_text_render(
                 "Gold        |" +
                     std::to_string(card.get_gold_award(
@@ -270,7 +324,7 @@ void Client::update_inventory_window() {
                 {1, 101}, tex
             );
             texture = Texture(tex);
-            win->add_texture(name, texture, {5 + 305 * count, 5}, true);
+            win->add_texture(name, texture, {5 + 305 * count, 335}, true);
             SDL_DestroyTexture(tex);
             texture.free();
             ++count;
