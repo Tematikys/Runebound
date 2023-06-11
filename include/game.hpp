@@ -169,10 +169,6 @@ private:
     std::set<character::StandardCharacter> m_free_characters;
 
     std::map<Point, std::set<unsigned int>> m_shops;
-    std::map<
-        character::StandardCharacter,
-        std::shared_ptr<::runebound::character::Character>>
-        m_matching_standard_characters;
     std::shared_ptr<fight::Fight> m_current_fight = nullptr;
     std::shared_ptr<fight::FightTwoPlayer> m_current_fight_two_player = nullptr;
 
@@ -264,11 +260,16 @@ public:
         generate_all();
     };
 
-    [[nodiscard]] std::map<
-        character::StandardCharacter,
-        std::shared_ptr<::runebound::character::Character>>
-    get_matching_standard_characters() const {
-        return m_matching_standard_characters;
+    [[nodiscard]] std::shared_ptr<::runebound::character::Character>
+    get_character_by_standard_characters(
+        character::StandardCharacter standard_character
+    ) const {
+        for (const auto &character : m_characters) {
+            if (character->get_standard_character() == standard_character) {
+                return character;
+            }
+        }
+        return nullptr;
     }
 
     [[nodiscard]] bool check_end_game() const {
@@ -484,6 +485,9 @@ public:
 
     [[nodiscard]] std::shared_ptr<character::Character> get_active_character(
     ) const {
+        if (m_count_players == 0) {
+            return nullptr;
+        }
         return m_characters[m_turn];
     }
 

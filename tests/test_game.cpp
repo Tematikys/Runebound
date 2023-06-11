@@ -474,8 +474,9 @@ TEST_CASE("exit and join game") {
     CHECK(game.get_free_characters().size() == 1);
     game.join_game(runebound::character::StandardCharacter::CORBIN);
     CHECK(game.get_free_characters().size() == 0);
-    auto corbin = game.get_matching_standard_characters(
-    )[runebound::character::StandardCharacter::CORBIN];
+    auto corbin = game.get_character_by_standard_characters(
+        runebound::character::StandardCharacter::CORBIN
+    );
     game.throw_movement_dice(lissa);
     game.start_next_character_turn(lissa);
     game.throw_movement_dice(corbin);
