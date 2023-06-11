@@ -78,7 +78,8 @@ void from_json(const nlohmann::json &json, Game &game) {
     }
     game.m_matching_standard_characters.clear();
     for (const auto &character : game.m_characters) {
-        game.m_matching_standard_characters[character->get_standard_character()] = character;
+        game.m_matching_standard_characters[character->get_standard_character(
+        )] = character;
     }
     fill_vector(json["m_card_deck_research"], game.m_card_deck_research);
     fill_vector(json["m_card_deck_fight"], game.m_card_deck_fight);
@@ -122,8 +123,7 @@ void from_json(const nlohmann::json &json, Game &game) {
         );
 
     game.m_free_characters = std::set<character::StandardCharacter>(
-        json["m_free_characters"].begin(),
-        json["m_free_characters"].end()
+        json["m_free_characters"].begin(), json["m_free_characters"].end()
     );
     game.m_shops = std::map<Point, std::set<unsigned int>>(
         json["m_shops"].begin(), json["m_shops"].end()
@@ -198,9 +198,12 @@ void Game::add_bot() {
             ::runebound::character::Character(standard_character)
         )
     );
-    m_characters.back()->make_new_state_in_game(character::StateCharacterInGame::BOT);
+    m_characters.back()->make_new_state_in_game(
+        character::StateCharacterInGame::BOT
+    );
     m_count_players += 1;
     m_matching_standard_characters[standard_character] = m_characters.back();
+    m_free_characters.insert(standard_character);
     m_remaining_standard_characters.erase(standard_character);
 }
 
@@ -671,7 +674,7 @@ std::vector<Point> Game::get_possible_moves() const {
     return possible_moves;
 }
 
-void Game::exit_game(const std::shared_ptr <character::Character> &chr) {
+void Game::exit_game(const std::shared_ptr<character::Character> &chr) {
     if (m_free_characters.count(chr->get_standard_character()) > 0) {
         throw NotSelectedCharacter();
     }
@@ -679,7 +682,9 @@ void Game::exit_game(const std::shared_ptr <character::Character> &chr) {
     m_free_characters.insert(chr->get_standard_character());
 }
 
-void Game::exit_game_and_replace_with_bot(const std::shared_ptr <character::Character> &chr) {
+void Game::exit_game_and_replace_with_bot(
+    const std::shared_ptr<character::Character> &chr
+) {
     exit_game(chr);
     chr->make_new_state_in_game(character::StateCharacterInGame::BOT);
 }
@@ -688,7 +693,9 @@ void Game::join_game(character::StandardCharacter character) {
     if (m_free_characters.count(character) == 0) {
         throw NotSelectedCharacter();
     }
-    m_matching_standard_characters[character]->make_new_state_in_game(character::StateCharacterInGame::PLAYER);
+    m_matching_standard_characters[character]->make_new_state_in_game(
+        character::StateCharacterInGame::PLAYER
+    );
     m_free_characters.erase(character);
 }
 
