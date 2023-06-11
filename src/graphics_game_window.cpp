@@ -629,6 +629,11 @@ void Client::update_game_window() {
             win->set_updatability_window("fight", true);
             win->set_all_updatability_button(false);
             update_fight_window();
+        } else if (win->get_active_window_name() == "fight") {
+            win->reset_active_window();
+            win->set_visibility_window("fight", false);
+            win->set_updatability_window("fight", false);
+            win->set_all_updatability_button(true);
         }
     }  // SHOW FIGHT WINDOW
 
