@@ -10,17 +10,16 @@ void Client::init_character_list_window() {
 
 void Client::update_character_list_window() {
     auto *win = m_window.get_window("char_list");
-    Texture texture;
-    Button button;
 
     win->remove_all_buttons();
 
     {  //  MAIN MENU BUTTON
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"], "Main menu",
             {0x00, 0x00, 0x00, 0xFF}
         );
-        button = Button(
+        Button button(
             10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
             VerticalButtonTextureAlign::CENTER, 0, 0, texture,
             [this]() {
@@ -40,11 +39,12 @@ void Client::update_character_list_window() {
     }  //  MAIN MENU BUTTON
 
     {  //  EXIT BUTTON
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
             {0x00, 0x00, 0x00, 0xFF}
         );
-        button = Button(
+        Button button(
             10 * 18, 30, HorizontalButtonTextureAlign::CENTER,
             VerticalButtonTextureAlign::CENTER, 0, 0, texture,
             [this]() {
@@ -85,11 +85,12 @@ void Client::update_character_list_window() {
             case character::StandardCharacter::NONE:
                 break;
         }
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"], name,
             {0x00, 0x00, 0x00, 0xFF}
         );
-        button = Button(
+        Button button(
             texture.width(), 30, HorizontalButtonTextureAlign::CENTER,
             VerticalButtonTextureAlign::CENTER, 0, 0, texture,
             [character, this]() {
