@@ -154,7 +154,8 @@ void Client::update_game_window() {
             const Point center = get_center_of_hexagon(
                 character.get_position().x, character.get_position().y
             );
-            const std::string name = character.get_name();
+            const std::string name =
+                CHARACTER_NAMES_WITH_DASH.at(character.get_name());
             m_images[name].render_to_texture(
                 m_graphic_renderer, -m_images[name].width() / 2 + center.x(),
                 -m_images[name].height() / 2 + center.y(), tex
@@ -390,9 +391,9 @@ void Client::update_game_window() {
                 );
                 SDL_RenderClear(m_graphic_renderer);
                 SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-                m_images[character.get_name() + "40"].render_to_texture(
-                    m_graphic_renderer, 0, 0, tex
-                );
+                m_images
+                    [CHARACTER_NAMES_WITH_DASH.at(character.get_name()) + "40"]
+                        .render_to_texture(m_graphic_renderer, 0, 0, tex);
                 Texture texture(tex);
                 window->get_window("chars")->remove_texture(name + "char");
                 window->get_window("chars")->add_texture(
@@ -526,9 +527,8 @@ void Client::update_game_window() {
                 );
                 SDL_RenderClear(m_graphic_renderer);
                 SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-                m_images[name + "40"].render_to_texture(
-                    m_graphic_renderer, 0, 0, tex
-                );
+                m_images[CHARACTER_NAMES_WITH_DASH.at(name) + "40"]
+                    .render_to_texture(m_graphic_renderer, 0, 0, tex);
                 Texture texture(tex);
                 window->remove_texture(name + "char");
                 window->add_texture(

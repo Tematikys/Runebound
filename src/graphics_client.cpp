@@ -57,15 +57,7 @@ void Client::load_images() {
 }
 
 void Client::init() {
-    std::ifstream settings("settings.txt");
-    if (settings.is_open()) {
-        std::string ignore;
-        settings >> ignore >> SHOW_CLIENT_DEBUG_INFO;
-        settings >> ignore >> SHOW_TEXTURE_DEBUG_INFO;
-        settings >> ignore >> SHOW_SHOP_DEBUG_INFO;
-    } else {
-        throw std::runtime_error("Settings can not be opened");
-    }
+    load_settings();
     init_graphics();
     m_window = Window(WINDOW_WIDTH, WINDOW_HEIGHT, {0xFF, 0xFF, 0xFF, 0xFF});
     if (SHOW_CLIENT_DEBUG_INFO) {
