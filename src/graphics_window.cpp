@@ -162,7 +162,7 @@ bool Window::update(Point mouse_pos, bool &mouse_pressed) {
     }
     bool updated = false;
     if (!m_active_window.empty()) {
-        updated |= m_windows[m_active_window]->update(mouse_pos, mouse_pressed);
+        updated |= m_windows[m_active_window]->update(mouse_pos - Point(m_window_pos[m_active_window].x(), m_window_pos[m_active_window].y()), mouse_pressed);
     }
     for (const auto &[name, window] : m_windows) {
         if (m_window_updatable[name] &&
