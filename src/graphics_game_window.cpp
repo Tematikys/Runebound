@@ -661,7 +661,6 @@ void Client::update_game_window() {
                     "inventory", true
                 );
                 m_window.get_window("game")->set_all_updatability_button(false);
-                update_fight_window();
             },
             []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
         );
