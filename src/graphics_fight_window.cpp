@@ -375,6 +375,18 @@ void Client::update_fight_window() {
         );
     }  // ENEMY NAME
 
+    static auto comp_text_render = [this](
+                                       const std::string &text, Point pos,
+                                       SDL_Texture *tex, int size
+                                   ) {
+        Texture texture;
+        texture.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono" + std::to_string(size)],
+            text, {0x00, 0x00, 0x00, 0xFF}
+        );
+        texture.render_to_texture(m_graphic_renderer, pos.x(), pos.y(), tex);
+    };
+
     int count = 0;
     for (const auto &token :
          fight.m_character_remaining_tokens) {  // CHARACTER TOKENS
@@ -402,103 +414,35 @@ void Client::update_fight_window() {
                 }
             }  // BACKGROUND
             {  // FACE SIDE
-                bool init = false;
-                const int num = token.count;
+                std::string name = HAND_FIGHT_TOKENS_TO_STR.at(token.hand);
                 if (token.token.first == token.hand) {
-                    init = token.token.first_lead;
+                    name += token.token.first_lead ? "_init" : "";
                 } else {
-                    init = token.token.second_lead;
-                }
-                std::string name;
-                switch (token.hand) {
-                    case fight::HandFightTokens::PHYSICAL_DAMAGE:
-                        name = "damage";
-                        break;
-                    case fight::HandFightTokens::MAGICAL_DAMAGE:
-                        name = "magic";
-                        break;
-                    case fight::HandFightTokens::DEXTERITY:
-                        name = "dexterity";
-                        break;
-                    case fight::HandFightTokens::HIT:
-                        name = "hit";
-                        break;
-                    case fight::HandFightTokens::ENEMY_DAMAGE:
-                        name = "skull";
-                        break;
-                    case fight::HandFightTokens::DOUBLING:
-                        name = "double";
-                        break;
-                    case fight::HandFightTokens::SHIELD:
-                        name = "shield";
-                        break;
-                    case fight::HandFightTokens::NOTHING:
-                        name = "none";
-                        break;
-                }
-                if (init) {
-                    name += "_init";
+                    name += token.token.second_lead ? "_init" : "";
                 }
                 m_images[name].render_to_texture(
                     m_graphic_renderer, 20, 20, tex
                 );
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono40"],
-                    std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
+                comp_text_render(
+                    std::to_string(token.count), {80, 30}, tex, 40
                 );
-                texture.render_to_texture(m_graphic_renderer, 80, 30, tex);
             }  // FACE SIDE
             {  // BACK SIDE
-                bool init = false;
                 int num = 0;
                 std::string name;
-                ::runebound::fight::HandFightTokens target{};
                 if (token.token.first == token.hand) {
-                    target = token.token.second;
                     num = token.token.second_count;
-                    init = token.token.second_lead;
+                    name = HAND_FIGHT_TOKENS_TO_STR.at(token.token.second);
+                    name += token.token.second_lead ? "_init" : "";
                 } else {
-                    target = token.token.first;
                     num = token.token.first_count;
-                    init = token.token.first_lead;
-                }
-                switch (target) {
-                    case fight::HandFightTokens::PHYSICAL_DAMAGE:
-                        name = "damage";
-                        break;
-                    case fight::HandFightTokens::MAGICAL_DAMAGE:
-                        name = "magic";
-                        break;
-                    case fight::HandFightTokens::DEXTERITY:
-                        name = "dexterity";
-                        break;
-                    case fight::HandFightTokens::HIT:
-                        name = "hit";
-                        break;
-                    case fight::HandFightTokens::ENEMY_DAMAGE:
-                        name = "skull";
-                        break;
-                    case fight::HandFightTokens::DOUBLING:
-                        name = "double";
-                        break;
-                    case fight::HandFightTokens::SHIELD:
-                        name = "shield";
-                        break;
-                    case fight::HandFightTokens::NOTHING:
-                        name = "none";
-                        break;
-                }
-                if (init) {
-                    name += "_init";
+                    name = HAND_FIGHT_TOKENS_TO_STR.at(token.token.first);
+                    name += token.token.first_lead ? "_init" : "";
                 }
                 m_images[name + "32"].render_to_texture(
                     m_graphic_renderer, 77, 77, tex
                 );
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 75, 100, tex);
+                comp_text_render(std::to_string(num), {75, 100}, tex, 20);
             }  // BACK SIDE
         }      // RENDER
         texture = Texture(tex);
@@ -557,103 +501,35 @@ void Client::update_fight_window() {
                 }
             }  // BACKGROUND
             {  // FACE SIDE
-                bool init = false;
-                const int num = token.count;
+                std::string name = HAND_FIGHT_TOKENS_TO_STR.at(token.hand);
                 if (token.token.first == token.hand) {
-                    init = token.token.first_lead;
+                    name += token.token.first_lead ? "_init" : "";
                 } else {
-                    init = token.token.second_lead;
-                }
-                std::string name;
-                switch (token.hand) {
-                    case fight::HandFightTokens::PHYSICAL_DAMAGE:
-                        name = "damage";
-                        break;
-                    case fight::HandFightTokens::MAGICAL_DAMAGE:
-                        name = "magic";
-                        break;
-                    case fight::HandFightTokens::DEXTERITY:
-                        name = "dexterity";
-                        break;
-                    case fight::HandFightTokens::HIT:
-                        name = "hit";
-                        break;
-                    case fight::HandFightTokens::ENEMY_DAMAGE:
-                        name = "skull";
-                        break;
-                    case fight::HandFightTokens::DOUBLING:
-                        name = "double";
-                        break;
-                    case fight::HandFightTokens::SHIELD:
-                        name = "shield";
-                        break;
-                    case fight::HandFightTokens::NOTHING:
-                        name = "none";
-                        break;
-                }
-                if (init) {
-                    name += "_init";
+                    name += token.token.second_lead ? "_init" : "";
                 }
                 m_images[name].render_to_texture(
                     m_graphic_renderer, 20, 20, tex
                 );
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono40"],
-                    std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
+                comp_text_render(
+                    std::to_string(token.count), {80, 30}, tex, 40
                 );
-                texture.render_to_texture(m_graphic_renderer, 80, 30, tex);
             }  // FACE SIDE
             {  // BACK SIDE
-                bool init = false;
                 int num = 0;
                 std::string name;
-                ::runebound::fight::HandFightTokens target{};
                 if (token.token.first == token.hand) {
-                    target = token.token.second;
                     num = token.token.second_count;
-                    init = token.token.second_lead;
+                    name = HAND_FIGHT_TOKENS_TO_STR.at(token.token.second);
+                    name += token.token.second_lead ? "_init" : "";
                 } else {
-                    target = token.token.first;
                     num = token.token.first_count;
-                    init = token.token.first_lead;
-                }
-                switch (target) {
-                    case fight::HandFightTokens::PHYSICAL_DAMAGE:
-                        name = "damage";
-                        break;
-                    case fight::HandFightTokens::MAGICAL_DAMAGE:
-                        name = "magic";
-                        break;
-                    case fight::HandFightTokens::DEXTERITY:
-                        name = "dexterity";
-                        break;
-                    case fight::HandFightTokens::HIT:
-                        name = "hit";
-                        break;
-                    case fight::HandFightTokens::ENEMY_DAMAGE:
-                        name = "skull";
-                        break;
-                    case fight::HandFightTokens::DOUBLING:
-                        name = "double";
-                        break;
-                    case fight::HandFightTokens::SHIELD:
-                        name = "shield";
-                        break;
-                    case fight::HandFightTokens::NOTHING:
-                        name = "none";
-                        break;
-                }
-                if (init) {
-                    name += "_init";
+                    name = HAND_FIGHT_TOKENS_TO_STR.at(token.token.first);
+                    name += token.token.first_lead ? "_init" : "";
                 }
                 m_images[name + "32"].render_to_texture(
                     m_graphic_renderer, 77, 77, tex
                 );
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"],
-                    std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
-                );
-                texture.render_to_texture(m_graphic_renderer, 75, 100, tex);
+                comp_text_render(std::to_string(num), {75, 100}, tex, 20);
             }  // BACK SIDE
         }      // RENDER
         texture = Texture(tex);
