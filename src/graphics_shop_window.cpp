@@ -3,13 +3,12 @@
 
 namespace runebound::graphics {
 void Client::init_shop_window() {
-    Texture texture;
-    Button button;
-
     auto *win = m_window.get_window("game");
     auto window = std::make_unique<Window>(
         Window(win->width(), win->height(), {0xFF, 0xFF, 0xFF, 0xFF})
     );
+    Texture texture;
+    Button button;
 
     {  // CLOSE BUTTON
         texture.load_text_from_string(
@@ -43,16 +42,21 @@ void Client::init_shop_window() {
 
 void Client::update_shop_window() {
     if (m_network_client.get_yourself_character() == nullptr) {
+        std::cout << "[[log]] :: Character does not exist" << std::endl;
         return;
     }
     auto *win = m_window.get_window("game")->get_window("shop");
+    Texture texture;
+    Button button;
+
     win->remove_all_textures();
     for (int i = 1; i <= 4; ++i) {
         win->remove_button(std::to_string(i));
     }
+
     const auto &pos = m_network_client.get_yourself_character()->get_position();
     if (!m_network_client.get_game_client().m_shops.contains(pos)) {
-        std::cout << "Trade does not exist" << std::endl;
+        std::cout << "[[log]] :: Trade does not exist" << std::endl;
         return;
     }
 
@@ -63,13 +67,12 @@ void Client::update_shop_window() {
         selected_shop_item_id = 0;
     }
 
+    // needed, because can not be made in init function
     static bool create_buttons = true;
 
     {  // UPDATE BUTTONS
         if (create_buttons) {
             create_buttons = false;
-            Texture texture;
-            Button button;
             {  // BUY BUTTON
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono30"], "Buy",
@@ -136,11 +139,12 @@ void Client::update_shop_window() {
         }
     }  // UPDATE BUTTONS
 
+    // just for convenience
     static auto comp_text_render = [this](
                                        const std::string &text, Point pos,
                                        SDL_Texture *tex
                                    ) {
-        static Texture texture;
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono20"], text,
             {0x00, 0x00, 0x00, 0xFF}
@@ -148,12 +152,10 @@ void Client::update_shop_window() {
         texture.render_to_texture(m_graphic_renderer, pos.x(), pos.y(), tex);
     };
 
-    const std::set<unsigned int> shop =
-        m_network_client.get_game_client().m_shops.at(pos);
     {  // UPDATE PRODUCTS
         int count = 0;
-        for (auto e : shop) {
-            auto prod = m_network_client.get_product(e);
+        for (auto id : m_network_client.get_game_client().m_shops.at(pos)) {
+            auto product = m_network_client.get_product(id);
             SDL_Texture *tex = SDL_CreateTexture(
                 m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
                 SDL_TEXTUREACCESS_TARGET, 300, 330
@@ -170,24 +172,23 @@ void Client::update_shop_window() {
             );
             SDL_RenderClear(m_graphic_renderer);
             SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-            Texture texture;
             {  // BORDER
                 const RectangleShape rect = RectangleShape(0, 0, 299, 329);
                 rect.render_to_texture(
                     m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
                 );
                 Texture temp;
-                Button button(
+                button = Button(
                     300, 330, HorizontalButtonTextureAlign::CENTER,
                     VerticalButtonTextureAlign::CENTER, 0, 0, temp,
-                    [&num = selected_shop_item, &id = selected_shop_item_id, e,
-                     count, this]() {
+                    [&num = selected_shop_item, &num_id = selected_shop_item_id,
+                     id, count, this]() {
                         if (num == count + 1) {
                             num = 0;
-                            id = 0;
+                            num_id = 0;
                         } else {
                             num = count + 1;
-                            id = e;
+                            num_id = id;
                         }
                         m_need_to_update = true;
                     },
@@ -198,30 +199,31 @@ void Client::update_shop_window() {
                     false, true
                 );
             }  // BORDER
-            const auto name = prod.get_product_name();
+            const auto name = product.get_product_name();
             comp_text_render(name, {101 - texture.width() / 2, 1}, tex);
             comp_text_render(
-                "Price: " + std::to_string(prod.get_price()), {1, 21}, tex
+                "Price: " + std::to_string(product.get_price()), {1, 21}, tex
             );
             comp_text_render(
-                "Marker price: " + std::to_string(prod.get_market_price()),
+                "Marker price: " + std::to_string(product.get_market_price()),
                 {1, 41}, tex
             );
             comp_text_render(
-                "Delta health: " + std::to_string(prod.get_delta_max_health()),
+                "Delta health: " +
+                    std::to_string(product.get_delta_max_health()),
                 {1, 61}, tex
             );
             comp_text_render(
-                "Delta speed: " + std::to_string(prod.get_delta_speed()),
+                "Delta speed: " + std::to_string(product.get_delta_speed()),
                 {1, 81}, tex
             );
             comp_text_render(
                 "Delta hand limit: " +
-                    std::to_string(prod.get_delta_hand_limit()),
+                    std::to_string(product.get_delta_hand_limit()),
                 {1, 101}, tex
             );
             comp_text_render("Characteristics:", {1, 121}, tex);
-            auto chars = prod.get_delta_characteristic();
+            auto chars = product.get_delta_characteristic();
             comp_text_render(
                 "    Body: " +
                     std::to_string(chars[::runebound::Characteristic::BODY]),
@@ -252,7 +254,7 @@ void Client::update_shop_window() {
                 );
                 SDL_RenderClear(m_graphic_renderer);
                 SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-                const auto token = prod.get_fight_token();
+                const auto token = product.get_fight_token();
                 if (token) {
                     {  // BACKGROUND
                         m_images["fight_token"].render_to_texture(
@@ -271,10 +273,12 @@ void Client::update_shop_window() {
                             m_graphic_renderer, 20, 20, token_tex
                         );
                         texture.load_text_from_string(
-                            m_graphic_renderer, m_fonts["FreeMono40"], std::to_string(num),
-                            {0x00, 0x00, 0x00, 0xFF}
+                            m_graphic_renderer, m_fonts["FreeMono40"],
+                            std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
                         );
-                        texture.render_to_texture(m_graphic_renderer, 80, 30, token_tex);
+                        texture.render_to_texture(
+                            m_graphic_renderer, 80, 30, token_tex
+                        );
                     }  // FACE SIDE
                     {  // BACK SIDE
                         const bool init = token.value().second_lead;
@@ -294,6 +298,8 @@ void Client::update_shop_window() {
                 }
                 texture = Texture(token_tex);
                 texture.render_to_texture(m_graphic_renderer, 1, 201, tex);
+                SDL_DestroyTexture(token_tex);
+                texture.free();
             }  // FIGHT TOKEN
             texture = Texture(tex);
             win->add_texture(name, texture, {5 + 305 * count, 5}, true);
