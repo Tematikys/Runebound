@@ -27,9 +27,6 @@ void Client::update_fight_window() {
         return;
     }
     auto *win = m_window.get_window("game")->get_window("fight");
-    Texture texture;
-    Button button;
-
     win->remove_all_textures();
     win->remove_all_buttons();
 
@@ -66,6 +63,7 @@ void Client::update_fight_window() {
             win->set_updatability_window("win_lose", true);
             win->set_all_updatability_button(false);
             if (winner == ::runebound::fight::Participant::CHARACTER) {
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono50"],
                     character_name + " win", {0x00, 0x00, 0x00, 0xFF}
@@ -81,7 +79,7 @@ void Client::update_fight_window() {
                              25},
                         true
                     );
-
+                texture.free();
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono50"],
                     "Reward: Gold: " +
@@ -102,6 +100,7 @@ void Client::update_fight_window() {
                         true
                     );
             } else {
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono50"],
                     enemy_name + " win", {0x00, 0x00, 0x00, 0xFF}
@@ -119,11 +118,12 @@ void Client::update_fight_window() {
             }
             if (my_role == ::runebound::character::StateCharacter::FIGHT) {
                 {  // EXIT BUTTON
+                    Texture texture;
                     texture.load_text_from_string(
                         m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
                         {0x00, 0x00, 0x00, 0xFF}
                     );
-                    button = Button(
+                    Button button(
                         200, 30, HorizontalButtonTextureAlign::CENTER,
                         VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                         [this]() {
@@ -184,11 +184,12 @@ void Client::update_fight_window() {
 
     {  // USE BUTTON
         if (my_role != ::runebound::character::StateCharacter::NORMAL_GAME) {
+            Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"], "Use",
                 {0x00, 0x00, 0x00, 0xFF}
             );
-            button = Button(
+            Button button(
                 200, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this, &char_vec = character_selected_tokens,
@@ -227,11 +228,12 @@ void Client::update_fight_window() {
 
     {  // PASS BUTTON
         if (my_role != ::runebound::character::StateCharacter::NORMAL_GAME) {
+            Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"], "Pass",
                 {0x00, 0x00, 0x00, 0xFF}
             );
-            button = Button(
+            Button button(
                 200, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this]() {
@@ -272,6 +274,7 @@ void Client::update_fight_window() {
         } else {
             turn_name = enemy_name;
         }
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"], "Turn: " + turn_name,
             {0x00, 0x00, 0x00, 0xFF}
@@ -285,6 +288,7 @@ void Client::update_fight_window() {
     }  // TURN
 
     {  // ROUND NUMBER
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"],
             "Round: " + std::to_string(fight.m_number_of_rounds),
@@ -303,6 +307,7 @@ void Client::update_fight_window() {
         if (my_role == ::runebound::character::StateCharacter::FIGHT) {
             text = "You are: " + text;
         }
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"], text,
             {0x00, 0x00, 0x00, 0xFF}
@@ -320,7 +325,7 @@ void Client::update_fight_window() {
         SDL_RenderClear(m_graphic_renderer);
         SDL_SetRenderTarget(m_graphic_renderer, nullptr);
         m_images["heart20"].render_to_texture(m_graphic_renderer, 0, 0, tex);
-        texture = Texture(tex);
+        Texture texture(tex);
         win->add_texture("char_heart", texture, {5, 173}, true);
         const auto health = std::to_string(fight.m_character.get_health());
         texture.load_text_from_string(
@@ -328,8 +333,6 @@ void Client::update_fight_window() {
             {0x00, 0x00, 0x00, 0xFF}
         );
         win->add_texture("char_health", texture, {30, 173}, true);
-        SDL_DestroyTexture(tex);
-        texture.free();
     }  // CHARACTER HEART
 
     {  // ENEMY HEART
@@ -342,12 +345,13 @@ void Client::update_fight_window() {
         SDL_RenderClear(m_graphic_renderer);
         SDL_SetRenderTarget(m_graphic_renderer, nullptr);
         m_images["heart20"].render_to_texture(m_graphic_renderer, 0, 0, tex);
-        texture = Texture(tex);
+        Texture texture(tex);
         win->add_texture(
             "enemy_heart", texture,
             {5, win->height() - 138 - texture.height() - 5 - 35}, true
         );
         const auto health = std::to_string(fight.m_enemy.get_health());
+        texture.free();
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono20"], health,
             {0x00, 0x00, 0x00, 0xFF}
@@ -356,8 +360,6 @@ void Client::update_fight_window() {
             "enemy_heath", texture,
             {30, win->height() - 138 - texture.height() - 5 - 35}, true
         );
-        SDL_DestroyTexture(tex);
-        texture.free();
     }  // ENEMY HEART
 
     {  // ENEMY NAME
@@ -365,6 +367,7 @@ void Client::update_fight_window() {
         if (my_role == ::runebound::character::StateCharacter::ENEMY) {
             text = "You are: " + text;
         }
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"], text,
             {0x00, 0x00, 0x00, 0xFF}
@@ -445,9 +448,9 @@ void Client::update_fight_window() {
                 comp_text_render(std::to_string(num), {75, 100}, tex, 20);
             }  // BACK SIDE
         }      // RENDER
-        texture = Texture(tex);
+        Texture texture(tex);
         if (my_role != ::runebound::character::StateCharacter::NORMAL_GAME) {
-            button = Button(
+            Button button(
                 128, 128, HorizontalButtonTextureAlign::NONE,
                 VerticalButtonTextureAlign::NONE, 0, 0, texture,
                 [&vec = character_selected_tokens, token]() {
@@ -470,8 +473,6 @@ void Client::update_fight_window() {
                 true
             );
         }
-        SDL_DestroyTexture(tex);
-        texture.free();
         ++count;
     }  // CHARACTER TOKENS
 
@@ -532,9 +533,9 @@ void Client::update_fight_window() {
                 comp_text_render(std::to_string(num), {75, 100}, tex, 20);
             }  // BACK SIDE
         }      // RENDER
-        texture = Texture(tex);
+        Texture texture(tex);
         if (my_role != ::runebound::character::StateCharacter::NORMAL_GAME) {
-            button = Button(
+            Button button(
                 128, 128, HorizontalButtonTextureAlign::NONE,
                 VerticalButtonTextureAlign::NONE, 0, 0, texture,
                 [&vec = enemy_selected_tokens, token]() {
@@ -557,8 +558,6 @@ void Client::update_fight_window() {
                 {5 + 133 * count, win->height() - 133}, true
             );
         }
-        SDL_DestroyTexture(tex);
-        texture.free();
         ++count;
     }  // ENEMY TOKENS
 }

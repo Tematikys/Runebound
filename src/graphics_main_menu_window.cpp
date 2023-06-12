@@ -7,12 +7,10 @@ void Client::init_main_menu_window() {
         auto window = std::make_unique<Window>(
             Window(WINDOW_WIDTH, WINDOW_HEIGHT, {0xFF, 0xFF, 0xFF, 0xFF})
         );
-        Texture texture;
-        Button button;
-        TextField text_field;
 
-        {  // ===== TEXT FIELD BUTTON =====
-            button = Button(
+        {  //  TEXT FIELD BUTTON
+            Texture texture;
+            Button button(
                 32 * 18, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this]() {
@@ -21,19 +19,20 @@ void Client::init_main_menu_window() {
                 },
                 []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
             );
-            text_field = TextField("New game", button, 32);
+            TextField text_field = TextField("New game", button, 32);
             window->add_text_field(
                 "new_game", text_field, m_fonts["FreeMono30"],
                 {0x00, 0x00, 0x00, 0xFF}, {5, 5}, true, true
             );
-        }  // ===== TEXT FIELD BUTTON =====
+        }  //  TEXT FIELD BUTTON
 
-        {  // ===== ADD GAME BUTTON =====
+        {  //  ADD GAME BUTTON
+            Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"], "Add game",
                 {0x00, 0x00, 0x00, 0xFF}
             );
-            button = Button(
+            Button button(
                 8 * 18, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this]() {
@@ -54,21 +53,22 @@ void Client::init_main_menu_window() {
                 []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
             );
             window->add_button("add_game", button, {586, 5}, true, true);
-        }  // ===== ADD GAME BUTTON =====
+        }  //  ADD GAME BUTTON
 
-        {  // ===== EXIT BUTTON =====
+        {  //  EXIT BUTTON
+            Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
                 {0x00, 0x00, 0x00, 0xFF}
             );
-            button = Button(
+            Button button(
                 8 * 18, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this]() { m_is_running = false; }, []() {},
                 {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
             );
             window->add_button("exit", button, {586, 40}, true, true);
-        }  // ===== EXIT BUTTON =====
+        }  //  EXIT BUTTON
         window->activate();
 
         win->add_window("main_menu", std::move(window), {0, 0}, true, true);

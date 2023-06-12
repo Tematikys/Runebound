@@ -7,14 +7,13 @@ void Client::init_game_window() {
         auto window = std::make_unique<Window>(
             Window(win->width(), win->height(), {0xFF, 0xFF, 0xFF, 0xFF})
         );
-        Texture texture;
-        Button button;
         {  // THROW DICE BUTTON
+            Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"], "Throw dice",
                 {0x00, 0x00, 0x00, 0xFF}
             );
-            button = Button(
+            Button button(
                 200, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this]() { m_network_client.throw_move_dice(); }, []() {},
@@ -28,11 +27,12 @@ void Client::init_game_window() {
             );
         }  // THROW DICE BUTTON
         {  // RELAX BUTTON
+            Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"], "Relax",
                 {0x00, 0x00, 0x00, 0xFF}
             );
-            button = Button(
+            Button button(
                 200, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this]() { m_network_client.relax(); }, []() {},
@@ -46,11 +46,12 @@ void Client::init_game_window() {
             );
         }  // RELAX BUTTON
         {  // PASS BUTTON
+            Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"], "Pass",
                 {0x00, 0x00, 0x00, 0xFF}
             );
-            button = Button(
+            Button button(
                 200, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this]() { m_network_client.pass(); }, []() {},
@@ -64,11 +65,12 @@ void Client::init_game_window() {
             );
         }  // PASS BUTTON
         {  // MAIN MENU BUTTON
+            Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"], "Main menu",
                 {0x00, 0x00, 0x00, 0xFF}
             );
-            button = Button(
+            Button button(
                 200, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this]() {
@@ -89,11 +91,12 @@ void Client::init_game_window() {
             );
         }  // MAIN MENU BUTTON
         {  // EXIT BUTTON
+            Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
                 {0x00, 0x00, 0x00, 0xFF}
             );
-            button = Button(
+            Button button(
                 200, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
                 [this]() {
@@ -142,7 +145,6 @@ void Client::init_game_window() {
 void Client::update_game_window() {
     {  // BOARD
         SDL_Texture *tex = nullptr;
-        Texture texture;
         auto *window = m_window.get_window("game");
         update_board();
         m_board.update_selection(m_mouse_pos - m_board_pos);
@@ -158,16 +160,13 @@ void Client::update_game_window() {
                 -m_images[name].height() / 2 + center.y(), tex
             );
         }
-        texture = Texture(tex);
+        Texture texture(tex);
         window->remove_texture("board");
         window->add_texture("board", texture, m_board_pos, true);
-        SDL_DestroyTexture(tex);
-        texture.free();
     }  // BOARD
 
     {  // DICES
         SDL_Texture *tex = nullptr;
-        Texture texture;
         auto *window = m_window.get_window("game");
         const int size = 50;
         const int delay = 5;
@@ -202,7 +201,7 @@ void Client::update_game_window() {
             );
             dx += 1;
         }
-        texture = Texture(tex);
+        Texture texture(tex);
         window->remove_texture("dice");
         window->add_texture(
             "dice", texture,
@@ -210,8 +209,6 @@ void Client::update_game_window() {
              window->height() - ((size + delay) * amount - delay + 1) - 5},
             true
         );
-        SDL_DestroyTexture(tex);
-        texture.free();
     }  // DICES
 
     {  // SELECTED HEXAGON
@@ -250,8 +247,8 @@ void Client::update_game_window() {
 
     {  // ACTION POINTS
         auto *window = m_window.get_window("game");
-        Texture texture;
         if (!m_network_client.get_game_client().m_characters.empty()) {
+            Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"],
                 "Action Points: " +
@@ -269,9 +266,9 @@ void Client::update_game_window() {
     }  // ACTION POINTS
 
     {  // ADD BOT
-        Texture texture;
         auto *window = m_window.get_window("game");
         window->remove_button("add_bot");
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"], "Add bot",
             {0x00, 0x00, 0x00, 0xFF}
@@ -289,7 +286,6 @@ void Client::update_game_window() {
     }  // ADD BOT
 
     {  // TRADE
-        Texture texture;
         auto *window = m_window.get_window("game");
         window->remove_button("trade");
         if (m_network_client.m_character !=
@@ -299,6 +295,7 @@ void Client::update_game_window() {
             const auto &cell =
                 m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
             if (cell.get_type_cell() == ::runebound::map::TypeCell::TOWN) {
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono30"], "Trade",
                     {0x00, 0x00, 0x00, 0xFF}
@@ -333,7 +330,6 @@ void Client::update_game_window() {
     }  // TRADE
 
     {  // TAKE TOKEN
-        Texture texture;
         auto *window = m_window.get_window("game");
         window->remove_button("take_token");
         if (m_network_client.m_character !=
@@ -344,6 +340,7 @@ void Client::update_game_window() {
                 m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
 
             if (cell.get_token() != ::runebound::AdventureType::NOTHING) {
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono30"], "Take token",
                     {0x00, 0x00, 0x00, 0xFF}
@@ -367,7 +364,6 @@ void Client::update_game_window() {
 
     {  // UPDATE CHARACTERS
         SDL_Texture *tex = nullptr;
-        Texture texture;
         auto *window = m_window.get_window("game");
         window->get_window("chars")->remove_all_textures();
         int counter = 0;
@@ -397,7 +393,7 @@ void Client::update_game_window() {
                 m_images[character.get_name() + "40"].render_to_texture(
                     m_graphic_renderer, 0, 0, tex
                 );
-                texture = Texture(tex);
+                Texture texture(tex);
                 window->get_window("chars")->remove_texture(name + "char");
                 window->get_window("chars")->add_texture(
                     name + "char", texture,
@@ -420,7 +416,7 @@ void Client::update_game_window() {
                 m_images["coin20"].render_to_texture(
                     m_graphic_renderer, 0, 0, tex
                 );
-                texture = Texture(tex);
+                Texture texture(tex);
                 window->get_window("chars")->remove_texture(name + "coin");
                 window->get_window("chars")->add_texture(
                     name + "coin", texture, {0, 20 + counter * (20 * 3 + 5)},
@@ -441,7 +437,7 @@ void Client::update_game_window() {
                 m_images["heart20"].render_to_texture(
                     m_graphic_renderer, 0, 0, tex
                 );
-                texture = Texture(tex);
+                Texture texture(tex);
                 window->get_window("chars")->remove_texture(name + "heart");
                 window->get_window("chars")->add_texture(
                     name + "heart", texture, {0, 40 + counter * (20 * 3 + 5)},
@@ -449,6 +445,7 @@ void Client::update_game_window() {
                 );
             }  // HEART
             {  // NAME
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"], name,
                     {0x00, 0x00, 0x00, 0xFF}
@@ -459,6 +456,7 @@ void Client::update_game_window() {
                 );
             }  // NAME
             {  // GOLD NUM
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"], gold,
                     {0x00, 0x00, 0x00, 0xFF}
@@ -470,6 +468,7 @@ void Client::update_game_window() {
                 );
             }  // GOLD NUM
             {  // HEALTH NUM
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"], health,
                     {0x00, 0x00, 0x00, 0xFF}
@@ -491,7 +490,7 @@ void Client::update_game_window() {
                     m_graphic_renderer, tex, {0xFF, 0xFF, 0xFF, 0xFF},
                     {0x00, 0xFF, 0x00, 0xFF}
                 );
-                texture = Texture(tex);
+                Texture texture(tex);
                 window->get_window("chars")->remove_texture(
                     "_" + name + "border"
                 );
@@ -502,15 +501,12 @@ void Client::update_game_window() {
             }  // BORDER
             ++counter;
         }
-        SDL_DestroyTexture(tex);
-        texture.free();
     }  // UPDATE CHARACTERS
 
     {  // UPDATE PLAYER
         if (m_network_client.m_character !=
             character::StandardCharacter::NONE) {
             SDL_Texture *tex = nullptr;
-            Texture texture;
             auto *win = m_window.get_window("game");
             auto *window = win->get_window("player");
             window->remove_all_textures();
@@ -533,7 +529,7 @@ void Client::update_game_window() {
                 m_images[name + "40"].render_to_texture(
                     m_graphic_renderer, 0, 0, tex
                 );
-                texture = Texture(tex);
+                Texture texture(tex);
                 window->remove_texture(name + "char");
                 window->add_texture(
                     name + "char", texture, {window->width() - 40, 0}, true
@@ -553,7 +549,7 @@ void Client::update_game_window() {
                 m_images["coin20"].render_to_texture(
                     m_graphic_renderer, 0, 0, tex
                 );
-                texture = Texture(tex);
+                Texture texture(tex);
                 window->remove_texture(name + "coin");
                 window->add_texture(name + "coin", texture, {0, 20}, true);
             }  // COIN
@@ -571,11 +567,12 @@ void Client::update_game_window() {
                 m_images["heart20"].render_to_texture(
                     m_graphic_renderer, 0, 0, tex
                 );
-                texture = Texture(tex);
+                Texture texture(tex);
                 window->remove_texture(name + "heart");
                 window->add_texture(name + "heart", texture, {0, 40}, true);
             }  // HEART
             {  // NAME
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"], name,
                     {0x00, 0x00, 0x00, 0xFF}
@@ -584,6 +581,7 @@ void Client::update_game_window() {
                 window->add_texture(name, texture, {0, 0}, true);
             }  // NAME
             {  // GOLD NUM
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"], gold,
                     {0x00, 0x00, 0x00, 0xFF}
@@ -592,6 +590,7 @@ void Client::update_game_window() {
                 window->add_texture(name + gold, texture, {25, 20}, true);
             }  // GOLD NUM
             {  // HEALTH NUM
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"], health,
                     {0x00, 0x00, 0x00, 0xFF}
@@ -610,14 +609,12 @@ void Client::update_game_window() {
                     m_graphic_renderer, tex, {0xFF, 0xFF, 0xFF, 0xFF},
                     {0x00, 0xFF, 0x00, 0xFF}
                 );
-                texture = Texture(tex);
+                Texture texture(tex);
                 window->remove_texture("_" + name + "border");
                 window->add_texture(
                     " " + name + "border", texture, {0, 0}, true
                 );
             }  // BORDER
-            SDL_DestroyTexture(tex);
-            texture.free();
         }
     }  // UPDATE PLAYER
 
@@ -645,9 +642,9 @@ void Client::update_game_window() {
     }  // TRADE UPDATE
 
     {  // INVENTORY
-        Texture texture;
         auto *window = m_window.get_window("game");
         window->remove_button("inventory");
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"], "Inventory",
             {0x00, 0x00, 0x00, 0xFF}

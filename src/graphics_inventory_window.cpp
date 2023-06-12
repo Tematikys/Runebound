@@ -77,13 +77,15 @@ void Client::update_inventory_window() {
             );
             SDL_RenderClear(m_graphic_renderer);
             SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-            Texture texture;
             const RectangleShape rect = RectangleShape(0, 0, 299, 329);
             rect.render_to_texture(
                 m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
             );
             const auto name = prod.get_product_name();
-            comp_text_render(name, {101 - texture.width() / 2, 1}, tex);
+            {
+                Texture texture;
+                comp_text_render(name, {101 - texture.width() / 2, 1}, tex);
+            }
             comp_text_render(
                 "Price: " + std::to_string(prod.get_price()), {1, 21}, tex
             );
@@ -154,6 +156,7 @@ void Client::update_inventory_window() {
                         m_images[token_name].render_to_texture(
                             m_graphic_renderer, 20, 20, token_tex
                         );
+                        Texture texture;
                         texture.load_text_from_string(
                             m_graphic_renderer, m_fonts["FreeMono40"],
                             std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
@@ -179,13 +182,11 @@ void Client::update_inventory_window() {
                         );
                     }  // BACK SIDE
                 }
-                texture = Texture(token_tex);
+                Texture texture(token_tex);
                 texture.render_to_texture(m_graphic_renderer, 1, 201, tex);
             }  // FIGHT TOKEN
-            texture = Texture(tex);
+            Texture texture(tex);
             win->add_texture(name, texture, {5 + 305 * count, 5}, true);
-            SDL_DestroyTexture(tex);
-            texture.free();
             ++count;
         }
     }  // UPDATE PRODUCTS
@@ -207,26 +208,28 @@ void Client::update_inventory_window() {
             );
             SDL_RenderClear(m_graphic_renderer);
             SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-            Texture texture;
-            Button button;
             const RectangleShape rect = RectangleShape(0, 0, 299, 119);
             rect.render_to_texture(
                 m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
             );
             const auto name = card.get_name();
-            texture.load_text_from_string(
-                m_graphic_renderer, m_fonts["FreeMono20"], name,
-                {0x00, 0x00, 0x00, 0xFF}
-            );
-            texture.render_to_texture(
-                m_graphic_renderer, 151 - texture.width() / 2, 1, tex
-            );
+            {
+                Texture texture;
+                texture.load_text_from_string(
+                    m_graphic_renderer, m_fonts["FreeMono20"], name,
+                    {0x00, 0x00, 0x00, 0xFF}
+                );
+                texture.render_to_texture(
+                    m_graphic_renderer, 151 - texture.width() / 2, 1, tex
+                );
+            }
             {  // FIRST
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"], "First",
                     {0x00, 0x00, 0x00, 0xFF}
                 );
-                button = Button(
+                Button button(
                     texture.width(), texture.height(),
                     HorizontalButtonTextureAlign::CENTER,
                     VerticalButtonTextureAlign::CENTER, 0, 0, texture,
@@ -246,11 +249,12 @@ void Client::update_inventory_window() {
                 );
             }  // FIRST
             {  // SECOND
+                Texture texture;
                 texture.load_text_from_string(
                     m_graphic_renderer, m_fonts["FreeMono20"], "Second",
                     {0x00, 0x00, 0x00, 0xFF}
                 );
-                button = Button(
+                Button button(
                     texture.width(), texture.height(),
                     HorizontalButtonTextureAlign::CENTER,
                     VerticalButtonTextureAlign::CENTER, 0, 0, texture,
@@ -269,8 +273,8 @@ void Client::update_inventory_window() {
                     {1 + 12 * 19, 356}, true, true
                 );
             }  // SECOND
-            //            comp_text_render("            |First|Second", {1, 21},
-            //            tex);
+            // comp_text_render("            |First|Second", {1, 21},
+            // tex);
             comp_text_render(
                 "Gold        |" +
                     std::to_string(card.get_gold_award(
@@ -328,10 +332,8 @@ void Client::update_inventory_window() {
                     "     ",
                 {1, 101}, tex
             );
-            texture = Texture(tex);
+            Texture texture(tex);
             win->add_texture(name, texture, {5 + 305 * count, 335}, true);
-            SDL_DestroyTexture(tex);
-            texture.free();
             ++count;
         }
     }  // UPDATE MEETINGS
