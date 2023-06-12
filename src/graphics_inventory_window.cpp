@@ -154,9 +154,11 @@ void Client::update_inventory_window() {
                         m_images[token_name].render_to_texture(
                             m_graphic_renderer, 20, 20, token_tex
                         );
-                        comp_text_render(
-                            std::to_string(num), {80, 30}, token_tex
+                        texture.load_text_from_string(
+                            m_graphic_renderer, m_fonts["FreeMono40"], std::to_string(num),
+                            {0x00, 0x00, 0x00, 0xFF}
                         );
+                        texture.render_to_texture(m_graphic_renderer, 80, 30, token_tex);;
                     }  // FACE SIDE
                     {  // BACK SIDE
                         const bool init = token.value().second_lead;
