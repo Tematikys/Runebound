@@ -46,7 +46,7 @@ void Client::update_inventory_window() {
                                        const std::string &text, Point pos,
                                        SDL_Texture *tex
                                    ) {
-        static Texture texture;
+        Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono20"], text,
             {0x00, 0x00, 0x00, 0xFF}
@@ -155,10 +155,13 @@ void Client::update_inventory_window() {
                             m_graphic_renderer, 20, 20, token_tex
                         );
                         texture.load_text_from_string(
-                            m_graphic_renderer, m_fonts["FreeMono40"], std::to_string(num),
-                            {0x00, 0x00, 0x00, 0xFF}
+                            m_graphic_renderer, m_fonts["FreeMono40"],
+                            std::to_string(num), {0x00, 0x00, 0x00, 0xFF}
                         );
-                        texture.render_to_texture(m_graphic_renderer, 80, 30, token_tex);;
+                        texture.render_to_texture(
+                            m_graphic_renderer, 80, 30, token_tex
+                        );
+                        ;
                     }  // FACE SIDE
                     {  // BACK SIDE
                         const bool init = token.value().second_lead;
