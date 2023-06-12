@@ -51,6 +51,8 @@ public:
 
     void load_images();
 
+    void load_settings();
+
     void init();
 
     void init_graphics();
