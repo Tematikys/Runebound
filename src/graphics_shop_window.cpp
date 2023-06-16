@@ -172,34 +172,8 @@ void Client::update_shop_window() {
             );
             SDL_RenderClear(m_graphic_renderer);
             SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-            {  // BORDER
-                const RectangleShape rect = RectangleShape(0, 0, 299, 329);
-                rect.render_to_texture(
-                    m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
-                );
-                Texture temp;
-                Button button(
-                    300, 330, HorizontalButtonTextureAlign::CENTER,
-                    VerticalButtonTextureAlign::CENTER, 0, 0, temp,
-                    [&num = selected_shop_item, &num_id = selected_shop_item_id,
-                     id, count, this]() {
-                        if (num == count + 1) {
-                            num = 0;
-                            num_id = 0;
-                        } else {
-                            num = count + 1;
-                            num_id = id;
-                        }
-                        m_need_to_update = true;
-                    },
-                    []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-                );
-                win->add_button(
-                    std::to_string(count + 1), button, {5 + 305 * count, 5},
-                    false, true
-                );
-            }  // BORDER
             const auto name = product.get_product_name();
+            int indent = 0;
             {  // NAME
                 Texture texture;
                 texture.load_text_from_string(
@@ -207,52 +181,69 @@ void Client::update_shop_window() {
                     {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(
-                    m_graphic_renderer, 151 - texture.width() / 2, 1, tex
+                    m_graphic_renderer, 151 - texture.width() / 2,
+                    1 + 20 * indent++, tex
                 );
             }  // NAME
             comp_text_render(
-                "Price: " + std::to_string(product.get_price()), {1, 21}, tex,
-                20
+                "Price: " + std::to_string(product.get_price()),
+                {1, 1 + 20 * indent++}, tex, 20
             );
-            comp_text_render(
-                "Marker price: " + std::to_string(product.get_market_price()),
-                {1, 41}, tex, 20
-            );
-            comp_text_render(
-                "Delta health: " +
-                    std::to_string(product.get_delta_max_health()),
-                {1, 61}, tex, 20
-            );
-            comp_text_render(
-                "Delta speed: " + std::to_string(product.get_delta_speed()),
-                {1, 81}, tex, 20
-            );
-            comp_text_render(
-                "Delta hand limit: " +
-                    std::to_string(product.get_delta_hand_limit()),
-                {1, 101}, tex, 20
-            );
-            comp_text_render("Characteristics:", {1, 121}, tex, 20);
+            if (product.get_market_price() != 0) {
+                comp_text_render(
+                    "Market price: " +
+                        std::to_string(product.get_market_price()),
+                    {1, 1 + 20 * indent++}, tex, 20
+                );
+            }
+            if (product.get_delta_max_health() != 0) {
+                comp_text_render(
+                    "Delta health: " +
+                        std::to_string(product.get_delta_max_health()),
+                    {1, 1 + 20 * indent++}, tex, 20
+                );
+            }
+            if (product.get_delta_speed() != 0) {
+                comp_text_render(
+                    "Delta speed: " + std::to_string(product.get_delta_speed()),
+                    {1, 1 + 20 * indent++}, tex, 20
+                );
+            }
+            if (product.get_delta_hand_limit() != 0) {
+                comp_text_render(
+                    "Delta hand limit: " +
+                        std::to_string(product.get_delta_hand_limit()),
+                    {1, 1 + 20 * indent++}, tex, 20
+                );
+            }
             auto chars = product.get_delta_characteristic();
-            comp_text_render(
-                "    Body: " +
-                    std::to_string(chars[::runebound::Characteristic::BODY]),
-                {1, 141}, tex, 20
-            );
-            comp_text_render(
-                "    Intelligence: " +
-                    std::to_string(
-                        chars[::runebound::Characteristic::INTELLIGENCE]
-                    ),
-                {1, 161}, tex, 20
-            );
-            comp_text_render(
-                "    Spirit: " +
-                    std::to_string(
-                        chars[::runebound::Characteristic::INTELLIGENCE]
-                    ),
-                {1, 181}, tex, 20
-            );
+            const int body = chars[::runebound::Characteristic::BODY];
+            const int intelligence =
+                chars[::runebound::Characteristic::INTELLIGENCE];
+            const int spirit = chars[::runebound::Characteristic::SPIRIT];
+            if (body != 0 || intelligence != 0 || spirit != 0) {
+                comp_text_render(
+                    "Characteristics:", {1, 1 + 20 * indent++}, tex, 20
+                );
+                if (body != 0) {
+                    comp_text_render(
+                        "    Body: " + std::to_string(body),
+                        {1, 1 + 20 * indent++}, tex, 20
+                    );
+                }
+                if (intelligence != 0) {
+                    comp_text_render(
+                        "    Intelligence: " + std::to_string(intelligence),
+                        {1, 1 + 20 * indent++}, tex, 20
+                    );
+                }
+                if (spirit != 0) {
+                    comp_text_render(
+                        "    Spirit: " + std::to_string(spirit),
+                        {1, 1 + 20 * indent++}, tex, 20
+                    );
+                }
+            }
             {  // FIGHT TOKEN
                 SDL_Texture *token_tex = SDL_CreateTexture(
                     m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
@@ -290,7 +281,7 @@ void Client::update_shop_window() {
                         const bool init = token.value().second_lead;
                         const int num = token.value().second_count;
                         std::string token_name =
-                            HAND_FIGHT_TOKENS_TO_STR.at(token.value().first);
+                            HAND_FIGHT_TOKENS_TO_STR.at(token.value().second);
                         if (init) {
                             token_name += "_init";
                         }
@@ -303,10 +294,49 @@ void Client::update_shop_window() {
                     }  // BACK SIDE
                 }
                 Texture texture(token_tex);
-                texture.render_to_texture(m_graphic_renderer, 1, 201, tex);
+                texture.render_to_texture(
+                    m_graphic_renderer, 1, 1 + 20 * indent, tex
+                );
             }  // FIGHT TOKEN
-            Texture texture(tex);
+            const int height =
+                indent * 20 + (product.get_fight_token() ? 129 : 0);
+            auto *res = SDL_CreateTexture(
+                m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
+                SDL_TEXTUREACCESS_TARGET, 300, height
+            );
+            {  // BORDER
+                const RectangleShape rect = RectangleShape(0, 0, 299, height);
+                rect.render_to_texture(
+                    m_graphic_renderer, res, col, {0x00, 0xFF, 0x00, 0xFF}
+                );
+                Texture temp;
+                Button button(
+                    300, height, HorizontalButtonTextureAlign::CENTER,
+                    VerticalButtonTextureAlign::CENTER, 0, 0, temp,
+                    [&num = selected_shop_item, &num_id = selected_shop_item_id,
+                     id, count, this]() {
+                        if (num == count + 1) {
+                            num = 0;
+                            num_id = 0;
+                        } else {
+                            num = count + 1;
+                            num_id = id;
+                        }
+                        m_need_to_update = true;
+                    },
+                    []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                );
+                win->add_button(
+                    std::to_string(count + 1), button, {5 + 305 * count, 5},
+                    false, true
+                );
+            }  // BORDER
+            SDL_SetRenderTarget(m_graphic_renderer, res);
+            const SDL_Rect clip{0, 0, 300, height};
+            SDL_RenderCopy(m_graphic_renderer, tex, &clip, nullptr);
+            Texture texture(res);
             win->add_texture(name, texture, {5 + 305 * count, 5}, true);
+            SDL_DestroyTexture(tex);
             ++count;
         }
     }  // UPDATE PRODUCTS
