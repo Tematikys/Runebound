@@ -22,43 +22,44 @@ void Client::load_settings() {
         settings >> ignore >> HEXAGON_RADIUS;
         SELECTED_COLOR = readCol(ignore, settings);
 
-        settings >> ignore;
-        CELL_FILL_COLOR[::runebound::map::TypeCell::WATER] =
-            readCol(ignore, settings);
-        CELL_FILL_COLOR[::runebound::map::TypeCell::FOREST] =
-            readCol(ignore, settings);
-        CELL_FILL_COLOR[::runebound::map::TypeCell::MOUNTAINS] =
-            readCol(ignore, settings);
-        CELL_FILL_COLOR[::runebound::map::TypeCell::HILLS] =
-            readCol(ignore, settings);
-        CELL_FILL_COLOR[::runebound::map::TypeCell::PLAIN] =
-            readCol(ignore, settings);
-        CELL_FILL_COLOR[::runebound::map::TypeCell::TOWN] =
-            readCol(ignore, settings);
+        const std::initializer_list<::runebound::map::TypeCell> allTypeCell = {
+            ::runebound::map::TypeCell::WATER,
+            ::runebound::map::TypeCell::FOREST,
+            ::runebound::map::TypeCell::MOUNTAINS,
+            ::runebound::map::TypeCell::HILLS,
+            ::runebound::map::TypeCell::PLAIN,
+            ::runebound::map::TypeCell::TOWN};
 
         settings >> ignore;
-        SPECIAL_COLOR[::runebound::map::SpecialTypeCell::SETTLEMENT] =
-            readCol(ignore, settings);
-        SPECIAL_COLOR[::runebound::map::SpecialTypeCell::SANCTUARY] =
-            readCol(ignore, settings);
-        SPECIAL_COLOR[::runebound::map::SpecialTypeCell::FORTRESS] =
-            readCol(ignore, settings);
+        for (auto key : allTypeCell) {
+            CELL_FILL_COLOR[key] = readCol(ignore, settings);
+        }
+        const std::initializer_list<::runebound::map::SpecialTypeCell>
+            allSpecialTypeCell = {
+                ::runebound::map::SpecialTypeCell::SETTLEMENT,
+                ::runebound::map::SpecialTypeCell::SANCTUARY,
+                ::runebound::map::SpecialTypeCell::FORTRESS};
 
         settings >> ignore;
-        ADVENTURE_COLOR[::runebound::AdventureType::MEETING] =
-            readCol(ignore, settings);
-        ADVENTURE_COLOR[::runebound::AdventureType::RESEARCH] =
-            readCol(ignore, settings);
-        ADVENTURE_COLOR[::runebound::AdventureType::FIGHT] =
-            readCol(ignore, settings);
+        for (auto key : allSpecialTypeCell) {
+            SPECIAL_COLOR[key] = readCol(ignore, settings);
+        }
+
+        const std::initializer_list<::runebound::AdventureType>
+            allAdventureType = {
+                ::runebound::AdventureType::MEETING,
+                ::runebound::AdventureType::RESEARCH,
+                ::runebound::AdventureType::FIGHT};
 
         settings >> ignore;
-        USED_ADVENTURE_COLOR[::runebound::AdventureType::MEETING] =
-            readCol(ignore, settings);
-        USED_ADVENTURE_COLOR[::runebound::AdventureType::RESEARCH] =
-            readCol(ignore, settings);
-        USED_ADVENTURE_COLOR[::runebound::AdventureType::FIGHT] =
-            readCol(ignore, settings);
+        for (auto key : allAdventureType) {
+            ADVENTURE_COLOR[key] = readCol(ignore, settings);
+        }
+
+        settings >> ignore;
+        for (auto key : allAdventureType) {
+            USED_ADVENTURE_COLOR[key] = readCol(ignore, settings);
+        }
 
         settings >> ignore >> WINDOW_TITLE;
         settings >> ignore >> WINDOW_X_OFFSET;
@@ -67,19 +68,19 @@ void Client::load_settings() {
         settings >> ignore >> WINDOW_HEIGHT;
         settings >> ignore >> WINDOW_FPS;
 
+        const std::initializer_list<::runebound::dice::HandDice> allHandDice = {
+            ::runebound::dice::HandDice::JOKER,
+            ::runebound::dice::HandDice::PLAIN,
+            ::runebound::dice::HandDice::PLAIN_FOREST,
+            ::runebound::dice::HandDice::FOREST_HILLS,
+            ::runebound::dice::HandDice::MOUNTAINS_WATER,
+            ::runebound::dice::HandDice::HILLS_PLAIN};
+
         settings >> ignore;
-        DICE_COLOR[::runebound::dice::HandDice::PLAIN] = {
-            readCol(ignore, settings), readCol(ignore, settings)};
-        DICE_COLOR[::runebound::dice::HandDice::PLAIN_FOREST] = {
-            readCol(ignore, settings), readCol(ignore, settings)};
-        DICE_COLOR[::runebound::dice::HandDice::FOREST_HILLS] = {
-            readCol(ignore, settings), readCol(ignore, settings)};
-        DICE_COLOR[::runebound::dice::HandDice::MOUNTAINS_WATER] = {
-            readCol(ignore, settings), readCol(ignore, settings)};
-        DICE_COLOR[::runebound::dice::HandDice::HILLS_PLAIN] = {
-            readCol(ignore, settings), readCol(ignore, settings)};
-        DICE_COLOR[::runebound::dice::HandDice::JOKER] = {
-            readCol(ignore, settings), readCol(ignore, settings)};
+        for (auto key : allHandDice) {
+            DICE_COLOR[key] = {
+                readCol(ignore, settings), readCol(ignore, settings)};
+        }
     } else {
         throw std::runtime_error("Settings can not be opened");
     }
