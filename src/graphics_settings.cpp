@@ -49,7 +49,8 @@ void Client::load_settings() {
             allAdventureType = {
                 ::runebound::AdventureType::MEETING,
                 ::runebound::AdventureType::RESEARCH,
-                ::runebound::AdventureType::FIGHT};
+                ::runebound::AdventureType::FIGHT,
+                ::runebound::AdventureType::BOSS};
 
         settings >> ignore;
         for (auto key : allAdventureType) {
