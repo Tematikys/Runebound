@@ -118,7 +118,7 @@ void Client::init_game_window() {
     {  // CHARACTERS WINDOW
         auto *win = m_window.get_window("game");
         auto window =
-            std::make_unique<Window>(Window(360, 385, {0xFF, 0xFF, 0xFF, 0xFF})
+            std::make_unique<Window>(Window(360, 321, {0xFF, 0xFF, 0xFF, 0xFF})
             );
         auto window_width = window->width();
         win->add_window(
@@ -225,6 +225,23 @@ void Client::update_game_window() {
             }
         }
     }  // SELECTED HEXAGON
+
+    {  // GAME ROUND
+        auto *window = m_window.get_window("game");
+        Texture texture;
+        if (!m_network_client.get_game_client().m_characters.empty()) {
+            const int round = 1;
+            texture.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono30"],
+                "Round: " + std::to_string(round), {0x00, 0x00, 0x00, 0xFF}
+            );
+            window->add_texture(
+                "round", texture,
+                {window->width() - texture.width(), window->height() - 35 * 10},
+                true
+            );
+        }
+    }  // GAME ROUND
 
     {  // TURN
         auto *window = m_window.get_window("game");
