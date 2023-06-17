@@ -143,6 +143,10 @@ void Client::init_game_window() {
 }
 
 void Client::update_game_window() {
+    if (m_network_client.get_yourself_character() == nullptr) {
+        return;
+    }
+
     {  // BOARD
         SDL_Texture *tex = nullptr;
         auto *window = m_window.get_window("game");
@@ -215,8 +219,7 @@ void Client::update_game_window() {
     {  // SELECTED HEXAGON
         if (m_window.get_window("game")->get_active_window_name().empty()) {
             const std::size_t index = m_board.get_selected_hexagon();
-            if (index != 0xFFFF && m_mouse_pressed &&
-                !m_network_client.get_game_client().is_fight) {
+            if (index != 0xFFFF && m_mouse_pressed) {
                 m_network_client.make_move(
                     static_cast<int>(index / ::runebound::map::STANDARD_SIZE),
                     static_cast<int>(index % ::runebound::map::STANDARD_SIZE)
@@ -306,44 +309,39 @@ void Client::update_game_window() {
     {  // TRADE
         auto *window = m_window.get_window("game");
         window->remove_button("trade");
-        if (m_network_client.m_character !=
-            ::runebound::character::StandardCharacter::NONE) {
-            const auto *me = m_network_client.get_yourself_character();
-            const auto &pos = me->get_position();
-            const auto &cell =
-                m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
-            if (cell.get_type_cell() == ::runebound::map::TypeCell::TOWN) {
-                Texture texture;
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono30"], "Trade",
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                Button button(
-                    200, 30, HorizontalButtonTextureAlign::CENTER,
-                    VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-                    [this]() {
-                        m_window.get_window("game")->set_active_window("shop");
-                        m_window.get_window("game")
-                            ->get_window("shop")
-                            ->activate();
-                        m_window.get_window("game")->set_visibility_window(
-                            "shop", true
-                        );
-                        m_window.get_window("game")->set_updatability_window(
-                            "shop", true
-                        );
-                        m_window.get_window("game")
-                            ->set_all_updatability_button(false);
-                        m_network_client.start_trade();
-                    },
-                    []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-                );
-                window->add_button(
-                    "trade", button,
-                    {window->width() - 205, window->height() - 35 * 7}, true,
-                    true
-                );
-            }
+        const auto *me = m_network_client.get_yourself_character();
+        const auto &pos = me->get_position();
+        const auto &cell =
+            m_network_client.get_game_client().m_map.m_map[pos.x][pos.y];
+        if (cell.get_type_cell() == ::runebound::map::TypeCell::TOWN) {
+            Texture texture;
+            texture.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono30"], "Trade",
+                {0x00, 0x00, 0x00, 0xFF}
+            );
+            Button button(
+                200, 30, HorizontalButtonTextureAlign::CENTER,
+                VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                [this]() {
+                    m_window.get_window("game")->set_active_window("shop");
+                    m_window.get_window("game")->get_window("shop")->activate();
+                    m_window.get_window("game")->set_visibility_window(
+                        "shop", true
+                    );
+                    m_window.get_window("game")->set_updatability_window(
+                        "shop", true
+                    );
+                    m_window.get_window("game")->set_all_updatability_button(
+                        false
+                    );
+                    m_network_client.start_trade();
+                },
+                []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+            );
+            window->add_button(
+                "trade", button,
+                {window->width() - 205, window->height() - 35 * 7}, true, true
+            );
         }
     }  // TRADE
 
@@ -638,10 +636,12 @@ void Client::update_game_window() {
     {  // SHOW FIGHT WINDOW
         auto *win = m_window.get_window("game");
         if (m_network_client.get_game_client().is_fight) {
-            win->set_active_window("fight");
-            win->set_visibility_window("fight", true);
-            win->set_updatability_window("fight", true);
-            win->set_all_updatability_button(false);
+            if (win->get_active_window_name() != "fight") {
+                win->set_active_window("fight");
+                win->set_visibility_window("fight", true);
+                win->set_updatability_window("fight", true);
+                win->set_all_updatability_button(false);
+            }
             update_fight_window();
         } else if (win->get_active_window_name() == "fight") {
             win->reset_active_window();

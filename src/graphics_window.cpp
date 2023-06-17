@@ -202,7 +202,6 @@ bool Window::update(Point mouse_pos, bool &mouse_pressed) {
         }
     }
     if (mouse_pressed) {
-        reset_active_window();
         reset_active_text_field();
         updated = true;
     }

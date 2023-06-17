@@ -239,7 +239,7 @@ void Client::update_inventory_window() {
                 m_network_client.get_game_client().m_all_cards_meeting[id];
             SDL_Texture *tex = SDL_CreateTexture(
                 m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
-                SDL_TEXTUREACCESS_TARGET, 300, 120
+                SDL_TEXTUREACCESS_TARGET, 164, 120
             );
             const SDL_Color col = {0xFF, 0xFF, 0xFF, 0xFF};
             SDL_SetRenderTarget(m_graphic_renderer, tex);
@@ -248,7 +248,7 @@ void Client::update_inventory_window() {
             );
             SDL_RenderClear(m_graphic_renderer);
             SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-            const RectangleShape rect = RectangleShape(0, 0, 299, 119);
+            const RectangleShape rect = RectangleShape(0, 0, 163, 119);
             rect.render_to_texture(
                 m_graphic_renderer, tex, col, {0x00, 0xFF, 0x00, 0xFF}
             );
@@ -260,7 +260,7 @@ void Client::update_inventory_window() {
                     {0x00, 0x00, 0x00, 0xFF}
                 );
                 texture.render_to_texture(
-                    m_graphic_renderer, 151 - texture.width() / 2, 1, tex
+                    m_graphic_renderer, 82 - texture.width() / 2, 0, tex
                 );
             }
             {  // FIRST
@@ -284,8 +284,8 @@ void Client::update_inventory_window() {
                     []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
                 );
                 win->add_button(
-                    std::to_string(count) + "first", button, {1 + 12 * 13, 356},
-                    true, true
+                    std::to_string(count) + "first", button, {26, 355}, true,
+                    true
                 );
             }  // FIRST
             {  // SECOND
@@ -309,67 +309,76 @@ void Client::update_inventory_window() {
                     []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
                 );
                 win->add_button(
-                    std::to_string(count) + "second", button,
-                    {1 + 12 * 19, 356}, true, true
+                    std::to_string(count) + "second", button, {92, 355}, true,
+                    true
                 );
             }  // SECOND
-            comp_text_render(
-                "Gold        |" +
-                    std::to_string(card.get_gold_award(
-                        ::runebound::cards::OptionMeeting::FIRST
-                    )) +
-                    "    |" +
-                    std::to_string(card.get_gold_award(
-                        ::runebound::cards::OptionMeeting::SECOND
-                    )) +
-                    "     ",
-                {1, 41}, tex, 20
+            m_images["coin20"].render_to_texture(
+                m_graphic_renderer, 0, 40, tex
             );
-            auto convert = [](runebound::Characteristic c) {
+            comp_text_render(
+                std::to_string(card.get_gold_award(
+                    ::runebound::cards::OptionMeeting::FIRST
+                )),
+                {50, 40}, tex, 20
+            );
+            comp_text_render(
+                std::to_string(card.get_gold_award(
+                    ::runebound::cards::OptionMeeting::SECOND
+                )),
+                {122, 40}, tex, 20
+            );
+            static const auto convert = [](runebound::Characteristic c) {
                 switch (c) {
                     case runebound::Characteristic::BODY:
-                        return std::string("body ");
+                        return std::string("body");
                     case runebound::Characteristic::INTELLIGENCE:
-                        return std::string("intel");
+                        return std::string("intelligence");
                     case runebound::Characteristic::SPIRIT:
-                        return std::string("spir ");
+                        return std::string("spirit");
+                    default:
+                        return std::string("none_meeting");
                 }
             };
+            m_images[convert(card.get_verifiable_characteristic(
+                         ::runebound::cards::OptionMeeting::FIRST
+                     ))]
+                .render_to_texture(m_graphic_renderer, 46, 60, tex);
+            m_images[convert(card.get_verifiable_characteristic(
+                         ::runebound::cards::OptionMeeting::SECOND
+                     ))]
+                .render_to_texture(m_graphic_renderer, 118, 60, tex);
+
+            m_images["delta"].render_to_texture(m_graphic_renderer, 0, 80, tex);
             comp_text_render(
-                "Characteris.|" +
-                    convert(card.get_verifiable_characteristic(
-                        ::runebound::cards::OptionMeeting::FIRST
-                    )) +
-                    "|" +
-                    convert(card.get_verifiable_characteristic(
-                        ::runebound::cards::OptionMeeting::SECOND
-                    )),
-                {1, 61}, tex, 20
+                std::to_string(card.get_change_characteristic(
+                    ::runebound::cards::OptionMeeting::FIRST
+                )),
+                {50, 80}, tex, 20
             );
             comp_text_render(
-                "Delta char. |" +
-                    std::to_string(card.get_change_characteristic(
-                        ::runebound::cards::OptionMeeting::FIRST
-                    )) +
-                    "    |" +
-                    std::to_string(card.get_change_characteristic(
-                        ::runebound::cards::OptionMeeting::SECOND
-                    )) +
-                    "    ",
-                {1, 81}, tex, 20
+                std::to_string(card.get_change_characteristic(
+                    ::runebound::cards::OptionMeeting::SECOND
+                )),
+                {122, 80}, tex, 20
+            );
+
+            m_images["knowledge"].render_to_texture(
+                m_graphic_renderer, 0, 100, tex
             );
             comp_text_render(
-                "Delta know. |" +
-                    std::to_string(card.get_knowledge_token(
-                        ::runebound::cards::OptionMeeting::FIRST
-                    )) +
-                    "    |" +
-                    std::to_string(card.get_knowledge_token(
-                        ::runebound::cards::OptionMeeting::SECOND
-                    )) +
-                    "     ",
-                {1, 101}, tex, 20
+                std::to_string(card.get_knowledge_token(
+                    ::runebound::cards::OptionMeeting::FIRST
+                )),
+                {50, 100}, tex, 20
             );
+            comp_text_render(
+                std::to_string(card.get_knowledge_token(
+                    ::runebound::cards::OptionMeeting::SECOND
+                )),
+                {122, 100}, tex, 20
+            );
+
             Texture texture(tex);
             win->add_texture(name, texture, {5 + 305 * count, 335}, true);
             ++count;

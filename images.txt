@@ -42,3 +42,8 @@
 "data/images/LORD_HAWTHORNE40.png" "Lord-Hawthorne40"
 "data/images/MASTER_THORN.png" "Master-Thorn"
 "data/images/MASTER_THORN40.png" "Master-Thorn40"
+"data/images/body.png" "body"
+"data/images/spirit.png" "spirit"
+"data/images/intelligence.png" "intelligence"
+"data/images/knowledge.png" "knowledge"
+"data/images/delta.png" "delta"
