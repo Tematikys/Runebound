@@ -312,7 +312,14 @@ void Client::update_fight_window() {
             m_graphic_renderer, m_fonts["FreeMono30"], text,
             {0x00, 0x00, 0x00, 0xFF}
         );
-        win->add_texture("char_name", texture, {5, 138}, true);
+        win->add_texture(
+            "char_name", texture,
+            {5, 138 + 133 * (static_cast<int>(
+                                 fight.m_character_remaining_tokens.size()
+                             ) /
+                             6)},
+            true
+        );
     }  // CHARACTER NAME
 
     {  // CHARACTER HEART
@@ -326,13 +333,27 @@ void Client::update_fight_window() {
         SDL_SetRenderTarget(m_graphic_renderer, nullptr);
         m_images["heart20"].render_to_texture(m_graphic_renderer, 0, 0, tex);
         Texture texture(tex);
-        win->add_texture("char_heart", texture, {5, 173}, true);
+        win->add_texture(
+            "char_heart", texture,
+            {5, 173 + 133 * (static_cast<int>(
+                                 fight.m_character_remaining_tokens.size()
+                             ) /
+                             6)},
+            true
+        );
         const auto health = std::to_string(fight.m_character.get_health());
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono20"], health,
             {0x00, 0x00, 0x00, 0xFF}
         );
-        win->add_texture("char_health", texture, {30, 173}, true);
+        win->add_texture(
+            "char_health", texture,
+            {30, 173 + 133 * (static_cast<int>(
+                                  fight.m_character_remaining_tokens.size()
+                              ) /
+                              6)},
+            true
+        );
     }  // CHARACTER HEART
 
     {  // ENEMY HEART
@@ -348,7 +369,11 @@ void Client::update_fight_window() {
         Texture texture(tex);
         win->add_texture(
             "enemy_heart", texture,
-            {5, win->height() - 138 - texture.height() - 5 - 35}, true
+            {5, win->height() - 138 - texture.height() - 5 - 35 -
+                    133 * (static_cast<int>(fight.m_enemy_remaining_tokens.size(
+                           )) /
+                           6)},
+            true
         );
         const auto health = std::to_string(fight.m_enemy.get_health());
         texture.free();
@@ -358,7 +383,12 @@ void Client::update_fight_window() {
         );
         win->add_texture(
             "enemy_heath", texture,
-            {30, win->height() - 138 - texture.height() - 5 - 35}, true
+            {30,
+             win->height() - 138 - texture.height() - 5 - 35 -
+                 133 *
+                     (static_cast<int>(fight.m_enemy_remaining_tokens.size()) /
+                      6)},
+            true
         );
     }  // ENEMY HEART
 
@@ -374,7 +404,11 @@ void Client::update_fight_window() {
         );
         win->add_texture(
             "enemy_name", texture,
-            {5, win->height() - 138 - texture.height() - 5}, true
+            {5, win->height() - 138 - texture.height() - 5 -
+                    133 * (static_cast<int>(fight.m_enemy_remaining_tokens.size(
+                           )) /
+                           6)},
+            true
         );
     }  // ENEMY NAME
 
@@ -464,13 +498,13 @@ void Client::update_fight_window() {
                 []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0xFF, 0xFF, 0xFF, 0xFF}
             );
             win->add_button(
-                "char" + std::to_string(count), button, {5 + 133 * count, 5},
-                true, true
+                "char" + std::to_string(count), button,
+                {5 + 133 * (count % 6), 5 + 133 * (count / 6)}, true, true
             );
         } else {
             win->add_texture(
-                "char" + std::to_string(count), texture, {5 + 133 * count, 5},
-                true
+                "char" + std::to_string(count), texture,
+                {5 + 133 * (count % 6), 5 + 133 * (count / 6)}, true
             );
         }
         ++count;
@@ -550,12 +584,14 @@ void Client::update_fight_window() {
             );
             win->add_button(
                 "enemy" + std::to_string(count), button,
-                {5 + 133 * count, win->height() - 133}, true, true
+                {5 + 133 * (count % 6), win->height() - 133 * (1 + count / 6)},
+                true, true
             );
         } else {
             win->add_texture(
                 "enemy" + std::to_string(count), texture,
-                {5 + 133 * count, win->height() - 133}, true
+                {5 + 133 * (count % 6), win->height() - 133 * (1 + count / 6)},
+                true
             );
         }
         ++count;
