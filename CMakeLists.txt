@@ -106,7 +106,6 @@ add_executable(network_client
         src/map.cpp
         src/map_cell.cpp
         src/map_client.cpp
-        src/network_client.cpp
         src/product.cpp
         src/fight_two_player.cpp
         )
