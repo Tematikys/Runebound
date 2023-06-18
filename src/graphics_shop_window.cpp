@@ -8,34 +8,6 @@ void Client::init_shop_window() {
         Window(win->width(), win->height(), {0xFF, 0xFF, 0xFF, 0xFF})
     );
 
-    {  // CLOSE BUTTON
-        Texture texture;
-        texture.load_text_from_string(
-            m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
-            {0x00, 0x00, 0x00, 0xFF}
-        );
-        Button button(
-            200, 30, HorizontalButtonTextureAlign::CENTER,
-            VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-            [this]() {
-                m_window.get_window("game")->reset_active_window();
-                m_window.get_window("game")->get_window("shop")->deactivate();
-                m_window.get_window("game")->set_visibility_window(
-                    "shop", false
-                );
-                m_window.get_window("game")->set_updatability_window(
-                    "shop", false
-                );
-                m_window.get_window("game")->set_all_updatability_button(true);
-            },
-            []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
-        );
-        window->add_button(
-            "exit", button, {window->width() - 205, window->height() - 35 * 1},
-            true, true
-        );
-    }  //  CLOSE BUTTON
-
     win->add_window("shop", std::move(window), {0, 0}, false, false);
 }
 
