@@ -90,8 +90,14 @@ public:
             }
             if (data["action type"] == "add game") {
                 std::string game_name = data["game name"];
+                if (std::find(
+                        game_names.begin(), game_names.end(), game_name
+                    ) != game_names.end()) {
+                    throw std::runtime_error("Game is already existing");
+                }
                 game_names.push_back(game_name);
                 games[game_name] = runebound::game::Game();
+
                 for (auto session : connections) {
                     session->send_game_names();
                 }
@@ -112,7 +118,9 @@ public:
 
             if (data["action type"] == "exit game") {
                 game_users[m_game_name].erase(m_user_name);
-                // m_game->delete_character(user_character[m_user_name]);
+
+                m_game->exit_game(user_character[m_user_name]);
+
                 user_character[m_user_name] = nullptr;
                 m_game = nullptr;
                 m_game_name = "";
@@ -125,16 +133,21 @@ public:
             if (data["action type"] == "select character") {
                 runebound::character::StandardCharacter character =
                     data["character"];
-                user_character[m_user_name] = m_game->make_character(character);
-                if (character ==
-                    runebound::character::StandardCharacter::NONE) {
-                    send_selected_character(character);
-                    send_game_for_all();
-                } else {
-                    send_game_for_all();
-                    send_selected_character(character);
-                }
+                m_game->make_character(character);
+                user_character[m_user_name] = m_game->get_character(character);
+                send_game_for_all();
+                send_selected_character(character);
             }
+
+            if (data["action type"] == "select free character") {
+                runebound::character::StandardCharacter character =
+                    data["character"];
+                m_game->join_game(character);
+                user_character[m_user_name] = m_game->get_character(character);
+                send_game_for_all();
+                send_selected_character(character);
+            }
+
             if (data["action type"] == "throw move dice") {
                 m_game->throw_movement_dice(user_character[m_user_name]);
                 send_game_for_all();
