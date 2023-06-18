@@ -233,10 +233,13 @@ void Client::update_game_window() {
         auto *window = m_window.get_window("game");
         Texture texture;
         if (!m_network_client.get_game_client().m_characters.empty()) {
-            const int round = 1;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"],
-                "Round: " + std::to_string(round), {0x00, 0x00, 0x00, 0xFF}
+                "Round: " +
+                    std::to_string(
+                        m_network_client.m_game_client.m_number_of_rounds
+                    ),
+                {0x00, 0x00, 0x00, 0xFF}
             );
             window->add_texture(
                 "round", texture,
@@ -322,21 +325,8 @@ void Client::update_game_window() {
             Button button(
                 200, 30, HorizontalButtonTextureAlign::CENTER,
                 VerticalButtonTextureAlign::CENTER, 0, 0, texture,
-                [this]() {
-                    m_window.get_window("game")->set_active_window("shop");
-                    m_window.get_window("game")->get_window("shop")->activate();
-                    m_window.get_window("game")->set_visibility_window(
-                        "shop", true
-                    );
-                    m_window.get_window("game")->set_updatability_window(
-                        "shop", true
-                    );
-                    m_window.get_window("game")->set_all_updatability_button(
-                        false
-                    );
-                    m_network_client.start_trade();
-                },
-                []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+                [this]() { m_network_client.start_trade(); }, []() {},
+                {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
             );
             window->add_button(
                 "trade", button,
@@ -651,12 +641,23 @@ void Client::update_game_window() {
         }
     }  // SHOW FIGHT WINDOW
 
-    {  // TRADE UPDATE
+    {  // SHOW SHOP WINDOW
         auto *win = m_window.get_window("game");
-        if (win->get_active_window_name() == "shop") {
+        if (m_network_client.get_yourself_character()->check_in_trade()) {
+            if (win->get_active_window_name() != "shop") {
+                win->set_active_window("shop");
+                win->set_visibility_window("shop", true);
+                win->set_updatability_window("shop", true);
+                win->set_all_updatability_button(false);
+            }
             update_shop_window();
+        } else if (win->get_active_window_name() == "shop") {
+            win->reset_active_window();
+            win->set_visibility_window("shop", false);
+            win->set_updatability_window("shop", false);
+            win->set_all_updatability_button(true);
         }
-    }  // TRADE UPDATE
+    }  // SHOW SHOP WINDOW
 
     {  // INVENTORY
         auto *window = m_window.get_window("game");
