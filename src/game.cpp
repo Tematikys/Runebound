@@ -95,9 +95,7 @@ void from_json(const nlohmann::json &json, Game &game) {
     fill_vector(
         json["m_last_dice_research_result"], game.m_last_dice_research_result
     );
-    fill_vector(
-        json["m_last_characteristic_check"], game.m_last_characteristic_check
-    );
+    game.m_last_characteristic_check = json["m_last_characteristic_check"];
     fill_vector(
         json["m_last_possible_outcomes"], game.m_last_possible_outcomes
     );
@@ -160,7 +158,6 @@ bool Game::check_characteristic_private(
         }
         auto card = m_card_deck_skill.back();
         m_card_deck_skill.pop_back();
-        m_last_characteristic_check.push_back(card);
         if (m_all_skill_cards[card].check_success()) {
             return true;
         }
@@ -175,7 +172,7 @@ void Game::start_next_character_turn(
     m_last_dice_movement_result.clear();
     m_last_dice_research_result.clear();
     m_last_dice_relax_result.clear();
-    m_last_characteristic_check.clear();
+    m_last_characteristic_check = false;
     m_turn = (m_turn + 1) % m_count_players;
     m_characters[m_turn]->restore_action_points();
     if (m_turn == 0) {
@@ -479,7 +476,7 @@ bool Game::check_characteristic(
     cards::OptionMeeting option
 ) {
     check_turn(chr);
-    m_last_characteristic_check.clear();
+    m_last_characteristic_check = false;
     int number_attempts =
         chr->get_characteristic(
             m_all_cards_meeting[card].get_verifiable_characteristic(option)
@@ -495,6 +492,7 @@ bool Game::check_characteristic(
             m_all_cards_meeting[card].get_knowledge_token(option)
         );
         chr->add_trophy(AdventureType::MEETING, card);
+        m_last_characteristic_check = true;
         return true;
     }
     return false;

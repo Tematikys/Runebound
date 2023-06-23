@@ -22,7 +22,6 @@ void to_json(nlohmann::json &json, const GameClient &game) {
     json["m_last_dice_movement_result"] = game.m_last_dice_movement_result;
     json["m_last_dice_relax_result"] = game.m_last_dice_relax_result;
     json["m_last_dice_research_result"] = game.m_last_dice_research_result;
-    json["m_last_characteristic_check"] = game.m_last_characteristic_check;
     json["m_last_possible_outcomes"] = game.m_last_possible_outcomes;
     json["m_possible_moves"] = game.m_possible_moves;
 
@@ -36,6 +35,7 @@ void to_json(nlohmann::json &json, const GameClient &game) {
     json["m_all_cards_meeting"] = game.m_all_cards_meeting;
 
     json["m_winner"] = game.m_winner;
+    json["m_last_characteristic_check"] = game.m_last_characteristic_check;
 }
 
 void from_json(const nlohmann::json &json, GameClient &game) {
@@ -66,10 +66,7 @@ void from_json(const nlohmann::json &json, GameClient &game) {
         json["m_last_dice_research_result"].end()
     );
 
-    game.m_last_characteristic_check = std::vector<unsigned int>(
-        json["m_last_characteristic_check"].begin(),
-        json["m_last_characteristic_check"].end()
-    );
+    game.m_last_characteristic_check = json["m_last_characteristic_check"];
 
     game.m_last_possible_outcomes = std::vector<std::size_t>(
         json["m_last_possible_outcomes"].begin(),
