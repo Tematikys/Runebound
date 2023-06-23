@@ -140,6 +140,14 @@ void Client::init_game_window() {
             true, true
         );
     }  // PLAYER WINDOW
+
+    {  // END WINDOW
+        auto *win = m_window.get_window("game");
+        auto window = std::make_unique<Window>(
+            Window(win->width(), win->height(), {0xFF, 0xFF, 0xFF, 0xFF})
+        );
+        win->add_window("end", std::move(window), {0, 0}, false, false);
+    }  // END WINDOW
 }
 
 void Client::update_game_window() {
@@ -694,5 +702,74 @@ void Client::update_game_window() {
             update_inventory_window();
         }
     }  // INVENTORY UPDATE
+
+    {  // GAME OVER
+        if (m_network_client.get_game_client().m_game_over) {
+            m_window.get_window("game")->set_active_window("end");
+            m_window.get_window("game")->set_visibility_window("end", true);
+            m_window.get_window("game")->set_updatability_window("end", true);
+
+            auto *win = m_window.get_window("game")->get_window("end");
+            win->remove_all_textures();
+            win->remove_all_buttons();
+            std::string name;
+            switch (m_network_client.get_game_client().m_winner) {
+                case ::runebound::character::StandardCharacter::NONE:
+                    name = "NONE???";
+                    break;
+                case character::StandardCharacter::LISSA:
+                    name = "Lissa win!";
+                    break;
+                case character::StandardCharacter::CORBIN:
+                    name = "Corbin win!";
+                    break;
+                case character::StandardCharacter::ELDER_MOK:
+                    name = "Elder Mok win!";
+                    break;
+                case character::StandardCharacter::LAUREL_FROM_BLOODWOOD:
+                    name = "Laurel from Bloodwood win!";
+                    break;
+                case character::StandardCharacter::LORD_HAWTHORNE:
+                    name = "Lord Hawthorne win!";
+                    break;
+                case character::StandardCharacter::MASTER_THORN:
+                    name = "Master Thorn win!";
+                    break;
+            }
+            Texture tex;
+            tex.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono50"], name, {0, 0, 0, 0}
+            );
+            win->add_texture(
+                "winner", tex,
+                {(win->width() - tex.width()) / 2,
+                 (win->height() - tex.height()) / 2},
+                true
+            );
+            tex.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono30"], "Exit", {0, 0, 0, 0}
+            );
+            Button button(
+                200, 30, HorizontalButtonTextureAlign::CENTER,
+                VerticalButtonTextureAlign::CENTER, 0, 0, tex,
+                [this]() {
+                    m_network_client.exit_game();
+                    m_window.get_window("game")->reset_active_window();
+                    m_window.set_updatability_window("game", false);
+                    m_window.set_visibility_window("game", false);
+                    m_window.set_active_window("main_menu");
+                    m_window.set_updatability_window("main_menu", true);
+                    m_window.set_visibility_window("main_menu", true);
+                },
+                []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+            );
+            win->add_button(
+                "exit", button,
+                {win->width() - button.width() - 5,
+                 win->height() - button.height() - 5},
+                true, true
+            );
+        }
+    }  // GAME OVER
 }
 }  // namespace runebound::graphics
