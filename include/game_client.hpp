@@ -18,6 +18,7 @@ public:
     ::runebound::map::MapClient m_map;
 
     bool m_game_over = false;
+    bool m_last_characteristic_check = false;
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
     unsigned int m_number_of_rounds = 0;
@@ -30,7 +31,6 @@ public:
     std::vector<dice::HandDice> m_last_dice_movement_result;
     std::vector<dice::HandDice> m_last_dice_relax_result;
     std::vector<dice::HandDice> m_last_dice_research_result;
-    std::vector<unsigned int> m_last_characteristic_check;
     std::vector<std::size_t> m_last_possible_outcomes;
     std::vector<Point> m_possible_moves;
 
@@ -49,6 +49,7 @@ public:
     explicit GameClient(const Game &game)
         : m_map(game.m_map),
           m_game_over(game.m_game_over),
+          m_last_characteristic_check(game.m_last_characteristic_check),
           m_turn(game.m_turn),
           m_count_players(game.m_count_players),
           m_number_of_rounds(game.m_number_of_rounds),
@@ -57,7 +58,6 @@ public:
           m_last_dice_movement_result(game.m_last_dice_movement_result),
           m_last_dice_relax_result(game.m_last_dice_relax_result),
           m_last_dice_research_result(game.m_last_dice_research_result),
-          m_last_characteristic_check(game.m_last_characteristic_check),
           m_last_possible_outcomes(game.m_last_possible_outcomes),
           m_possible_moves(game.get_possible_moves()),
           m_shops(game.m_shops),
