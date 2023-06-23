@@ -755,6 +755,13 @@ void Client::update_game_window() {
                 [this]() {
                     m_network_client.exit_game();
                     m_window.get_window("game")->reset_active_window();
+                    m_window.get_window("game")->set_visibility_window(
+                        "end", false
+                    );
+                    m_window.get_window("game")->set_updatability_window(
+                        "end", false
+                    );
+                    m_window.get_window("game")->set_all_updatability_button(true);
                     m_window.set_updatability_window("game", false);
                     m_window.set_visibility_window("game", false);
                     m_window.set_active_window("main_menu");
