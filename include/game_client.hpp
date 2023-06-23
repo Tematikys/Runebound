@@ -41,10 +41,8 @@ public:
     bool is_fight = false;
     runebound::fight::FightClient m_fight_client;
 
-    // SMART ARTEM
     ::runebound::character::StandardCharacter m_winner =
         ::runebound::character::StandardCharacter::NONE;
-    // SMART ARTEM
 
     GameClient() = default;
 

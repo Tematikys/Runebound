@@ -35,9 +35,7 @@ void to_json(nlohmann::json &json, const GameClient &game) {
     }
     json["m_all_cards_meeting"] = game.m_all_cards_meeting;
 
-    // SMART ARTEM
-    //    json["m_winner"] = game.m_winner;
-    // SMART ARTEM
+    json["m_winner"] = game.m_winner;
 }
 
 void from_json(const nlohmann::json &json, GameClient &game) {
@@ -96,8 +94,6 @@ void from_json(const nlohmann::json &json, GameClient &game) {
         json["m_all_cards_meeting"].begin(), json["m_all_cards_meeting"].end()
     );
 
-    // SMART ARTEM
-    //    game.m_winner = json["m_winner"];
-    // SMART ARTEM
+    game.m_winner = json["m_winner"];
 }
 }  // namespace runebound::game
