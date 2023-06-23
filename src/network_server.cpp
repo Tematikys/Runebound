@@ -151,7 +151,13 @@ public:
 
             if (data["action type"] == "fight") {
                 if (data["fight command"] == "end fight") {
-                    m_game->end_fight(user_character[m_user_name]);
+                    if (m_game->get_current_fight()->get_enemy()->check_boss(
+                        )) {
+                        m_game->end_fight_with_boss(user_character[m_user_name]
+                        );
+                    } else {
+                        m_game->end_fight(user_character[m_user_name]);
+                    }
                 }
 
                 if (data["fight command"] == "use tokens") {

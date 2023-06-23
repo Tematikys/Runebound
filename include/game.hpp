@@ -140,6 +140,7 @@ private:
         m_characters;
     std::vector<unsigned int> m_card_deck_research, m_card_deck_fight,
         m_card_deck_skill, m_card_deck_meeting, m_remaining_products;
+    bool m_last_characteristic_check = false;
     unsigned int m_turn = 0;
     unsigned int m_count_players = 0;
     unsigned int m_number_of_rounds = 0;
@@ -149,7 +150,6 @@ private:
     std::vector<dice::HandDice> m_last_dice_movement_result;
     std::vector<dice::HandDice> m_last_dice_relax_result;
     std::vector<dice::HandDice> m_last_dice_research_result;
-    std::vector<unsigned int> m_last_characteristic_check;
     std::vector<std::size_t> m_last_possible_outcomes;
 
     std::vector<cards::CardResearch> m_all_cards_research;
@@ -542,11 +542,6 @@ public:
         unsigned int card,
         cards::OptionMeeting option
     );
-
-    [[nodiscard]] std::vector<unsigned int> get_last_characteristic_check(
-    ) const {
-        return m_last_characteristic_check;
-    }
 
     void start_trade(const std::shared_ptr<character::Character> &chr);
 
