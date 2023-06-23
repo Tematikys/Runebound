@@ -41,16 +41,20 @@ public:
     bool is_fight = false;
     runebound::fight::FightClient m_fight_client;
 
+    // SMART ARTEM
+    ::runebound::character::StandardCharacter m_winner =
+        ::runebound::character::StandardCharacter::NONE;
+    // SMART ARTEM
+
     GameClient() = default;
 
     explicit GameClient(const Game &game)
         : m_map(game.m_map),
-
           m_game_over(game.m_game_over),
           m_turn(game.m_turn),
           m_count_players(game.m_count_players),
           m_number_of_rounds(game.m_number_of_rounds),
-
+          m_winner(game.get_winner()),
           m_characters(game.get_character_without_shared_ptr()),
           m_last_dice_movement_result(game.m_last_dice_movement_result),
           m_last_dice_relax_result(game.m_last_dice_relax_result),
