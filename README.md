@@ -11,7 +11,7 @@ Runebound is a popular strategic tabletop game in the fantasy genre for 2-4 play
 TODO
 
 ## Installation
-This software is developed only for the Windows, so you will need to install minGW compiler, CMake, boost by yourself. Also you wil need nlohmann::json, but is already included in this reposotory, and finally SDL2. Here are the links of source files, whic should be placed into tpl/SDL2 folder:
+This software is developed only for the Windows, so you will need to install minGW compiler, CMake, boost by yourself. Also you wil need nlohmann::json, but is already included in this reposotory, and finally SDL2. Here are the links of source files, which should be placed into tpl/SDL2 folder:
 1. https://github.com/libsdl-org/SDL/releases/tag/release-2.26.4
 2. https://github.com/libsdl-org/SDL_image/releases
 3. https://sourceforge.net/projects/sdl2gfx/
