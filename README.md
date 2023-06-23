@@ -1,2 +1,9 @@
 # Runebound
-Runebound - популярная стратегическая настольная игра в жанре фэнтези для 2-4 игроков, ранее не адаптированная для ПК. Действие происходит в фэнтезийном мире, генерируемом каждый раз уникально. Каждый игрок в течение игры проходит различные испытания. Цель игры может различаться в зависимости от выбранного сценария. На стартовом экране присутствует меню настроек, создания игры и подключение к уже существующей. Главный экран - поле, на котором расположены игроки или объекты мира. Во время партии при выполнении отдельных заданий игроку доступен экран магазина или битвы.
+
+* [About](#About)
+* [Installation](#Installation)
+
+## About
+Runebound is a popular strategic tabletop game in the fantasy genre for 2-4 players, previously not adapted for PC. The action takes place in a fantasy world. Each player goes through various trials during the game. The goal of the game may vary depending on the chosen scenario. The main menu screen includes game creation and joining an existing one. The main screen is the playing field where players or objects in the world are located. During the game, when completing specific tasks, the player has access to the store, battles, and inventory screen.
+
+## Installation
