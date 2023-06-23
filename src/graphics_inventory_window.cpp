@@ -284,8 +284,8 @@ void Client::update_inventory_window() {
                     []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
                 );
                 win->add_button(
-                    std::to_string(count) + "first", button, {26, 355}, true,
-                    true
+                    std::to_string(count) + "first", button,
+                    {26 + 170 * count, 355}, true, true
                 );
             }  // FIRST
             {  // SECOND
@@ -309,8 +309,8 @@ void Client::update_inventory_window() {
                     []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
                 );
                 win->add_button(
-                    std::to_string(count) + "second", button, {92, 355}, true,
-                    true
+                    std::to_string(count) + "second", button,
+                    {92 + 170 * count, 355}, true, true
                 );
             }  // SECOND
             m_images["coin20"].render_to_texture(
@@ -380,7 +380,7 @@ void Client::update_inventory_window() {
             );
 
             Texture texture(tex);
-            win->add_texture(name, texture, {5 + 305 * count, 335}, true);
+            win->add_texture(name, texture, {5 + 170 * count, 335}, true);
             ++count;
         }
     }  // UPDATE MEETINGS
