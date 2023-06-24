@@ -103,8 +103,75 @@ void Client::update_character_list_window() {
             },
             []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
         );
-        win->add_button(name, button, {5, count * 35 + 5}, true, true);
+        win->add_button(name, button, {5, 35 + count * 35 + 5}, true, true);
         ++count;
+    }
+
+
+    Texture texture1;
+    texture1.load_text_from_string(
+        m_graphic_renderer, m_fonts["FreeMono30"], "Create new character",
+        {0x00, 0x00, 0x00, 0xFF}
+    );
+    win->add_texture("Create new character", texture1, {5, 5}, true);
+
+    if (!m_network_client.get_game_client().m_free_characters.empty()) {
+        count = 0;
+        for (const auto &character :
+             m_network_client.get_game_client().m_free_characters) {
+            std::string name;
+            switch (character) {
+                case ::runebound::character::StandardCharacter::LISSA:
+                    name = "Lissa";
+                    break;
+                case character::StandardCharacter::CORBIN:
+                    name = "Corbin";
+                    break;
+                case character::StandardCharacter::ELDER_MOK:
+                    name = "Elder Mok";
+                    break;
+                case character::StandardCharacter::LAUREL_FROM_BLOODWOOD:
+                    name = "Laurel from Bloodwood";
+                    break;
+                case character::StandardCharacter::LORD_HAWTHORNE:
+                    name = "Lord Hawthorne";
+                    break;
+                case character::StandardCharacter::MASTER_THORN:
+                    name = "Master Thorn";
+                    break;
+                case character::StandardCharacter::NONE:
+                    break;
+            }
+            Texture texture;
+            texture.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono30"], name,
+                {0x00, 0x00, 0x00, 0xFF}
+            );
+            Button button(
+                texture.width(), 30, HorizontalButtonTextureAlign::CENTER,
+                VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                [character, this]() {
+                    m_network_client.select_free_character(character);
+                    m_window.set_updatability_window("char_list", false);
+                    m_window.set_visibility_window("char_list", false);
+                    m_window.set_active_window("game");
+                    m_window.set_updatability_window("game", true);
+                    m_window.set_visibility_window("game", true);
+                },
+                []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+            );
+            win->add_button(
+                name, button, {605, 35 + count * 35 + 5}, true, true
+            );
+            ++count;
+        }
+
+        Texture texture2;
+        texture2.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono30"],
+            "Select existing character", {0x00, 0x00, 0x00, 0xFF}
+        );
+        win->add_texture("Select existing character", texture2, {605, 5}, true);
     }
 }
 }  // namespace runebound::graphics

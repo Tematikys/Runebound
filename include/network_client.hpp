@@ -17,8 +17,7 @@ using json = nlohmann::json;
 
 namespace runebound::network {
 
-//void f_timer(const boost::system::error_code & /*error*/) {
-//}
+
 
 class Client {
 public:
@@ -72,20 +71,6 @@ private:
                     std::istream is(&m_buffer);
                     std::string message;
                     std::getline(is, message);
-                    if ((!m_game_client.m_characters.empty()) &&
-                        (m_game_client.m_characters[m_game_client.m_turn]
-                             .get_state_in_game() ==
-                         character::StateCharacterInGame::BOT)) {
-                        // boost::asio::steady_timer
-                        // timer(io_context_,
-                        // boost::asio::chrono::seconds(1));
-                        // timer.async_wait(f_timer);
-
-                        // std::chrono::seconds duration(3);
-                        // auto start = std::chrono::steady_clock::now();
-                        // while (std::chrono::steady_clock::now() - start <
-                        //        duration)
-                    }
 #ifdef NETWORK_DEBUG_INFO
                     std::cout << "Received: " << message.substr(0, 80)
                               << " Length: " << length << '\n';
@@ -146,8 +131,7 @@ public:
         do_write(data.dump());
     }
 
-    void select_free_character(
-        runebound::character::StandardCharacter character
+    void select_free_character(runebound::character::StandardCharacter character
     ) {
         json data;
         data["action type"] = "select free character";
@@ -171,9 +155,17 @@ public:
 
     void exit_game() {
         json data;
-        data["action type"] = "exit game";
+        data["action type"] = "exit_game";
         do_write(data.dump());
     }
+
+    void exit_game_and_replace_with_bot() {
+        json data;
+        data["action type"] = "exit_game_and_replace_with_bot";
+        do_write(data.dump());
+    }
+
+
 
     void relax() {
         json data;
