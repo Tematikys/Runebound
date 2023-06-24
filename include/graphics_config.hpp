@@ -27,6 +27,7 @@ extern int WINDOW_HEIGHT;
 extern int WINDOW_FPS;
 extern std::map<::runebound::dice::HandDice, std::pair<SDL_Color, SDL_Color>>
     DICE_COLOR;
+extern const std::map<::runebound::map::SpecialTypeCell, std::string> SPECIAL_TO_STR;
 
 extern std::vector<std::pair<std::string, std::string>> FONTS;
 extern std::vector<std::pair<std::string, std::string>> IMAGES;

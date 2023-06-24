@@ -51,6 +51,11 @@ const std::map<::runebound::fight::HandFightTokens, std::string>
         {fight::HandFightTokens::SHIELD, "shield"},
         {fight::HandFightTokens::NOTHING, "none"},
 };
+const std::map<::runebound::map::SpecialTypeCell, std::string> SPECIAL_TO_STR =
+    {{::runebound::map::SpecialTypeCell::SANCTUARY, "Sanctuary"},
+     {::runebound::map::SpecialTypeCell::FORTRESS, "Fortress"},
+     {::runebound::map::SpecialTypeCell::SETTLEMENT, "Settlement"},
+     {::runebound::map::SpecialTypeCell::NOTHING, ""}};
 const std::map<std::pair<int, int>, std::pair<int, int>> RIVER_DIRECTIONS = {
     {{-1, 0}, {3, 4}}, {{-1, -1}, {2, 3}}, {{-1, 1}, {4, 5}},
     {{1, 0}, {0, 1}},  {{1, -1}, {1, 2}},  {{1, 1}, {5, 0}}};
