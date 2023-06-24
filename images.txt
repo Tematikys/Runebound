@@ -50,3 +50,7 @@
 "data/images/settlement.png" "Settlement"
 "data/images/fortress.png" "Fortress"
 "data/images/sanctuary.png" "Sanctuary"
+"data/images/hit.png" "hit"
+"data/images/hit32.png" "hit32"
+"data/images/hit_init.png" "hit_init"
+"data/images/hit_init32.png" "hit_init32"
