@@ -30,12 +30,9 @@ std::map<std::string, Connection *> user_connection;
 int counter = 0;
 
 void save_game(const std::string &game_name) {
-    // можно вынести в метод для клиента save_game
-    // ещё можно сделать сохранение у клиента
-
     json data;
-    runebound::game::Game game = games[game_name];
-    to_json(data, game);
+    runebound::game::Game game;
+    to_json(data, games[game_name]);
     data["game_name"] = game_name;
     std::ofstream file("save/" + game_name + ".json");
     file << data;
@@ -116,18 +113,30 @@ public:
                 send_game_for_all();
             }
 
-            if (data["action type"] == "exit game") {
-                game_users[m_game_name].erase(m_user_name);
-
+            if (data["action type"] == "exit_game") {
                 m_game->exit_game(user_character[m_user_name]);
-
+                game_users[m_game_name].erase(m_user_name);
+                send_game_for_all();
                 user_character[m_user_name] = nullptr;
                 m_game = nullptr;
                 m_game_name = "";
                 send_selected_character(
                     runebound::character::StandardCharacter::NONE
                 );
+            }
+
+            if (data["action type"] == "exit_game_and_replace_with_bot") {
+                m_game->exit_game_and_replace_with_bot(
+                    user_character[m_user_name]
+                );
+                game_users[m_game_name].erase(m_user_name);
                 send_game_for_all();
+                user_character[m_user_name] = nullptr;
+                m_game = nullptr;
+                m_game_name = "";
+                send_selected_character(
+                    runebound::character::StandardCharacter::NONE
+                );
             }
 
             if (data["action type"] == "select character") {
@@ -297,9 +306,6 @@ public:
                             } else {
                                 throw std::runtime_error("Wrong damage");
                             }
-                        }
-                        if (!is_checked) {
-                            throw std::runtime_error("Wrong combination");
                         }
                     }
                 }
@@ -499,6 +505,11 @@ int main() {
                 game_names.push_back(game_name);
                 runebound::game::Game game;
                 from_json(data, game);
+                for (const auto &character : game.get_characters()) {
+                    if (character->get_state_in_game() ==
+                        runebound::character::StateCharacterInGame::PLAYER)
+                        game.exit_game(character);
+                }
                 games[game_name] = game;
             }
         }

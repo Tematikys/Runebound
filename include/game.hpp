@@ -260,6 +260,10 @@ public:
         generate_all();
     };
 
+    auto get_characters(){
+        return m_characters;
+    }
+
     [[nodiscard]] std::shared_ptr<::runebound::character::Character>
     get_character_by_standard_characters(
         character::StandardCharacter standard_character
