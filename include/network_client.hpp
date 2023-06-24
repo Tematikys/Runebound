@@ -17,8 +17,6 @@ using json = nlohmann::json;
 
 namespace runebound::network {
 
-
-
 class Client {
 public:
     Client(
@@ -164,8 +162,6 @@ public:
         data["action type"] = "exit_game_and_replace_with_bot";
         do_write(data.dump());
     }
-
-
 
     void relax() {
         json data;

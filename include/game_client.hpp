@@ -31,7 +31,7 @@ public:
     std::vector<dice::HandDice> m_last_dice_movement_result;
     std::vector<dice::HandDice> m_last_dice_relax_result;
     std::vector<dice::HandDice> m_last_dice_research_result;
-    bool m_last_characteristic_check =  false;
+    bool m_last_characteristic_check = false;
     std::vector<std::size_t> m_last_possible_outcomes;
     std::vector<Point> m_possible_moves;
 
@@ -58,6 +58,7 @@ public:
           m_last_dice_movement_result(game.m_last_dice_movement_result),
           m_last_dice_relax_result(game.m_last_dice_relax_result),
           m_last_dice_research_result(game.m_last_dice_research_result),
+          m_last_characteristic_check(game.m_last_characteristic_check),
           m_last_possible_outcomes(game.m_last_possible_outcomes),
           m_possible_moves(game.get_possible_moves()),
           m_shops(game.m_shops),
