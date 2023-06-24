@@ -22,6 +22,17 @@ std::map<::runebound::dice::HandDice, std::pair<SDL_Color, SDL_Color>>
 std::vector<std::pair<std::string, std::string>> FONTS{};
 std::vector<std::pair<std::string, std::string>> IMAGES{};
 
+const std::map<::runebound::character::StandardCharacter, std::string>
+    STANDARD_CHARACTER_TO_STRING = {
+        {character::StandardCharacter::LISSA, "Lissa"},
+        {character::StandardCharacter::CORBIN, "Corbin"},
+        {character::StandardCharacter::ELDER_MOK, "Elder Mok"},
+        {character::StandardCharacter::LAUREL_FROM_BLOODWOOD,
+         "Laurel from Bloodwood"},
+        {character::StandardCharacter::LORD_HAWTHORNE, "Lord Hawthorne"},
+        {character::StandardCharacter::MASTER_THORN, "Master Thorn"},
+        {character::StandardCharacter::NONE, "None"}};
+
 const std::map<std::string, std::string> CHARACTER_NAMES_WITH_DASH = {
     {"Lissa", "Lissa"},
     {"Corbin", "Corbin"},

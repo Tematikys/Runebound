@@ -62,29 +62,7 @@ void Client::update_character_list_window() {
     int count = 0;
     for (const auto &character :
          m_network_client.get_game_client().m_remaining_standard_characters) {
-        std::string name;
-        switch (character) {
-            case ::runebound::character::StandardCharacter::LISSA:
-                name = "Lissa";
-                break;
-            case character::StandardCharacter::CORBIN:
-                name = "Corbin";
-                break;
-            case character::StandardCharacter::ELDER_MOK:
-                name = "Elder Mok";
-                break;
-            case character::StandardCharacter::LAUREL_FROM_BLOODWOOD:
-                name = "Laurel from Bloodwood";
-                break;
-            case character::StandardCharacter::LORD_HAWTHORNE:
-                name = "Lord Hawthorne";
-                break;
-            case character::StandardCharacter::MASTER_THORN:
-                name = "Master Thorn";
-                break;
-            case character::StandardCharacter::NONE:
-                break;
-        }
+        std::string name = STANDARD_CHARACTER_TO_STRING.at(character);
         Texture texture;
         texture.load_text_from_string(
             m_graphic_renderer, m_fonts["FreeMono30"], name,
@@ -118,29 +96,7 @@ void Client::update_character_list_window() {
         count = 0;
         for (const auto &character :
              m_network_client.get_game_client().m_free_characters) {
-            std::string name;
-            switch (character) {
-                case ::runebound::character::StandardCharacter::LISSA:
-                    name = "Lissa";
-                    break;
-                case character::StandardCharacter::CORBIN:
-                    name = "Corbin";
-                    break;
-                case character::StandardCharacter::ELDER_MOK:
-                    name = "Elder Mok";
-                    break;
-                case character::StandardCharacter::LAUREL_FROM_BLOODWOOD:
-                    name = "Laurel from Bloodwood";
-                    break;
-                case character::StandardCharacter::LORD_HAWTHORNE:
-                    name = "Lord Hawthorne";
-                    break;
-                case character::StandardCharacter::MASTER_THORN:
-                    name = "Master Thorn";
-                    break;
-                case character::StandardCharacter::NONE:
-                    break;
-            }
+            std::string name = STANDARD_CHARACTER_TO_STRING.at(character);
             Texture texture;
             texture.load_text_from_string(
                 m_graphic_renderer, m_fonts["FreeMono30"], name,
