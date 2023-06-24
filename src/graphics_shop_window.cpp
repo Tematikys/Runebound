@@ -39,6 +39,30 @@ void Client::update_shop_window() {
     // needed, because can not be made in init function
     static bool create_buttons = true;
 
+    {  // GOLD
+        SDL_Texture *tex = SDL_CreateTexture(
+            m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
+            SDL_TEXTUREACCESS_TARGET, 60, 20
+        );
+        SDL_SetRenderTarget(m_graphic_renderer, tex);
+        SDL_SetRenderDrawColor(m_graphic_renderer, 255, 255, 255, 255);
+        SDL_RenderClear(m_graphic_renderer);
+        SDL_SetRenderTarget(m_graphic_renderer, nullptr);
+        m_images["coin20"].render_to_texture(m_graphic_renderer, 0, 0, tex);
+        Texture texture;
+        texture.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono20"],
+            std::to_string(m_network_client.get_yourself_character()->get_gold()
+            ),
+            {0, 0, 0, 255}
+        );
+        texture.render_to_texture(m_graphic_renderer, 20, 0, tex);
+        Texture texture1(tex);
+        win->add_texture(
+            "gold", texture1, {win->width() - 65, win->height() - 25}, true
+        );
+    }  // GOLD
+
     {  // UPDATE BUTTONS
         if (create_buttons) {
             create_buttons = false;
