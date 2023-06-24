@@ -154,6 +154,13 @@ void Client::update_inventory_window() {
                     {1, 1 + 20 * indent++}, tex, 20
                 );
             }
+            if (product.get_place_of_cell() !=
+                ::runebound::map::SpecialTypeCell::NOTHING) {
+                comp_text_render(
+                    "Place: " + SPECIAL_TO_STR.at(product.get_place_of_cell()),
+                    {1, 1 + 20 * indent++}, tex, 20
+                );
+            }
             if (product.get_delta_max_health() != 0) {
                 comp_text_render(
                     "Delta health: " +
