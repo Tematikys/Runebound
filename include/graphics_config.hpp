@@ -31,6 +31,8 @@ extern std::map<::runebound::dice::HandDice, std::pair<SDL_Color, SDL_Color>>
 extern std::vector<std::pair<std::string, std::string>> FONTS;
 extern std::vector<std::pair<std::string, std::string>> IMAGES;
 
+extern const std::map<::runebound::character::StandardCharacter, std::string>
+    STANDARD_CHARACTER_TO_STRING;
 extern const std::map<std::string, std::string> CHARACTER_NAMES_WITH_DASH;
 extern const std::map<::runebound::fight::HandFightTokens, std::string>
     HAND_FIGHT_TOKENS_TO_STR;
