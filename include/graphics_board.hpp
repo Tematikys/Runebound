@@ -6,6 +6,7 @@
 #include <graphics_point.hpp>
 #include <graphics_segment.hpp>
 #include <graphics_shapes.hpp>
+#include <graphics_texture.hpp>
 #include <map_client.hpp>
 #include <utility>
 #include <vector>
@@ -25,9 +26,8 @@ private:
     std::size_t m_token_amount{0};
     std::size_t m_selected_token{0xFFFF};
 
-    std::vector<SquareShape> m_specials{};
-    std::vector<SDL_Color> m_special_fill_color{};
-    std::vector<SDL_Color> m_special_border_color{};
+    std::vector<std::string> m_specials{};
+    std::vector<Point> m_specials_pos{};
     std::size_t m_special_amount{0};
 
     std::vector<Segment> m_rivers{};
@@ -57,11 +57,7 @@ private:
         SDL_Color border_color
     );
 
-    void add_special(
-        const SquareShape &square,
-        SDL_Color fill_color,
-        SDL_Color border_color
-    );
+    void add_special(std::string name, Point pos);
 
     void add_river(const Segment &segment, SDL_Color color);
 
@@ -72,9 +68,18 @@ public:
 
     explicit Board(const ::runebound::map::MapClient &map);
 
-    void render(SDL_Renderer *renderer, int x_offset, int y_offset) const;
+    void render(
+        SDL_Renderer *renderer,
+        int x_offset,
+        int y_offset,
+        std::map<std::string, Texture> &images
+    ) const;
 
-    void render_to_texture(SDL_Renderer *renderer, SDL_Texture *&texture) const;
+    void render_to_texture(
+        SDL_Renderer *renderer,
+        SDL_Texture *&texture,
+        std::map<std::string, Texture> &images
+    ) const;
 
     void update_selection(const Point &dot);
 

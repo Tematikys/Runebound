@@ -190,7 +190,7 @@ void Client::update_game_window() {
         auto *window = m_window.get_window("game");
         update_board();
         m_board.update_selection(m_mouse_pos - m_board_pos);
-        m_board.render_to_texture(m_graphic_renderer, tex);
+        m_board.render_to_texture(m_graphic_renderer, tex, m_images);
         for (const auto &character :
              m_network_client.get_game_client().m_characters) {
             const Point center = get_center_of_hexagon(
