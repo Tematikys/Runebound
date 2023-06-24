@@ -415,6 +415,8 @@ void Window::set_active_window(const std::string &name) {
     reset_active_window();
     m_active_window = name;
     m_windows[name]->activate();
+    set_visibility_window(name, true);
+    set_updatability_window(name, true);
 }
 
 void Window::set_active_text_field(const std::string &name) {

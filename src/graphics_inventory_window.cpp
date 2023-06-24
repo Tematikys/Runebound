@@ -97,6 +97,22 @@ void Client::update_inventory_window() {
         win->remove_button(std::to_string(i) + "second");
     }
 
+    {  // UPDATE RESULT
+        auto *window = m_window.get_window("game")
+                           ->get_window("inventory")
+                           ->get_window("result");
+        window->remove_all_textures();
+        Texture tex;
+        tex.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono30"],
+            m_network_client.get_game_client().m_last_characteristic_check
+                ? "Success"
+                : "Fail",
+            {0, 0, 0, 255}
+        );
+        window->add_texture("res", tex, {90 - tex.width() / 2, 5}, true);
+    }  // UPDATE RESULT
+
     auto prods = m_network_client.get_yourself_character()->get_products();
     {  // UPDATE PRODUCTS
         int count = 0;
@@ -311,25 +327,9 @@ void Client::update_inventory_window() {
                         m_network_client.check_characteristic(
                             id, ::runebound::cards::OptionMeeting::FIRST
                         );
-                        auto *win =
-                            m_window.get_window("game")->get_window("inventory"
-                            );
-                        win->set_active_window("result");
-                        win->set_visibility_window("result", true);
-                        win->set_updatability_window("result", true);
-                        win->get_window("result")->remove_all_textures();
-                        Texture tex;
-                        tex.load_text_from_string(
-                            m_graphic_renderer, m_fonts["FreeMono30"],
-                            m_network_client.get_game_client()
-                                    .m_last_characteristic_check
-                                ? "Success"
-                                : "Fail",
-                            {0, 0, 0, 255}
-                        );
-                        win->get_window("result")->add_texture(
-                            "res", tex, {90 - tex.width() / 2, 5}, true
-                        );
+                        m_window.get_window("game")
+                            ->get_window("inventory")
+                            ->set_active_window("result");
                     },
                     []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
                 );
@@ -355,25 +355,9 @@ void Client::update_inventory_window() {
                         m_network_client.check_characteristic(
                             id, ::runebound::cards::OptionMeeting::SECOND
                         );
-                        auto *win =
-                            m_window.get_window("game")->get_window("inventory"
-                            );
-                        win->set_active_window("result");
-                        win->set_visibility_window("result", true);
-                        win->set_updatability_window("result", true);
-                        win->get_window("result")->remove_all_textures();
-                        Texture tex;
-                        tex.load_text_from_string(
-                            m_graphic_renderer, m_fonts["FreeMono30"],
-                            m_network_client.get_game_client()
-                                    .m_last_characteristic_check
-                                ? "Success"
-                                : "Fail",
-                            {0, 0, 0, 255}
-                        );
-                        win->get_window("result")->add_texture(
-                            "res", tex, {90 - tex.width() / 2, 5}, true
-                        );
+                        m_window.get_window("game")
+                            ->get_window("inventory")
+                            ->set_active_window("result");
                     },
                     []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
                 );
