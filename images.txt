@@ -47,4 +47,6 @@
 "data/images/skull_init.png" "skull_init"
 "data/images/skull_init32.png" "skull_init32"
 "data/images/spirit.png" "spirit"
-"data/images/settlement.png" "settlement"
+"data/images/settlement.png" "Settlement"
+"data/images/fortress.png" "Fortress"
+"data/images/sanctuary.png" "Sanctuary"

@@ -21,12 +21,9 @@ Board::Board(const ::runebound::map::MapClient &map) {
             const ::runebound::map::SpecialTypeCell special =
                 map.m_map[row][col].get_special_type_cell();
             if (special != ::runebound::map::SpecialTypeCell::NOTHING) {
-                auto [special_type_cell_key, special_fill_color] =
-                    *SPECIAL_COLOR.find(special);
-                add_special(
-                    {center + Point(HEXAGON_RADIUS / 2, 0), HEXAGON_RADIUS / 5},
-                    special_fill_color, {0x00, 0x00, 0x00, 0xFF}
-                );
+                auto [special_type_cell_key, img] =
+                    *SPECIAL_TO_STR.find(special);
+                add_special(img, center - Point(13, 13));
             }
             auto cell = map.m_map[row][col];
             if (cell.get_token() != ::runebound::AdventureType::NOTHING) {
@@ -100,14 +97,9 @@ void Board::add_token(
     ++m_token_amount;
 }
 
-void Board::add_special(
-    const SquareShape &square,
-    SDL_Color fill_color,
-    SDL_Color border_color
-) {
-    m_specials.push_back(square);
-    m_special_fill_color.push_back(fill_color);
-    m_special_border_color.push_back(border_color);
+void Board::add_special(std::string name, Point pos) {
+    m_specials.push_back(std::move(name));
+    m_specials_pos.push_back(pos);
     ++m_special_amount;
 }
 
@@ -123,7 +115,12 @@ void Board::add_road(const Segment &segment, SDL_Color color) {
     ++m_road_amount;
 }
 
-void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
+void Board::render(
+    SDL_Renderer *renderer,
+    int x_offset,
+    int y_offset,
+    std::map<std::string, Texture> &images
+) const {
     for (std::size_t i = 0; i < m_cell_amount; ++i) {
         m_cells[i].render(renderer, x_offset, y_offset, m_cell_fill_color[i]);
         m_cells[i].render_border(
@@ -160,11 +157,9 @@ void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
         }
     }
     for (std::size_t i = 0; i < m_special_amount; ++i) {
-        m_specials[i].render(
-            renderer, x_offset, y_offset, m_special_fill_color[i]
-        );
-        m_specials[i].render_border(
-            renderer, x_offset, y_offset, m_special_border_color[i], 1
+        images[m_specials[i]].render(
+            renderer, x_offset + m_specials_pos[i].x(),
+            y_offset + m_specials_pos[i].y()
         );
     }
     for (std::size_t i = 0; i < m_token_amount; ++i) {
@@ -183,8 +178,11 @@ void Board::render(SDL_Renderer *renderer, int x_offset, int y_offset) const {
     }
 }
 
-void Board::render_to_texture(SDL_Renderer *renderer, SDL_Texture *&texture)
-    const {
+void Board::render_to_texture(
+    SDL_Renderer *renderer,
+    SDL_Texture *&texture,
+    std::map<std::string, Texture> &images
+) const {
     SDL_DestroyTexture(texture);
     texture = SDL_CreateTexture(
         renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
@@ -193,7 +191,7 @@ void Board::render_to_texture(SDL_Renderer *renderer, SDL_Texture *&texture)
     SDL_SetRenderTarget(renderer, texture);
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(renderer);
-    render(renderer, 0, 0);
+    render(renderer, 0, 0, images);
     SDL_SetRenderTarget(renderer, nullptr);
 }
 
