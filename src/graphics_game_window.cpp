@@ -155,6 +155,36 @@ void Client::update_game_window() {
         return;
     }
 
+    static auto img_render = [this](
+                                 Window *win, const std::string &name,
+                                 const std::string &id, Point pos, Point size
+                             ) {
+        SDL_Texture *tex = SDL_CreateTexture(
+            m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
+            SDL_TEXTUREACCESS_TARGET, size.x(), size.y()
+        );
+        SDL_SetRenderTarget(m_graphic_renderer, tex);
+        SDL_SetRenderDrawColor(m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        SDL_RenderClear(m_graphic_renderer);
+        SDL_SetRenderTarget(m_graphic_renderer, nullptr);
+        m_images[name].render_to_texture(m_graphic_renderer, 0, 0, tex);
+        Texture texture(tex);
+        win->remove_texture(id);
+        win->add_texture(id, texture, pos, true);
+    };
+    static auto text_render = [this](
+                                  Window *win, const std::string &text,
+                                  const std::string &id, Point pos, int size
+                              ) {
+        Texture texture;
+        texture.load_text_from_string(
+            m_graphic_renderer, m_fonts["FreeMono" + std::to_string(size)],
+            text, {0x00, 0x00, 0x00, 0xFF}
+        );
+        win->remove_texture(id);
+        win->add_texture(id, texture, pos, true);
+    };
+
     {  // BOARD
         SDL_Texture *tex = nullptr;
         auto *window = m_window.get_window("game");
@@ -378,8 +408,8 @@ void Client::update_game_window() {
 
     {  // UPDATE CHARACTERS
         SDL_Texture *tex = nullptr;
-        auto *window = m_window.get_window("game");
-        window->get_window("chars")->remove_all_textures();
+        auto *window = m_window.get_window("game")->get_window("chars");
+        window->remove_all_textures();
         int counter = 0;
         RectangleShape rect;
         for (const auto &character :
@@ -393,106 +423,78 @@ void Client::update_game_window() {
             const auto name = character.get_name();
             const auto gold = std::to_string(character.get_gold());
             const auto health = std::to_string(character.get_health());
-            {  // CHARACTER
-                tex = SDL_CreateTexture(
-                    m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
-                    SDL_TEXTUREACCESS_TARGET, 40, 40
-                );
-                SDL_SetRenderTarget(m_graphic_renderer, tex);
-                SDL_SetRenderDrawColor(
-                    m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF
-                );
-                SDL_RenderClear(m_graphic_renderer);
-                SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-                m_images
-                    [CHARACTER_NAMES_WITH_DASH.at(character.get_name()) + "40"]
-                        .render_to_texture(m_graphic_renderer, 0, 0, tex);
-                Texture texture(tex);
-                window->get_window("chars")->remove_texture(name + "char");
-                window->get_window("chars")->add_texture(
-                    name + "char", texture,
-                    {window->get_window("chars")->width() - 40,
-                     (1 + counter) * (20 * 3 + 5) - 45},
-                    true
-                );
-            }  // CHARACTER
-            {  // COIN
-                tex = SDL_CreateTexture(
-                    m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
-                    SDL_TEXTUREACCESS_TARGET, 20, 20
-                );
-                SDL_SetRenderTarget(m_graphic_renderer, tex);
-                SDL_SetRenderDrawColor(
-                    m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF
-                );
-                SDL_RenderClear(m_graphic_renderer);
-                SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-                m_images["coin20"].render_to_texture(
-                    m_graphic_renderer, 0, 0, tex
-                );
-                Texture texture(tex);
-                window->get_window("chars")->remove_texture(name + "coin");
-                window->get_window("chars")->add_texture(
-                    name + "coin", texture, {0, 20 + counter * (20 * 3 + 5)},
-                    true
-                );
-            }  // COIN
-            {  // HEART
-                tex = SDL_CreateTexture(
-                    m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
-                    SDL_TEXTUREACCESS_TARGET, 20, 20
-                );
-                SDL_SetRenderTarget(m_graphic_renderer, tex);
-                SDL_SetRenderDrawColor(
-                    m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF
-                );
-                SDL_RenderClear(m_graphic_renderer);
-                SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-                m_images["heart20"].render_to_texture(
-                    m_graphic_renderer, 0, 0, tex
-                );
-                Texture texture(tex);
-                window->get_window("chars")->remove_texture(name + "heart");
-                window->get_window("chars")->add_texture(
-                    name + "heart", texture, {0, 40 + counter * (20 * 3 + 5)},
-                    true
-                );
-            }  // HEART
-            {  // NAME
-                Texture texture;
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"], name,
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                window->get_window("chars")->remove_texture(name);
-                window->get_window("chars")->add_texture(
-                    name, texture, {0, counter * (20 * 3 + 5)}, true
-                );
-            }  // NAME
-            {  // GOLD NUM
-                Texture texture;
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"], gold,
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                window->get_window("chars")->remove_texture(name + gold);
-                window->get_window("chars")->add_texture(
-                    name + gold, texture, {25, counter * (20 * 3 + 5) + 20},
-                    true
-                );
-            }  // GOLD NUM
-            {  // HEALTH NUM
-                Texture texture;
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"], health,
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                window->get_window("chars")->remove_texture(name + health);
-                window->get_window("chars")->add_texture(
-                    name + health, texture, {25, counter * (20 * 3 + 5) + 40},
-                    true
-                );
-            }  // HEALTH NUM
+
+            img_render(
+                window, CHARACTER_NAMES_WITH_DASH.at(name) + "40",
+                name + "char",
+                {window->width() - 40, (1 + counter) * (20 * 3 + 5) - 45},
+                {40, 40}
+            );
+            text_render(window, name, name, {0, counter * (20 * 3 + 5)}, 20);
+
+            img_render(
+                window, "coin20", name + "coin",
+                {0, 20 + counter * (20 * 3 + 5)}, {20, 20}
+            );
+            text_render(
+                window, gold, name + gold, {25, counter * (20 * 3 + 5) + 20}, 20
+            );
+
+            img_render(
+                window, "heart20", name + "heart",
+                {0, 40 + counter * (20 * 3 + 5)}, {20, 20}
+            );
+            text_render(
+                window, health, name + health,
+                {25, counter * (20 * 3 + 5) + 40}, 20
+            );
+
+            img_render(
+                window, "body", name + "body",
+                {60, 20 + counter * (20 * 3 + 5)}, {20, 20}
+            );
+            auto body = std::to_string(
+                character.get_characteristic(::runebound::Characteristic::BODY)
+            );
+            text_render(
+                window, body, name + "body_num",
+                {85, 20 + counter * (20 * 3 + 5)}, 20
+            );
+
+            img_render(
+                window, "intelligence", name + "intelligence",
+                {60, 40 + counter * (20 * 3 + 5)}, {20, 20}
+            );
+            auto intelligence = std::to_string(character.get_characteristic(
+                ::runebound::Characteristic::INTELLIGENCE
+            ));
+            text_render(
+                window, intelligence, name + "intelligence_num",
+                {85, 40 + counter * (20 * 3 + 5)}, 20
+            );
+
+            img_render(
+                window, "spirit", name + "spirit",
+                {120, 20 + counter * (20 * 3 + 5)}, {20, 20}
+            );
+            auto spirit = std::to_string(character.get_characteristic(
+                ::runebound::Characteristic::SPIRIT
+            ));
+            text_render(
+                window, body, name + "spirit_num",
+                {145, 20 + counter * (20 * 3 + 5)}, 20
+            );
+
+            img_render(
+                window, "knowledge", name + "knowledge",
+                {120, 40 + counter * (20 * 3 + 5)}, {20, 20}
+            );
+            auto knowledge = std::to_string(character.get_knowledge_token());
+            text_render(
+                window, knowledge, name + "knowledge_num",
+                {145, 40 + counter * (20 * 3 + 5)}, 20
+            );
+
             {  // BORDER
                 rect = RectangleShape(0, 0, 2 * 10 * 30 * 3 / 5, 60);
                 tex = SDL_CreateTexture(
@@ -505,10 +507,8 @@ void Client::update_game_window() {
                     {0x00, 0xFF, 0x00, 0xFF}
                 );
                 Texture texture(tex);
-                window->get_window("chars")->remove_texture(
-                    "_" + name + "border"
-                );
-                window->get_window("chars")->add_texture(
+                window->remove_texture("_" + name + "border");
+                window->add_texture(
                     " " + name + "border", texture, {0, counter * (20 * 3 + 5)},
                     true
                 );
@@ -529,88 +529,50 @@ void Client::update_game_window() {
             const auto name = character->get_name();
             const auto gold = std::to_string(character->get_gold());
             const auto health = std::to_string(character->get_health());
-            {  // CHARACTER
-                tex = SDL_CreateTexture(
-                    m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
-                    SDL_TEXTUREACCESS_TARGET, 40, 40
-                );
-                SDL_SetRenderTarget(m_graphic_renderer, tex);
-                SDL_SetRenderDrawColor(
-                    m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF
-                );
-                SDL_RenderClear(m_graphic_renderer);
-                SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-                m_images[CHARACTER_NAMES_WITH_DASH.at(name) + "40"]
-                    .render_to_texture(m_graphic_renderer, 0, 0, tex);
-                Texture texture(tex);
-                window->remove_texture(name + "char");
-                window->add_texture(
-                    name + "char", texture, {window->width() - 40, 0}, true
-                );
-            }  // CHARACTER
-            {  // COIN
-                tex = SDL_CreateTexture(
-                    m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
-                    SDL_TEXTUREACCESS_TARGET, 20, 20
-                );
-                SDL_SetRenderTarget(m_graphic_renderer, tex);
-                SDL_SetRenderDrawColor(
-                    m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF
-                );
-                SDL_RenderClear(m_graphic_renderer);
-                SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-                m_images["coin20"].render_to_texture(
-                    m_graphic_renderer, 0, 0, tex
-                );
-                Texture texture(tex);
-                window->remove_texture(name + "coin");
-                window->add_texture(name + "coin", texture, {0, 20}, true);
-            }  // COIN
-            {  // HEART
-                tex = SDL_CreateTexture(
-                    m_graphic_renderer, SDL_PIXELFORMAT_RGBA8888,
-                    SDL_TEXTUREACCESS_TARGET, 20, 20
-                );
-                SDL_SetRenderTarget(m_graphic_renderer, tex);
-                SDL_SetRenderDrawColor(
-                    m_graphic_renderer, 0xFF, 0xFF, 0xFF, 0xFF
-                );
-                SDL_RenderClear(m_graphic_renderer);
-                SDL_SetRenderTarget(m_graphic_renderer, nullptr);
-                m_images["heart20"].render_to_texture(
-                    m_graphic_renderer, 0, 0, tex
-                );
-                Texture texture(tex);
-                window->remove_texture(name + "heart");
-                window->add_texture(name + "heart", texture, {0, 40}, true);
-            }  // HEART
-            {  // NAME
-                Texture texture;
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"], name,
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                window->remove_texture(name);
-                window->add_texture(name, texture, {0, 0}, true);
-            }  // NAME
-            {  // GOLD NUM
-                Texture texture;
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"], gold,
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                window->remove_texture(name + gold);
-                window->add_texture(name + gold, texture, {25, 20}, true);
-            }  // GOLD NUM
-            {  // HEALTH NUM
-                Texture texture;
-                texture.load_text_from_string(
-                    m_graphic_renderer, m_fonts["FreeMono20"], health,
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-                window->remove_texture(name + health);
-                window->add_texture(name + health, texture, {25, 40}, true);
-            }  // HEALTH NUM
+
+            text_render(window, name, name, {0, 0}, 20);
+            img_render(
+                window, CHARACTER_NAMES_WITH_DASH.at(name) + "40",
+                name + "char", {window->width() - 40, 0}, {40, 40}
+            );
+
+            img_render(window, "coin20", name + "coin", {0, 20}, {20, 20});
+            text_render(window, gold, name + gold, {25, 20}, 20);
+
+            img_render(window, "heart20", name + "heart", {0, 40}, {20, 20});
+            text_render(window, health, name + health, {25, 40}, 20);
+
+            img_render(window, "body", name + "body", {60, 20}, {20, 20});
+            auto body = std::to_string(
+                character->get_characteristic(::runebound::Characteristic::BODY)
+            );
+            text_render(window, body, name + "body_num", {85, 20}, 20);
+
+            img_render(
+                window, "intelligence", name + "intelligence", {60, 40},
+                {20, 20}
+            );
+            auto intelligence = std::to_string(character->get_characteristic(
+                ::runebound::Characteristic::INTELLIGENCE
+            ));
+            text_render(
+                window, intelligence, name + "intelligence_num", {85, 40}, 20
+            );
+
+            img_render(window, "spirit", name + "spirit", {120, 20}, {20, 20});
+            auto spirit = std::to_string(character->get_characteristic(
+                ::runebound::Characteristic::SPIRIT
+            ));
+            text_render(window, body, name + "spirit_num", {145, 20}, 20);
+
+            img_render(
+                window, "knowledge", name + "knowledge", {120, 40}, {20, 20}
+            );
+            auto knowledge = std::to_string(character->get_knowledge_token());
+            text_render(
+                window, knowledge, name + "knowledge_num", {145, 40}, 20
+            );
+
             {  // BORDER
                 rect = RectangleShape(0, 0, 2 * 10 * 30 * 3 / 5, 60);
                 tex = SDL_CreateTexture(
@@ -761,7 +723,9 @@ void Client::update_game_window() {
                     m_window.get_window("game")->set_updatability_window(
                         "end", false
                     );
-                    m_window.get_window("game")->set_all_updatability_button(true);
+                    m_window.get_window("game")->set_all_updatability_button(
+                        true
+                    );
                     m_window.set_updatability_window("game", false);
                     m_window.set_visibility_window("game", false);
                     m_window.set_active_window("main_menu");
