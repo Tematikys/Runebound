@@ -2,44 +2,75 @@
 
 namespace runebound::graphics {
 void Client::init_inventory_window() {
-    auto *win = m_window.get_window("game");
-    auto window = std::make_unique<Window>(Window(
-        WINDOW_WIDTH * 3 / 4, WINDOW_HEIGHT * 3 / 4, {0xFF, 0xFF, 0xFF, 0xFF}
-    ));
-    {  // EXIT BUTTON
+    {  // INVENTORY WINDOW
+        auto *win = m_window.get_window("game");
+        auto window = std::make_unique<Window>(Window(
+            win->width() * 3 / 4, win->height() * 3 / 4,
+            {0xFF, 0xFF, 0xFF, 0xFF}
+        ));
+        {  // EXIT BUTTON
+            Texture texture;
+            texture.load_text_from_string(
+                m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
+                {0x00, 0x00, 0x00, 0xFF}
+            );
+            Button button(
+                200, 30, HorizontalButtonTextureAlign::CENTER,
+                VerticalButtonTextureAlign::CENTER, 0, 0, texture,
+                [this]() {
+                    m_window.get_window("game")->reset_active_window();
+                    m_window.get_window("game")
+                        ->get_window("inventory")
+                        ->deactivate();
+                    m_window.get_window("game")->set_visibility_window(
+                        "inventory", false
+                    );
+                    m_window.get_window("game")->set_updatability_window(
+                        "inventory", false
+                    );
+                    m_window.get_window("game")->set_all_updatability_button(
+                        true
+                    );
+                },
+                []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
+            );
+            window->add_button(
+                "exit", button,
+                {window->width() - 205, window->height() - 35 * 1}, true, true
+            );
+        }  // EXIT BUTTON
+        win->add_window(
+            "inventory", std::move(window),
+            {WINDOW_WIDTH / 8, WINDOW_HEIGHT / 8}, false, false
+        );
+    }  // INVENTORY WINDOW
+    {  // RESULT WINDOW
+        auto *win = m_window.get_window("game")->get_window("inventory");
+        auto window =
+            std::make_unique<Window>(Window(180, 70, {0xFF, 0xFF, 0xFF, 0xFF}));
         Texture texture;
         texture.load_text_from_string(
-            m_graphic_renderer, m_fonts["FreeMono30"], "Exit",
-            {0x00, 0x00, 0x00, 0xFF}
+            m_graphic_renderer, m_fonts["FreeMono30"], "OK", {0, 0, 0, 255}
         );
         Button button(
-            200, 30, HorizontalButtonTextureAlign::CENTER,
+            160, 30, HorizontalButtonTextureAlign::CENTER,
             VerticalButtonTextureAlign::CENTER, 0, 0, texture,
             [this]() {
-                m_window.get_window("game")->reset_active_window();
-                m_window.get_window("game")
-                    ->get_window("inventory")
-                    ->deactivate();
-                m_window.get_window("game")->set_visibility_window(
-                    "inventory", false
-                );
-                m_window.get_window("game")->set_updatability_window(
-                    "inventory", false
-                );
-                m_window.get_window("game")->set_all_updatability_button(true);
-                std::cout << "Exit from inventory" << std::endl;
+                auto *win =
+                    m_window.get_window("game")->get_window("inventory");
+                win->reset_active_window();
+                win->set_visibility_window("result", false);
+                win->set_updatability_window("result", false);
+                win->set_all_updatability_button(true);
             },
             []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
         );
-        window->add_button(
-            "exit", button, {window->width() - 205, window->height() - 35 * 1},
-            true, true
+        window->add_button("exit", button, {10, 35}, true, true);
+        win->add_window(
+            "result", std::move(window),
+            {win->width() / 2 - 90, win->height() / 2 - 35}, false, false
         );
-    }  // EXIT BUTTON
-    win->add_window(
-        "inventory", std::move(window), {WINDOW_WIDTH / 8, WINDOW_HEIGHT / 8},
-        false, false
-    );
+    }  // RESULT WINDOW
 }
 
 void Client::update_inventory_window() {
@@ -280,6 +311,25 @@ void Client::update_inventory_window() {
                         m_network_client.check_characteristic(
                             id, ::runebound::cards::OptionMeeting::FIRST
                         );
+                        auto *win =
+                            m_window.get_window("game")->get_window("inventory"
+                            );
+                        win->set_active_window("result");
+                        win->set_visibility_window("result", true);
+                        win->set_updatability_window("result", true);
+                        win->get_window("result")->remove_all_textures();
+                        Texture tex;
+                        tex.load_text_from_string(
+                            m_graphic_renderer, m_fonts["FreeMono30"],
+                            m_network_client.get_game_client()
+                                    .m_last_characteristic_check
+                                ? "Success"
+                                : "Fail",
+                            {0, 0, 0, 255}
+                        );
+                        win->get_window("result")->add_texture(
+                            "res", tex, {90 - tex.width() / 2, 5}, true
+                        );
                     },
                     []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
                 );
@@ -304,6 +354,25 @@ void Client::update_inventory_window() {
                         );
                         m_network_client.check_characteristic(
                             id, ::runebound::cards::OptionMeeting::SECOND
+                        );
+                        auto *win =
+                            m_window.get_window("game")->get_window("inventory"
+                            );
+                        win->set_active_window("result");
+                        win->set_visibility_window("result", true);
+                        win->set_updatability_window("result", true);
+                        win->get_window("result")->remove_all_textures();
+                        Texture tex;
+                        tex.load_text_from_string(
+                            m_graphic_renderer, m_fonts["FreeMono30"],
+                            m_network_client.get_game_client()
+                                    .m_last_characteristic_check
+                                ? "Success"
+                                : "Fail",
+                            {0, 0, 0, 255}
+                        );
+                        win->get_window("result")->add_texture(
+                            "res", tex, {90 - tex.width() / 2, 5}, true
                         );
                     },
                     []() {}, {0xFF, 0xFF, 0xFF, 0xFF}, {0x00, 0x00, 0x00, 0xFF}
