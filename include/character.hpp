@@ -192,8 +192,8 @@ public:
         return m_cards_meeting;
     }
 
-    [[nodiscard]] int get_characteristic(Characteristic characteristic) {
-        return m_characteristics[characteristic];
+    [[nodiscard]] int get_characteristic(Characteristic characteristic) const {
+        return m_characteristics.at(characteristic);
     }
 
     void set_position(const Point &new_position) {
