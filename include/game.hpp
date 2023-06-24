@@ -260,7 +260,7 @@ public:
         generate_all();
     };
 
-    auto get_characters(){
+    auto get_characters() {
         return m_characters;
     }
 
