@@ -107,7 +107,6 @@ void Client::update_character_list_window() {
         ++count;
     }
 
-
     Texture texture1;
     texture1.load_text_from_string(
         m_graphic_renderer, m_fonts["FreeMono30"], "Create new character",
