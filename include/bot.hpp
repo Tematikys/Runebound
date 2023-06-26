@@ -2,14 +2,11 @@
 #define BOT_HPP_
 
 #include "game.hpp"
-#include "network_client.hpp"
 #include "network_server.hpp"
 #include "nlohmann/json_fwd.hpp"
 #include "runebound_fwd.hpp"
 
 namespace runebound::bot {
-
-enum class BotCommands { MAKE_MOVE, RELAX, THROW_DICE, PASS };
 
 struct Bot {
 private:
