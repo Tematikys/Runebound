@@ -76,6 +76,13 @@ struct Board;
 struct Client;
 }  // namespace graphics
 
+namespace bot {
+struct Bot;
+}
+
+
 }  // namespace runebound
+
+class Connection;
 
 #endif  // RUNEBOUND_FWD_HPP_
