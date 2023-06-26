@@ -33,8 +33,7 @@ private:
     std::vector<Segment> m_rivers{};
     std::vector<SDL_Color> m_river_color{};
     std::size_t m_river_amount{0};
-    // TODO
-    std::vector<bool> m_is_connected_to_town = {};
+    std::vector<bool> m_is_connected_to_town{};
 
     std::vector<Segment> m_roads{};
     std::vector<SDL_Color> m_road_color{};

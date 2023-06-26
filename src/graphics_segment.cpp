@@ -28,7 +28,6 @@ void Segment::render(
     );
 }
 
-// TODO
 void Segment::half_render(
     SDL_Renderer *renderer,
     SDL_Color color,
