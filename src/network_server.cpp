@@ -13,6 +13,7 @@
 #include "fight.hpp"
 #include "game.hpp"
 #include "game_client.hpp"
+#include "bot.hpp"
 
 // #define NETWORK_DEBUG_INFO
 
@@ -378,6 +379,10 @@ void Connection::do_read() {
     );
 }
 
+    void play_as_bot() {
+        runebound::bot::Bot bot(m_game, this);
+        send_game_for_all();
+    }
 void Connection::play_as_bot() {
     auto bot = m_game->get_active_character();
     for (int turn = 0; turn < 3; ++turn) {
