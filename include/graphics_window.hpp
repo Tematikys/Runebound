@@ -67,16 +67,6 @@ public:
         SDL_Texture *main_texture = nullptr
     ) const;
 
-    void render_texture(
-        SDL_Renderer *renderer,
-        int x_offset,
-        int y_offset,
-        int width,
-        int height,
-        SDL_Texture *texture,
-        SDL_Texture *main_texture = nullptr
-    ) const;
-
     bool handle_events(SDL_Event event);
 
     bool update(Point mouse_pos, bool &mouse_pressed);
@@ -93,8 +83,6 @@ public:
 
     void set_all_updatability_button(bool state);
 
-    void set_visibility_button(const std::string &name, bool state);
-
     void remove_button(const std::string &name);
 
     void remove_all_buttons();
@@ -109,22 +97,12 @@ public:
         bool updatable
     );
 
-    void set_updatability_text_field(const std::string &name, bool state);
-
-    void set_visibility_text_field(const std::string &name, bool state);
-
-    void remove_text_field(const std::string &name);
-
-    void remove_all_text_fields();
-
     void add_texture(
         const std::string &name,
         Texture &texture,
         Point pos,
         bool visible
     );
-
-    void set_visibility_texture(const std::string &name, bool state);
 
     void remove_texture(const std::string &name);
 
@@ -141,10 +119,6 @@ public:
     void set_updatability_window(const std::string &name, bool state);
 
     void set_visibility_window(const std::string &name, bool state);
-
-    void remove_window(const std::string &name);
-
-    void remove_all_windows();
 
     void activate() {
         m_is_active = true;
@@ -187,19 +161,6 @@ public:
     }
 
     [[nodiscard]] bool in_bounds(const Point &p) const;
-
-    [[nodiscard]] bool is_active() const {
-        return m_is_active;
-    }
-
-    void add_window_in_window(
-        const std::string &win_name,
-        const std::string &name,
-        std::unique_ptr<Window> window,
-        Point pos,
-        bool visible,
-        bool updatable
-    );
 };
 }  // namespace runebound::graphics
 
