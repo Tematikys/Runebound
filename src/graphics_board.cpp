@@ -39,7 +39,6 @@ Board::Board(const ::runebound::map::MapClient &map) {
                     {0x00, 0x00, 0x00, 0xFF}
                 );
             }
-            // TODO refactor
             if (map.m_map[row][col].check_road()) {
                 for (auto [i, j] :
                      map.get_all_neighbours(::runebound::Point(row, col))) {
@@ -143,7 +142,6 @@ void Board::render(
             renderer, x_offset, y_offset, {0xFF, 0x00, 0x00, 0xFF}, 3
         );
     }
-    // TODO
     for (std::size_t i = 0; i < m_river_amount; ++i) {
         m_rivers[i].render(renderer, m_river_color[i], 5, x_offset, y_offset);
     }

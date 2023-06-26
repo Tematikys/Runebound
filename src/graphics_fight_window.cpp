@@ -39,7 +39,6 @@ void Client::update_fight_window() {
     const auto character_name = fight.m_character.get_name();
     const auto enemy_name = fight.m_enemy.get_name();
     const auto my_role = m_network_client.get_yourself_character()->get_state();
-    // TODO
 
     {  // UPDATE TOKENS
         if (m_network_client.is_game_need_update()) {
