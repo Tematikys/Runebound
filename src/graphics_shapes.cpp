@@ -40,9 +40,8 @@ void PolygonShape::render(
     if (right_index >= num_vertexes) {
         right_index = 0;
     }
-    int left_x{};
-    int right_x{};
-    left_x = right_x = (m_vertexes[top_index].x()) << 16;
+    int left_x = (m_vertexes[top_index].x()) << 16;
+    int right_x = (m_vertexes[top_index].x()) << 16;
     int left_slope = 0;
     if (m_vertexes[left_index].y() != m_vertexes[top_index].y()) {
         left_slope =
@@ -141,24 +140,8 @@ void PolygonShape::render_to_texture(
 ) const {
     SDL_SetRenderTarget(renderer, texture);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-    //    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     render(renderer, 0, 0, fill_color);
     render_border(renderer, 0, 0, border_color, 1);
-    //    SDL_SetRenderTarget(renderer, nullptr);
-    //    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-}
-
-void PolygonShape::render_border_to_texture(
-    SDL_Renderer *renderer,
-    SDL_Texture *previous_texture,
-    SDL_Texture *texture_to_render_on,
-    int x_offset,
-    int y_offset,
-    SDL_Color border_color
-) const {
-    SDL_SetRenderTarget(renderer, texture_to_render_on);
-    render_border(renderer, x_offset, y_offset, border_color, 1);
-    SDL_SetRenderTarget(renderer, previous_texture);
 }
 
 bool PolygonShape::in_bounds(const Point &dot) const {
@@ -179,14 +162,6 @@ HexagonShape::HexagonShape(const Point &center, int radius) {
     m_vertexes.emplace_back(center.x() + radius / 2, center.y() + dy);
     m_vertexes.emplace_back(center.x() - radius / 2, center.y() + dy);
     m_vertexes.emplace_back(center.x() - radius, center.y());
-    init_side_coefficients();
-}
-
-SquareShape::SquareShape(const Point &center, int radius) {
-    m_vertexes.emplace_back(center + Point(-radius, -radius));
-    m_vertexes.emplace_back(center + Point(radius, -radius));
-    m_vertexes.emplace_back(center + Point(radius, radius));
-    m_vertexes.emplace_back(center + Point(-radius, radius));
     init_side_coefficients();
 }
 
