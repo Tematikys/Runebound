@@ -53,7 +53,8 @@ private:
             runebound::game::from_json(answer, m_game_client);
         }
         if (answer["change type"] == "exception") {
-            std::cout << "Exception: " << answer["exception"] << "\n";
+            is_exception = true;
+            exception_string = answer["exception"];
         }
         if (answer["change type"] == "selected character") {
             m_character = answer["character"];
@@ -351,6 +352,9 @@ public:
         character::StandardCharacter::NONE;
     std::vector<std::string> game_names;
     runebound::game::GameClient m_game_client;
+
+    bool is_exception = false;
+    std::string exception_string = "";
 
 private:
     boost::asio::streambuf m_buffer;

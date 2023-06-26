@@ -380,7 +380,7 @@ void Connection::do_read() {
 }
 
 void Connection::play_as_bot() {
-    runebound::bot::Bot bot(m_game, this);
+    runebound::bot::Bot bot(m_game, this, io_context_);
     send_game_for_all();
 }
 
@@ -425,25 +425,29 @@ void Connection::send_game_for_all() {
 class Server {
 public:
     Server(boost::asio::io_context &io_context, short port)
-        : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port)) {
+        : m_acceptor(io_context, tcp::endpoint(tcp::v4(), port)),
+          m_io_context(io_context) {
         std::cout << "Server started\n";
         do_accept();
     }
 
 private:
     void do_accept() {
-        m_acceptor.async_accept(
-            [this](boost::system::error_code ec, tcp::socket socket) {
-                if (!ec) {
-                    std::make_shared<Connection>(std::move(socket))->start();
-                }
-
-                do_accept();
+        m_acceptor.async_accept([this](
+                                    boost::system::error_code ec,
+                                    tcp::socket socket
+                                ) {
+            if (!ec) {
+                std::make_shared<Connection>(std::move(socket), m_io_context)
+                    ->start();
             }
-        );
+
+            do_accept();
+        });
     }
 
     tcp::acceptor m_acceptor;
+    boost::asio::io_context &m_io_context;
 };
 
 int main() {
