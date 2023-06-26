@@ -122,9 +122,7 @@ std::vector<Point> Map::get_neighbours(Point current) const {
     auto directions = get_directions(current);
     std::vector<Point> result;
     for (const auto &direction : directions) {
-        if (check_neighbour(
-                current, get_neighbour_in_direction(current, direction)
-            )) {
+        if (check_neighbour_in_direction(current, direction)) {
             result.push_back(get_neighbour_in_direction(current, direction));
         }
     }
