@@ -1,4 +1,3 @@
-#include <fstream>
 #include <graphics_client.hpp>
 #include <iostream>
 #include <string>
