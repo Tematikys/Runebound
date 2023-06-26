@@ -113,7 +113,7 @@ bool Texture::load_text_from_string(
     return m_texture != nullptr;
 }
 
-Texture::Texture() : m_texture(nullptr), m_width(0), m_height(0) {
+Texture::Texture() {
     if (SHOW_TEXTURE_DEBUG_INFO) {
         std::cout << "Default: " << this << std::endl;
     }
