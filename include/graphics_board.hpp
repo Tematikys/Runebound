@@ -44,23 +44,17 @@ private:
     int m_width{0};
     int m_height{0};
 
-    void add_cell(
-        const HexagonShape &hexagon,
-        SDL_Color fill_color,
-        SDL_Color border_color
-    );
-
-    void add_token(
-        const CircleShape &circle,
-        SDL_Color fill_color,
-        SDL_Color border_color
-    );
-
-    void add_special(std::string name, Point pos);
+    void add_rivers(const ::runebound::map::MapClient &map);
 
     void add_river(const Segment &segment, SDL_Color color);
 
-    void add_road(const Segment &segment, SDL_Color color);
+    void add_cell(const ::runebound::map::MapClient &map, int row, int col);
+
+    void add_token(const ::runebound::map::MapClient &map, int row, int col);
+
+    void add_special(const ::runebound::map::MapClient &map, int row, int col);
+
+    void add_road(const ::runebound::map::MapClient &map, int row, int col);
 
 public:
     Board() = default;

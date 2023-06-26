@@ -11,57 +11,21 @@ namespace runebound::graphics {
 Board::Board(const ::runebound::map::MapClient &map) {
     for (int row = 0; row < ::runebound::map::STANDARD_SIZE; ++row) {
         for (int col = 0; col < ::runebound::map::STANDARD_SIZE; ++col) {
-            auto center = get_center_of_hexagon(row, col);
-            auto [type_cell_key, cell_fill_color] =
-                *CELL_FILL_COLOR.find(map.m_map[row][col].get_type_cell());
-            add_cell(
-                {center, HEXAGON_RADIUS}, cell_fill_color,
-                SDL_Color{0x00, 0x00, 0x00, 0xFF}
-            );
-            const ::runebound::map::SpecialTypeCell special =
-                map.m_map[row][col].get_special_type_cell();
-            if (special != ::runebound::map::SpecialTypeCell::NOTHING) {
-                auto [special_type_cell_key, img] =
-                    *SPECIAL_TO_STR.find(special);
-                add_special(img, center - Point(13, 13));
-            }
-            auto cell = map.m_map[row][col];
-            if (cell.get_token() != ::runebound::AdventureType::NOTHING) {
-                SDL_Color color;
-                if (cell.get_side_token() == ::runebound::Side::FRONT) {
-                    color = (*ADVENTURE_COLOR.find(cell.get_token())).second;
-                } else {
-                    color =
-                        (*USED_ADVENTURE_COLOR.find(cell.get_token())).second;
-                }
-                add_token(
-                    {center, HEXAGON_RADIUS / 2}, color,
-                    {0x00, 0x00, 0x00, 0xFF}
-                );
-            }
-            if (map.m_map[row][col].check_road()) {
-                for (auto [i, j] :
-                     map.get_all_neighbours(::runebound::Point(row, col))) {
-                    if (map.m_map[i][j].check_road()) {
-                        const Segment seg(center, get_center_of_hexagon(i, j));
-                        add_road(seg, {0x80, 0x80, 0x80, 0xFF});
-                        m_is_connected_to_town.push_back(false);
-                    }
-                    if (map.m_map[i][j].get_type_cell() ==
-                        ::runebound::map::TypeCell::TOWN) {
-                        const Segment seg(center, get_center_of_hexagon(i, j));
-                        add_road(seg, {0x80, 0x80, 0x80, 0xFF});
-                        m_is_connected_to_town.push_back(true);
-                    }
-                }
-            }
+            add_cell(map, row, col);
+            add_special(map, row, col);
+            add_token(map, row, col);
+            add_road(map, row, col);
         }
     }
+    add_rivers(map);
+}
+
+void Board::add_rivers(const map::MapClient &map) {
     for (const auto &pair : map.m_rivers) {
-        const SDL_Color river_color = {0x37, 0x1A, 0xFA, 0xFF};
-        auto [x1, y1] = pair.first;
-        auto [x2, y2] = pair.second;
-        auto [i, v] = *RIVER_DIRECTIONS.find(
+        const SDL_Color river_color = {55, 26, 250, 255};
+        const auto [x1, y1] = pair.first;
+        const auto [x2, y2] = pair.second;
+        const auto [i, v] = *RIVER_DIRECTIONS.find(
             {sign(x1 - x2) + (1 - std::abs(sign(x1 - x2))) * (2 * (y1 % 2) - 1),
              sign(y1 - y2)}
         );
@@ -72,46 +36,79 @@ Board::Board(const ::runebound::map::MapClient &map) {
     }
 }
 
-void Board::add_cell(
-    const HexagonShape &hexagon,
-    SDL_Color fill_color,
-    SDL_Color border_color
-) {
-    m_cells.push_back(hexagon);
-    m_cell_fill_color.push_back(fill_color);
-    m_cell_border_color.push_back(border_color);
-    ++m_cell_amount;
-    m_width = std::max(m_width, m_cells.back().get_vertex(2).x());
-    m_height = std::max(m_height, m_cells.back().get_vertex(3).y());
-}
-
-void Board::add_token(
-    const CircleShape &circle,
-    SDL_Color fill_color,
-    SDL_Color border_color
-) {
-    m_tokens.push_back(circle);
-    m_token_fill_color.push_back(fill_color);
-    m_token_border_color.push_back(border_color);
-    ++m_token_amount;
-}
-
-void Board::add_special(std::string name, Point pos) {
-    m_specials.push_back(std::move(name));
-    m_specials_pos.push_back(pos);
-    ++m_special_amount;
-}
-
 void Board::add_river(const Segment &segment, SDL_Color color) {
     m_rivers.push_back(segment);
     m_river_color.push_back(color);
     ++m_river_amount;
 }
 
-void Board::add_road(const Segment &segment, SDL_Color color) {
-    m_roads.push_back(segment);
-    m_road_color.push_back(color);
-    ++m_road_amount;
+void Board::add_cell(const ::runebound::map::MapClient &map, int row, int col) {
+    const auto center = get_center_of_hexagon(row, col);
+    const auto [type_cell_key, cell_fill_color] =
+        *CELL_FILL_COLOR.find(map.m_map[row][col].get_type_cell());
+    m_cells.emplace_back(center, HEXAGON_RADIUS);
+    m_cell_fill_color.push_back(cell_fill_color);
+    m_cell_border_color.push_back({0, 0, 0, 255});
+    ++m_cell_amount;
+    m_width = std::max(m_width, m_cells.back().get_vertex(2).x());
+    m_height = std::max(m_height, m_cells.back().get_vertex(3).y());
+}
+
+void Board::add_token(
+    const ::runebound::map::MapClient &map,
+    int row,
+    int col
+) {
+    const auto center = get_center_of_hexagon(row, col);
+    const auto cell = map.m_map[row][col];
+    if (cell.get_token() != ::runebound::AdventureType::NOTHING) {
+        SDL_Color color;
+        if (cell.get_side_token() == ::runebound::Side::FRONT) {
+            color = (*ADVENTURE_COLOR.find(cell.get_token())).second;
+        } else {
+            color = (*USED_ADVENTURE_COLOR.find(cell.get_token())).second;
+        }
+        m_tokens.emplace_back(center, HEXAGON_RADIUS / 2);
+        m_token_fill_color.push_back(color);
+        m_token_border_color.push_back({0, 0, 0, 255});
+        ++m_token_amount;
+    }
+}
+
+void Board::add_special(
+    const ::runebound::map::MapClient &map,
+    int row,
+    int col
+) {
+    const auto special = map.m_map[row][col].get_special_type_cell();
+    if (special != ::runebound::map::SpecialTypeCell::NOTHING) {
+        const auto center = get_center_of_hexagon(row, col);
+        const auto [special_type_cell_key, img] = *SPECIAL_TO_STR.find(special);
+        m_specials.push_back(img);
+        m_specials_pos.push_back(center - Point(13, 13));
+        ++m_special_amount;
+    }
+}
+
+void Board::add_road(const ::runebound::map::MapClient &map, int row, int col) {
+    if (map.m_map[row][col].check_road()) {
+        const auto center = get_center_of_hexagon(row, col);
+        for (auto [i, j] :
+             map.get_all_neighbours(::runebound::Point(row, col))) {
+            if (map.m_map[i][j].check_road() ||
+                map.m_map[i][j].get_type_cell() ==
+                    ::runebound::map::TypeCell::TOWN) {
+                const Segment seg(center, get_center_of_hexagon(i, j));
+                m_roads.push_back(seg);
+                m_road_color.push_back({0x80, 0x80, 0x80, 0xFF});
+                ++m_road_amount;
+                m_is_connected_to_town.push_back(
+                    map.m_map[i][j].get_type_cell() ==
+                    ::runebound::map::TypeCell::TOWN
+                );
+            }
+        }
+    }
 }
 
 void Board::render(
