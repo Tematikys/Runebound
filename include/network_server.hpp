@@ -10,6 +10,7 @@ using boost::asio::ip::tcp;
 
 class Connection : public std::enable_shared_from_this<Connection> {
 public:
+    friend struct runebound::bot::Bot;
     explicit Connection(tcp::socket socket) : socket_(std::move(socket)){};
     void start();
 

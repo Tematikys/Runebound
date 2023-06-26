@@ -9,11 +9,11 @@
 #include <nlohmann/json.hpp>
 #include <set>
 #include <thread>
+#include "bot.hpp"
 #include "character.hpp"
 #include "fight.hpp"
 #include "game.hpp"
 #include "game_client.hpp"
-#include "bot.hpp"
 
 // #define NETWORK_DEBUG_INFO
 
@@ -379,26 +379,8 @@ void Connection::do_read() {
     );
 }
 
-    void play_as_bot() {
-        runebound::bot::Bot bot(m_game, this);
-        send_game_for_all();
-    }
 void Connection::play_as_bot() {
-    auto bot = m_game->get_active_character();
-    for (int turn = 0; turn < 3; ++turn) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-        m_game->throw_movement_dice(bot);
-        send_game_for_all();
-        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-        auto possible_moves = m_game->get_possible_moves();
-        m_game->make_move(
-            bot, possible_moves[runebound::rng() % possible_moves.size()]
-        );
-        send_game_for_all();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    }
-
-    m_game->start_next_character_turn(bot);
+    runebound::bot::Bot bot(m_game, this);
     send_game_for_all();
 }
 

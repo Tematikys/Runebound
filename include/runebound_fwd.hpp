@@ -80,7 +80,6 @@ namespace bot {
 struct Bot;
 }
 
-
 }  // namespace runebound
 
 class Connection;
