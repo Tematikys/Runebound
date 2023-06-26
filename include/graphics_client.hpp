@@ -42,9 +42,6 @@ private:
     Point m_mouse_pos{};
     Point m_prev_mouse_pos{};
 
-public:
-    Client() = default;
-
     void update_board();
 
     void load_fonts();
@@ -52,8 +49,6 @@ public:
     void load_images();
 
     void load_settings();
-
-    void init();
 
     void init_graphics();
 
@@ -69,10 +64,6 @@ public:
 
     void init_inventory_window();
 
-    void handle_events();
-
-    void render();
-
     void update_game_window();
 
     void update_main_menu_window();
@@ -84,6 +75,44 @@ public:
     void update_shop_window();
 
     void update_inventory_window();
+
+    void fight_window_check_end_of_fight();
+
+    void fight_window_use_button(
+        std::vector<::runebound::fight::TokenHandCount>
+            &character_selected_tokens,
+        std::vector<::runebound::fight::TokenHandCount> &enemy_selected_tokens
+    );
+
+    void fight_window_pass_button();
+
+    void fight_window_turn();
+
+    void fight_window_round_number();
+
+    void fight_window_character();
+
+    void fight_window_enemy();
+
+    void fight_window_tokens(
+        bool character,
+        std::vector<::runebound::fight::TokenHandCount> &vec
+    );
+
+    void fight_window_generate_texture(
+        SDL_Texture *tex,
+        ::runebound::fight::TokenHandCount token,
+        std::vector<::runebound::fight::TokenHandCount> &vec
+    );
+
+public:
+    Client() = default;
+
+    void init();
+
+    void handle_events();
+
+    void render();
 
     void update();
 
